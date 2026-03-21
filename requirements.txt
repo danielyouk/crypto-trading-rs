@@ -32,6 +32,10 @@ yfinance==1.2.0
 scikit-learn==1.8.0
 joblib==1.5.3
 
+# Gemini fallback for S&P 500 (when Wikipedia fails)
+google-genai==1.68.0
+python-dotenv==1.2.2
+
 # Crypto notebooks: REST + WebSocket
 requests==2.32.5
 websockets==16.0

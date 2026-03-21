@@ -12,7 +12,11 @@ dependencies = [
   "pandas>=3.0",
   "requests>=2.31",
   "lxml>=5.0",
+  "beautifulsoup4>=4.12",
 ]
+
+[project.optional-dependencies]
+gemini = ["google-genai>=1.0", "python-dotenv>=1.0"]
 
 [tool.setuptools.packages.find]
 where = ["."]

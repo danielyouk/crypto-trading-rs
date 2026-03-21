@@ -35,14 +35,23 @@ class WikipediaSp500Error(RuntimeError):
     """Raised when the Wikipedia table cannot be fetched or parsed."""
 
 
-def _fetch_wikipedia_html(url: str, *, timeout: float) -> str:
+def _fetch_wikipedia_html(url: str, *, timeout: float | tuple[float, float]) -> str:
+    # Tuple (connect_timeout, read_timeout) avoids hanging forever on bad networks (e.g. IPv6 issues).
     resp = requests.get(url, headers=DEFAULT_HEADERS, timeout=timeout)
     resp.raise_for_status()
     return resp.text
 
 
 def _parse_wikipedia_sp500_table(html: str) -> pd.DataFrame:
-    tables = pd.read_html(io.StringIO(html))
+    # Parse only the main constituents table (~500 rows) instead of scanning the whole page (~800k+).
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html, "lxml")
+    node = soup.find("table", attrs={"id": "constituents"})
+    if node is not None:
+        tables = pd.read_html(io.StringIO(str(node)))
+    else:
+        tables = pd.read_html(io.StringIO(html))
     if not tables:
         raise WikipediaSp500Error("No HTML tables found on Wikipedia page.")
     first = tables[0]
@@ -57,13 +66,19 @@ def _parse_wikipedia_sp500_table(html: str) -> pd.DataFrame:
     return out
 
 
+def _vb(verbose: bool, msg: str) -> None:
+    if verbose:
+        print(f"[pairs_eda] {msg}", flush=True)
+
+
 def fetch_sp500_constituents_table(
     *,
     wiki_url: str = DEFAULT_WIKI_URL,
-    wiki_timeout: float = 30.0,
+    wiki_timeout: float | tuple[float, float] = (15.0, 60.0),
     exa_backend: Optional["Sp500ExaBackend"] = None,
     exa_mode: Optional["_ExaRunMode"] = None,
     on_wiki_failure: str = "raise",
+    verbose: bool = False,
 ) -> pd.DataFrame:
     """
     Return a DataFrame with columns ``Symbol`` and ``Date added`` (datetime64).
@@ -79,12 +94,18 @@ def fetch_sp500_constituents_table(
     on_wiki_failure
         ``"raise"`` — propagate Wikipedia errors.
         ``"exa"`` — call ``exa_backend``; raises if backend is None or ``exa_mode`` is None.
+    verbose
+        If True, print short progress lines to stdout (useful in Jupyter when a cell looks “stuck”).
     """
     from pairs_eda.exa_fallback import ExaRunMode  # local import for runtime
 
     try:
+        _vb(verbose, "Fetching Wikipedia HTML …")
         html = _fetch_wikipedia_html(wiki_url, timeout=wiki_timeout)
-        return _normalize_dates(_parse_wikipedia_sp500_table(html))
+        _vb(verbose, "Parsing constituents table …")
+        out = _normalize_dates(_parse_wikipedia_sp500_table(html))
+        _vb(verbose, f"Done ({len(out)} rows).")
+        return out
     except Exception as exc:
         logger.warning("Wikipedia S&P 500 fetch/parse failed: %s", exc)
         if on_wiki_failure != "exa":

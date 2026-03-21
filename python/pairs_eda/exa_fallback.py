@@ -14,13 +14,15 @@ Use ``ExaRunMode.LIVE`` for code paths that may query the **open web** (or a
 non-KB-restricted search) to recover tickers when Wikipedia fails.
 
 This package does **not** import ``google-agents-api-gen``; you wire that in your
-callables.
+callables.  However, ``default_gemini_backend()`` provides a ready-made LIVE
+backend using Gemini + Google Search Grounding (same mechanism as exa_search
+in live mode).
 """
 
 from __future__ import annotations
 
 from enum import Enum
-from typing import Callable, Protocol, Sequence, runtime_checkable
+from typing import Callable, Optional, Protocol, Sequence, runtime_checkable
 
 
 class ExaRunMode(str, Enum):
@@ -63,3 +65,26 @@ def create_exa_backend(
             return fn_live()
 
     return _Backend()
+
+
+def default_gemini_backend(
+    *,
+    fn_simulation: Optional[Callable[[], Sequence[str]]] = None,
+) -> Sp500ExaBackend:
+    """
+    Ready-made backend: LIVE uses Gemini Search Grounding (needs GOOGLE_API_KEY).
+
+    For SIMULATION, supply ``fn_simulation`` or an error is raised at call time.
+    Requires: ``pip install google-genai`` and ``GOOGLE_API_KEY`` in env.
+    """
+    from pairs_eda.gemini_search import search_sp500_via_gemini
+
+    def _sim_not_configured() -> Sequence[str]:
+        raise RuntimeError(
+            "SIMULATION mode not configured. Pass fn_simulation= to default_gemini_backend()."
+        )
+
+    return create_exa_backend(
+        fn_live=search_sp500_via_gemini,
+        fn_simulation=fn_simulation or _sim_not_configured,
+    )
