@@ -1,0 +1,4 @@
+{
+  "extraPaths": ["python"],
+  "reportMissingImports": true
+}
