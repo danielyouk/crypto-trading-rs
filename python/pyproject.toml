@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pairs_eda"
+version = "0.1.0"
+description = "Helpers for pairs-trading EDA: S&P 500 universe fetch with optional Exa fallback"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "pandas>=3.0",
+  "requests>=2.31",
+  "lxml>=5.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pairs_eda*"]

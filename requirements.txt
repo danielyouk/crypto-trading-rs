@@ -2,6 +2,8 @@
 # Stock pairs reference: reference/python_pairstrading/stock-trading-eda-scheduled_eng.ipynb
 #
 # Setup: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# S&P 500 helper package (Wikipedia + optional Exa fallback hooks):
+#   .venv/bin/pip install -e ./python
 
 # Jupyter / notebooks
 jupyter==1.1.1
