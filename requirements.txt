@@ -11,6 +11,8 @@ ipython==9.11.0
 
 # Core data & visualization
 pandas==3.0.1
+# pd.read_html (e.g. Wikipedia S&P 500 tables) needs an HTML parser
+lxml==6.0.2
 numpy==2.4.3
 plotly==6.6.0
 matplotlib==3.10.8
