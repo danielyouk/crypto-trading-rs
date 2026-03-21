@@ -1,0 +1,28 @@
+# Python env for notebooks/ (crypto streaming + stock pairs EDA).
+# Stock pairs reference: reference/python_pairstrading/stock-trading-eda-scheduled_eng.ipynb
+#
+# Setup: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+# Jupyter / notebooks
+jupyter==1.1.1
+jupyterlab==4.5.6
+ipywidgets==8.1.8
+ipython==9.11.0
+
+# Core data & visualization
+pandas==3.0.1
+numpy==2.4.3
+plotly==6.6.0
+matplotlib==3.10.8
+mplfinance==0.12.10b0
+
+# Yahoo Finance (stock OHLCV; pulls curl_cffi, beautifulsoup4, peewee, etc.)
+yfinance==1.2.0
+
+# Pairs notebook: LinearRegression, Parallel/delayed
+scikit-learn==1.8.0
+joblib==1.5.3
+
+# Crypto notebooks: REST + WebSocket
+requests==2.32.5
+websockets==16.0
