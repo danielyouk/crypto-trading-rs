@@ -1,0 +1,58 @@
+---
+description: Automatically commit and push when a meaningful change is complete, after brainstorming and decision-making.
+alwaysApply: true
+---
+
+# Auto Commit & Push on Meaningful Changes
+
+After brainstorming, discussion, and implementation of a change, **intelligently judge** when the work unit is complete and proactively commit + push.
+
+## When to Commit
+
+Commit when **all** of these are true:
+
+1. A decision has been made (brainstorming / discussion is settled)
+2. Code changes are implemented and verified (linter clean, tests pass if applicable)
+3. The change forms a **coherent unit** — not half-done
+
+## What counts as a "meaningful change"
+
+- New feature or function added and working
+- Bug fix verified
+- Refactoring complete (old behavior preserved)
+- New tests added and passing
+- Configuration or dependency update applied
+
+## What does NOT warrant a commit
+
+- Mid-discussion exploration (still brainstorming alternatives)
+- Partial implementation (function exists but untested / broken)
+- Temporary debugging code
+
+## How to Commit
+
+1. `git add` only the relevant files (not unrelated changes)
+2. Write a concise commit message: **what** changed and **why**
+3. Push to the remote branch immediately after commit
+4. Report the commit hash and summary to the user
+
+## Commit Message Style
+
+```
+<type>: <short summary>
+
+<optional body — what and why, not how>
+```
+
+Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
+
+Examples:
+- `feat: smart price column selection with split/dividend detection`
+- `fix: drop tickers by min history period instead of coverage ratio`
+- `test: add fake-data scenarios for adj_close_or_close_panel`
+
+## Important
+
+- **Do not interrupt** brainstorming to commit — wait until the decision is final
+- **Do not batch** unrelated changes into one commit — prefer small, focused commits
+- If unsure whether the user considers the change "done," **ask briefly** before committing
