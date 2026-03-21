@@ -1,0 +1,48 @@
+---
+description: Write detailed, flow-oriented comments in notebook cells that explain logic, Python syntax, and data transformations.
+globs: "**/*.ipynb"
+alwaysApply: false
+---
+
+# Notebook Comments — Logic Flow Style
+
+Notebook cells should have **detailed comments that explain the logic flow**, not just what the code does. The audience is a learner/reader who benefits from understanding the *reasoning* and *Python mechanics*.
+
+## Structure
+
+Use section headers with `# ── N. Title ──` to break a cell into logical steps:
+
+```python
+# ── 1. Download daily OHLCV ──
+# yf.download returns a MultiIndex DataFrame: (price_type, ticker) × dates.
+# auto_adjust=False preserves "Adj Close" — important for pairs trading.
+_dl = yf.download(tickers, start=start, end=end, auto_adjust=False)
+```
+
+## What to include in comments
+
+1. **Why** this step exists in the pipeline (not just "download data")
+2. **Data shape** — what the DataFrame looks like after this operation (rows × cols, MultiIndex structure)
+3. **Python/pandas mechanics** — explain non-obvious syntax:
+   - Dict comprehensions: `{col: data[col].first_valid_index() for col in data.columns}`
+   - List comprehensions with guards: `[x for x, v in items() if pd.notna(v)]`
+   - Method behavior: `Series.first_valid_index()` scans top-to-bottom, returns first non-NaN index label
+4. **Concrete examples** with realistic values:
+   ```python
+   # Example (end_time = 2026-03-16):
+   #   earliest_required = 2024-01-16
+   #   AAPL first data = 2023-11-16 → keep
+   #   NEWSTOCK listed 2024-09     → drop
+   ```
+5. **Cross-references** to related functions/modules: `(see yfinance_tools.py)`
+
+## What NOT to do
+
+- Don't just echo the code: `# download data` above `yf.download()`
+- Don't explain basic Python: `# import pandas` above `import pandas`
+- Don't write a wall of text with no code breaks — interleave comments with code
+- **Don't duplicate function docs**: if a function's docstring or signature already explains its behavior (e.g. `yf.download`, `pd.read_html`), don't repeat that in a cell comment. Only add comments for *our* specific usage choices (e.g. why `auto_adjust=False`, why `threads=True`).
+
+## Tone
+
+Write as if explaining to a capable colleague who is new to this specific codebase. Be precise but not pedantic.

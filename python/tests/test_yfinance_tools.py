@@ -1,12 +1,13 @@
-"""Tests for adj_close_or_close_panel — fake data demonstrates each scenario."""
+"""Tests for adj_close_or_close_panel and download_with_retry."""
 
 import warnings
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from pairs_eda.yfinance_tools import adj_close_or_close_panel
+from pairs_eda.yfinance_tools import adj_close_or_close_panel, download_with_retry
 
 # ---------------------------------------------------------------------------
 # Helpers to build fake yfinance-style DataFrames
@@ -172,3 +173,77 @@ class TestEdgeCases:
         dl = pd.DataFrame({"Volume": [1, 2, 3]})
         with pytest.raises(KeyError, match="(?i)neither.*nor"):
             adj_close_or_close_panel(dl, verbose=False)
+
+
+# ---------------------------------------------------------------------------
+# Tests for download_with_retry
+# ---------------------------------------------------------------------------
+
+def _make_multi_dl(tickers: list[str], dates: pd.DatetimeIndex, *, nan_tickers: list[str] | None = None) -> pd.DataFrame:
+    """Build a fake yf.download result (MultiIndex) with optional all-NaN tickers."""
+    rng = np.random.default_rng(42)
+    data: dict[tuple[str, str], np.ndarray] = {}
+    for t in tickers:
+        prices = rng.uniform(100, 300, size=len(dates))
+        if nan_tickers and t in nan_tickers:
+            prices = np.full(len(dates), np.nan)
+        data[("Adj Close", t)] = prices
+        data[("Close", t)] = prices
+    df = pd.DataFrame(data, index=dates)
+    df.columns = pd.MultiIndex.from_tuples(df.columns)
+    return df
+
+
+class TestDownloadWithRetry:
+    """Mock yf.download to test retry logic without network calls."""
+
+    @patch("pairs_eda.yfinance_tools.yf")
+    def test_no_failures_no_retry(self, mock_yf: object, capsys: pytest.CaptureFixture[str]) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=30)
+        tickers = ["AAPL", "MSFT"]
+        mock_yf.download = lambda *a, **kw: _make_multi_dl(tickers, dates)  # type: ignore[attr-defined]
+
+        result = download_with_retry(tickers, start="2024-01-02", end="2024-02-15", verbose=True)
+        assert result.shape == (30, 2)
+        out = capsys.readouterr().out
+        assert "Retry" not in out
+
+    @patch("pairs_eda.yfinance_tools.yf")
+    def test_retry_recovers_failed_ticker(self, mock_yf: object, capsys: pytest.CaptureFixture[str]) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=30)
+        tickers = ["AAPL", "MSFT", "GOOG"]
+        call_count = {"n": 0}
+
+        def fake_download(*args: object, **kwargs: object) -> pd.DataFrame:
+            call_count["n"] += 1
+            requested = args[0] if args else kwargs.get("tickers", tickers)
+            if call_count["n"] == 1:
+                return _make_multi_dl(tickers, dates, nan_tickers=["GOOG"])
+            return _make_multi_dl(list(requested), dates)
+
+        mock_yf.download = fake_download  # type: ignore[attr-defined]
+
+        result = download_with_retry(
+            tickers, start="2024-01-02", end="2024-02-15",
+            max_retries=2, retry_delay=0, verbose=True,
+        )
+        assert "GOOG" in result.columns, "GOOG should be recovered after retry"
+        assert result.shape == (30, 3)
+        out = capsys.readouterr().out
+        assert "recovered" in out.lower()
+
+    @patch("pairs_eda.yfinance_tools.yf")
+    def test_permanent_failure_drops_ticker(self, mock_yf: object, capsys: pytest.CaptureFixture[str]) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=30)
+        tickers = ["AAPL", "BADTICKER"]
+
+        mock_yf.download = lambda *a, **kw: _make_multi_dl(tickers, dates, nan_tickers=["BADTICKER"])  # type: ignore[attr-defined]
+
+        result = download_with_retry(
+            tickers, start="2024-01-02", end="2024-02-15",
+            max_retries=2, retry_delay=0, verbose=True,
+        )
+        assert "BADTICKER" not in result.columns, "Permanently failed ticker should be dropped"
+        assert result.shape == (30, 1)
+        out = capsys.readouterr().out
+        assert "Dropping" in out

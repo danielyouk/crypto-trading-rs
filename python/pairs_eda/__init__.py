@@ -11,7 +11,7 @@ from pairs_eda.sp500 import (
     WikipediaSp500Error,
     fetch_sp500_constituents_table,
 )
-from pairs_eda.yfinance_tools import adj_close_or_close_panel
+from pairs_eda.yfinance_tools import adj_close_or_close_panel, download_with_retry
 
 __all__ = [
     "ExaRunMode",
@@ -19,6 +19,7 @@ __all__ = [
     "Sp500FetchError",
     "WikipediaSp500Error",
     "adj_close_or_close_panel",
+    "download_with_retry",
     "create_exa_backend",
     "default_gemini_backend",
     "fetch_sp500_constituents_table",

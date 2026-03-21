@@ -1,4 +1,4 @@
-"""Helpers for yfinance DataFrame shapes (MultiIndex columns, Adj Close vs Close).
+"""Helpers for yfinance: download with retry, price column selection.
 
 Pairs trading on daily data should use Adjusted Close to avoid spurious signals
 from stock splits and dividends.  Intraday data (5m, 15m, …) typically only has
@@ -7,11 +7,13 @@ Close — that's fine because corporate actions don't happen mid-day.
 
 from __future__ import annotations
 
+import time
 import warnings
-from typing import Optional
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
+import yfinance as yf
 
 
 def _ensure_dataframe(x: pd.DataFrame | pd.Series) -> pd.DataFrame:
@@ -32,6 +34,81 @@ def _adj_close_is_meaningful(
     if mask.sum() == 0:
         return False
     return bool(np.any(np.abs(a[mask] / c[mask] - 1.0) > tolerance))
+
+
+def download_with_retry(
+    tickers: list[str],
+    *,
+    max_retries: int = 2,
+    retry_delay: float = 5.0,
+    verbose: bool = True,
+    **yf_kwargs: Any,
+) -> pd.DataFrame:
+    """
+    Download data via ``yf.download``, retrying only failed tickers.
+
+    After the initial download, identifies tickers whose columns are all-NaN
+    (download failures). Re-downloads only those tickers up to ``max_retries``
+    times, merging successful results back into the main DataFrame.
+
+    Parameters
+    ----------
+    tickers
+        List of ticker symbols.
+    max_retries
+        How many times to retry failed tickers (default 2).
+    retry_delay
+        Seconds to wait between retries (backs off from Yahoo rate limits).
+    verbose
+        Print retry progress.
+    **yf_kwargs
+        Passed directly to ``yf.download()`` (start, end, interval, etc.).
+    """
+    def _msg(text: str) -> None:
+        if verbose:
+            print(f"[pairs_eda] {text}", flush=True)
+
+    _msg(f"Downloading {len(tickers)} tickers …")
+    dl = yf.download(tickers, **yf_kwargs)
+    if dl is None or dl.empty:
+        raise RuntimeError("yf.download returned None or empty DataFrame")
+
+    panel = adj_close_or_close_panel(dl, verbose=verbose)
+
+    def _all_nan(s: pd.Series | pd.DataFrame) -> bool:
+        return bool(s.isna().all())
+
+    for attempt in range(1, max_retries + 1):
+        failed = [c for c in panel.columns if _all_nan(panel[c])]
+        if not failed:
+            break
+
+        _msg(f"Retry {attempt}/{max_retries}: {len(failed)} failed tickers → {failed}")
+        time.sleep(retry_delay)
+
+        retry_dl = yf.download(failed, **yf_kwargs)
+        if retry_dl is None or retry_dl.empty:
+            _msg(f"Retry {attempt}: still no data.")
+            continue
+
+        retry_panel = adj_close_or_close_panel(retry_dl, verbose=False)
+        for col in retry_panel.columns:
+            if col in panel.columns and not _all_nan(retry_panel[col]):
+                panel[col] = retry_panel[col]
+
+        recovered = [c for c in failed if not _all_nan(panel[c])]
+        still_failed = [c for c in failed if _all_nan(panel[c])]
+        if recovered:
+            _msg(f"Retry {attempt}: recovered {recovered}")
+        if still_failed:
+            _msg(f"Retry {attempt}: still failing {still_failed}")
+
+    final_failed = [c for c in panel.columns if _all_nan(panel[c])]
+    if final_failed:
+        _msg(f"Dropping {len(final_failed)} tickers after all retries: {final_failed}")
+        panel = panel.drop(columns=final_failed)
+
+    return panel
 
 
 def adj_close_or_close_panel(

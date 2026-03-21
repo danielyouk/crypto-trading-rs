@@ -28,6 +28,7 @@ Commit when **all** of these are true:
 - Mid-discussion exploration (still brainstorming alternatives)
 - Partial implementation (function exists but untested / broken)
 - Temporary debugging code
+- **Notebook-only changes** (`.ipynb`) — cell edits, output changes, reordering cells, adding comments. Notebooks change too frequently and their commit history is not important. Only include notebooks in a commit when they accompany a library/function change that the notebook consumes.
 
 ## How to Commit
 
