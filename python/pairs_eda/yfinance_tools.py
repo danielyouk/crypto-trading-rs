@@ -5,6 +5,13 @@ from __future__ import annotations
 import pandas as pd
 
 
+def _ensure_dataframe(x: pd.DataFrame | pd.Series) -> pd.DataFrame:
+    """Normalize yfinance/pandas slices: __getitem__ is typed as DataFrame | Series."""
+    if isinstance(x, pd.DataFrame):
+        return x.copy()
+    return x.to_frame()
+
+
 def adj_close_or_close_panel(dl: pd.DataFrame) -> pd.DataFrame:
     """
     Return a DataFrame of (dates × tickers) using adjusted prices when available.
@@ -21,18 +28,18 @@ def adj_close_or_close_panel(dl: pd.DataFrame) -> pd.DataFrame:
     if isinstance(dl.columns, pd.MultiIndex):
         level0 = dl.columns.get_level_values(0)
         if "Adj Close" in level0:
-            return dl["Adj Close"].copy()
+            return _ensure_dataframe(dl["Adj Close"])
         if "Close" in level0:
-            return dl["Close"].copy()
+            return _ensure_dataframe(dl["Close"])
         raise KeyError(
             "MultiIndex panel has neither 'Adj Close' nor 'Close' in level 0; "
             f"got {level0.unique().tolist()!r}"
         )
 
     if "Adj Close" in dl.columns:
-        return dl[["Adj Close"]].copy()
+        return _ensure_dataframe(dl["Adj Close"])
     if "Close" in dl.columns:
-        return dl[["Close"]].copy()
+        return _ensure_dataframe(dl["Close"])
     raise KeyError(
         f"Expected 'Adj Close' or 'Close' in columns; got {list(dl.columns)[:20]!r}"
     )
