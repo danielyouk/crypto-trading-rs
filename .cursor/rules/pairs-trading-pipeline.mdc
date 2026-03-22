@@ -14,8 +14,8 @@ alwaysApply: false
 
 - [x] Data acquisition: S&P 500 fetch (Wikipedia + Gemini fallback)
 - [x] yfinance download with retry (only failed tickers re-downloaded)
-- [x] Ticker filtering: MIN_HISTORY_START = 2000-01-01 (dot-com / GFC / COVID / rate-hikes)
-- [x] Correlation screening: returns correlation (pct_change), band [0.40, 0.85] (coarse filter)
+- [x] Pair-level overlap filter: min_overlap_years=5 (replaces per-ticker MIN_HISTORY_START cutoff)
+- [x] Correlation screening: returns correlation (pct_change), band [0.40, 0.85], dual condition (full + 3yr recency)
 - [x] Phase design: P1 = daily (1990→p1_end), P2a = 1h (730d), P2b = 5m (60d)
 - [x] find_candidate_pairs returns dict {pair: corr_value}
 - [x] Histogram: full returns correlation distribution with candidate cutoff line
@@ -51,6 +51,7 @@ Record the *why* behind key choices so future sessions have context.
 | 5m and 1h data also use Adj Close | Confirmed available via yfinance; consistent with Phase 1 |
 | Phase 2 split into 2a (1h, 730d) + 2b (5m, 60d) | 60 days too short to capture market stress events; 1h interval allows 730 days from yfinance, covering recent volatility/rate events |
 | Correlation band [0.40, 0.85] | Returns corr is a coarse filter only; real selection via cointegration. 0.40 = minimum daily co-movement signal (95th pct ≈ 0.50); 0.85 = exclude structurally identical instruments. Median returns corr across S&P 500 ≈ 0.31 over 26 years. |
-| MIN_HISTORY_START = 2000-01-01 | Captures 4 major market regimes; most S&P 500 tickers have data from 1990 |
+| Pair-level overlap (min 5yr) over per-ticker date cutoff | Per-ticker MIN_HISTORY_START=2000 excluded GOOGL, TSLA, META etc. Pair-level overlap via corr(min_periods) is more flexible — newer stocks can pair with each other |
+| Dual correlation condition (full + 3yr recent) | Catches pairs whose long-term relationship has degraded recently. If full-period corr is high but recent is low, the pair is excluded |
 | Survivorship bias accepted | S&P 500 = survivors by definition; pairs trading trades current relationships |
 | Non-overlapping selection deferred | Needs optimization results first; applied after parameter optimization, before Phase 2 |

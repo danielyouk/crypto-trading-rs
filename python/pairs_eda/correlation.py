@@ -18,9 +18,15 @@ def find_candidate_pairs(
     min_correlation: float = 0.40,
     max_correlation: float = 0.85,
     use_returns: bool = True,
+    min_overlap_years: float = 5.0,
+    recent_years: float = 3.0,
 ) -> dict[tuple[str, str], float]:
     """
     Return correlated ticker pairs filtered by correlation range.
+
+    Applies a dual condition: each pair must pass the correlation band
+    over BOTH the full period AND the most recent ``recent_years``.
+    This catches pairs whose long-term relationship has degraded.
 
     Parameters
     ----------
@@ -41,43 +47,64 @@ def find_candidate_pairs(
         If True (default), compute correlation on daily returns (pct_change)
         instead of raw prices. This removes shared market trends that inflate
         price-level correlations over long periods.
+    min_overlap_years
+        Minimum years of overlapping data required for a pair.
+        Pairs with fewer overlapping trading days are excluded (NaN correlation).
+        Converted to trading days as ``int(years * 252)``.
+    recent_years
+        Window (in years) for the recency check. A pair must also pass
+        ``[min_correlation, max_correlation]`` within this recent window.
+        Set to 0 to disable the recency check.
 
     Returns
     -------
     ``{(ticker_a, ticker_b): correlation_value, ...}`` ordered by
-    correlation descending. The dict preserves insertion order (Python 3.7+).
+    full-period correlation descending. The dict preserves insertion order.
     """
     sliced = data.loc[start:end] if (start is not None or end is not None) else data
 
     if sliced.shape[1] < 2:
         raise ValueError(f"Need at least 2 tickers, got {sliced.shape[1]}")
 
-    # pct_change() makes row 0 all-NaN; .corr() handles NaN via pairwise
-    # deletion automatically — no need for dropna() which would discard
-    # entire rows when ANY ticker has a gap.
-    series = sliced.pct_change() if use_returns else sliced
-    corr = series.corr()
-    n = corr.shape[0]
+    min_periods = int(min_overlap_years * 252)
 
-    # Upper triangle mask (excludes diagonal) → avoids duplicate pairs and self-correlation.
+    series = sliced.pct_change() if use_returns else sliced
+    full_corr = series.corr(min_periods=min_periods)
+
+    # Recent correlation matrix (if recency check enabled)
+    if recent_years > 0:
+        recent_td = int(recent_years * 252)
+        recent_series = series.iloc[-recent_td:]
+        recent_min_periods = min(min_periods, len(recent_series))
+        recent_corr = recent_series.corr(min_periods=recent_min_periods)
+    else:
+        recent_corr = None
+
+    n = full_corr.shape[0]
     mask = np.triu(np.ones((n, n), dtype=bool), k=1)
     rows, cols = np.where(mask)
-    tickers = corr.columns.tolist()
+    tickers = full_corr.columns.tolist()
 
-    pairs_with_corr = [
-        (float(corr.iloc[r, c]), (tickers[r], tickers[c]))
-        for r, c in zip(rows, cols)
-    ]
+    pairs_with_corr: list[tuple[float, tuple[str, str]]] = []
+    for r, c in zip(rows, cols):
+        fc = full_corr.iloc[r, c]
+        if np.isnan(fc):
+            continue
+        if not (min_correlation <= fc <= max_correlation):
+            continue
+
+        if recent_corr is not None:
+            rc = recent_corr.iloc[r, c]
+            if np.isnan(rc) or not (min_correlation <= rc <= max_correlation):
+                continue
+
+        pairs_with_corr.append((float(fc), (tickers[r], tickers[c])))
 
     pairs_with_corr.sort(key=lambda x: -x[0])
 
-    filtered = [
-        (pair, corr_val)
-        for corr_val, pair in pairs_with_corr
-        if min_correlation <= corr_val <= max_correlation
-    ]
+    result = [(pair, corr_val) for corr_val, pair in pairs_with_corr]
 
     if top_n is not None:
-        filtered = filtered[:top_n]
+        result = result[:top_n]
 
-    return dict(filtered)
+    return dict(result)
