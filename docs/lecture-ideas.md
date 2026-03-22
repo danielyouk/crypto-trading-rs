@@ -90,10 +90,17 @@
 - **Key selling point**: "Contribute to open source as part of the course" — real resume value for students.
 - **Risk mitigation**: Control scope via labels; never accept PRs to core trading logic without your review.
 
-### Course Positioning
+### Course Positioning & Marketing Message
 - **Target audience**: Engineers interested in investing (not traders learning to code)
 - **Honest framing**: "I'm not a professional quant — I build systems that keep your strategy running 24/7"
 - **Differentiation**: Other courses say "make money with this strategy". This course says "build an engineering system for any strategy".
+- **Core marketing message**:
+  > Pairs trading typically involves leverage, which means significant risk.
+  > Like any course, I cannot guarantee your returns — nor will I disclose my own.
+  > What I CAN offer: I've deeply considered many ways to NOT lose money,
+  > and automated them into the system.
+- **Why this works**: Most individual investors fear large losses more than they desire gains (loss aversion). Each pipeline stage (cointegration → hedge ratio → stop-loss) maps directly to a "don't lose money" safeguard — the lecture storyline (lines above) IS the marketing pitch.
+- **Contrast with competitors**: Other courses hide behind disclaimers at the end. This course makes risk management the HEADLINE.
 
 ---
 
