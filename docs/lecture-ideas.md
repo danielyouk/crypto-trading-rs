@@ -81,4 +81,20 @@
 
 ---
 
+## Open Source & Community
+
+### Phased Open Source Contribution Model
+- **Phase 1 (launch)**: Code public, PRs not accepted yet. `CONTRIBUTING.md` says "coming soon".
+- **Phase 2 (50+ students)**: Accept limited PRs via `good-first-issue` labels only (unit tests, docs, translations). No core logic changes.
+- **Phase 3 (community formed)**: Promote 2-3 active students to reviewer role → share review burden.
+- **Key selling point**: "Contribute to open source as part of the course" — real resume value for students.
+- **Risk mitigation**: Control scope via labels; never accept PRs to core trading logic without your review.
+
+### Course Positioning
+- **Target audience**: Engineers interested in investing (not traders learning to code)
+- **Honest framing**: "I'm not a professional quant — I build systems that keep your strategy running 24/7"
+- **Differentiation**: Other courses say "make money with this strategy". This course says "build an engineering system for any strategy".
+
+---
+
 <!-- Add new ideas under the appropriate section above, or create a new section below -->
