@@ -11,9 +11,18 @@ import time
 import warnings
 from typing import Any, Optional
 
+import os
+import tempfile
+
 import numpy as np
 import pandas as pd
 import yfinance as yf
+
+# yfinance uses a SQLite cache for timezone lookups. In restricted
+# environments the default location may be read-only → OperationalError.
+_yf_cache = os.path.join(tempfile.gettempdir(), "yf_cache")
+os.makedirs(_yf_cache, exist_ok=True)
+yf.set_tz_cache_location(_yf_cache)
 
 
 def _ensure_dataframe(x: pd.DataFrame | pd.Series) -> pd.DataFrame:

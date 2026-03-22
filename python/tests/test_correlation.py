@@ -1,10 +1,10 @@
-"""Tests for find_top_pairs."""
+"""Tests for find_candidate_pairs."""
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from pairs_eda.correlation import find_top_pairs
+from pairs_eda.correlation import find_candidate_pairs
 
 DATES = pd.bdate_range("2024-01-02", periods=120)
 
@@ -24,42 +24,86 @@ def _make_correlated_panel() -> pd.DataFrame:
     return pd.DataFrame({"A": a, "B": b, "C": c, "D": d}, index=DATES)
 
 
-class TestFindTopPairs:
-    def test_returns_pairs_sorted_by_correlation(self) -> None:
+class TestReturnsCorrelation:
+    """Default mode: use_returns=True (correlate daily % changes)."""
+
+    def test_returns_dict_sorted_descending(self) -> None:
         data = _make_correlated_panel()
-        pairs = find_top_pairs(data, top_n=6)
-        assert len(pairs) <= 6
-        assert all(isinstance(p, tuple) and len(p) == 2 for p in pairs)
-        assert pairs[0] == ("A", "B"), "A-B should be the most correlated pair"
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0)
+        assert isinstance(result, dict)
+        values = list(result.values())
+        assert values == sorted(values, reverse=True)
+
+    def test_ab_is_top_pair(self) -> None:
+        data = _make_correlated_panel()
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0)
+        first_pair = next(iter(result))
+        assert first_pair == ("A", "B")
+        assert result[first_pair] > 0.8
+
+    def test_returns_correlation_lower_than_price(self) -> None:
+        """Returns correlation should be lower than price correlation for trending data."""
+        data = _make_correlated_panel()
+        ret_corr = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0)
+        price_corr = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, use_returns=False)
+        assert ret_corr[("A", "B")] < price_corr[("A", "B")]
+
+
+class TestPriceCorrelation:
+    """Legacy mode: use_returns=False (correlate raw price levels)."""
+
+    def test_ab_highly_correlated(self) -> None:
+        data = _make_correlated_panel()
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, use_returns=False)
+        assert result[("A", "B")] > 0.99
+
+    def test_max_correlation_excludes_ab(self) -> None:
+        data = _make_correlated_panel()
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=0.98, use_returns=False)
+        assert ("A", "B") not in result
+        assert len(result) > 0
+
+
+class TestSharedBehavior:
+    """Tests that apply regardless of use_returns setting."""
 
     def test_top_n_limits_output(self) -> None:
         data = _make_correlated_panel()
-        pairs = find_top_pairs(data, top_n=2)
-        assert len(pairs) == 2
+        result = find_candidate_pairs(data, top_n=2, min_correlation=-1.0, max_correlation=1.0)
+        assert len(result) == 2
+
+    def test_top_n_none_returns_all(self) -> None:
+        data = _make_correlated_panel()
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0)
+        assert len(result) == 6  # C(4,2) = 6
 
     def test_min_correlation_filters(self) -> None:
         data = _make_correlated_panel()
-        pairs_all = find_top_pairs(data, top_n=100, min_correlation=-1.0)
-        pairs_high = find_top_pairs(data, top_n=100, min_correlation=0.9)
-        assert len(pairs_high) < len(pairs_all)
+        all_pairs = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0)
+        high_pairs = find_candidate_pairs(data, min_correlation=0.5, max_correlation=1.0)
+        assert len(high_pairs) < len(all_pairs)
+
+    def test_correlation_band_inclusive(self) -> None:
+        data = _make_correlated_panel()
+        result = find_candidate_pairs(data, min_correlation=0.0, max_correlation=0.95)
+        for pair, val in result.items():
+            assert 0.0 <= val <= 0.95, f"{pair} has r={val}, outside [0.0, 0.95]"
 
     def test_start_end_slices_data(self) -> None:
         data = _make_correlated_panel()
-        pairs_full = find_top_pairs(data, top_n=3)
-        pairs_half = find_top_pairs(data, start=DATES[60], end=DATES[-1], top_n=6, min_correlation=-1.0)
-        assert len(pairs_half) > 0
-        # Results may differ because correlation changes with window
+        result = find_candidate_pairs(data, start=DATES[60], end=DATES[-1], min_correlation=-1.0, max_correlation=1.0)
+        assert len(result) > 0
 
     def test_too_few_tickers_raises(self) -> None:
         data = pd.DataFrame({"A": [1, 2, 3]}, index=pd.bdate_range("2024-01-02", periods=3))
         with pytest.raises(ValueError, match="at least 2"):
-            find_top_pairs(data)
+            find_candidate_pairs(data)
 
     def test_no_duplicate_pairs(self) -> None:
         data = _make_correlated_panel()
-        pairs = find_top_pairs(data, top_n=100)
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0)
         pair_set = set()
-        for a, b in pairs:
-            key = tuple(sorted([a, b]))
+        for pair in result:
+            key = tuple(sorted(pair))
             assert key not in pair_set, f"Duplicate pair: {key}"
             pair_set.add(key)

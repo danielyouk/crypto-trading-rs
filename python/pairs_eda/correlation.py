@@ -9,16 +9,18 @@ import numpy as np
 import pandas as pd
 
 
-def find_top_pairs(
+def find_candidate_pairs(
     data: pd.DataFrame,
     *,
     start: Optional[datetime | pd.Timestamp] = None,
     end: Optional[datetime | pd.Timestamp] = None,
-    top_n: int = 3000,
-    min_correlation: float = 0.0,
-) -> list[tuple[str, str]]:
+    top_n: Optional[int] = None,
+    min_correlation: float = 0.40,
+    max_correlation: float = 0.85,
+    use_returns: bool = True,
+) -> dict[tuple[str, str], float]:
     """
-    Return the top-N most correlated ticker pairs from a price panel.
+    Return correlated ticker pairs filtered by correlation range.
 
     Parameters
     ----------
@@ -28,20 +30,33 @@ def find_top_pairs(
         Slice the data to ``[start:end]`` before computing correlations.
         If None, uses the full range.
     top_n
-        Number of pairs to return (sorted by correlation descending).
+        Cap on the number of pairs returned (sorted by correlation descending).
+        None means no cap — return all pairs within the correlation range.
     min_correlation
-        Only include pairs with correlation >= this threshold.
+        Lower bound (inclusive). Pairs below this are excluded.
+    max_correlation
+        Upper bound (inclusive). Pairs above this are excluded.
+        Useful for filtering out structurally identical pairs (e.g. GOOG/GOOGL).
+    use_returns
+        If True (default), compute correlation on daily returns (pct_change)
+        instead of raw prices. This removes shared market trends that inflate
+        price-level correlations over long periods.
 
     Returns
     -------
-    List of ``(ticker_a, ticker_b)`` tuples, sorted by correlation descending.
+    ``{(ticker_a, ticker_b): correlation_value, ...}`` ordered by
+    correlation descending. The dict preserves insertion order (Python 3.7+).
     """
     sliced = data.loc[start:end] if (start is not None or end is not None) else data
 
     if sliced.shape[1] < 2:
         raise ValueError(f"Need at least 2 tickers, got {sliced.shape[1]}")
 
-    corr = sliced.corr()
+    # pct_change() makes row 0 all-NaN; .corr() handles NaN via pairwise
+    # deletion automatically — no need for dropna() which would discard
+    # entire rows when ANY ticker has a gap.
+    series = sliced.pct_change() if use_returns else sliced
+    corr = series.corr()
     n = corr.shape[0]
 
     # Upper triangle mask (excludes diagonal) → avoids duplicate pairs and self-correlation.
@@ -50,15 +65,19 @@ def find_top_pairs(
     tickers = corr.columns.tolist()
 
     pairs_with_corr = [
-        (corr.iloc[r, c], (tickers[r], tickers[c]))
+        (float(corr.iloc[r, c]), (tickers[r], tickers[c]))
         for r, c in zip(rows, cols)
     ]
 
     pairs_with_corr.sort(key=lambda x: -x[0])
 
-    result = [
-        pair for corr_val, pair in pairs_with_corr
-        if corr_val >= min_correlation
+    filtered = [
+        (pair, corr_val)
+        for corr_val, pair in pairs_with_corr
+        if min_correlation <= corr_val <= max_correlation
     ]
 
-    return result[:top_n]
+    if top_n is not None:
+        filtered = filtered[:top_n]
+
+    return dict(filtered)

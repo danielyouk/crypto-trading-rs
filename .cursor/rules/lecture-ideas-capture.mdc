@@ -1,0 +1,35 @@
+---
+description: Capture noteworthy discussion points as lecture material. When a conversation produces a teaching-worthy insight, example, or "aha moment", append it to docs/lecture-ideas.md.
+globs: 
+alwaysApply: true
+---
+
+# Lecture Ideas Capture
+
+## When to capture
+
+Add an entry to `docs/lecture-ideas.md` when ANY of the following occurs during a conversation:
+
+1. **Visual "aha" moment** — a chart or data point that makes a concept click (e.g. FRT/KIM 2008 divergence)
+2. **Counter-intuitive result** — something that surprises the user or challenges assumptions (e.g. returns correlation being much lower than price correlation)
+3. **Design decision with clear rationale** — a pipeline choice where the "why" is worth teaching (e.g. why coarse filter before cointegration)
+4. **Common misconception** — something a student would likely get wrong (e.g. "0.5 correlation means weak relationship")
+5. **Risk scenario** — a concrete example of what can go wrong and how to mitigate it
+6. **User explicitly says** something like "강의에서 설명하기 좋은 포인트" or "수강생에게 보여주기 좋겠다"
+
+## How to capture
+
+- Append to the appropriate section in `docs/lecture-ideas.md`, or create a new section
+- Each entry should include:
+  - **Visual**: what chart/data to show
+  - **Key message**: one sentence takeaway
+  - **Lecture storyline**: step-by-step flow if applicable
+  - **Anticipated student questions**: what students might ask
+- **Write in English** — consistent with project documentation standards
+- Keep entries concise — these are raw material, not finished slides
+
+## Do NOT capture
+
+- Routine debugging or code fixes
+- Implementation details with no teaching value
+- Repetitive points already covered in existing entries

@@ -1,0 +1,76 @@
+---
+description: Respond in both English and Korean when the user writes in Korean. Use polite Korean (존댓말).
+alwaysApply: true
+---
+
+# Bilingual Response (English + Korean)
+
+When the user writes in **Korean**, respond in **both English and Korean**.
+
+## Rules
+
+1. **User writes in Korean** → Respond in English first, then Korean translation
+2. **User writes in English** → Respond in English only
+3. **Code, file paths, and terminal commands** stay as-is (no translation needed)
+
+## Korean Tone: Polite (존댓말)
+
+When responding in Korean, **always use polite speech (존댓말/해요체 or 합쇼체)**.
+
+- Use `-습니다`, `-세요`, `-해요`, `-입니다` endings
+- Do NOT use casual speech (반말): `-해`, `-야`, `-거야`, `-임`
+- Formal but natural — not overly stiff (극존칭 불필요)
+
+| Bad (반말) | Good (존댓말) |
+|------------|---------------|
+| `버그 찾았어` | `버그를 찾았습니다` |
+| `이렇게 하면 돼` | `이렇게 하시면 됩니다` |
+| `확인해 봐` | `확인해 보세요` |
+| `수정했어` | `수정했습니다` |
+
+## Response Format
+
+When the user's message is in Korean, structure the response like this:
+
+```
+[English explanation]
+
+---
+
+[Same content in Korean / 같은 내용을 한국어로]
+```
+
+## Examples
+
+### User asks in Korean
+
+**User:** 이 함수에서 버그가 있는 것 같아요. 확인해주세요.
+
+**Response:**
+
+I found a bug in the `create_repository` function. The return type should be `dict` instead of `list`. Here's the fix:
+
+```python
+return repository_data  # Changed from list to dict
+```
+
+---
+
+`create_repository` 함수에서 버그를 찾았습니다. 반환 타입이 `list`가 아니라 `dict`여야 합니다. 수정 내용은 다음과 같습니다:
+
+```python
+return repository_data  # list에서 dict로 변경
+```
+
+### User asks in English
+
+**User:** Can you check this function for bugs?
+
+**Response:** (English only, no Korean needed)
+
+## Important
+
+- The Korean section should be a natural translation, not a word-for-word mirror
+- Technical terms (function names, types, etc.) can stay in English within the Korean section
+- Keep both sections concise — don't over-explain in either language
+- **Always use polite Korean (존댓말)** — never casual speech

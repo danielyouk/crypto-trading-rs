@@ -1,0 +1,22 @@
+---
+description: How to rename Python functions/classes used in Jupyter notebooks — avoids autoreload failures
+globs: python/**/*.py
+alwaysApply: false
+---
+
+# Python Rename Strategy (autoreload-safe)
+
+Jupyter `%autoreload` cannot handle symbol renames — it tries to import the new name from a stale in-memory module and fails with `ImportError`.
+
+## When renaming a function, class, or variable exported from a module:
+
+1. **Create the new name first** — define the new function (or assign `new_name = old_name`) so both names coexist.
+2. **Update all call sites** — notebook cells, tests, `__init__.py` exports.
+3. **Delete the old name** only after all references are updated.
+4. **Clear `__pycache__`** — run `find python/ -name __pycache__ -exec rm -rf {} +`
+5. If the notebook still fails, a **kernel restart** is required (rename = symbol identity change).
+
+## Do NOT
+
+- Rename in-place and update references simultaneously — autoreload will break mid-session.
+- Rely on autoreload to pick up renamed symbols — it only tracks code edits within existing symbols.

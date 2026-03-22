@@ -1,0 +1,40 @@
+---
+description: Quality guardrails for API README documentation
+globs: "APIs/*/README.md"
+alwaysApply: false
+---
+
+# API README Quality Guardrails
+
+## Content Rules
+
+- **English only** — no Korean, Chinese, Japanese, or other non-English text
+- **No company names** — no "Mercor", "Turing", or other company references (open source ready)
+- **No internal jargon** — explain concepts clearly for external contributors
+
+## Test Table Rules
+
+- **Exceptions only** — NEVER list PASS tests in any README table. Only SKIP and FAIL appear.
+- **Simulation Limitations table** — `| Limitation | Skipped Tests |` — one row per limitation, accepted simplifications, no TODO needed
+- **Cross-Function Needs Resolution table** — `| Test | Functions Involved | Failing Function | Resolution |` — only populated when failures exist; empty/dummy when all pass
+- **Run tests before writing** — always run `pytest -v` to get live status, never guess
+
+## Required Sections
+
+Every API README must include:
+1. Overview and summary tables
+2. Database structure
+3. Module/model architecture
+4. Unit Tests section (purpose + categories)
+5. Scenario Tests section (purpose + 3 categories)
+6. Simulation Limitations (exceptions-only: limitation → skipped tests)
+7. Cross-Function Tests — Needs Resolution (exceptions-only: failures only, dummy when clean)
+8. Validation Infrastructure
+9. How to Run Tests (with actual commands)
+
+## Scalability
+
+- If README exceeds ~300 lines, shorten the API overview, not the testing section
+- Simulation Limitations: one row per limitation (not per test), skipped tests comma-separated
+- Cross-Function Needs Resolution: empty table when all tests pass
+- PASS tests are verified by running `pytest -v`, not by documenting them
