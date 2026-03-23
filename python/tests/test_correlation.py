@@ -186,3 +186,68 @@ class TestRecentCorrelation:
         data = _make_correlated_panel()
         result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, min_overlap_years=0, recent_years=0)
         assert len(result) == 6
+
+
+class TestInputValidation:
+    """Fail-fast on invalid parameters."""
+
+    def test_min_gt_max_raises(self) -> None:
+        data = _make_correlated_panel()
+        with pytest.raises(ValueError, match="min_correlation.*>.*max_correlation"):
+            find_candidate_pairs(data, min_correlation=0.9, max_correlation=0.4, **_NO_OVERLAP)
+
+    def test_min_correlation_out_of_range(self) -> None:
+        data = _make_correlated_panel()
+        with pytest.raises(ValueError, match="min_correlation.*outside"):
+            find_candidate_pairs(data, min_correlation=-1.5, max_correlation=1.0, **_NO_OVERLAP)
+
+    def test_max_correlation_out_of_range(self) -> None:
+        data = _make_correlated_panel()
+        with pytest.raises(ValueError, match="max_correlation.*outside"):
+            find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.5, **_NO_OVERLAP)
+
+    def test_negative_overlap_years_raises(self) -> None:
+        data = _make_correlated_panel()
+        with pytest.raises(ValueError, match="min_overlap_years"):
+            find_candidate_pairs(data, min_overlap_years=-1.0, recent_years=0)
+
+    def test_negative_recent_years_raises(self) -> None:
+        data = _make_correlated_panel()
+        with pytest.raises(ValueError, match="recent_years"):
+            find_candidate_pairs(data, min_overlap_years=0, recent_years=-1.0)
+
+    def test_negative_top_n_raises(self) -> None:
+        data = _make_correlated_panel()
+        with pytest.raises(ValueError, match="top_n"):
+            find_candidate_pairs(data, top_n=-1, **_NO_OVERLAP)
+
+
+class TestEdgeCases:
+    """Missing data, unsorted index, and other edge cases."""
+
+    def test_nan_gaps_do_not_create_false_returns(self) -> None:
+        """Gaps in price data should remain NaN in returns, not become 0."""
+        dates = pd.bdate_range("2020-01-02", periods=100)
+        rng = np.random.default_rng(55)
+        a = 100 + np.cumsum(rng.normal(0.1, 1, 100))
+        b = a * 1.2 + rng.normal(0, 0.5, 100)
+        b[30:40] = np.nan  # gap in B
+
+        data = pd.DataFrame({"A": a, "B": b}, index=dates)
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, **_NO_OVERLAP)
+        assert ("A", "B") in result
+        # With NaN gap, correlation uses fewer observations but should still work
+        assert result[("A", "B")] > 0.5
+
+    def test_unsorted_index_still_correct(self) -> None:
+        """Shuffled index should produce same results as sorted."""
+        data = _make_correlated_panel()
+        shuffled = data.sample(frac=1, random_state=42)  # shuffle rows
+        assert not shuffled.index.is_monotonic_increasing
+
+        sorted_result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, **_NO_OVERLAP)
+        shuffled_result = find_candidate_pairs(shuffled, min_correlation=-1.0, max_correlation=1.0, **_NO_OVERLAP)
+
+        assert sorted_result.keys() == shuffled_result.keys()
+        for pair in sorted_result:
+            assert abs(sorted_result[pair] - shuffled_result[pair]) < 1e-10

@@ -61,17 +61,35 @@ def find_candidate_pairs(
     ``{(ticker_a, ticker_b): correlation_value, ...}`` ordered by
     full-period correlation descending. The dict preserves insertion order.
     """
+    # ── Input validation ──
+    if min_correlation > max_correlation:
+        raise ValueError(
+            f"min_correlation ({min_correlation}) > max_correlation ({max_correlation})"
+        )
+    if not (-1.0 <= min_correlation <= 1.0):
+        raise ValueError(f"min_correlation ({min_correlation}) outside [-1, 1]")
+    if not (-1.0 <= max_correlation <= 1.0):
+        raise ValueError(f"max_correlation ({max_correlation}) outside [-1, 1]")
+    if min_overlap_years < 0:
+        raise ValueError(f"min_overlap_years ({min_overlap_years}) must be >= 0")
+    if recent_years < 0:
+        raise ValueError(f"recent_years ({recent_years}) must be >= 0")
+    if top_n is not None and top_n < 0:
+        raise ValueError(f"top_n ({top_n}) must be >= 0 or None")
+
     sliced = data.loc[start:end] if (start is not None or end is not None) else data
+    sliced = sliced.sort_index()
 
     if sliced.shape[1] < 2:
         raise ValueError(f"Need at least 2 tickers, got {sliced.shape[1]}")
 
     min_periods = int(min_overlap_years * 252)
 
+    # pct_change() on pandas >=3.0 never forward-fills gaps (fill_method removed).
+    # NaN gaps stay NaN in returns; .corr() handles them via pairwise deletion.
     series = sliced.pct_change() if use_returns else sliced
     full_corr = series.corr(min_periods=min_periods)
 
-    # Recent correlation matrix (if recency check enabled)
     if recent_years > 0:
         recent_td = int(recent_years * 252)
         recent_series = series.iloc[-recent_td:]
