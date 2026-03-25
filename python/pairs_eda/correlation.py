@@ -9,6 +9,72 @@ import numpy as np
 import pandas as pd
 
 
+def compute_pairwise_return_correlations(
+    prices: pd.DataFrame,
+    *,
+    end: Optional[datetime | pd.Timestamp] = None,
+) -> np.ndarray:
+    """All unique pairwise returns correlations from a price panel.
+
+    Flow:
+        prices[:end]        (dates x N tickers)
+         -> pct_change()    (dates x N, first row = NaN, dropped)
+         -> .corr()         (N x N symmetric matrix)
+         -> upper triangle  (N*(N-1)/2 unique pairs, flat 1-D array)
+
+    What r means (daily returns correlation):
+        r ~ 0.10:  Nearly independent daily moves (e.g. tech vs. utilities).
+        r ~ 0.30:  Median for S&P 500 pairs over 26 years. Weak co-movement.
+        r ~ 0.50:  Top ~5% of S&P 500 pairs. Noticeable daily co-movement.
+        r ~ 0.70:  Very strong — stocks move together most days.
+        r ~ 0.90+: Near-identical instruments (share classes, tracking ETFs).
+
+    This project uses r in [0.40, 0.85] as a coarse pre-filter:
+        0.40: captures meaningful co-movement above the S&P 500 median.
+        0.85: excludes structurally identical pairs (e.g. BRK.A/BRK.B).
+        The cointegration test (ADF) narrows candidates further.
+
+    Note on methodology:
+        Returns correlation is NOT the only (or classic) pair selection
+        method. Gatev et al. (2006) used normalized price distance, not
+        correlation. Correlation is a fast pre-filter; cointegration is the
+        theoretically grounded selection criterion for mean-reversion.
+
+    References:
+        Gatev, Goetzmann, Rouwenhorst (2006) "Pairs Trading: Performance
+        of a Relative-Value Arbitrage Rule", Review of Financial Studies.
+        https://doi.org/10.1093/rfs/hhj020
+        (Uses price distance, not correlation. ~11% annualized excess return.)
+
+        Vidyamurthy (2004) "Pairs Trading: Quantitative Methods and
+        Analysis", Wiley Finance. (Cointegration-based approach.)
+
+    Args:
+        prices: DataFrame shaped (dates x tickers) with Adj Close prices.
+        end: Slice data to [:end] before computing. None = use full range.
+
+    Returns:
+        1-D numpy array of all unique pairwise return correlations.
+        Length = N*(N-1)/2 where N = number of tickers.
+
+    Performance notes:
+        PERF-001: .dropna() creates one extra DataFrame copy.
+                  Negligible for S&P 500 sizes (~500 tickers).
+
+    Example:
+        >>> all_corr = compute_pairwise_return_correlations(data_1d, end=p1_end)
+        >>> np.nanmedian(all_corr)   # ~0.31 for S&P 500 over 26 years
+        >>> np.nanpercentile(all_corr, 95)  # ~0.50
+    """
+    # PERF-001: .dropna() creates a copy; avoids NaN row 0 inflating corr() output
+    returns = prices.loc[:end].pct_change().dropna()
+    correlation_matrix = returns.corr().values
+
+    # Upper triangle only: (A,B) without (B,A) or diagonal (self-corr = 1.0)
+    upper_triangle_indices = np.triu_indices_from(correlation_matrix, k=1)
+    return correlation_matrix[upper_triangle_indices]
+
+
 def find_candidate_pairs(
     data: pd.DataFrame,
     *,
