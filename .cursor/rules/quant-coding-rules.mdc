@@ -1,0 +1,47 @@
+---
+description: Must-follow constraints for all /quant-coding generated code. These are hard rules, not suggestions.
+globs: python/pairs_eda/**,python/tests/**
+alwaysApply: false
+---
+
+# Quant Coding — Hard Rules
+
+> These constraints apply to ALL code produced by `/quant-coding`.
+> Violating any of these is a bug.
+
+## Language & Framework
+
+1. **Python only** unless the user explicitly requests Rust.
+2. **pandas >= 3.0** — `pct_change()` has no `fill_method` parameter.
+3. **Pydantic v2** for input/output models (`BaseModel`, `Field`, `field_validator`).
+4. **Pyright-compatible type hints** on every function signature.
+
+## Data Rules
+
+5. **Returns correlation** (`.pct_change().corr()`), never price-level correlation.
+6. **Adj Close** for all price data, all phases, all intervals.
+7. **`sort_index()`** before any time-series operation (rolling, iloc, loc slicing).
+8. **No lookahead bias** — never use future data for current-period decisions.
+9. **Explicit NaN handling** — never silently drop or fill NaN without documenting why.
+
+## Code Quality
+
+10. **No Python loops over DataFrame rows** — use vectorized Pandas/NumPy operations.
+11. **Input validation via Pydantic** — use `Field(ge=..., le=...)` and `field_validator` over manual `if/raise`.
+12. **Google-style docstrings** with complexity analysis and failure modes.
+13. **No redundant comments** — only explain non-obvious intent, trade-offs, or constraints.
+
+## Output Requirements
+
+14. **Pydantic models** for both input parameters and return values.
+15. **At least 2 test suggestions** — one happy path, one edge case.
+16. **Synthesis notes** — explain what came from which agent draft and why.
+
+## Design Decisions (DO NOT VIOLATE)
+
+Refer to `.cursor/rules/pairs-trading-pipeline.mdc` for the full table.
+Key settled decisions:
+- Correlation band [0.40, 0.85]
+- Pair-level overlap (min 5yr, not per-ticker cutoff)
+- Dual correlation condition (full + 3yr recent)
+- No explicit margin buffer

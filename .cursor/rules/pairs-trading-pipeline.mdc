@@ -1,48 +1,35 @@
 ---
-description: Living document — pairs trading pipeline stages, decisions, and pending tasks. Update this file whenever a new decision is made or a task is deferred.
+description: Design decisions and constraints for the pairs trading pipeline. Consult before modifying correlation logic, phase design, or data handling.
 globs: reference/python_pairstrading/**,python/pairs_eda/**,python/tests/**
 alwaysApply: false
 ---
 
-# Pairs Trading Pipeline
+# Pairs Trading Pipeline — Design Decisions
 
-> **This is a living document.** When a design decision is made, a task is deferred,
-> or a new idea emerges during development, ADD it here under the appropriate section.
-> Move items from Pending to Completed as they are implemented.
+> **Agent constraint:** These decisions have been deliberately made.
+> Do NOT change or contradict them without explicit user approval.
 
-## Completed
+## Backlog & TODO Tracking
 
-- [x] Data acquisition: S&P 500 fetch (Wikipedia + Gemini fallback)
-- [x] yfinance download with retry (only failed tickers re-downloaded)
-- [x] Pair-level overlap filter: min_overlap_years=5 (replaces per-ticker MIN_HISTORY_START cutoff)
-- [x] Correlation screening: returns correlation (pct_change), band [0.40, 0.85], dual condition (full + 3yr recency)
-- [x] Phase design: P1 = daily (1990→p1_end), P2a = 1h (730d), P2b = 5m (60d)
-- [x] find_candidate_pairs returns dict {pair: corr_value}
-- [x] Histogram: full returns correlation distribution with candidate cutoff line
+Project backlog (completed milestones, in-progress work, pending tasks) lives in
+**`docs/pipeline-backlog.md`**. Consult it when you need context on what has been
+done, what is in progress, or what is planned next. Update it when a task is
+completed or a new task is identified.
 
-## In Progress
+## Agent Infrastructure
 
-- [ ] Parameter optimization: z-score thresholds and rolling window per pair (notebook cells 17-31)
+The project uses a **command → agent → skill → rule** chain:
 
-## Pending
+| Layer | Location | Contains |
+|-------|----------|----------|
+| Commands | `.cursor/commands/quant-*.md` | Entry points: `/quant-coding`, `/quant-brainstorm`, `/quant-refactor` |
+| Agents | `.cursor/agents/quant-*.md` | Task instructions: `perf-optimizer`, `risk-manager`, `synthesizer`, `architect` |
+| Skills | `.cursor/skills/pairs-trading/` | Tools, templates, recipes (`SKILL.md` + `references/`) |
+| Rules | `.cursor/rules/quant-*-rules.mdc` | Hard constraints (this file + `quant-coding-rules.mdc`) |
 
-Items below should be implemented when reaching the corresponding stage.
-
-### After Optimization
-- [ ] **Non-overlapping pair selection**: each ticker in at most 1 (or K) active pair(s). Use graph maximum matching weighted by expected return. Prevents concentration risk. Ref: Gatev et al. (2006).
-
-### Phase 2
-- [ ] **Phase 2a reassurance on 1h data** (730 days) — validate strategy across recent market events.
-- [ ] **Phase 2b reassurance on 5m data** (60 days) — execution-level validation with the selected non-overlapping pairs.
-
-### Future Enhancements
-- [ ] **LLM-assisted strategy design**: feed pair statistics (spread distribution, half-life, volatility regime) to LLM. Build as Cursor skill or agent command.
-- [ ] **Regime-adaptive parameters**: different z-score / window per volatility regime (low vol vs high vol).
-- [ ] **Cointegration test (ADF on spread)**: the real pair selection criterion. Returns correlation is only a coarse pre-filter; cointegration validates that the spread is mean-reverting. Expected to reduce ~4K candidates to ~200-500.
+Commands orchestrate agents. Agents use skill tools. Rules constrain everything.
 
 ## Design Decisions
-
-Record the *why* behind key choices so future sessions have context.
 
 | Decision | Rationale |
 |----------|-----------|

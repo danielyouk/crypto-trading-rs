@@ -1,0 +1,72 @@
+---
+description: Execution guardrails for the Quant Development command → agent → skill chain.
+globs: *
+alwaysApply: true
+---
+
+# Quant Development — Execution Guardrails
+
+## Architecture: command → agent → skill → rule
+
+```
+User triggers /quant-*
+    ↓
+Command (.cursor/commands/quant-*.md)        ← WHAT to do
+    ↓
+Agent(s) (.cursor/agents/quant-*.md)         ← HOW to do it (task instructions)
+    ↓
+Skill (.cursor/skills/pairs-trading/SKILL.md) ← WITH WHAT (tools, templates, recipes)
+    ↓
+Rules (.cursor/rules/quant-*-rules.mdc)       ← CONSTRAINTS (must-follow)
+```
+
+## Layer Responsibilities
+
+| Layer | Contains | Example |
+|-------|----------|---------|
+| **Command** | Entry point, orchestration flow | "Launch A+B in parallel, then C" |
+| **Agent** | Persona, focus area, output format | "You are a paranoid risk manager" |
+| **Skill** | Concrete code templates, tools, recipes | Pydantic I/O template, vectorized correlation pattern |
+| **Rule** | Hard constraints, design decisions | "Never use price correlation", "pandas >= 3.0" |
+
+## /quant-coding Pipeline (Parallel → Sequential)
+
+```
+Step 1: Context gathering (parallel reads)
+Step 2: Agent A + Agent B (PARALLEL — independent, same input)
+Step 3: Agent C (SEQUENTIAL — waits for both A and B)
+Step 4: Documentation update
+```
+
+| Step | Agent | Model | Depends On | Output |
+|------|-------|-------|------------|--------|
+| 2a | `quant-perf-optimizer` | Claude latest | context only | `<draft_a>` |
+| 2b | `quant-risk-manager` | composer-2 | context only | `<draft_b>` |
+| 3 | `quant-synthesizer` | GPT Codex latest | `<draft_a>` + `<draft_b>` | Final code with Pydantic I/O |
+
+## /quant-brainstorm Pipeline
+
+| Step | Agent | Model | Output |
+|------|-------|-------|--------|
+| 1 | `quant-architect` | gemini-3.1-pro | Conceptual analysis + educational translation |
+
+## /quant-refactor Pipeline
+
+| Step | Agent | Model | Rule | Output |
+|------|-------|-------|------|--------|
+| 1 | `quant-synthesizer` (refactor mode) | GPT Codex latest | `quant-refactor-rules.mdc` | Readable, hover-friendly, PERF-tagged code |
+
+**Rule priority:** `quant-refactor-rules.mdc` > `quant-coding-rules.mdc` when they conflict.
+Key: readability > performance, with every trade-off tagged `PERF-NNN` for future optimization.
+
+## Execution Rules
+
+1. **Always read the full chain** — command → agent → skill → rule. Do not skip layers.
+2. **Parallel execution for `/quant-coding`** — Agent A and Agent B MUST be launched simultaneously (single tool call batch with two Task invocations). Agent C runs only after both complete.
+3. **All three outputs required** — `<draft_a>`, `<draft_b>`, and final synthesized code must all appear. Do not skip any agent.
+4. **Role separation** — coding questions during `/quant-brainstorm` → suggest `/quant-coding`. Architecture questions during `/quant-coding` → answer briefly, suggest `/quant-brainstorm`.
+5. **Documentation discipline**:
+   - Design decisions → `.cursor/rules/pairs-trading-pipeline.mdc`
+   - Teaching insights → `docs/lecture-ideas.md`
+   - Task tracking → `docs/pipeline-backlog.md`
+6. **Design decision protection** — NEVER contradict `.cursor/rules/pairs-trading-pipeline.mdc` without explicit user approval.
