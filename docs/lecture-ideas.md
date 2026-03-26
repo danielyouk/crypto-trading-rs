@@ -111,6 +111,102 @@
 - **Solution 2: Liquidity Filtering**: Only trade highly liquid stocks (e.g., S&P 500 constituents with >$10M daily volume). Wide bid-ask spreads mathematically destroy the edge of pairs trading.
 - **Solution 3: Slippage Buffer in Signal**: If your entry trigger is Z-score > 2.0, calculate the expected slippage (Bid-Ask spread of both stocks). Only enter if the expected *post-slippage* Z-score is still > 1.8. (Note: The Phase 2b 5-minute data validation step in the pipeline specifically tests for this intraday slippage impact).
 
+### Earnings Blackout Window — Avoid Known, Scheduled Risk
+
+**Core idea**: Pairs trading is built on the assumption that the spread is stationary. Earnings announcements
+break this assumption *temporarily but predictably*. Unlike the stop-loss (which reacts after the fact),
+an earnings blackout avoids the loss proactively.
+
+**Why the pair breaks around earnings**:
+- Ticker A and B report on different days (typically days apart)
+- On A's report day: +15% gap → z-score spikes → looks like a strong entry signal
+- But this is NOT mean-reversion — A has genuinely re-rated at a new fundamental level
+- The spread does not revert; the stop-loss fires after a 5% loss anyway
+- **Lesson**: If you can predict the risk, avoid it — don't just react to it
+
+**Proposed rule**:
+```
+blackout_start = min(earnings_A, earnings_B) - 2 days
+blackout_end   = max(earnings_A, earnings_B) + 1 day
+→ close any open position for this pair before blackout_start
+→ skip all new entry signals within the window
+→ apply cooldown = window bars after blackout_end (same logic as post-stop-loss)
+```
+Why 2 days before: implied volatility (IV) spikes in the lead-up; market makers widen spreads; slippage increases.
+
+**How far apart are earnings dates within a pair?**
+Same-sector pairs (which is what our correlation filter selects) report almost simultaneously:
+
+| Pair | Sector | Closest quarterly gap | Example |
+|---|---|---|---|
+| MSFT / GOOGL | Tech (same Dec FY) | 0 days (same day) | MSFT 2026-01-28, GOOGL 2026-02-04 |
+| JPM / BAC | Banks | 1 day | JPM 2026-01-13, BAC 2026-01-14 |
+| MSFT / AAPL | Tech (AAPL Sep FY) | 1 day | MSFT 2026-01-28, AAPL 2026-01-29 |
+| XOM / CVX | Energy | 0 days | Both 2026-01-30 |
+| WMT / COST | Retail (diff FY) | 14 days | WMT 2026-02-19, COST 2026-03-05 |
+| NKE / PVH | Apparel (NKE May FY) | 11 days | NKE 2025-12-18, PVH 2025-12-03 |
+
+**Implication**: For high-correlation pairs (same sector, similar business), the typical quarterly gap is
+0–2 days → blackout window is only about 5 days per quarter → **~20 trading days per year (~8%)**.
+Edge cases with unusual fiscal year ends (WMT/COST, NKE/PVH, 11–14 day gaps) are likely already
+filtered out by the correlation filter — different reporting rhythms produce weaker return correlations.
+
+**Data sources**:
+
+| Source | Cost | Coverage | Use case |
+|---|---|---|---|
+| `yfinance.Ticker.calendar` | Free | Next date only | Live trading |
+| `yfinance.Ticker.earnings_dates` | Free | ~8 quarters back | Phase 2a/2b backtesting |
+| Polygon.io / Nasdaq Data Link | ~$30/mo | Full history | Production-grade backtesting |
+| SEC EDGAR (10-Q/10-K) | Free | Full history | Requires parsing |
+
+**Relationship with stop-loss**:
+- Earnings blackout = proactive (close before the event)
+- Stop-loss = reactive (close after loss threshold is breached)
+- Priority in execution: check blackout first → check stop-loss daily → after blackout ends, apply cooldown
+
+**Implementation plan (TODO — next session)**:
+
+Fetch earnings dates **once per pair** via `yfinance` REST (or LLM-assisted lookup as fallback),
+cache the result so the live engine doesn't call the API on every bar.
+
+```
+Proposed flow:
+
+  pair_defined (ticker_a, ticker_b)
+       │
+       ▼  fetch ONCE at pair registration time
+  earnings_cache[(a, b)] = {
+      "fetched_at": today,
+      "dates_a": [...],   # next 4 quarters for ticker_a
+      "dates_b": [...],   # next 4 quarters for ticker_b
+  }
+       │
+       ▼  query cheaply on every bar (no API call)
+  is_blacked_out(a, b, today) → bool
+       │
+       ▼  refresh only when stale
+  if today > fetched_at + 90 days:
+      re-fetch  (one quarter has passed, new dates available)
+```
+
+Why cache:
+- yfinance `earnings_dates` is a network call; calling it on every signal check adds latency and may be rate-limited
+- Earnings dates don't change — once fetched they're valid for ~90 days (one quarter)
+- A simple JSON file or SQLite table per pair is sufficient for persistence across restarts
+
+LLM fallback (if yfinance returns no data):
+- Prompt: "What are the next 4 quarterly earnings dates for {ticker}? Return as JSON list of YYYY-MM-DD."
+- Use for tickers with incomplete yfinance coverage (small-cap additions, recent IPOs)
+
+Persistence across bot restarts:
+- Store cache in `data/earnings_cache.json`
+- Load on startup; refresh any entry older than 90 days before the trading session begins
+
+**Status**: Pending implementation — design locked, implement next session.
+
+---
+
 ### Operational Risk: What Happens When a Ticker Gets Delisted Mid-Trade?
 - **Scenario**: Bot is long A / short B. Today's pipeline run drops ticker A (delisted, no data, removed from S&P 500). Position is still open.
 - **Real-world example**: SNDK (SanDisk) acquired by WDC in 2016 — ticker ceased to exist.
