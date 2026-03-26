@@ -361,10 +361,11 @@ def find_cointegrated_pairs(
         return []
 
     from joblib import Parallel, delayed
+    from tqdm import tqdm
 
     results = Parallel(n_jobs=n_jobs)(
         delayed(_test_one_pair)(a, b, prices, significance)
-        for a, b in pairs
+        for a, b in tqdm(pairs, desc="Cointegration test")
     )
 
     passed = [r for r in results if r is not None]
