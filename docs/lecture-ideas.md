@@ -17,13 +17,13 @@
 ## Course Structure & Strategy
 
 ### Course Lineup (Independent, Self-Contained)
-- **Course 1**: Python stock pairs trading (S&P 500) — nearly ready to launch
-- **Course 2**: Python FX risk management for non-USD traders (2-3 hours) — FX-adjusted returns, IB multi-currency API, automated event-driven/daily hedge rebalancing. Prerequisite: Course 1.
-- **Course 3**: Rust grid trading bot (crypto) — Rust entry point. Ownership, types, async through a simple strategy. One exchange, one asset, clear state machine.
-- **Course 4**: Rust funding rate arbitrage (crypto) — the serious Rust project. Multi-exchange delta-neutral hedging (spot + futures), websocket streaming, state persistence, error recovery. Assumes Rust basics from Course 3.
-- **Course 5**: Rust cross-exchange arbitrage (crypto) — where Rust's speed genuinely matters. Concurrent connections, latency optimization.
-- **Course 6 (Future)**: Python/Rust FX & Commodities (Macro Quant) — Cross-asset statistical arbitrage (e.g., CAD vs. Crude Oil), carry trades, and macro trend following.
-- Platform: Udemy — each course ~10 hours max, independently complete (except Course 2 which extends Course 1)
+- **Course 1**: Python stock pairs trading (S&P 500) — includes a dedicated module on FX risk management (Natural Hedge via Margin Loan) for non-USD investors.
+- **Course 2**: Python FX & Commodities Trading (Macro Quant) — Traditional quant methods applied to currencies and commodities (Carry trades, Cross-asset statistical arbitrage like CAD vs. Crude Oil).
+- **Course 3**: Python AI Quant Assistant (RAG & Multimodal) — Post-market reverse engineering. Building a RAG system with quant textbooks, codebase, and charts to automatically analyze daily trading anomalies and propose code improvements.
+- **Course 4**: Rust grid trading bot (crypto) — Rust entry point. Ownership, types, async through a simple strategy. One exchange, one asset, clear state machine.
+- **Course 5**: Rust funding rate arbitrage (crypto) — the serious Rust project. Multi-exchange delta-neutral hedging (spot + futures), websocket streaming, state persistence, error recovery.
+- **Course 6**: Rust cross-exchange arbitrage (crypto) — where Rust's speed genuinely matters. Concurrent connections, latency optimization.
+- Platform: Udemy — each course ~10 hours max, independently complete.
 
 ### Rust Course Philosophy (Courses 3-5) — Honest Framing
 **What the Rust courses are NOT:**
@@ -82,6 +82,18 @@
 ### Why Coarse Filter → Cointegration → Half-life
 - **Key message**: Testing all 60,726 pairs for cointegration is too expensive. Returns correlation is a "coarse sieve" — confirms minimum co-movement, then cointegration does the real validation.
 - **Numbers**: 60,726 → ~12,000 (corr filter) → ~200-500 (cointegration) → final pairs
+
+### The Computational Bottleneck (Backtesting 26 Years of Data)
+- **The Problem**: When moving from a 2-year backtest to a 26-year backtest (1990s to present), the grid search for optimal parameters (window size, z-score threshold) across hundreds of pairs becomes computationally explosive. A process that took 40 minutes can take over 10 hours.
+- **Why this happens**: `joblib.Parallel` is running a full historical backtest loop for every combination of parameters for every pair. Python's overhead in Pandas row-by-row operations compounds over 26 years of daily data.
+- **The Solution (Vectorized Backtesting)**: We replace the slow Python loops (e.g., `iterrows`, `apply`) with pure NumPy array operations and Pandas' C-optimized `.rolling()` methods.
+- **Lecture Storyline**:
+  1. Show the `joblib.Parallel` code block and explain why it's a bottleneck (Python loop overhead).
+  2. Mark it as `[DEPRECATED]` in the notebook to show the evolution of the codebase.
+  3. Introduce the `vectorized_backtest.py` module.
+  4. Explain how we vectorized the rolling statistics (`df.rolling().mean()`), the Z-score calculation (`np.divide`), and the returns calculation (`shift(1)` to prevent look-ahead bias).
+  5. Show the performance difference: what took hours now takes seconds.
+  6. **Key Takeaway**: "Python is slow, but NumPy is C." Vectorization is the most important skill for a Python quant.
 
 ### Screener vs. State Machine: Watchlist vs. Triggered Entry
 - **The Problem**: If you run the Jupyter notebook daily and trade the top 5 pairs, your portfolio will churn constantly. A pair that was #1 yesterday might be #5 today just because its spread narrowed slightly. High turnover destroys accounts via transaction costs and slippage.
@@ -218,7 +230,7 @@ Persistence across bot restarts:
 
 ---
 
-## FX Risk Management for Non-USD Traders (Course 2)
+## FX Risk Management for Non-USD Traders (Module in Course 1)
 
 ### The Core Problem
 - Non-USD traders (EUR, KRW, etc.) face FX risk even with a profitable USD strategy
@@ -297,6 +309,30 @@ When evaluating a trading bot against an ETF, absolute return is not enough. You
   > and automated them into the system.
 - **Why this works**: Most individual investors fear large losses more than they desire gains (loss aversion). Each pipeline stage maps directly to a "don't lose money" safeguard.
 
+## Course 3: AI-Driven Quant System Optimization (RAG & Multimodal)
+
+### The "Post-Market Reverse Engineering" Concept
+- **The Edge of Equity Markets (Time to Think)**: Unlike crypto which trades 24/7 in a chaotic, continuous loop, the US stock market closes. This daily "maintenance window" is a massive structural advantage for engineers. When a loss occurs today, you don't have to panic-fix a live system. You have 16 hours to analyze, reverse-engineer the failure, and deploy a fix before the market opens tomorrow.
+- **Continuous Evolution vs. Set-and-Forget**: Most retail bots fail because the market regime changes, but the bot stays the same ("set-and-forget"). This course teaches a paradigm shift: **The bot is never finished.** Every single day, the RAG agent analyzes the day's trades, finds inefficiencies, and proposes code changes. Your system evolves and adapts daily, compounding its intelligence over time.
+- **The RAG Application**: Instead of using AI to predict prices (which is highly prone to overfitting), we use AI to **debug and improve the trading system itself during this downtime**.
+- **Workflow**:
+  1. Market closes. Bot generates a daily report (PnL, slippage logs, failed pairs, spread charts).
+  2. The AI Agent reads the report and identifies anomalies (e.g., "Pair A-B hit stop-loss due to massive slippage at the open").
+  3. The Agent queries the **Quant RAG System**.
+
+### Building the Multimodal Quant RAG
+- **Text & Code Embedding**: The Vector DB is populated with classic quant textbooks, academic papers on pairs trading, and the project's own Python codebase.
+- **The "Holy Trinity" of RAG Reference Books**: To make the AI agent truly intelligent, we embed these specific institutional textbooks:
+  1. *Advances in Financial Machine Learning* (Marcos López de Prado): The bible for debugging why backtests fail in live trading (Overfitting, Lookahead Bias, Purged Cross-Validation).
+  2. *Quantitative Equity Portfolio Management* (Chincarini & Kim): The ultimate reference for execution mechanics, FX margin hedging, and transaction cost modeling.
+  3. *Statistical Arbitrage* (Andrew Pole): The mathematical foundation for pairs trading, cointegration, and half-life decay.
+- **Image/Chart Embedding (Multimodal)**: Financial analysis is highly visual. We embed historical charts of "spread blowouts" or "successful mean reversions." When a trade fails today, the agent can search for visually similar historical failures in the DB to diagnose the structural issue.
+- **Actionable Output**: The Agent doesn't just give advice. It finds the relevant textbook theory, locates the exact Python function in our codebase, and generates a Pull Request (e.g., "Based on Chapter 13 regarding liquidity buffering, I propose increasing the `min_volume_threshold` in `filters.py`. Here is the code update.").
+
+### Why This is a Killer Course
+- It bridges the hottest tech (Multimodal RAG, LLM Agents) with practical Quantitative Finance.
+- It solves the "Black-box AI" problem. The AI isn't trading blindly; it is acting as a Junior Quant Researcher reading textbooks and suggesting logical code updates to the Senior Engineer (the student) for approval.
+
 ---
 
 ## Future Course: FX & Commodities (Macro Quant)
@@ -320,4 +356,5 @@ When evaluating a trading bot against an ETF, absolute return is not enough. You
 
 ### Lecture Angle for the Next Course
 - **Theme**: "Macro Quant: Trading the Global Machine"
+- **Pedagogical Philosophy (Traditional First)**: Strictly focus on traditional, interpretable quant methods (Linear regression, Cointegration, Z-scores). Avoid deep learning or "black-box" AI. Students must first master market mechanics, execution infrastructure, and risk management using transparent "white-box" models where every trade's rationale can be mathematically proven and debugged.
 - **Differentiation**: While the stock course teaches *Micro* relationships (Coca-Cola vs. Pepsi), the FX/Commodity course teaches *Macro* relationships (A nation's currency vs. its primary export). It introduces concepts like interest rate differentials (Carry) and cross-asset correlation.
