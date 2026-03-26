@@ -9,6 +9,81 @@ import numpy as np
 import pandas as pd
 
 
+def filter_volatile_tickers(
+    prices: pd.DataFrame,
+    *,
+    max_move_quantile: float = 0.90,
+) -> pd.DataFrame:
+    """Remove tickers with extreme single-day crash risk before pair selection.
+
+    What breaks a pair relationship permanently is a sudden *crash* — fraud,
+    near-bankruptcy, forced delisting, or a structural business collapse.
+    A sudden *surge* (great earnings, M&A target, product launch) is a good
+    sign and does NOT disqualify a ticker.
+
+    Therefore this filter measures only the **worst single-day drop** per
+    ticker, not the absolute move.
+
+    Filter logic (per ticker):
+
+        daily_returns = Adj Close.pct_change()   (dates × tickers)
+                │
+                ▼  clip(upper=0).abs()  →  drop-only returns (gains → 0)
+                │
+                ▼  .max()              →  max_drop  (1 value per ticker,
+                │                          = worst single-day loss magnitude)
+                ▼  .quantile(max_move_quantile)  →  threshold
+                │
+                ▼  keep ticker if  max_drop <= threshold
+                                   ^^^^^^^^^^^^^^^^^^^^
+                                   adapts to the actual universe distribution
+                                   (2008 crisis vs. 2010s bull market treated
+                                    consistently — always worst X% excluded)
+
+    Example: AAPL had big positive days (iPhone launch, earnings beats) but
+    its worst single-day drop is modest relative to stocks like Enron or
+    Lehman — so AAPL survives the filter while genuine crash-prone stocks
+    are excluded.
+
+    Args:
+        prices:            Adj Close panel (dates × tickers).
+        max_move_quantile: Tickers above this quantile of worst single-day
+                           drop are excluded.  0.90 = drop the worst 10%.
+
+    Returns:
+        Filtered DataFrame with the same date index but fewer ticker columns.
+
+    Example:
+        >>> sp500_daily_prices = filter_volatile_tickers(
+        ...     sp500_daily_prices, max_move_quantile=0.90
+        ... )
+        filter_volatile_tickers: dropped 48/481 tickers
+          max single-day drop cut-off: 28.1%  (p90)
+          Dropped: ['AIG', 'MER', ...]
+    """
+    daily_returns = prices.pct_change().dropna(how="all")
+    # clip(upper=0): turn gains into 0 so only losses contribute.
+    # abs(): convert negative losses to positive magnitudes for easy comparison.
+    max_drop = daily_returns.clip(upper=0).abs().max()
+
+    threshold = float(max_drop.quantile(max_move_quantile))
+    keep = max_drop <= threshold
+
+    n_before = prices.shape[1]
+    filtered = prices.loc[:, keep]
+    n_dropped = n_before - filtered.shape[1]
+
+    if n_dropped > 0:
+        dropped = prices.columns[~keep].tolist()
+        print(f"filter_volatile_tickers: dropped {n_dropped}/{n_before} tickers")
+        print(f"  max single-day drop cut-off: {threshold:.1%}  (p{max_move_quantile:.0%})")
+        print(f"  Dropped: {dropped[:10]}{'...' if len(dropped) > 10 else ''}")
+    else:
+        print("filter_volatile_tickers: no tickers dropped")
+
+    return filtered
+
+
 def compute_pairwise_return_correlations(
     prices: pd.DataFrame,
     *,
