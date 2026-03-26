@@ -27,6 +27,8 @@ class PairsBacktestInput(BaseModel):
         allow_flip (bool): If True, allows the strategy to directly flip from long to short (or vice versa) 
             if the opposite threshold is breached without crossing the exit threshold first.
     """
+    model_config = {"arbitrary_types_allowed": True}
+    
     price_a: pd.Series = Field(description="Series of prices for leg A (e.g. close), DatetimeIndex")
     price_b: pd.Series = Field(description="Series of prices for leg B, aligned index with A")
     window: int = Field(gt=1, description="Rolling window length (observations)")
