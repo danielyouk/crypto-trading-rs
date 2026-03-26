@@ -103,8 +103,9 @@
   3. Introduce the `vectorized_backtest.py` module.
   4. Show the performance difference: what took hours now takes seconds per pair.
   5. **The Twist**: Run it on all 14,000 pairs and show the progress bar saying "10 hours left". Ask the students: "Wait, our code is blazing fast (4ms per backtest), why is it still so slow?"
-  6. **Key Takeaway**: "Brute force doesn't scale, even in C." Teach the importance of pipeline ordering. Cointegration must act as a strict filter *before* parameter optimization.
-  7. **The Rust Reality Check**: Explain that NumPy is already C. Use this to set the stage for *why* we use Rust later in the course (for complex state machines and live execution, not just array math).
+  6. **The "Aha!" Moment**: Show the **[BAD APPROACH]** code block right next to the **[GOOD APPROACH]** code block in the notebook. Explain that the problem isn't the speed of the code, but the *number of times* we are running it (8 million vs 280,000).
+  7. **Key Takeaway**: "Brute force doesn't scale, even in C." Teach the importance of pipeline ordering. Cointegration must act as a strict filter *before* parameter optimization.
+  8. **The Rust Reality Check**: Explain that NumPy is already C. Use this to set the stage for *why* we use Rust later in the course (for complex state machines and live execution, not just array math).
 
 ### Screener vs. State Machine: Watchlist vs. Triggered Entry
 - **The Problem**: If you run the Jupyter notebook daily and trade the top 5 pairs, your portfolio will churn constantly. A pair that was #1 yesterday might be #5 today just because its spread narrowed slightly. High turnover destroys accounts via transaction costs and slippage.
