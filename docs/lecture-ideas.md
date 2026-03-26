@@ -93,6 +93,10 @@
     1. Coarse Filter (Correlation) -> 14,000 pairs
     2. **Cointegration Test** -> Reduces to ~500 structurally sound pairs
     3. Grid Search Optimization -> 500 pairs * 2.5 seconds = **20 minutes**.
+- **Python/NumPy vs. Rust (The Truth About Speed)**:
+  - **Student Question**: "If we rewrite this backtest in Rust, will it be 100x faster?"
+  - **Answer**: No. NumPy is already executing C code under the hood. The vectorized operations (`np.divide`, `np.where`) are running at near hardware limits. Rewriting this specific *vectorized* logic in Rust might yield a 2-3x speedup (due to better cache locality and avoiding Python object overhead between operations), but not a 100x speedup.
+  - **When Rust actually wins**: Rust destroys Python/NumPy when you *cannot* vectorize the logic. For example, complex path-dependent state machines (like a trailing stop-loss that resets based on a dynamic condition) require `for` loops. A Python `for` loop over 100,000 rows is dead slow; a Rust `for` loop over 100,000 rows is instant.
 - **Lecture Storyline**:
   1. Show the `joblib.Parallel` code block and explain why it's a bottleneck (Python loop overhead).
   2. Mark it as `[DEPRECATED]` in the notebook to show the evolution of the codebase.
@@ -100,6 +104,7 @@
   4. Show the performance difference: what took hours now takes seconds per pair.
   5. **The Twist**: Run it on all 14,000 pairs and show the progress bar saying "10 hours left". Ask the students: "Wait, our code is blazing fast (4ms per backtest), why is it still so slow?"
   6. **Key Takeaway**: "Brute force doesn't scale, even in C." Teach the importance of pipeline ordering. Cointegration must act as a strict filter *before* parameter optimization.
+  7. **The Rust Reality Check**: Explain that NumPy is already C. Use this to set the stage for *why* we use Rust later in the course (for complex state machines and live execution, not just array math).
 
 ### Screener vs. State Machine: Watchlist vs. Triggered Entry
 - **The Problem**: If you run the Jupyter notebook daily and trade the top 5 pairs, your portfolio will churn constantly. A pair that was #1 yesterday might be #5 today just because its spread narrowed slightly. High turnover destroys accounts via transaction costs and slippage.
