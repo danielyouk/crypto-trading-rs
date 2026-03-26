@@ -36,6 +36,12 @@ from pairs_eda.display import (
     print_signal_groups,
     print_zscore_summary,
 )
+from pairs_eda.vectorized_backtest import (
+    PairsBacktestInput,
+    PairsBacktestOutput,
+    run_grid_search_optimization,
+    run_pairs_backtest_vectorized,
+)
 
 __all__ = [
     "ExaRunMode",
@@ -65,4 +71,8 @@ __all__ = [
     "print_zscore_summary",
     "run_pair_pipeline",
     "summarize_signals",
+    "PairsBacktestInput",
+    "PairsBacktestOutput",
+    "run_grid_search_optimization",
+    "run_pairs_backtest_vectorized",
 ]
