@@ -1,10 +1,10 @@
-"""Tests for find_candidate_pairs."""
+"""Tests for find_candidate_pairs and find_cointegrated_pairs."""
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from pairs_eda.correlation import find_candidate_pairs
+from pairs_eda.correlation import find_candidate_pairs, find_cointegrated_pairs
 
 DATES = pd.bdate_range("2024-01-02", periods=120)
 
@@ -251,3 +251,64 @@ class TestEdgeCases:
         assert sorted_result.keys() == shuffled_result.keys()
         for pair in sorted_result:
             assert abs(sorted_result[pair] - shuffled_result[pair]) < 1e-10
+
+
+# ---------------------------------------------------------------------------
+# find_cointegrated_pairs
+# ---------------------------------------------------------------------------
+
+def _make_cointegrated_panel(n: int = 600) -> pd.DataFrame:
+    """Build price data with one cointegrated pair (A-B) and one non-cointegrated pair (A-C).
+
+    A and B share a common stochastic trend plus small stationary noise,
+    so the spread is mean-reverting. C is an independent random walk.
+    """
+    rng = np.random.default_rng(42)
+    dates = pd.bdate_range("2020-01-02", periods=n)
+    common = np.cumsum(rng.normal(0.05, 0.5, n))
+    a = 100.0 + common + rng.normal(0, 0.3, n)
+    b = 80.0 + common * 0.8 + rng.normal(0, 0.3, n)
+    c = 120.0 + np.cumsum(rng.normal(0.02, 0.6, n))
+    return pd.DataFrame({"A": a, "B": b, "C": c}, index=dates)
+
+
+class TestFindCointegratedPairs:
+    def test_cointegrated_pair_passes(self) -> None:
+        prices = _make_cointegrated_panel()
+        pairs = [("A", "B"), ("A", "C"), ("B", "C")]
+        result = find_cointegrated_pairs(pairs, prices, significance=0.05)
+        assert ("A", "B") in result
+
+    def test_independent_pair_excluded(self) -> None:
+        prices = _make_cointegrated_panel()
+        pairs = [("A", "C")]
+        result = find_cointegrated_pairs(pairs, prices, significance=0.05)
+        assert ("A", "C") not in result
+
+    def test_missing_ticker_skipped(self) -> None:
+        prices = _make_cointegrated_panel()
+        pairs = [("A", "MISSING"), ("A", "B")]
+        result = find_cointegrated_pairs(pairs, prices, significance=0.05)
+        assert ("A", "MISSING") not in result
+        assert ("A", "B") in result
+
+    def test_short_overlap_skipped(self) -> None:
+        """Pairs with < 252 overlapping days are skipped."""
+        prices = _make_cointegrated_panel(n=200)  # 200 < 252
+        pairs = [("A", "B")]
+        result = find_cointegrated_pairs(pairs, prices, significance=0.05)
+        assert len(result) == 0
+
+    def test_preserves_input_order(self) -> None:
+        prices = _make_cointegrated_panel()
+        pairs = [("B", "C"), ("A", "B"), ("A", "C")]
+        result = find_cointegrated_pairs(pairs, prices, significance=0.50)
+        # With a very loose threshold, A-B should pass; check order matches input
+        if len(result) >= 2:
+            input_order = [p for p in pairs if p in result]
+            assert result == input_order
+
+    def test_empty_input_returns_empty(self) -> None:
+        prices = _make_cointegrated_panel()
+        result = find_cointegrated_pairs([], prices, significance=0.05)
+        assert result == []

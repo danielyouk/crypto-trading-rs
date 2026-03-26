@@ -15,6 +15,7 @@ from pairs_eda.correlation import (
     compute_pairwise_return_correlations,
     filter_volatile_tickers,
     find_candidate_pairs,
+    find_cointegrated_pairs,
 )
 from pairs_eda.visualization import plot_correlation_histogram
 from pairs_eda.yfinance_tools import adj_close_or_close_panel, download_with_retry
@@ -51,6 +52,7 @@ __all__ = [
     "compute_zscore_intraday",
     "filter_volatile_tickers",
     "find_candidate_pairs",
+    "find_cointegrated_pairs",
     "download_with_retry",
     "create_exa_backend",
     "default_gemini_backend",

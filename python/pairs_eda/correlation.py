@@ -267,3 +267,93 @@ def find_candidate_pairs(
         result = result[:top_n]
 
     return dict(result)
+
+
+# ---------------------------------------------------------------------------
+# Cointegration filter
+# ---------------------------------------------------------------------------
+
+def find_cointegrated_pairs(
+    pairs: list[tuple[str, str]],
+    prices: pd.DataFrame,
+    *,
+    significance: float = 0.05,
+) -> list[tuple[str, str]]:
+    """Filter candidate pairs by the Engle-Granger cointegration test.
+
+    Pipeline position:
+
+        60K+ pairs
+           │  find_candidate_pairs (correlation band)
+        ~4K–14K pairs  ← high_correlated_pairs
+           │
+           ▼  find_cointegrated_pairs  ← YOU ARE HERE
+        ~200–500 pairs ← stationary_pairs
+           │
+           ▼  grid_search_pair / run_grid_search_optimization
+        final optimized pairs
+
+    Method (Engle-Granger two-step):
+        1. OLS regression:  log(price_A) = α + β·log(price_B) + ε
+        2. ADF test on the residual ε
+        3. If p-value < significance → the spread is stationary → pair is cointegrated
+
+    Why cointegration, not just correlation?
+        Correlation measures co-movement direction.  Cointegration measures whether
+        the spread is mean-reverting — which is what pairs trading actually bets on.
+        Two stocks can have 0.80 correlation but a non-stationary spread (both trending
+        up at different rates).  Cointegration catches this.
+
+    Args:
+        pairs:        List of (ticker_a, ticker_b) tuples from find_candidate_pairs.
+        prices:       Adj Close panel (dates × tickers) — same as used for correlation.
+        significance: p-value threshold for the Engle-Granger test (default 0.05).
+
+    Returns:
+        List of (ticker_a, ticker_b) tuples that pass the cointegration test,
+        preserving the input ordering.
+
+    Example:
+        >>> stationary_pairs = find_cointegrated_pairs(
+        ...     high_correlated_pairs, sp500_daily_prices, significance=0.05
+        ... )
+        find_cointegrated_pairs: 387/4021 pairs passed (p < 0.05)
+    """
+    from statsmodels.tsa.stattools import coint  # lazy import — heavy dependency
+
+    passed: list[tuple[str, str]] = []
+    n_tested = 0
+    n_skipped = 0
+
+    for a, b in pairs:
+        if a not in prices.columns or b not in prices.columns:
+            n_skipped += 1
+            continue
+
+        pa = prices[a].dropna()
+        pb = prices[b].dropna()
+        common = pa.index.intersection(pb.index)
+        if len(common) < 252:  # need at least ~1 year of overlap
+            n_skipped += 1
+            continue
+
+        pa_aligned = pa.loc[common]
+        pb_aligned = pb.loc[common]
+
+        try:
+            _, p_value, _ = coint(pa_aligned, pb_aligned)
+            n_tested += 1
+            if p_value < significance:
+                passed.append((a, b))
+        except Exception:
+            n_skipped += 1
+            continue
+
+    print(
+        f"find_cointegrated_pairs: {len(passed)}/{n_tested} pairs passed "
+        f"(p < {significance})"
+    )
+    if n_skipped > 0:
+        print(f"  ({n_skipped} pairs skipped — missing data or < 1 year overlap)")
+
+    return passed
