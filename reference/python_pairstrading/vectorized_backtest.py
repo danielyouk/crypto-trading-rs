@@ -118,6 +118,86 @@ def _prepare_prices(price_a: pd.Series, price_b: pd.Series) -> Tuple[pd.Series, 
         
     return _strip_tz(a), _strip_tz(b), common
 
+def run_grid_search_optimization(
+    pairs: list[Tuple[str, str]], 
+    prices_df: pd.DataFrame, 
+    windows: list[int], 
+    zscore_thresholds: list[float], 
+    num_cores: int = -1,
+    desc: str = "Optimizing Pairs"
+) -> pd.DataFrame:
+    """
+    Runs a parallel grid search optimization over a list of pairs.
+    
+    Pipeline:
+        pairs ──→ joblib.Parallel ──→ optimize_pair() ──→ best params ──→ concat DataFrame
+    
+    Args:
+        pairs: List of tuple pairs, e.g., [('AAPL', 'MSFT'), ...].
+        prices_df: DataFrame containing daily prices for all tickers.
+        windows: List of rolling window sizes to test.
+        zscore_thresholds: List of Z-score thresholds to test.
+        num_cores: Number of CPU cores to use for parallel processing (-1 for all).
+        desc: Description for the tqdm progress bar.
+        
+    Returns:
+        A DataFrame containing the best parameters and total return for each pair.
+        Returns an empty DataFrame if no pairs are processed successfully.
+        
+    Performance notes:
+        PERF-001: Uses joblib.Parallel to distribute the grid search across CPU cores.
+        The inner loop is fully vectorized via run_pairs_backtest_vectorized.
+    """
+    from joblib import Parallel, delayed
+    import itertools
+    from tqdm import tqdm
+    
+    def optimize_pair(pair):
+        best_return = -np.inf
+        best_params = {}
+        
+        # Extract and dropna
+        price_a = pd.Series(prices_df[pair[0]].dropna())
+        price_b = pd.Series(prices_df[pair[1]].dropna())
+        
+        if len(price_a) < max(windows) or len(price_b) < max(windows):
+            return None
+            
+        for w, z in itertools.product(windows, zscore_thresholds):
+            inp = PairsBacktestInput(
+                price_a=price_a,
+                price_b=price_b,
+                window=w,
+                zscore_threshold=z
+            )
+            out = run_pairs_backtest_vectorized(inp)
+            total_ret = out.strategy_return.sum()
+            
+            if total_ret > best_return:
+                best_return = total_ret
+                best_params = {'window': w, 'zscore_threshold': z}
+                
+        if best_params:
+            return pd.DataFrame([{
+                'Asset1': pair[0],
+                'Asset2': pair[1],
+                'Best_Window': best_params['window'],
+                'Best_Z_Threshold': best_params['zscore_threshold'],
+                'Total_Return': best_return
+            }])
+        return None
+
+    results = Parallel(n_jobs=num_cores)(
+        delayed(optimize_pair)(pair) for pair in tqdm(pairs, desc=desc)
+    )
+    
+    valid_results = [res for res in results if res is not None]
+    if not valid_results:
+        return pd.DataFrame()
+        
+    return pd.concat(valid_results, ignore_index=True)
+
+
 def _safe_log_spread(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     """
     Calculates the log spread log(A/B) safely.
