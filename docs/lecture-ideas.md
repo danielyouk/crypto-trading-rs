@@ -84,16 +84,22 @@
 - **Numbers**: 60,726 → ~12,000 (corr filter) → ~200-500 (cointegration) → final pairs
 
 ### The Computational Bottleneck (Backtesting 26 Years of Data)
-- **The Problem**: When moving from a 2-year backtest to a 26-year backtest (1990s to present), the grid search for optimal parameters (window size, z-score threshold) across hundreds of pairs becomes computationally explosive. A process that took 40 minutes can take over 10 hours.
-- **Why this happens**: `joblib.Parallel` is running a full historical backtest loop for every combination of parameters for every pair. Python's overhead in Pandas row-by-row operations compounds over 26 years of daily data.
+- **The Problem**: When moving from a 2-year backtest to a 26-year backtest (1990s to present), the grid search for optimal parameters (window size, z-score threshold) across hundreds of pairs becomes computationally explosive.
 - **The Solution (Vectorized Backtesting)**: We replace the slow Python loops (e.g., `iterrows`, `apply`) with pure NumPy array operations and Pandas' C-optimized `.rolling()` methods.
+- **The "Aha!" Moment on Scale (Why Pipeline Ordering Matters)**:
+  - Even after vectorizing (reducing a single 26-year backtest to ~4 milliseconds), running a grid search (567 parameter combinations) across 14,000 "highly correlated" pairs means running **~8 million backtests**. This still takes ~10 hours.
+  - *If we didn't vectorize, 8 million backtests at 1 second each would take 92 days!*
+  - **The Real Fix (Architecture)**: Never run grid search on the coarse filter output. The pipeline MUST be: 
+    1. Coarse Filter (Correlation) -> 14,000 pairs
+    2. **Cointegration Test** -> Reduces to ~500 structurally sound pairs
+    3. Grid Search Optimization -> 500 pairs * 2.5 seconds = **20 minutes**.
 - **Lecture Storyline**:
   1. Show the `joblib.Parallel` code block and explain why it's a bottleneck (Python loop overhead).
   2. Mark it as `[DEPRECATED]` in the notebook to show the evolution of the codebase.
   3. Introduce the `vectorized_backtest.py` module.
-  4. Explain how we vectorized the rolling statistics (`df.rolling().mean()`), the Z-score calculation (`np.divide`), and the returns calculation (`shift(1)` to prevent look-ahead bias).
-  5. Show the performance difference: what took hours now takes seconds.
-  6. **Key Takeaway**: "Python is slow, but NumPy is C." Vectorization is the most important skill for a Python quant.
+  4. Show the performance difference: what took hours now takes seconds per pair.
+  5. **The Twist**: Run it on all 14,000 pairs and show the progress bar saying "10 hours left". Ask the students: "Wait, our code is blazing fast (4ms per backtest), why is it still so slow?"
+  6. **Key Takeaway**: "Brute force doesn't scale, even in C." Teach the importance of pipeline ordering. Cointegration must act as a strict filter *before* parameter optimization.
 
 ### Screener vs. State Machine: Watchlist vs. Triggered Entry
 - **The Problem**: If you run the Jupyter notebook daily and trade the top 5 pairs, your portfolio will churn constantly. A pair that was #1 yesterday might be #5 today just because its spread narrowed slightly. High turnover destroys accounts via transaction costs and slippage.
