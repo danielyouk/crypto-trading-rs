@@ -66,20 +66,25 @@ def filter_volatile_tickers(
     # abs(): convert negative losses to positive magnitudes for easy comparison.
     max_drop = daily_returns.clip(upper=0).abs().max()
 
-    threshold = float(max_drop.quantile(max_move_quantile))
-    keep = max_drop <= threshold
+    no_data = max_drop.isna()
+    n_no_data = int(no_data.sum())
+    has_data = ~no_data
+
+    threshold = float(max_drop[has_data].quantile(max_move_quantile))
+    too_volatile = has_data & (max_drop > threshold)
+    keep = has_data & (max_drop <= threshold)
 
     n_before = prices.shape[1]
+    n_with_data = int(has_data.sum())
+    n_volatile = int(too_volatile.sum())
     filtered = prices.loc[:, keep]
-    n_dropped = n_before - filtered.shape[1]
 
-    if n_dropped > 0:
-        dropped = prices.columns[~keep].tolist()
-        print(f"filter_volatile_tickers: dropped {n_dropped}/{n_before} tickers")
-        print(f"  max single-day drop cut-off: {threshold:.1%}  (p{max_move_quantile:.0%})")
-        print(f"  Dropped: {dropped[:10]}{'...' if len(dropped) > 10 else ''}")
-    else:
-        print("filter_volatile_tickers: no tickers dropped")
+    print(f"filter_volatile_tickers: {n_before} tickers")
+    if n_no_data > 0:
+        print(f"  no data in window: {n_no_data} tickers excluded")
+    print(f"  with data: {n_with_data} tickers")
+    print(f"  volatile (>{threshold:.1%} max drop, p{max_move_quantile:.0%}): {n_volatile} dropped")
+    print(f"  kept: {filtered.shape[1]} tickers")
 
     return filtered
 
