@@ -16,6 +16,32 @@
 
 ## Course Structure & Strategy
 
+### Revenue Model: Online + Live Workshop
+
+**Online Course (Course 1): ~15 hours, self-paced**
+
+| Part | Hours | Content |
+|------|-------|---------|
+| Part 1: Strategy | 6h | Data → Correlation → Cointegration → Backtest → Grid Search |
+| Part 2: Validation | 4h | WFA → Results Analysis → Leverage/Margin → "Does this make money?" |
+| Part 3: Go Live | 5h | IBKR setup → TWS API → Production code → Oracle VM → Monitoring |
+
+**Language**: English (primary). Korean version update planned separately
+(existing Korean course to be refreshed with WFA + automation content).
+
+**Live Workshop (Premium): Weekend, ₩300K–₩1M per person**
+- Target: Online course graduates who want deep, hands-on guidance.
+- Content (not included in online course):
+  - Iterative strategy refinement — loss-period forensics with LLM agent
+  - Earnings blackout implementation
+  - Sector concentration constraints
+  - Volatility regime detection
+  - Advanced position sizing (Kelly criterion)
+  - Live debugging of student's own IBKR setup
+- Format: Small group (5–15 people), screen-sharing, real portfolio review.
+- Value proposition: "The online course teaches you the system.
+  The workshop teaches you to evolve it."
+
 ### Course Lineup (Independent, Self-Contained)
 - **Course 1**: Python stock pairs trading (S&P 500) — includes a dedicated module on FX risk management (Natural Hedge via Margin Loan) for non-USD investors.
 - **Course 2**: Python FX & Commodities Trading (Macro Quant) — Traditional quant methods applied to currencies and commodities (Carry trades, Cross-asset statistical arbitrage like CAD vs. Crude Oil).
@@ -119,6 +145,22 @@
 - **Visual**: Price chart showing sudden crashes (GFC 2008, COVID 2020) — if 60 days fall in a calm period, you never test crisis behavior at intraday resolution.
 - **Key message**: Phase 1 (daily, 26yr) covers regime risk, but that's at daily granularity. You need intraday stress-testing too.
 - **Solution**: Split Phase 2 into 2a (1h, 730 days — captures recent market events) and 2b (5m, 60 days — execution mechanics). This is driven by yfinance's interval-dependent history limits.
+
+### Adaptive but Stable: Rolling Selection With Sticky Watchlist
+- **Visual**: Two equity curves from the same universe:
+  1) "Re-pick top pairs every month with immediate replacement"
+  2) "Monthly rolling discovery + sticky watchlist + trigger-based entry"
+- **Key message**: Adaptiveness is necessary, but without stickiness it becomes churn. A robust pipeline updates slowly at the watchlist layer and quickly at the trigger layer.
+- **Lecture storyline**:
+  1. Show why "global best pair over 30 years" is unstable in live deployment.
+  2. Introduce monthly rolling Phase 1 (trailing 24-36 months) instead of full-history optimization.
+  3. Separate Discovery (eligibility) from Monitoring/Execution (actual trade trigger).
+  4. Add retention buffer/persistence bonus to avoid pair flip-flopping every rebalance.
+  5. Conclude with slot-constrained portfolio simulation (e.g., max 7 positions) as the real validation target.
+- **Anticipated student questions**:
+  - "If adaptiveness is good, why not replace all pairs immediately each month?"
+  - "How do we choose retention length without overfitting?"
+  - "Is this still market-neutral if watchlist members persist across rebalances?"
 
 ---
 
@@ -228,6 +270,54 @@ Persistence across bot restarts:
 - Load on startup; refresh any entry older than 90 days before the trading session begins
 
 **Status**: Pending implementation — design locked, implement next session.
+
+---
+
+### Walk-Forward Analysis (WFA) — The Real Backtest
+
+**Core problem**: A static backtest (full-history grid search) sees the future. It optimises
+parameters *after* the 2008 crisis, COVID crash, and every other event. This inflates returns
+and hides overfitting.
+
+**Solution**: Walk-Forward Analysis repeats the full Train → Validate → Execute cycle
+rolling forward through time, so each turn never sees its own future.
+
+```
+Turn 1:  [── Phase 1 (2yr train) ──][P2b (1mo execute)]
+Turn 2:       shift 3mo →  [── Phase 1 ──][P2b]
+Turn 3:            shift 3mo →  [── Phase 1 ──][P2b]
+...1998 → 2024...   (margin accumulates across turns)
+```
+
+**Design decisions** (locked):
+
+| Decision | Choice | Rationale |
+|---|---|---|
+| Phase 1 re-run frequency | Quarterly | Cointegration relationships change slowly |
+| Parameter selection | Stable region median (`df_sel` style) | Robust across market regimes |
+| Slot capital allocation | Fixed `margin/n` at Phase 2b start | Prevents intra-month loss compounding |
+| Max concurrent slots | 7 | Diversification without over-dilution |
+| Cointegration cache | p-value margin (±0.02 from significance) | ~80% cache hit → ~4× speedup |
+
+**Cointegration cache — why it works**:
+When shifting Phase 1 by 3 months, 87% of the 2-year window overlaps with the prior turn.
+Most pairs that were firmly cointegrated (p << 0.05) or firmly not (p >> 0.05) won't flip.
+Only borderline pairs (0.03 < p < 0.07) need retesting. This cuts cointegration computation
+by ~80% across all turns.
+
+**Lecture flow**:
+1. Show the static backtest result (e.g. "27% annual return — amazing!")
+2. Run WFA on the exact same strategy → e.g. "12% annual return"
+3. The 15%p gap = **the price of overfitting** (answer key vs. real exam)
+4. "But 12% still beats the S&P 500 (~10%)!" → strategy is real, just less magical
+5. Show the equity curve with drawdowns through 2008 and COVID
+
+**Anticipated student questions**:
+- "If 12% is good enough, why bother with static first?" → Static is fast screening;
+  WFA is expensive but gives trustworthy numbers
+- "Can we optimise WFA itself?" → Meta-overfitting trap — use fixed, sensible defaults
+
+**Implementation**: `python/pairs_eda/rolling_phase2.py` (`run_phase2_rolling`)
 
 ---
 
@@ -344,6 +434,166 @@ When evaluating a trading bot against an ETF, absolute return is not enough. You
 ### Why This is a Killer Course
 - It bridges the hottest tech (Multimodal RAG, LLM Agents) with practical Quantitative Finance.
 - It solves the "Black-box AI" problem. The AI isn't trading blindly; it is acting as a Junior Quant Researcher reading textbooks and suggesting logical code updates to the Senior Engineer (the student) for approval.
+
+---
+
+## Iterative Strategy Refinement via Loss-Period Analysis
+
+### Core Concept
+
+After running the full WFA simulation, identify months (or quarters) with the
+largest drawdowns.  For each loss period:
+
+1. **Diagnose** — What caused the loss?  Was it a specific pair blowing up, a
+   regime shift (e.g. 2008 GFC, 2020 COVID), a sector rotation, or a failure of
+   the z-score/window parameters?
+2. **Decide** — Was the loss *unavoidable* (systemic event affecting all pairs)
+   or *addressable* (poor pair selection, missing stop-loss, earnings event)?
+3. **Update** — If addressable, formulate a new rule or filter (e.g. earnings
+   blackout, tighter stop-loss, sector diversification constraint, volatility
+   regime detector).
+4. **Re-simulate** — Re-run the WFA from that month onwards with the updated
+   strategy, keeping everything before that date untouched.
+5. **Repeat** — Find the next large-loss period in the updated simulation and
+   iterate.
+
+This process is **not look-ahead bias** because:
+- Each strategy update uses only information available up to the loss month.
+- The updated strategy is tested forward, never backward.
+- It mirrors how a real portfolio manager would evolve their system over decades.
+
+### LLM Agent Role
+
+This is where an LLM agent adds massive value:
+- **Trade-level forensics**: Given a loss month, the agent retrieves the
+  specific trades, their entry/exit z-scores, holding periods, and the
+  underlying price paths.  It identifies whether the loss was from spread
+  divergence, stop-loss cascade, or parameter mismatch.
+- **News/event overlay**: The agent cross-references loss dates with major
+  market events (rate decisions, earnings surprises, geopolitical shocks) to
+  distinguish systematic vs. idiosyncratic losses.
+- **Strategy suggestion**: Based on the diagnosis, the agent proposes concrete
+  code changes — a new filter, an adjusted parameter range, or a new exit
+  condition — with expected impact analysis.
+- **Automated re-simulation**: The agent re-runs the WFA from the identified
+  date and compares before/after metrics (Sharpe, max drawdown, cumulative
+  return).
+
+### Lecture Demo: Reproducing the "Before" State (Loss Scenario)
+
+To show students that pairs trading CAN produce significant losses before
+strategy refinement, use this baseline config.  This produces the unrefined
+WFA results with visible drawdown periods (especially 2004-2008).
+
+```python
+# ── BASELINE CONFIG (before iterative refinement) ──
+# Save this to reproduce the "before" equity curve in the lecture.
+# Key characteristics:
+#   - No sector diversification constraint
+#   - No earnings blackout
+#   - Basic volatility filter only (quantile-based)
+#   - No regime detection
+#   - Result: ~11.95% annualized (3x), but max DD -46%, worst month -23%
+
+wfa_config_baseline = RollingPhase2Config(
+    training_months=24,
+    expanding_window=True,
+    validation_days=63,
+    rebalance_frequency="QS",
+    min_correlation=0.40,
+    max_correlation=0.85,
+    min_overlap_years=1.5,
+    recent_years=1.0,
+    top_n_candidates=200,
+    windows=(10, 15, 20, 30),
+    zscore_thresholds=(2.0, 2.5, 3.0),
+    watchlist_size=20,
+    max_slots=7,
+    leverage=3.0,
+    max_drop_quantile=0.90,
+    entry_zscore_default=2.0,
+    exit_zscore=0.0,
+    stop_loss_pct=0.05,
+    commission_per_leg_bps=0.5,
+    slippage_per_leg_bps=0.5,
+)
+
+# Results snapshot (3x leverage, 1992-2024):
+#   Cumulative      : ~3526%
+#   Annualized      : ~11.95%
+#   Sharpe          : 0.75
+#   Max drawdown    : -46.41%
+#   Worst month     : -23.48%
+
+# Leverage comparison table for the lecture:
+# | Leverage | Annual | Sharpe | Max DD  | Worst Month |
+# |----------|--------|--------|---------|-------------|
+# | 1x       | 4.9%   | 0.89   | -15.7%  | -5.6%       |
+# | 3x       | 11.95% | 0.75   | -46.4%  | -23.5%      |
+# | 5x       | 18.5%  | 0.72   | -70.5%  | -39.7%      |
+```
+
+After RCA and strategy refinement, run the same WFA with improved config
+to show the "after" equity curve side-by-side.
+
+### What "Strategy" Means (Far Beyond Parameters)
+
+"Strategy" is not just `window` and `z_score`.  It is the full stack of
+decisions that determine trade outcomes:
+
+| Layer                    | Example rules                                   |
+|--------------------------|------------------------------------------------|
+| Universe filter          | Volatility pre-filter, min liquidity, GICS sector |
+| Pair selection           | Correlation band, cointegration, overlap years  |
+| Parameter selection      | Window, z-score threshold, robustness scoring   |
+| Entry/exit rules         | Z-score trigger, mean-reversion exit            |
+| Risk management          | Stop-loss %, cooldown period, max sector exposure|
+| Event avoidance          | Earnings blackout, index rebalance dates        |
+| Position sizing          | Equal weight, volatility-scaled, Kelly criterion|
+| Portfolio constraints    | Max slots, max pairs per sector, leverage cap   |
+| **Not yet discovered**   | Rules that emerge from loss-period analysis     |
+
+Each iteration of the refinement cycle may touch ANY of these layers.
+
+### Lecture Flow — Branching Equity Curves
+
+```
+          Strategy v1 (baseline)
+          ─────────────────────────────────────── (gray, dashed)
+         /
+────────●─── 2008-10: worst month detected
+         \
+          Strategy v2 (+sector constraint)
+          ──────────────────────────────────────── (blue)
+                        /
+               ────────●─── 2011-08: next loss period
+                        \
+                         Strategy v3 (+earnings blackout)
+                         ────────────────────────── (green)
+                                    ...
+```
+
+At each branch point:
+1. **Compare** old vs. new equity curves side-by-side from that date forward
+2. **Quantify** improvement: Sharpe delta, max-DD delta, cumulative return delta
+3. **Validate** the new rule doesn't degrade performance in other periods
+4. **Decide** whether to keep the rule (parsimony check)
+
+### Key Teaching Points
+
+- **Strategy evolution is continuous** — A trading system is never "done."
+  Windows and z-scores are just the starting layer.  The system grows as we
+  discover new failure modes.
+- **Not all losses are fixable** — Systemic crashes (2008, 2020) affect all
+  pairs simultaneously.  The goal is to *survive* them, not avoid them.
+  Recognizing "this was unavoidable" is itself a valuable conclusion.
+- **Over-fitting risk** — Each new rule added to fix a past loss must be
+  validated on out-of-sample periods.  Adding too many rules creates a
+  brittle system.  Emphasize parsimony: fewer rules that each cover broad
+  failure modes beat many narrow rules.
+- **Human + AI collaboration** — The student makes the final judgment on
+  whether a rule change is justified; the LLM does the heavy analytical
+  lifting and code generation.  The LLM proposes, the human disposes.
 
 ---
 

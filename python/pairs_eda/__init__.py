@@ -42,6 +42,17 @@ from pairs_eda.vectorized_backtest import (
     run_grid_search_optimization,
     run_pairs_backtest_vectorized,
 )
+from pairs_eda.rolling_phase2 import (
+    RebalanceWindow,
+    RollingPhase2Config,
+    RollingPhase2Input,
+    RollingPhase2Output,
+    apply_sticky_watchlist,
+    build_rolling_timeline,
+    compute_robust_pair_scores,
+    filter_cointegrated_cached,
+    run_phase2_rolling,
+)
 
 __all__ = [
     "ExaRunMode",
@@ -73,6 +84,15 @@ __all__ = [
     "summarize_signals",
     "PairsBacktestInput",
     "PairsBacktestOutput",
+    "RebalanceWindow",
+    "RollingPhase2Config",
+    "RollingPhase2Input",
+    "RollingPhase2Output",
+    "apply_sticky_watchlist",
+    "build_rolling_timeline",
+    "compute_robust_pair_scores",
+    "filter_cointegrated_cached",
     "run_grid_search_optimization",
     "run_pairs_backtest_vectorized",
+    "run_phase2_rolling",
 ]
