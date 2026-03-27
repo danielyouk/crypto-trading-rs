@@ -101,6 +101,36 @@
   5. "And still, stop-loss on spread" → practical risk management
 - **Student takeaway**: Why multiple pipeline stages are necessary — this single chart explains it all.
 
+### Survivorship Bias — Known Limitation
+
+**The problem**: Our backtest uses today's S&P 500 constituent list applied
+to the entire 1990–2024 period. In reality, the S&P 500 changes ~20-30
+stocks per year — companies are added (TSLA in 2020) and removed (Enron
+in 2001, Lehman in 2008). Removed stocks often had poor performance before
+removal, and we never see them in our current list.
+
+**Impact**:
+- We are backtesting on *survivors* — stocks that were successful enough
+  to remain in (or be added to) the S&P 500 by 2024.
+- Stocks that were delisted, bankrupted, or removed are excluded from our
+  universe, which slightly inflates historical returns.
+
+**Why it's acceptable for this course**:
+- Our goal is to validate the *mechanism* of pairs trading (cointegration,
+  z-score mean-reversion, stop-loss behavior) — not to claim precise
+  historical returns.
+- In live trading, we will always use the *current* S&P 500 list, which
+  is updated quarterly. So the survivorship bias only affects the backtest,
+  not the live system.
+- The WFA rolling framework naturally handles constituent changes: new
+  stocks appear when they have enough data; removed stocks disappear from
+  the price panel.
+
+**Lecture note**: Present this as an honest disclosure. Students respect
+transparency about limitations. "This backtest shows the strategy *works*,
+but the exact return numbers have a small upward bias due to survivorship.
+In live trading, this bias does not exist."
+
 ---
 
 ## Pipeline Design & Architecture
