@@ -74,6 +74,13 @@ class RollingPhase2Config(BaseModel):
     entry_zscore_default: float = Field(default=2.0, gt=0.0)
     exit_zscore: float = Field(default=0.0)
     stop_loss_pct: float = Field(default=0.05, ge=0.0)
+    stop_loss_max_slip_pct: float = Field(
+        default=0.02, ge=0.0,
+        description="Max additional slippage beyond stop_loss_pct when stop fires. "
+        "Simulates real-time stop-loss order execution. "
+        "Actual loss per trade is capped at (stop_loss_pct + stop_loss_max_slip_pct) "
+        "× slot_notional. Set to 0 for ideal stop execution.",
+    )
     commission_per_leg_bps: float = Field(default=0.5, ge=0.0)
     slippage_per_leg_bps: float = Field(default=1.5, ge=0.0)
     annual_risk_free_rate: float = Field(default=0.0, ge=0.0)
@@ -787,6 +794,10 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                 exit_sell_b = px_b * (1.0 - slip)
                 exit_buy_a = px_a * (1.0 + slip)
                 pnl = (exit_sell_b - pos.entry_buy_b) * pos.qty_b + (pos.entry_sell_a - exit_buy_a) * pos.qty_a
+
+            if hit_stop:
+                max_loss = -(cfg.stop_loss_pct + cfg.stop_loss_max_slip_pct) * pos.slot_notional
+                pnl = max(pnl, max_loss)
 
             exit_commission = _commission_from_notional(pos.slot_notional, cfg.commission_per_leg_bps)
             entry_commission = _commission_from_notional(pos.slot_notional, cfg.commission_per_leg_bps)
