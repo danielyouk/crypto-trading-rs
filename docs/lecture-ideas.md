@@ -351,6 +351,86 @@ by ~80% across all turns.
 
 ---
 
+### Portfolio-Level Circuit Breaker — Limiting Catastrophic Drawdowns
+
+**Core problem**: Individual stop-losses limit per-trade risk, but multiple
+sequential losses across different slots can accumulate into a severe portfolio
+drawdown.  With 7 concurrent slots and 3× leverage, even a moderate per-trade
+stop (5%) can compound into a -36% portfolio drawdown if several trades fail
+within the same rebalance period.
+
+**Solution**: A portfolio-level circuit breaker that monitors total equity
+relative to the peak within each rebalance period.  When the drawdown exceeds
+a threshold, ALL positions are liquidated and no new entries are allowed until
+the next quarterly rebalance.
+
+```
+Equity peak tracking (per rebalance period):
+
+  peak = max(peak, realized_equity)   ← updated daily
+  dd   = (equity - peak) / peak
+
+  if dd ≤ -circuit_breaker_pct:      ← e.g. -15%
+      ┌─────────────────────────────────┐
+      │  CIRCUIT BREAKER TRIGGERED      │
+      │  • Close ALL open positions     │
+      │  • Block new entries            │
+      │  • Wait until next rebalance    │
+      │  • Reset peak at rebalance      │
+      └─────────────────────────────────┘
+```
+
+**Design decisions**:
+
+| Decision | Choice | Rationale |
+|---|---|---|
+| Scope | Per rebalance period | Fresh start each quarter; avoids permanent shutdown |
+| Threshold | 15% from peak | Aggressive enough to protect, loose enough to allow normal drawdowns |
+| Action on trigger | Close all + block new entries | Decisive risk-off; half-measures leave residual exposure |
+| Peak reset | At each rebalance boundary | Matches capital reallocation cycle |
+
+**Relationship with other risk layers**:
+
+```
+Risk management stack (from narrowest to broadest):
+
+  ┌─────────────────────────────────────────┐
+  │  Per-trade stop-loss (5% + 2% slip)     │  ← single position
+  ├─────────────────────────────────────────┤
+  │  Post-stop cooldown (window bars)       │  ← single pair
+  ├─────────────────────────────────────────┤
+  │  Earnings blackout                      │  ← single pair, proactive
+  ├─────────────────────────────────────────┤
+  │  Volatility pre-filter (quantile)       │  ← universe level
+  ├─────────────────────────────────────────┤
+  │  ★ Portfolio circuit breaker (15% DD)   │  ← entire portfolio
+  └─────────────────────────────────────────┘
+```
+
+**Lecture flow**:
+1. Show the "before" equity curve with -46% max DD (baseline config, no circuit breaker)
+2. Add `circuit_breaker_pct=0.15` → show reduced max DD
+3. Discuss the trade-off: circuit breaker caps losses but also caps recovery
+   (forced out of positions that might have reverted)
+4. Show how many times the breaker fired over 30+ years — if it fires every
+   quarter, the threshold is too tight; if it never fires, it's too loose
+5. Ask students: "What threshold would you use for your personal capital?"
+
+**Anticipated student questions**:
+- "If we close everything at -15%, don't we lock in losses?" → Yes, but the
+  alternative is risking -30% or worse.  The next rebalance gets a fresh start.
+- "Why not resume trading in the same period after equity recovers?" → With all
+  positions closed, there is no mechanism for recovery within the period.  Waiting
+  for the next rebalance with fresh pair selection is cleaner.
+- "Can we combine this with a trailing stop on the portfolio level?" → Yes, but
+  adds complexity.  Start simple; the quarterly reset already provides a natural
+  recovery mechanism.
+
+**Implementation**: `RollingPhase2Config.circuit_breaker_pct` in
+`python/pairs_eda/rolling_phase2.py`
+
+---
+
 ### Operational Risk: What Happens When a Ticker Gets Delisted Mid-Trade?
 - **Scenario**: Bot is long A / short B. Today's pipeline run drops ticker A (delisted, no data, removed from S&P 500). Position is still open.
 - **Real-world example**: SNDK (SanDisk) acquired by WDC in 2016 — ticker ceased to exist.
@@ -565,6 +645,12 @@ wfa_config_baseline = RollingPhase2Config(
 
 After RCA and strategy refinement, run the same WFA with improved config
 to show the "after" equity curve side-by-side.
+
+First refinement step: Add `circuit_breaker_pct=0.15` to the baseline config
+and re-run.  This alone should visibly reduce max drawdown from -46% to a
+capped ~15% per rebalance period, at the cost of slightly lower cumulative
+returns (forced exits during temporary drawdowns).  This is the "before vs.
+after circuit breaker" comparison — a powerful visual for the lecture.
 
 ### What "Strategy" Means (Far Beyond Parameters)
 
