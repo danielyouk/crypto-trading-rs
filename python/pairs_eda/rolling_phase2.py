@@ -91,6 +91,13 @@ class RollingPhase2Config(BaseModel):
     )
     commission_per_leg_bps: float = Field(default=0.5, ge=0.0)
     slippage_per_leg_bps: float = Field(default=1.5, ge=0.0)
+    min_entry_score: float = Field(
+        default=0.0, ge=0.0,
+        description="Minimum final_score required to open a new position. "
+        "Pairs below this threshold are skipped even when slots are available. "
+        "Set to 0 to disable (accept any watchlist pair). "
+        "Typical range: 0.3-0.6 depending on scoring calibration.",
+    )
     annual_risk_free_rate: float = Field(default=0.0, ge=0.0)
     start_date: Optional[pd.Timestamp] = None
     end_date: Optional[pd.Timestamp] = None
@@ -756,12 +763,13 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
     realized_equity = float(inp.initial_capital)
     entry_count = 0
     exit_count = 0
+    skipped_low_score = 0
 
     rebalance_idx = 0
     current_watchlist = watchlist_by_rebalance[schedule[0].rebalance_date]
     current_slot_notional = realized_equity * cfg.leverage / cfg.max_slots
-    rebalance_peak_equity = realized_equity
-    circuit_breaker_active = False
+    cb_peak_equity = realized_equity
+    cb_cooldown_remaining = 0
     circuit_breaker_count = 0
 
     for day in sim_dates:
@@ -772,8 +780,6 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
             rebalance_idx += 1
             current_watchlist = watchlist_by_rebalance[schedule[rebalance_idx].rebalance_date]
             current_slot_notional = realized_equity * cfg.leverage / cfg.max_slots
-            rebalance_peak_equity = realized_equity
-            circuit_breaker_active = False
 
         for key in list(open_positions.keys()):
             pos = open_positions[key]
@@ -838,13 +844,22 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
             )
             open_positions.pop(key, None)
 
-        # --- Portfolio-level circuit breaker ---
-        if cfg.circuit_breaker_pct > 0.0 and not circuit_breaker_active:
-            rebalance_peak_equity = max(rebalance_peak_equity, realized_equity)
-            dd_from_peak = (realized_equity - rebalance_peak_equity) / rebalance_peak_equity
+        # --- Portfolio-level circuit breaker (uses total equity = realized + unrealized) ---
+        if cfg.circuit_breaker_pct > 0.0 and cb_cooldown_remaining <= 0:
+            cb_unrealized = 0.0
+            for _cb_k, _cb_p in open_positions.items():
+                _cb_ck = (_cb_p.pair[0], _cb_p.pair[1], _cb_p.window)
+                if _cb_ck in feature_cache and day in feature_cache[_cb_ck].index:
+                    _cb_r = cast(pd.Series, feature_cache[_cb_ck].loc[day])
+                    cb_unrealized += _compute_unrealized_pnl(
+                        _cb_p, float(_cb_r["price_a"]), float(_cb_r["price_b"])
+                    )
+            total_equity = realized_equity + cb_unrealized
+            cb_peak_equity = max(cb_peak_equity, total_equity)
+            dd_from_peak = (total_equity - cb_peak_equity) / cb_peak_equity
             if dd_from_peak <= -cfg.circuit_breaker_pct:
-                circuit_breaker_active = True
                 circuit_breaker_count += 1
+                cb_cooldown_remaining = 5
                 for cb_key in list(open_positions.keys()):
                     cb_pos = open_positions[cb_key]
                     cb_cache_key = (cb_pos.pair[0], cb_pos.pair[1], cb_pos.window)
@@ -873,10 +888,11 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                             "exit_reason": "circuit_breaker",
                         })
                 open_positions.clear()
+                cb_peak_equity = realized_equity
+        elif cb_cooldown_remaining > 0:
+            cb_cooldown_remaining -= 1
 
         available_slots = cfg.max_slots - len(open_positions)
-        if circuit_breaker_active:
-            available_slots = 0
         if available_slots > 0 and not current_watchlist.empty:
             ranked = current_watchlist.sort_values("final_score", ascending=False)
             for candidate in ranked.to_dict("records"):
@@ -885,6 +901,9 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                 pair_key = str(candidate["pair_key"])
                 if pair_key in open_positions:
                     continue
+                if cfg.min_entry_score > 0.0 and float(candidate["final_score"]) < cfg.min_entry_score:
+                    skipped_low_score += 1
+                    break
                 pair = _key_to_pair(pair_key)
                 window = int(candidate["window"])
                 cache_key = (pair[0], pair[1], window)
@@ -1000,6 +1019,7 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
         "coint_cache_hits_total": float(total_coint_cached),
         "coint_cache_hit_rate": float(cache_hit_rate),
         "circuit_breaker_triggers": float(circuit_breaker_count),
+        "skipped_low_score": float(skipped_low_score),
     }
 
     return RollingPhase2Output(

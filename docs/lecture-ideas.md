@@ -431,6 +431,64 @@ Risk management stack (from narrowest to broadest):
 
 ---
 
+### Entry Quality Gate — "No Good Pairs? Don't Trade."
+
+**Core problem (discovered via WFA period analysis)**:
+
+The strategy forces trades to fill all 7 slots whenever the z-score triggers,
+regardless of the pair's quality score. During low-volatility bull markets
+(2004-2008, 2016-2020), this leads to trading thin-spread pairs that produce
+tiny wins but occasional stop-loss hits that wipe out months of small profits.
+
+**Evidence from WFA period breakdown**:
+
+| Period    | Annualized | Avg PnL/trade | Win Rate | Stop % | Diagnosis |
+|-----------|-----------|---------------|----------|--------|-----------|
+| 2004-2008 | +1.6%     | $15           | 66%      | 6%     | Wins too small |
+| 2016-2020 | -1.6%     | $-7           | 63%      | 6%     | Net negative |
+
+Both periods have LOW stop-loss rates (6%) — the problem is not large losses
+but insufficient profit per winning trade. The strategy is churning through
+mediocre pairs.
+
+**Solution**: Add `min_entry_score` threshold. Pairs below this score are
+skipped even when slots are available. The key insight:
+
+> "Not trading is itself a position. When the opportunity set is poor,
+> cash preservation beats forced deployment."
+
+```
+Entry logic (before):
+  slot_available AND z_score_triggered → ENTER
+
+Entry logic (after):
+  slot_available AND z_score_triggered AND final_score >= min_entry_score → ENTER
+  slot_available AND z_score_triggered AND final_score <  min_entry_score → SKIP
+```
+
+**Calibration**: `final_score` is the sum of `base_score` (surface evaluation
+margin) + `persistence_bonus` (up to +0.15) - `turnover_penalty` (up to -0.10).
+A threshold of 0.3-0.5 filters out the bottom ~30-50% of watchlist pairs.
+
+**Lecture flow**:
+1. Show the period breakdown table (2004-2008 at 1.6% annual, 2016-2020 at -1.6%)
+2. Ask: "Win rate is 66%, so why are we losing money?"
+3. Answer: "Because the average win ($15) is so small that one stop-loss ($2,000) erases 130 winning trades"
+4. Show: "These periods have LOW volatility — spreads are tight, profit per trade is thin"
+5. Solution: "Don't force all 7 slots to be filled. Trade only when the opportunity is genuinely good."
+6. Compare before/after with `min_entry_score=0.4`
+
+**Anticipated student questions**:
+- "Won't we miss opportunities by sitting in cash?" → In low-vol regimes,
+  those 'opportunities' were destroying value. Missing them is a feature.
+- "How do we pick the threshold?" → Start with the median `final_score`
+  from the watchlist. Adjust via WFA comparison.
+
+**Implementation**: `RollingPhase2Config.min_entry_score` in
+`python/pairs_eda/rolling_phase2.py`
+
+---
+
 ### Operational Risk: What Happens When a Ticker Gets Delisted Mid-Trade?
 - **Scenario**: Bot is long A / short B. Today's pipeline run drops ticker A (delisted, no data, removed from S&P 500). Position is still open.
 - **Real-world example**: SNDK (SanDisk) acquired by WDC in 2016 — ticker ceased to exist.
