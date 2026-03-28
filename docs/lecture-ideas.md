@@ -565,9 +565,10 @@ skip the entry — the spread is too flat to trade profitably.
 ```
 lookback = min(60, available_days)
 recent_zscore = zscore[day - lookback : day]
-spread_vol = std(recent_zscore) × sqrt(252)
+ratio = price_a / price_b   (60-day window)
+ratio_range = (max - min) / mean
 
-if spread_vol < min_spread_vol:  SKIP
+if ratio_range < min_spread_range_pct:  SKIP
 ```
 
 **Calibration**: A z-score with annualized vol < 3.0 means daily moves
@@ -579,10 +580,15 @@ of ~0.19σ — the spread barely fluctuates. At vol = 5.0, daily moves are
 2. Ask: "If you win 2 out of 3 trades but only make $15 each, and you lose
    $2,000 on the third, are you profitable?" → No
 3. Explain: the spread is too flat — z-score oscillates in a tiny band
-4. Add `min_spread_vol=3.0` and show improvement
+4. Add `min_spread_range_pct=0.05` and show improvement
 
-**Implementation**: `RollingPhase2Config.min_spread_vol` in
+**Implementation**: `RollingPhase2Config.min_spread_range_pct` in
 `python/pairs_eda/rolling_phase2.py`
+
+**Note on prior approach**: An earlier version measured z-score volatility
+(`std(zscore) × sqrt(252)`), but z-scores are standardized (std ≈ 1.0),
+so annualized vol ≈ 15.87 — always above any reasonable threshold.
+The price-ratio range is a direct, interpretable measure of spread tradability.
 
 ---
 
@@ -886,6 +892,79 @@ At each branch point:
   - **NZD (New Zealand Dollar)** & **Dairy/Agriculture**
 - **Cross-Asset Statistical Arbitrage**: This is where quant pairs trading shines in FX. Instead of pairing two currencies, you pair a currency with a commodity. For example, if Crude Oil spikes but the CAD/JPY pair hasn't moved yet, a quant bot can exploit this temporary divergence (Lead-Lag relationship).
 - **The "Safe Haven" Trade**: Modeling the relationship between USD, JPY, CHF, and Gold during risk-off market events.
+
+---
+
+## Advanced Topic: Market Regime Overlay (Live Workshop Material)
+
+### The Core Insight from WFA Results
+
+Our WFA simulation (1995-2026, 3x leverage, 5-year rolling window, monthly rebalance)
+demonstrates a clear pattern:
+
+| Metric | Pairs Trading | S&P 500 |
+|--------|--------------|---------|
+| Annualized | ~12.5% | ~10-11% |
+| Sharpe | **0.96** | ~0.5-0.7 |
+| Max Drawdown | **-23%** | **-55%** |
+| Worst Month | -9.6% | -16.8% |
+| 2000-2010 (lost decade) | Strong gains | ~0% |
+| 2015-2025 (bull run) | Modest | Strong |
+
+**Key takeaway**: Pairs trading is not about beating S&P 500 in bull markets.
+It's about producing **institutional-quality risk-adjusted returns** (Sharpe ~1.0)
+with dramatically lower drawdowns. The drawdown chart is the most compelling
+visual — S&P reaches -55% while pairs stays within -23%.
+
+### Why This Matters (Lecture Positioning)
+
+1. **Psychological advantage**: Individual investors lose money because they buy high
+   (FOMO) and sell low (panic). Pairs trading is fully systematic — emotions removed.
+2. **Pension/endowment fit**: Institutions need steady returns, not home runs. Sharpe
+   0.96 with -23% max DD is exactly what pension funds and endowments target.
+3. **The max drawdown occurred early** in the simulation when the strategy was
+   still calibrating. As the rolling window accumulates market regime experience,
+   drawdowns shrink — a sign of genuine adaptive learning.
+
+### Dynamic Beta Exposure ("Bull Market Tilt")
+
+**Student question**: "Can we capture some bull market upside while staying mostly neutral?"
+
+**Concept**: Detect market regime and slightly tilt long/short balance.
+
+**Simple implementation**:
+- Trend filter: S&P 500 price vs. 200-day moving average
+- Bullish (price > 200MA): long leg 1.2x / short leg 0.8x
+- Bearish (price < 200MA): stay fully neutral 1.0x / 1.0x
+
+**Danger**: If 200MA signals "bull" but a crash hits next day (e.g., COVID Feb 2020),
+the long bias amplifies losses. This is why it's an advanced topic, not the default.
+
+**Verdict**: Keep the base strategy market-neutral. The regime overlay is optional
+and should be presented as a research direction, not a recommendation.
+
+### Real-Time Adaptive Strategy (The True Edge)
+
+The WFA simulation uses ONE fixed parameter set across all periods. In real trading,
+the investor has a crucial advantage: **real-time adaptation**.
+
+When a loss period occurs:
+1. Examine which pairs caused the loss and WHY
+2. Check if the loss was structural (pair relationship broke) or temporary (shock event)
+3. Adjust strategy parameters (windows, z-score thresholds, sector limits)
+4. Resume with updated parameters from that point forward
+
+This iterative refinement process — aided by LLM analysis of market news and
+trade logs — is where pairs trading truly excels vs. passive investing.
+A human-in-the-loop quantitative system can adapt to regime changes that no
+single backtest can anticipate.
+
+**Lecture flow**: Show the WFA equity curve → identify a loss period →
+analyze it with the student → update strategy → re-simulate from that point →
+compare before/after. This teaches the *process* of quantitative investing,
+not just the *strategy*.
+
+---
 
 ### Lecture Angle for the Next Course
 - **Theme**: "Macro Quant: Trading the Global Machine"

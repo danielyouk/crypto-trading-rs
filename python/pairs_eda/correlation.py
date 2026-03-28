@@ -14,65 +14,44 @@ def filter_volatile_tickers(
     *,
     max_move_quantile: float = 0.90,
 ) -> pd.DataFrame:
-    """Remove tickers with extreme single-day crash risk before pair selection.
+    """Remove tickers with extreme single-day moves before pair selection.
 
-    What breaks a pair relationship permanently is a sudden *crash* — fraud,
-    near-bankruptcy, forced delisting, or a structural business collapse.
-    A sudden *surge* (great earnings, M&A target, product launch) is a good
-    sign and does NOT disqualify a ticker.
-
-    Therefore this filter measures only the **worst single-day drop** per
-    ticker, not the absolute move.
+    Both crashes AND surges break pair equilibrium:
+    - A crash (fraud, delisting) permanently destroys the spread relationship.
+    - A surge (M&A, earnings shock) can equally break the spread by moving
+      one leg far from its historical ratio, causing the z-score to escape
+      its normal band.
 
     Filter logic (per ticker):
 
         daily_returns = Adj Close.pct_change()   (dates × tickers)
                 │
-                ▼  clip(upper=0).abs()  →  drop-only returns (gains → 0)
+                ▼  .abs()              →  magnitude of each daily move
                 │
-                ▼  .max()              →  max_drop  (1 value per ticker,
-                │                          = worst single-day loss magnitude)
+                ▼  .max()              →  max_abs_move  (1 value per ticker,
+                │                          = worst single-day move in either direction)
                 ▼  .quantile(max_move_quantile)  →  threshold
                 │
-                ▼  keep ticker if  max_drop <= threshold
-                                   ^^^^^^^^^^^^^^^^^^^^
-                                   adapts to the actual universe distribution
-                                   (2008 crisis vs. 2010s bull market treated
-                                    consistently — always worst X% excluded)
-
-    Example: AAPL had big positive days (iPhone launch, earnings beats) but
-    its worst single-day drop is modest relative to stocks like Enron or
-    Lehman — so AAPL survives the filter while genuine crash-prone stocks
-    are excluded.
+                ▼  keep ticker if  max_abs_move <= threshold
 
     Args:
         prices:            Adj Close panel (dates × tickers).
         max_move_quantile: Tickers above this quantile of worst single-day
-                           drop are excluded.  0.90 = drop the worst 10%.
+                           absolute move are excluded.  0.90 = drop the worst 10%.
 
     Returns:
         Filtered DataFrame with the same date index but fewer ticker columns.
-
-    Example:
-        >>> sp500_daily_prices = filter_volatile_tickers(
-        ...     sp500_daily_prices, max_move_quantile=0.90
-        ... )
-        filter_volatile_tickers: dropped 48/481 tickers
-          max single-day drop cut-off: 28.1%  (p90)
-          Dropped: ['AIG', 'MER', ...]
     """
     daily_returns = prices.pct_change().dropna(how="all")
-    # clip(upper=0): turn gains into 0 so only losses contribute.
-    # abs(): convert negative losses to positive magnitudes for easy comparison.
-    max_drop = daily_returns.clip(upper=0).abs().max()
+    max_abs_move = daily_returns.abs().max()
 
-    no_data = max_drop.isna()
+    no_data = max_abs_move.isna()
     n_no_data = int(no_data.sum())
     has_data = ~no_data
 
-    threshold = float(max_drop[has_data].quantile(max_move_quantile))
-    too_volatile = has_data & (max_drop > threshold)
-    keep = has_data & (max_drop <= threshold)
+    threshold = float(max_abs_move[has_data].quantile(max_move_quantile))
+    too_volatile = has_data & (max_abs_move > threshold)
+    keep = has_data & (max_abs_move <= threshold)
 
     n_before = prices.shape[1]
     n_with_data = int(has_data.sum())
@@ -83,7 +62,7 @@ def filter_volatile_tickers(
     if n_no_data > 0:
         print(f"  no data in window: {n_no_data} tickers excluded")
     print(f"  with data: {n_with_data} tickers")
-    print(f"  volatile (>{threshold:.1%} max drop, p{max_move_quantile:.0%}): {n_volatile} dropped")
+    print(f"  volatile (>{threshold:.1%} max abs move, p{max_move_quantile:.0%}): {n_volatile} dropped")
     print(f"  kept: {filtered.shape[1]} tickers")
 
     return filtered

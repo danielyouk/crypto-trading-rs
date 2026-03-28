@@ -104,11 +104,12 @@ class RollingPhase2Config(BaseModel):
         "Requires sector_map in RollingPhase2Input. "
         "Set to 0 to disable (no sector constraint).",
     )
-    min_spread_vol: float = Field(
+    min_spread_range_pct: float = Field(
         default=0.0, ge=0.0,
-        description="Minimum annualized spread volatility (as fraction of notional) "
-        "required to enter a pair. Pairs with spreads too narrow to profit from "
-        "are skipped. E.g. 0.05 = require at least 5% annualized spread vol. "
+        description="Minimum recent spread range as a fraction of mid-price. "
+        "Computed as (max - min) of (price_a / price_b) over 60 days, divided "
+        "by its mean. If the price ratio barely moves, the pair is too flat to "
+        "trade profitably. E.g. 0.05 = require at least 5% ratio swing. "
         "Set to 0 to disable.",
     )
     annual_risk_free_rate: float = Field(default=0.0, ge=0.0)
@@ -431,7 +432,11 @@ def _evaluate_pair_surface(
     if len(val_df) < max(cfg.windows) + 3:
         return None
 
+    n_train_days = float(len(train_df))
+    n_val_days = float(len(val_df))
+
     rows: list[dict[str, float]] = []
+    zscore_cache: dict[int, tuple[pd.Series, pd.Series]] = {}
     for window in cfg.windows:
         train_stats = compute_zscore(train_df[a], train_df[b], window=window)
         val_stats = compute_zscore(val_df[a], val_df[b], window=window)
@@ -440,6 +445,8 @@ def _evaluate_pair_surface(
         val_ret = cast(pd.Series, val_stats["ratio"]).diff().fillna(0.0)
         train_z = cast(pd.Series, train_stats["zscore"]).replace([np.inf, -np.inf], np.nan)
         val_z = cast(pd.Series, val_stats["zscore"]).replace([np.inf, -np.inf], np.nan)
+
+        zscore_cache[window] = (train_z, val_z)
 
         for zthr in cfg.zscore_thresholds:
             train_pos = (
@@ -466,12 +473,14 @@ def _evaluate_pair_surface(
                     "zscore": float(zthr),
                     "train_margin": float(train_strat),
                     "validation_margin": float(val_strat),
+                    "train_margin_daily": float(train_strat) / n_train_days,
+                    "val_margin_daily": float(val_strat) / n_val_days,
                 }
             )
 
     if not rows:
         return None
-    surface = pd.DataFrame(rows).sort_values("validation_margin", ascending=False)
+    surface = pd.DataFrame(rows).sort_values("val_margin_daily", ascending=False)
     top_k = surface.head(min(cfg.top_k_for_robustness, len(surface)))
     if len(top_k) == 0:
         return None
@@ -481,15 +490,36 @@ def _evaluate_pair_surface(
     train_margin = float(top_k["train_margin"].mean())
     validation_margin = float(top_k["validation_margin"].mean())
     diff_margin = abs(train_margin - validation_margin)
-    diff_ratio = diff_margin / (abs(validation_margin) + 1e-6)
+
+    train_daily = float(top_k["train_margin_daily"].mean())
+    val_daily = float(top_k["val_margin_daily"].mean())
+
+    # --- Hard consistency gate (Phase 2a must confirm Phase 1) ---
+    # (a) Training period must be profitable on a per-day basis.
+    #     If even the training data can't produce a profit, the pair is not viable.
+    if train_daily <= 0.0:
+        return None
 
     best_window = int(round(float(top_k["window"].median())))
     best_window = min(cfg.windows, key=lambda x: abs(x - best_window))
     best_z = float(top_k["zscore"].median())
     best_z = min(cfg.zscore_thresholds, key=lambda x: abs(x - best_z))
 
+    # (c) Z-score volatility consistency for the chosen window.
+    #     The std of z-score reflects spread dynamics; it should be
+    #     structurally similar across train and validation periods.
+    if best_window in zscore_cache:
+        tz, vz = zscore_cache[best_window]
+        train_z_std = float(tz.dropna().std())
+        val_z_std = float(vz.dropna().std())
+        if train_z_std > 1e-6 and val_z_std > 1e-6:
+            z_vol_ratio = val_z_std / train_z_std
+            if z_vol_ratio > 2.5 or z_vol_ratio < 0.4:
+                return None
+
+    diff_ratio = abs(val_daily - train_daily) / (val_daily + 1e-9)
     stability = 1.0 / (1.0 + dist_window + dist_zscore + diff_ratio)
-    profit = float(np.tanh(validation_margin * 30.0))
+    profit = float(np.tanh(val_daily * 252.0 * 30.0))
     base_score = 0.6 * profit + 0.4 * stability
 
     return {
@@ -941,15 +971,20 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                 if day not in feat.index:
                     continue
 
-                # --- Minimum spread volatility check ---
-                if cfg.min_spread_vol > 0.0:
+                # --- Minimum spread range check (price ratio range) ---
+                if cfg.min_spread_range_pct > 0.0:
                     day_loc = feat.index.get_loc(day)
                     lookback = min(60, int(day_loc))
                     if lookback >= 10:
-                        recent_z = feat["zscore"].iloc[int(day_loc) - lookback:int(day_loc) + 1]
-                        spread_vol = float(recent_z.std()) * np.sqrt(252)
-                        if spread_vol < cfg.min_spread_vol:
-                            continue
+                        sl = slice(int(day_loc) - lookback, int(day_loc) + 1)
+                        pa = feat["price_a"].iloc[sl]
+                        pb = feat["price_b"].iloc[sl]
+                        valid = (pb > 0).all()
+                        if valid:
+                            ratio = pa / pb
+                            ratio_range = float((ratio.max() - ratio.min()) / ratio.mean())
+                            if ratio_range < cfg.min_spread_range_pct:
+                                continue
 
                 row = cast(pd.Series, feat.loc[day])
                 z = float(row["zscore"])

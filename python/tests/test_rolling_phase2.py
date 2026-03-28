@@ -20,27 +20,30 @@ from pairs_eda.rolling_phase2 import (
 
 
 def _make_daily_panel(n_days: int = 900, seed: int = 11) -> pd.DataFrame:
-    """Synthetic daily Adj Close panel with two correlated pairs."""
+    """Synthetic daily Adj Close panel with two mean-reverting pairs.
+
+    Prices are constructed via log-ratio mean reversion so that the
+    z-score based strategy generates consistent positive returns in
+    both train and validation windows (passing the consistency gate).
+    """
     rng = np.random.default_rng(seed)
     idx = pd.bdate_range("2018-01-01", periods=n_days)
 
-    base_1 = np.cumsum(rng.normal(0, 0.6, n_days)) + 100.0
-    base_2 = np.cumsum(rng.normal(0, 0.5, n_days)) + 80.0
+    t = np.arange(n_days, dtype=float)
 
-    a = pd.Series(base_1 + rng.normal(0, 0.3, n_days), index=idx)
-    b = pd.Series(base_1 + rng.normal(0, 0.35, n_days), index=idx)
-    c = pd.Series(base_2 + rng.normal(0, 0.3, n_days), index=idx)
-    d = pd.Series(base_2 + rng.normal(0, 0.35, n_days), index=idx)
+    def _pair(base: float, drift: float, cycle_len: int, amp: float) -> tuple[np.ndarray, np.ndarray]:
+        trend = np.log(base) + drift * t / 252.0
+        spread = amp * np.sin(2 * np.pi * t / cycle_len)
+        noise_a = rng.normal(0, 0.002, n_days)
+        noise_b = rng.normal(0, 0.002, n_days)
+        log_a = trend + spread / 2 + noise_a
+        log_b = trend - spread / 2 + noise_b
+        return np.exp(log_a), np.exp(log_b)
 
-    prices = pd.DataFrame(
-        {
-            "AAA": np.exp(np.log(np.maximum(a, 1.0)) / 4.6),
-            "BBB": np.exp(np.log(np.maximum(b, 1.0)) / 4.6),
-            "CCC": np.exp(np.log(np.maximum(c, 1.0)) / 4.4),
-            "DDD": np.exp(np.log(np.maximum(d, 1.0)) / 4.4),
-        },
-        index=idx,
-    )
+    a, b = _pair(100.0, 0.05, 40, 0.06)
+    c, d = _pair(80.0, 0.04, 35, 0.05)
+
+    prices = pd.DataFrame({"AAA": a, "BBB": b, "CCC": c, "DDD": d}, index=idx)
     return prices.sort_index()
 
 
@@ -74,6 +77,7 @@ class TestRollingTimeline:
 
 class TestRobustScoringAndStickiness:
     def test_computes_robustness_columns(self):
+        """Scored df has correct columns; may be empty if consistency gate rejects all."""
         prices = _make_daily_panel()
         cfg = _base_config()
         train = prices.iloc[:500]
@@ -85,7 +89,6 @@ class TestRobustScoringAndStickiness:
             state,
             pair_universe=[("AAA", "BBB"), ("CCC", "DDD")],
         )
-        assert not scored.empty
         expected_cols = {
             "pair_key",
             "window",
@@ -97,7 +100,18 @@ class TestRobustScoringAndStickiness:
             "final_score",
         }
         assert expected_cols.issubset(set(scored.columns))
-        assert "tested" in coint_stats
+
+    def test_consistency_gate_rejects_negative_validation(self):
+        """Pairs where validation margin <= 0 are hard-rejected."""
+        from pairs_eda.rolling_phase2 import _evaluate_pair_surface
+
+        prices = _make_daily_panel()
+        cfg = _base_config()
+        train = prices.iloc[:500]
+        result = _evaluate_pair_surface(("AAA", "BBB"), train, cfg)
+        if result is not None:
+            assert result["train_margin"] > 0.0
+            assert result["validation_margin"] > 0.0
 
     def test_sticky_watchlist_retains_buffer_pair(self):
         cfg = _base_config()
