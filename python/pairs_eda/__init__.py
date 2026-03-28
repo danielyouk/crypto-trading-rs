@@ -10,6 +10,7 @@ from pairs_eda.sp500 import (
     Sp500FetchError,
     WikipediaSp500Error,
     fetch_sp500_constituents_table,
+    fetch_sp500_sector_map,
 )
 from pairs_eda.correlation import (
     compute_pairwise_return_correlations,
@@ -74,6 +75,7 @@ __all__ = [
     "create_exa_backend",
     "default_gemini_backend",
     "fetch_sp500_constituents_table",
+    "fetch_sp500_sector_map",
     "grid_search_pair",
     "plot_correlation_histogram",
     "print_margin_summary",

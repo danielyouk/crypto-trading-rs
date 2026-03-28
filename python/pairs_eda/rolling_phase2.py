@@ -98,6 +98,19 @@ class RollingPhase2Config(BaseModel):
         "Set to 0 to disable (accept any watchlist pair). "
         "Typical range: 0.3-0.6 depending on scoring calibration.",
     )
+    max_sector_slots: int = Field(
+        default=0, ge=0,
+        description="Max open positions sharing the same GICS sector. "
+        "Requires sector_map in RollingPhase2Input. "
+        "Set to 0 to disable (no sector constraint).",
+    )
+    min_spread_vol: float = Field(
+        default=0.0, ge=0.0,
+        description="Minimum annualized spread volatility (as fraction of notional) "
+        "required to enter a pair. Pairs with spreads too narrow to profit from "
+        "are skipped. E.g. 0.05 = require at least 5% annualized spread vol. "
+        "Set to 0 to disable.",
+    )
     annual_risk_free_rate: float = Field(default=0.0, ge=0.0)
     start_date: Optional[pd.Timestamp] = None
     end_date: Optional[pd.Timestamp] = None
@@ -137,6 +150,7 @@ class RollingPhase2Input(BaseModel):
     initial_capital: float = Field(gt=0.0)
     config: RollingPhase2Config
     pair_universe: Optional[list[tuple[str, str]]] = None
+    sector_map: Optional[dict[str, str]] = None
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -709,6 +723,7 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
 
     cfg = inp.config
     prices = inp.prices
+    sector_map = inp.sector_map or {}
     schedule = build_rolling_timeline(inp)
     if len(schedule) == 0:
         raise ValueError("No valid rolling schedule. Adjust date range/training settings.")
@@ -905,6 +920,19 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                     skipped_low_score += 1
                     break
                 pair = _key_to_pair(pair_key)
+
+                # --- Sector diversification constraint ---
+                if cfg.max_sector_slots > 0 and sector_map:
+                    pair_sectors = {sector_map.get(pair[0], ""), sector_map.get(pair[1], "")} - {""}
+                    sector_counts: dict[str, int] = {}
+                    for pos in open_positions.values():
+                        for t in pos.pair:
+                            s = sector_map.get(t, "")
+                            if s:
+                                sector_counts[s] = sector_counts.get(s, 0) + 1
+                    if any(sector_counts.get(s, 0) >= cfg.max_sector_slots * 2 for s in pair_sectors):
+                        continue
+
                 window = int(candidate["window"])
                 cache_key = (pair[0], pair[1], window)
                 if cache_key not in feature_cache:
@@ -912,6 +940,17 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                 feat = feature_cache[cache_key]
                 if day not in feat.index:
                     continue
+
+                # --- Minimum spread volatility check ---
+                if cfg.min_spread_vol > 0.0:
+                    day_loc = feat.index.get_loc(day)
+                    lookback = min(60, int(day_loc))
+                    if lookback >= 10:
+                        recent_z = feat["zscore"].iloc[int(day_loc) - lookback:int(day_loc) + 1]
+                        spread_vol = float(recent_z.std()) * np.sqrt(252)
+                        if spread_vol < cfg.min_spread_vol:
+                            continue
+
                 row = cast(pd.Series, feat.loc[day])
                 z = float(row["zscore"])
                 px_a = float(row["price_a"])

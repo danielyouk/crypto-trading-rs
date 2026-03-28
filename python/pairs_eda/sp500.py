@@ -350,5 +350,53 @@ def _normalize_dates(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def fetch_sp500_sector_map(
+    *,
+    url: str = DEFAULT_URL,
+    timeout: float | tuple[float, float] = (15.0, 60.0),
+    verbose: bool = False,
+) -> dict[str, str]:
+    """Return a {ticker: GICS_sector} mapping from the S&P 500 Wikipedia table.
+
+    Falls back to an empty dict if the sector column is not found.
+    """
+    _SECTOR_HINTS = {"gics sector", "sector", "gics_sector"}
+
+    try:
+        html = _fetch_html(url, timeout=timeout)
+        tables = _extract_tables(html, url)
+        if not tables:
+            return {}
+
+        table, sym_col, _ = _pick_best_table(tables, None, None)
+        if table.empty or not sym_col:
+            return {}
+
+        cols_lower = {str(c).lower().strip(): str(c) for c in table.columns}
+        sector_col = None
+        for hint in _SECTOR_HINTS:
+            if hint in cols_lower:
+                sector_col = cols_lower[hint]
+                break
+
+        if sector_col is None:
+            _vb(verbose, "No GICS Sector column found in table.")
+            return {}
+
+        mapping: dict[str, str] = {}
+        for _, row in table.iterrows():
+            ticker = str(row[sym_col]).strip().upper().replace(".", "-")
+            sector = str(row[sector_col]).strip()
+            if ticker and sector and sector != "nan":
+                mapping[ticker] = sector
+
+        _vb(verbose, f"Sector map: {len(mapping)} tickers across {len(set(mapping.values()))} sectors.")
+        return mapping
+
+    except Exception as exc:
+        logger.warning("Failed to fetch sector map: %s", exc)
+        return {}
+
+
 # Backward compat alias
 WikipediaSp500Error = Sp500FetchError

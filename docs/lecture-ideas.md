@@ -489,6 +489,103 @@ A threshold of 0.3-0.5 filters out the bottom ~30-50% of watchlist pairs.
 
 ---
 
+### Sector Diversification Constraint — Preventing REIT Concentration
+
+**Core problem (discovered via WFA trade analysis)**:
+
+The worst-performing pairs in 2020-2024 were dominated by REIT tickers:
+ARE, KIM, EXR, PLD, ESS, MAA, REG. These are all Real Estate sector stocks.
+When REITs face a sector-wide shock (rising interest rates in 2022), ALL
+pairs in the sector fail simultaneously — the "diversification" of 7 slots
+provides zero protection because they are all correlated.
+
+**Evidence from trade-level analysis (2022-2024)**:
+
+| Pair    | Total PnL | Trades | Sector |
+|---------|----------|--------|--------|
+| ARE/DLR | -$27,092 | 14     | Real Estate |
+| ARE/EQR | -$17,042 | 6      | Real Estate |
+| AVB/EXR | -$16,815 | 10     | Real Estate |
+| ARE/ESS | -$13,852 | 8      | Real Estate |
+| DOC/O   | -$13,498 | 13     | Real Estate |
+
+5 of the top 5 worst pairs are REITs. This is sector concentration, not
+diversification.
+
+**Solution**: Limit the number of open slots sharing the same GICS sector.
+Each pair involves two tickers, both typically from the same sector (that is
+why they are correlated). Count sector exposure per ticker across all open
+positions and enforce a cap.
+
+```
+For each candidate pair (ticker_a, ticker_b):
+  sector_a = GICS_sector(ticker_a)
+  sector_b = GICS_sector(ticker_b)
+
+  count sector exposure across all open positions:
+    sector_counts[sector] = number of open tickers in that sector
+
+  if sector_counts[sector_a] >= max_sector_slots * 2:  SKIP
+  if sector_counts[sector_b] >= max_sector_slots * 2:  SKIP
+  (×2 because each pair has 2 tickers)
+```
+
+**Data source**: GICS sector from Wikipedia S&P 500 table, fetched via
+`fetch_sp500_sector_map()` at startup.
+
+**Lecture flow**:
+1. Show the top-10 worst pairs table for 2022-2024
+2. Highlight: "5 of 5 are REITs — our 7 slots were a REIT portfolio"
+3. Add `max_sector_slots=3` and re-run
+4. Compare: sector-constrained vs unconstrained equity curve
+
+**Implementation**: `RollingPhase2Config.max_sector_slots` +
+`RollingPhase2Input.sector_map` in `python/pairs_eda/rolling_phase2.py`
+
+---
+
+### Minimum Spread Volatility — Skip Flat Spreads in Calm Markets
+
+**Core problem (discovered via WFA period analysis)**:
+
+During low-volatility bull markets (2004-2008, 2016-2020), the strategy
+traded pairs whose spreads were too narrow to generate meaningful profit.
+Win rate was decent (66%) but average PnL per winning trade was only $15.
+A single stop-loss hit ($2,000) erased 130 winning trades.
+
+**Root cause**: In calm markets, stock prices move in lockstep with very
+small deviations. The z-score barely crosses the entry threshold, and when
+it does, the profit from mean-reversion is minimal. The spread's volatility
+is simply too low to support profitable trading at the given cost structure.
+
+**Solution**: Before entering a position, compute the recent (60-day)
+annualized volatility of the z-score series. If it is below a threshold,
+skip the entry — the spread is too flat to trade profitably.
+
+```
+lookback = min(60, available_days)
+recent_zscore = zscore[day - lookback : day]
+spread_vol = std(recent_zscore) × sqrt(252)
+
+if spread_vol < min_spread_vol:  SKIP
+```
+
+**Calibration**: A z-score with annualized vol < 3.0 means daily moves
+of ~0.19σ — the spread barely fluctuates. At vol = 5.0, daily moves are
+~0.31σ, enough for the entry/exit to capture a meaningful range.
+
+**Lecture flow**:
+1. Show the 2004-2008 period stats: 66% win rate, $15 avg profit
+2. Ask: "If you win 2 out of 3 trades but only make $15 each, and you lose
+   $2,000 on the third, are you profitable?" → No
+3. Explain: the spread is too flat — z-score oscillates in a tiny band
+4. Add `min_spread_vol=3.0` and show improvement
+
+**Implementation**: `RollingPhase2Config.min_spread_vol` in
+`python/pairs_eda/rolling_phase2.py`
+
+---
+
 ### Operational Risk: What Happens When a Ticker Gets Delisted Mid-Trade?
 - **Scenario**: Bot is long A / short B. Today's pipeline run drops ticker A (delisted, no data, removed from S&P 500). Position is still open.
 - **Real-world example**: SNDK (SanDisk) acquired by WDC in 2016 — ticker ceased to exist.
