@@ -64,6 +64,11 @@ class RollingPhase2Config(BaseModel):
     watchlist_retention_buffer: int = Field(default=8, ge=0)
     max_drop_rebalances: int = Field(default=2, ge=1)
     max_slots: int = Field(default=7, ge=1)
+    max_new_entries_per_day: int = Field(
+        default=0, ge=0,
+        description="Daily cap for new position entries. "
+        "0 disables this cap (unlimited entries per day).",
+    )
     leverage: float = Field(default=1.0, ge=1.0)
     max_drop_quantile: float = Field(
         default=0.0, ge=0.0, le=1.0,
@@ -74,6 +79,11 @@ class RollingPhase2Config(BaseModel):
     entry_zscore_default: float = Field(default=2.0, gt=0.0)
     exit_zscore: float = Field(default=0.0)
     stop_loss_pct: float = Field(default=0.05, ge=0.0)
+    min_holding_days: int = Field(
+        default=0, ge=0,
+        description="Minimum holding days before mean-reversion exit is allowed. "
+        "Stop-loss exits are always allowed. 0 disables this.",
+    )
     stop_loss_max_slip_pct: float = Field(
         default=0.02, ge=0.0,
         description="Max additional slippage beyond stop_loss_pct when stop fires. "
@@ -842,8 +852,11 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                 continue
 
             unrealized = _compute_unrealized_pnl(pos, px_a, px_b)
-            hit_exit = (pos.direction == 1 and z >= pos.exit_zscore) or (
-                pos.direction == -1 and z <= pos.exit_zscore
+            holding_days = int((day - pos.entry_date).days)
+            can_mean_revert_exit = holding_days >= cfg.min_holding_days
+            hit_exit = can_mean_revert_exit and (
+                (pos.direction == 1 and z >= pos.exit_zscore) or
+                (pos.direction == -1 and z <= pos.exit_zscore)
             )
             hit_stop = cfg.stop_loss_pct > 0.0 and unrealized <= (-cfg.stop_loss_pct * pos.slot_notional)
             if not (hit_exit or hit_stop):
@@ -867,7 +880,6 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
             entry_commission = _commission_from_notional(pos.slot_notional, cfg.commission_per_leg_bps)
             realized_equity += pnl - exit_commission
             exit_count += 1
-            holding_days = int((day - pos.entry_date).days)
             trades.append(
                 {
                     "pair_key": key,
@@ -938,10 +950,13 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
             cb_cooldown_remaining -= 1
 
         available_slots = cfg.max_slots - len(open_positions)
+        daily_new_entries = 0
         if available_slots > 0 and not current_watchlist.empty:
             ranked = current_watchlist.sort_values("final_score", ascending=False)
             for candidate in ranked.to_dict("records"):
                 if available_slots <= 0:
+                    break
+                if cfg.max_new_entries_per_day > 0 and daily_new_entries >= cfg.max_new_entries_per_day:
                     break
                 pair_key = str(candidate["pair_key"])
                 if pair_key in open_positions:
@@ -1039,6 +1054,7 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
                 )
                 entry_count += 1
                 available_slots -= 1
+                daily_new_entries += 1
 
         unrealized_total = 0.0
         for pos in open_positions.values():

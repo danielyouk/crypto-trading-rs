@@ -966,6 +966,90 @@ not just the *strategy*.
 
 ---
 
+## FAQ: Anticipated Student Questions
+
+### Q: "Can't I just buy S&P 500 with a stop-loss instead of pairs trading?"
+
+**Short answer**: In theory yes, in practice the stop-loss approach has a fatal flaw
+called **whipsaw** that pairs trading avoids structurally.
+
+**The whipsaw problem**:
+1. S&P drops -5% in one day → you sell
+2. Next day it bounces +4% → you see "momentum confirmed" → you buy back
+3. Day after, it drops -3% again → you sell again
+4. Each cycle: you lock in a loss + pay transaction costs + miss part of the recovery
+5. During COVID March 2020, this would have triggered multiple times in a single week
+
+**Why "momentum confirmation" is the hardest part**:
+- Define "confirmed": 3 consecutive up days? 10-day MA cross? There is no reliable signal.
+- Enter too early → another drop. Enter too late → miss the strongest recovery days.
+- Famous stat: **Missing the best 10 days over 20 years cuts S&P returns by more than half.**
+  Those best days almost always occur right after the worst days.
+
+**S&P -5% single-day drops are extremely rare**:
+- Most crashes unfold as -2% to -3% over many consecutive days
+- By the time you see -5% in one day, cumulative drawdown is already -15% to -20%
+- The stop-loss fires too late to protect and too early to capture recovery
+
+**Comparison table (show in lecture)**:
+
+| | S&P 500 + Stop-Loss | Pairs Trading |
+|---|---|---|
+| Entry/exit decision | Subjective judgment each time | Fully systematic (z-score) |
+| Whipsaw risk | Severe in volatile markets | None (pair-level management) |
+| Psychological burden | High ("when do I re-enter?") | Low (automated execution) |
+| Drawdown protection | Theoretically possible, practically hard | **Structurally built-in** |
+| Works in flat markets | No returns while waiting | Mean-reversion still works |
+
+**Lecture delivery**: Present as a 3-minute FAQ slide. Acknowledge the student's
+intuition is reasonable, then show the whipsaw diagram. End with: "Pairs trading
+doesn't need you to predict market direction — that's its structural advantage."
+
+---
+
+### Training Window Length: 3yr vs 5yr Trade-offs
+
+**Why this matters**: The training window determines how much historical data the strategy
+uses to find pairs and optimize parameters. This is one of the most impactful config choices.
+
+**5-year rolling window**:
+- More data for cointegration tests (statistical power)
+- Better at detecting long-term structural relationships
+- Risk: carries stale regime data — patterns from 2015 don't apply to post-COVID 2021
+- Observed: underperformance in 2012-2016 (9% cumulative) and 2020-2024 (19% cumulative)
+  because parameters trained on distant regimes failed to adapt
+
+**3-year rolling window**:
+- Faster adaptation to current market regime
+- Drops stale pairs sooner when correlations break down
+- Risk: less data for cointegration → more false positives
+- Mitigation: the Phase 2a consistency gate catches pairs that pass cointegration
+  but fail to produce consistent profit patterns
+
+**Teaching point**: Show students both configurations side-by-side. The 5yr window
+produces a smoother equity curve in stable decades (1995-2005) but stagnates when
+regimes shift. The 3yr window is choppier but recovers faster from regime changes.
+This is a microcosm of the bias-variance trade-off in all quantitative strategies.
+
+### Circuit Breaker Tuning: 15% vs 10%
+
+**15% threshold (original)**:
+- Allows more room for temporary drawdowns to recover
+- Risk: by the time it triggers during a crash, the damage is already severe
+- During COVID (March 2020), equity could drop 15% before any positions are closed
+
+**10% threshold (current)**:
+- Triggers earlier, limiting tail risk
+- Trade-off: may trigger during "normal" volatile periods, causing unnecessary exits
+- The 5-day cooldown after trigger prevents immediate re-entry into a crashing market
+
+**Teaching point**: Circuit breakers are a last-resort defense. The primary defense
+should be good pair selection (consistency gate, cointegration), position sizing,
+and per-trade stop losses. A tighter circuit breaker compensates for the reduced
+statistical power of a shorter training window.
+
+---
+
 ### Lecture Angle for the Next Course
 - **Theme**: "Macro Quant: Trading the Global Machine"
 - **Pedagogical Philosophy (Traditional First)**: Strictly focus on traditional, interpretable quant methods (Linear regression, Cointegration, Z-scores). Avoid deep learning or "black-box" AI. Students must first master market mechanics, execution infrastructure, and risk management using transparent "white-box" models where every trade's rationale can be mathematically proven and debugged.

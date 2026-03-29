@@ -1,0 +1,1 @@
+timestamp_utc,holdout_years,start_date,end_date,training_months,circuit_breaker_pct,min_holding_days,cumulative_return,annualized_return,sharpe_ratio,max_drawdown,entry_count,slot_utilization

@@ -44,6 +44,8 @@ def plot_correlation_histogram(
     """
     fig, ax = plt.subplots(figsize=(9, 4), dpi=100)
 
+    all_correlations = all_correlations[~np.isnan(all_correlations)]
+
     ax.hist(
         all_correlations,
         bins=bins,
