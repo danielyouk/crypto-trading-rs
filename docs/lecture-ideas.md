@@ -209,24 +209,20 @@ In live trading, this bias does not exist."
 
 ### Earnings Blackout Window — Avoid Known, Scheduled Risk
 
-**Core idea**: Pairs trading is built on the assumption that the spread is stationary. Earnings announcements
-break this assumption *temporarily but predictably*. Unlike the stop-loss (which reacts after the fact),
-an earnings blackout avoids the loss proactively.
+**Core idea**: Pairs trading is built on the assumption that the spread is stationary. Earnings announcements break this assumption *temporarily but predictably*. Unlike the stop-loss (which reacts after the fact), an earnings blackout avoids the loss proactively.
 
-**Why the pair breaks around earnings**:
-- Ticker A and B report on different days (typically days apart)
-- On A's report day: +15% gap → z-score spikes → looks like a strong entry signal
-- But this is NOT mean-reversion — A has genuinely re-rated at a new fundamental level
-- The spread does not revert; the stop-loss fires after a 5% loss anyway
-- **Lesson**: If you can predict the risk, avoid it — don't just react to it
+**The Backtesting Dilemma (Data Availability)**:
+- In live trading, checking the next earnings date is trivial.
+- In a 20-year backtest, obtaining accurate historical earnings dates for all 500 S&P stocks is nearly impossible with free data sources.
+- **Our Approach (The Hybrid Solution)**: 
+  1. **Long-term Backtest (Phase 1)**: We run the 20-year backtest *without* the blackout rule. This means our backtest takes the full damage of historical earnings shocks. We present this as a "conservative baseline"—if the strategy survives this, it is robust.
+  2. **Short-term Precision Backtest (Phase 2a/2b)**: For the most recent 1-3 years, `yfinance` provides accurate historical earnings dates. We implement the Earnings Blackout logic here to prove its effectiveness and show how it improves the Sharpe ratio compared to the baseline.
 
-**Proposed rule**:
-```
+**Proposed rule (for Phase 2 and Live Trading)**:
+```python
 blackout_start = min(earnings_A, earnings_B) - 2 days
 blackout_end   = max(earnings_A, earnings_B) + 1 day
-→ close any open position for this pair before blackout_start
-→ skip all new entry signals within the window
-→ apply cooldown = window bars after blackout_end (same logic as post-stop-loss)
+# Action: Close any open position before blackout_start. Skip new signals within window.
 ```
 Why 2 days before: implied volatility (IV) spikes in the lead-up; market makers widen spreads; slippage increases.
 
