@@ -1077,19 +1077,20 @@ statistical power of a shorter training window.
 **Lecture storyline**:
 1. **The Execution Risk (The Future)**:
    - When we are holding a live position, a sudden 20% jump or drop in one leg is our worst nightmare. It blows out the spread and hits our stop-loss instantly.
-   - *How do we protect against this?* Institutions spend millions on alternative data (real-time news sentiment, Twitter traffic, options IV) to predict jumps. (We will cover NLP and Twitter sentiment APIs in the Advanced AI course).
-   - *Our Solution for this course*: 
-     1. **The Earnings Blackout Window**: A "naive" but incredibly powerful defense. By simply closing positions 2 days before earnings and ignoring signals until 1 day after, we eliminate the vast majority of predictable jump risk.
-     2. **The Volatility Filter (`filter_volatile_tickers`)**: We drop the top 10% most volatile stocks (using Sector De-meaning). *Debate point for the class*: Why do we do this? If lightning rarely strikes twice, why drop a stock just because it jumped a year ago? The answer is that we aren't filtering out "one-off" events; we are filtering out **"Lightning Rods"**. Meme stocks, highly shorted companies, or biotech firms have a structural *habit* of jumping due to investor emotion. We drop them because their baseline idiosyncratic volatility is fundamentally incompatible with a mean-reversion strategy.
+   - *The Reality of Pairs Trading*: Pairs trading perfectly hedges *Market Risk* (Beta). If the S&P 500 crashes, your long and short legs cancel each other out. However, it **cannot perfectly hedge Idiosyncratic Risk** (individual stock shocks). If your short leg cures cancer tomorrow, you will lose money. Jumps are an unavoidable destiny in stock investing.
+   - *How do we protect against this?* 
+     1. **The Volatility Filter (`filter_volatile_tickers`)**: We drop the top 10% most volatile stocks. Why? We aren't filtering out "one-off" events; we are filtering out **"Lightning Rods"**. Meme stocks or highly shorted companies have a structural *habit* of jumping due to investor emotion. We drop them because their baseline volatility is fundamentally incompatible with a mean-reversion strategy.
+     2. **The Earnings Blackout Window**: Even for the remaining 90% of "safe" stocks, jumps still happen. The vast majority of predictable jumps occur around earnings. By simply closing positions 2 days before earnings and ignoring signals until 1 day after, we eliminate the biggest source of jump risk.
+     3. **Advanced Sentiment Analysis (Course 2 Preview)**: What about unpredictable jumps (e.g., sudden CEO resignation, FDA approval)? In the Advanced AI course, we will build a real-time sentiment analysis engine using Twitter APIs and financial news streams to detect the *symptoms* of an impending jump and exit the trade milliseconds before the price blows out.
 
 2. **The Training Risk (The Past)**:
-   - What if a fundamentally *safe* stock (like MSFT) had a rare 20% jump *a year ago*? Is it dangerous today?
+   - What if one of our 90% "safe" stocks had a rare 20% jump *a year ago*? Is it dangerous today?
    - *Counter-intuitive thought*: A safe stock that had a massive earnings surprise a year ago is actually LESS likely to have another one today. So why is it a problem?
    - *The real reason*: That historical 20% jump *permanently breaks our mathematical spread* in the training data. If we use a Simple Moving Average (SMA), a 20% jump creates a 60-day "ghost signal" period where the Z-score is artificially high, generating fake entry signals today even though the stock is peaceful.
 
 3. **The Ultimate Institutional Solution (Kalman Filters)**:
    - *Student question*: "If a safe stock had one rare jump, why throw it away? Can't we fix the math?"
-   - *Answer*: Yes! Instead of SMA, we use a **Kalman Filter**. When a 20% jump occurs in the training data, the Kalman Filter mathematically detects a "regime change" and instantly resets the moving average to the new price level. It treats the post-jump spread as the **"New Normal"** rather than an anomaly. This completely eliminates the data pollution without having to discard perfectly good stocks. **We will implement this Kalman Filter directly in our Z-score calculation for this course.**
+   - *Answer*: Yes! Instead of SMA, we use a **Kalman Filter**. When a 20% jump occurs in the training data, the Kalman Filter mathematically detects a "regime change" (data drift) and instantly resets the moving average to the new price level. It treats the post-jump spread as the **"New Normal"** rather than an anomaly. This completely eliminates the data pollution without having to discard perfectly good stocks. **We will implement this Kalman Filter directly in our Z-score calculation for this course.**
 
 **Real-world Proof (COVID-19 Crash, Jan-Jun 2020)**:
 We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" filter on the top 100 S&P 500 stocks during the 2020 COVID crash. The results perfectly demonstrate the power of this institutional technique:
