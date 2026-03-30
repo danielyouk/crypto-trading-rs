@@ -1077,8 +1077,8 @@ statistical power of a shorter training window.
 **Lecture storyline**:
 1. **The Execution Risk (The Future)**:
    - When we are holding a live position, a sudden 20% jump or drop in one leg is our worst nightmare. It blows out the spread and hits our stop-loss instantly.
-   - *How do we protect against this?* Institutional quants use alternative data (real-time news sentiment APIs, Twitter traffic spikes, options implied volatility) to detect the *symptoms* of an impending jump and exit the trade beforehand.
-   - For this course, since we are relying purely on price data, our best defense is the **Earnings Blackout Window** (avoiding scheduled jumps) and the **Sector De-meaning Filter** (avoiding stocks that have a *habit* of jumping independently of their peers).
+   - *How do we protect against this?* Institutions spend millions on alternative data (real-time news sentiment, Twitter traffic, options IV) to predict jumps. (We will cover NLP and Twitter sentiment APIs in the Advanced AI course).
+   - *Our Solution for this course*: The **Earnings Blackout Window**. It is a "naive" but incredibly powerful defense. By simply closing positions 2 days before earnings and ignoring signals until 1 day after, we eliminate the vast majority of predictable jump risk without needing complex alternative data.
 
 2. **The Training Risk (The Past)**:
    - What if a stock had a 20% jump *a year ago*? Is it dangerous today?
@@ -1088,7 +1088,7 @@ statistical power of a shorter training window.
 3. **The Ultimate Institutional Solution (Kalman Filters)**:
    - *Student question*: "But aren't jumps a fundamental nature of stocks? If we just filter them out, aren't we ignoring reality?"
    - *Answer*: Yes! Filtering out the top 10% volatile stocks is a blunt heuristic. The true institutional approach is to fix the math, not throw away the stock.
-   - Instead of SMA, quants use a **Kalman Filter**. When a 20% jump occurs in the training data, the Kalman Filter mathematically detects a "regime change" and instantly resets the moving average to the new price level. It treats the post-jump spread as the **"New Normal"** rather than an anomaly. This completely eliminates the data pollution without having to discard perfectly good stocks.
+   - Instead of SMA, we use a **Kalman Filter**. When a 20% jump occurs in the training data, the Kalman Filter mathematically detects a "regime change" and instantly resets the moving average to the new price level. It treats the post-jump spread as the **"New Normal"** rather than an anomaly. This completely eliminates the data pollution without having to discard perfectly good stocks. **We will implement this Kalman Filter directly in our Z-score calculation for this course.**
 
 **Real-world Proof (COVID-19 Crash, Jan-Jun 2020)**:
 We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" filter on the top 100 S&P 500 stocks during the 2020 COVID crash. The results perfectly demonstrate the power of this institutional technique:

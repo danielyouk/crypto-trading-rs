@@ -18,6 +18,7 @@
 
 ## In Progress
 
+- [ ] **Kalman Filter for Z-score calculation**: Replace Simple Moving Average (SMA) with a Kalman Filter to mathematically handle structural breaks (jumps) in the spread. This allows us to treat post-jump spreads as the "new normal" and reduces the need for aggressive volatility filtering.
 - [ ] Parameter optimization: z-score thresholds and rolling window per pair (notebook cells 17-31)
 
 ## Pending
