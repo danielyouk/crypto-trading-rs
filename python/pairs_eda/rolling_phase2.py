@@ -77,7 +77,8 @@ class RollingPhase2Config(BaseModel):
         "E.g. 0.90 = drop the worst 10%. Applied per-rebalance (no look-ahead).",
     )
     entry_zscore_default: float = Field(default=2.0, gt=0.0)
-    exit_zscore: float = Field(default=0.0)
+    exit_zscore: float = Field(default=1.0)
+    max_zscore: float = Field(default=5.0, gt=0.0)
     stop_loss_pct: float = Field(default=0.05, ge=0.0)
     min_holding_days: int = Field(
         default=0, ge=0,
@@ -459,18 +460,22 @@ def _evaluate_pair_surface(
         zscore_cache[window] = (train_z, val_z)
 
         for zthr in cfg.zscore_thresholds:
-            train_pos = (
-                np.where(train_z > zthr, -1.0, np.where(train_z < -zthr, 1.0, 0.0))
+            train_pos = np.where(
+                (train_z > zthr) & (train_z < cfg.max_zscore), -1.0, 
+                np.where((train_z < -zthr) & (train_z > -cfg.max_zscore), 1.0, 0.0)
             )
-            val_pos = np.where(val_z > zthr, -1.0, np.where(val_z < -zthr, 1.0, 0.0))
+            val_pos = np.where(
+                (val_z > zthr) & (val_z < cfg.max_zscore), -1.0, 
+                np.where((val_z < -zthr) & (val_z > -cfg.max_zscore), 1.0, 0.0)
+            )
 
             train_pos_s = pd.Series(train_pos, index=train_z.index).ffill().fillna(0.0)
             val_pos_s = pd.Series(val_pos, index=val_z.index).ffill().fillna(0.0)
 
             if cfg.exit_zscore != 0.0:
-                train_pos_s = train_pos_s.where(~((train_pos_s == 1.0) & (train_z >= cfg.exit_zscore)), 0.0)
+                train_pos_s = train_pos_s.where(~((train_pos_s == 1.0) & (train_z >= -cfg.exit_zscore)), 0.0)
                 train_pos_s = train_pos_s.where(~((train_pos_s == -1.0) & (train_z <= cfg.exit_zscore)), 0.0)
-                val_pos_s = val_pos_s.where(~((val_pos_s == 1.0) & (val_z >= cfg.exit_zscore)), 0.0)
+                val_pos_s = val_pos_s.where(~((val_pos_s == 1.0) & (val_z >= -cfg.exit_zscore)), 0.0)
                 val_pos_s = val_pos_s.where(~((val_pos_s == -1.0) & (val_z <= cfg.exit_zscore)), 0.0)
 
             train_strat = cast(pd.Series, train_pos_s.shift(1).fillna(0.0) * train_ret).sum()
@@ -856,7 +861,7 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
             holding_days = int((day - pos.entry_date).days)
             can_mean_revert_exit = holding_days >= cfg.min_holding_days
             hit_exit = can_mean_revert_exit and (
-                (pos.direction == 1 and z >= pos.exit_zscore) or
+                (pos.direction == 1 and z >= -pos.exit_zscore) or
                 (pos.direction == -1 and z <= pos.exit_zscore)
             )
             hit_stop = cfg.stop_loss_pct > 0.0 and unrealized <= (-cfg.stop_loss_pct * pos.slot_notional)
@@ -1011,9 +1016,9 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
 
                 entry_z = float(candidate["entry_zscore"])
                 direction = 0
-                if z >= entry_z:
+                if entry_z <= z < cfg.max_zscore:
                     direction = -1
-                elif z <= -entry_z:
+                elif -cfg.max_zscore < z <= -entry_z:
                     direction = 1
                 if direction == 0:
                     continue
