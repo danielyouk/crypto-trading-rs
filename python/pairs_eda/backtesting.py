@@ -402,35 +402,47 @@ def compute_zscore_intraday(
 # Signals
 # ---------------------------------------------------------------------------
 
-def compute_signals(zscore: pd.Series, threshold: float) -> pd.Series:
-    """Trading signals from z-score and threshold.
+def compute_signals(
+    zscore: pd.Series, 
+    entry_threshold: float,
+    exit_threshold: float = 1.0,
+    max_zscore: float = 5.0,
+) -> pd.Series:
+    """Trading signals from z-score with adaptive entry and exit thresholds.
 
     Signal rules:
-        zscore >  threshold  AND  zscore <  5   ->  -1  (A overvalued: short A, long B)
-        zscore < -threshold  AND  zscore > -5   ->   1  (A undervalued: long A, short B)
-        -1 < zscore < 1                         ->   0  (neutral / close positions)
-        |zscore| >= 5                            ->  hold previous signal (extreme)
-        deadband (between 1..threshold)          ->  hold previous signal
+        zscore >  entry_threshold  AND  zscore <  max_zscore   ->  -1  (A overvalued: short A, long B)
+        zscore < -entry_threshold  AND  zscore > -max_zscore   ->   1  (A undervalued: long A, short B)
+        -exit_threshold < zscore < exit_threshold              ->   0  (neutral / close positions)
+        |zscore| >= max_zscore                                 ->  hold previous signal (extreme jump)
+        deadband (between exit and entry)                      ->  hold previous signal
 
     NaN values are forward-filled, then remaining NaN filled with 0.
 
     Args:
-        zscore:    Z-score series (output of compute_zscore).
-        threshold: Entry threshold (e.g. 2.0).
+        zscore:          Z-score series (output of compute_zscore).
+        entry_threshold: Entry threshold (e.g. 2.0).
+        exit_threshold:  Exit threshold (e.g. 1.0 or 0.5).
+        max_zscore:      Maximum valid z-score. Jumps beyond this are ignored for entry.
 
     Returns:
         Series of integer signals: -1, 0, or 1.
     """
     signal = pd.Series(np.nan, index=zscore.index)
+    
+    # Entry signals (only if below max_zscore to avoid extreme jumps)
     signal = np.where(
-        (zscore > threshold) & (zscore < 5), -1, signal
+        (zscore > entry_threshold) & (zscore < max_zscore), -1, signal
     )
     signal = np.where(
-        (zscore < -threshold) & (zscore > -5), 1, signal
+        (zscore < -entry_threshold) & (zscore > -max_zscore), 1, signal
     )
+    
+    # Exit signals (close position when reverting past exit_threshold)
     signal = np.where(
-        (zscore > -1) & (zscore < 1), 0, signal
+        (zscore > -exit_threshold) & (zscore < exit_threshold), 0, signal
     )
+    
     signal = pd.Series(signal, index=zscore.index)
     signal = signal.ffill().fillna(0)
     return signal
@@ -732,6 +744,8 @@ def run_pair_pipeline(
     pair: tuple[str, str] | None = None,
     fractional: bool = True,
     stop_loss_pct: float = 0.0,
+    exit_threshold: float = 1.0,
+    max_zscore: float = 5.0,
 ) -> PairPipelineState:
     """Run one full daily backtest and return all intermediate state.
 
@@ -767,7 +781,12 @@ def run_pair_pipeline(
 
     spread_stats = compute_zscore(prices_a, prices_b, window)
     zscore = _column_as_series(spread_stats, "zscore")
-    signals = compute_signals(zscore, zscore_threshold)
+    signals = compute_signals(
+        zscore, 
+        entry_threshold=zscore_threshold, 
+        exit_threshold=exit_threshold,
+        max_zscore=max_zscore
+    )
 
     # Combine zscore stats + signal into one inspectable DataFrame.
     pair_stats = spread_stats.assign(signal=signals)
@@ -831,6 +850,8 @@ def backtest_pair_intraday(
     *,
     pair: tuple[str, str] | None = None,
     fractional: bool = True,
+    exit_threshold: float = 1.0,
+    max_zscore: float = 5.0,
 ) -> dict:
     """Full intraday backtest: daily rolling stats + intraday z-score.
 
@@ -846,7 +867,12 @@ def backtest_pair_intraday(
         prices_b_daily,
         window,
     )
-    signals = compute_signals(_column_as_series(zdf, "zscore"), zscore_threshold)
+    signals = compute_signals(
+        _column_as_series(zdf, "zscore"), 
+        entry_threshold=zscore_threshold,
+        exit_threshold=exit_threshold,
+        max_zscore=max_zscore
+    )
     signal_summary = summarize_signals(
         _column_as_series(zdf, "stock1"),
         _column_as_series(zdf, "stock2"),
@@ -875,6 +901,8 @@ def grid_search_pair(
     pair: tuple[str, str] | None = None,
     fractional: bool = True,
     stop_loss_pct: float = 0.0,
+    exit_threshold: float = 1.0,
+    max_zscore: float = 5.0,
 ) -> list[dict]:
     """Run run_pair_pipeline across all (window, zscore_threshold) combinations.
 
@@ -935,6 +963,8 @@ def grid_search_pair(
                 pair=pair,
                 fractional=fractional,
                 stop_loss_pct=stop_loss_pct,
+                exit_threshold=exit_threshold,
+                max_zscore=max_zscore,
             )
             for w in windows
             for z in zscore_thresholds
