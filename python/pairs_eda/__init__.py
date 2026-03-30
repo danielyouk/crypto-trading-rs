@@ -21,6 +21,7 @@ from pairs_eda.correlation import (
 from pairs_eda.visualization import plot_correlation_histogram
 from pairs_eda.yfinance_tools import adj_close_or_close_panel, download_with_retry
 from pairs_eda.backtesting import (
+    KalmanParams,
     PairPipelineState,
     backtest_pair_intraday,
     calculate_margin,
@@ -57,6 +58,7 @@ from pairs_eda.rolling_phase2 import (
 
 __all__ = [
     "ExaRunMode",
+    "KalmanParams",
     "Sp500ExaBackend",
     "Sp500FetchError",
     "WikipediaSp500Error",

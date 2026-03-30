@@ -65,12 +65,12 @@ class TestComputeZscore:
         df = compute_zscore(pa, pb, window=10)
         assert len(df) == len(pa)
 
-    def test_first_rows_nan(self, prices):
-        """First `window` rows of MA/MSD should be NaN (shifted by 1)."""
+    def test_first_row_nan(self, prices):
+        """First row of MA should be NaN (Kalman not yet initialised)."""
         pa, pb = prices
         window = 10
         df = compute_zscore(pa, pb, window=window)
-        assert df["ma"].iloc[:window].isna().all()
+        assert pd.isna(df["ma"].iloc[0])
 
     def test_ratio_is_log(self, prices):
         pa, pb = prices
@@ -79,10 +79,12 @@ class TestComputeZscore:
         np.testing.assert_allclose(df["ratio"].values, expected.values)
 
     def test_zscore_formula(self, prices):
+        """Z-score = (ratio - ma) / msd where ma and msd are not NaN."""
         pa, pb = prices
         df = compute_zscore(pa, pb, window=5)
         manual = (df["ratio"] - df["ma"]) / df["msd"]
-        valid = ~manual.isna()
+        # Both must be non-NaN for the comparison
+        valid = df["zscore"].notna() & manual.notna()
         np.testing.assert_allclose(
             df["zscore"][valid].values, manual[valid].values
         )
