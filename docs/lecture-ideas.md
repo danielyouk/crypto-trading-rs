@@ -1072,6 +1072,7 @@ statistical power of a shorter training window.
 **Anticipated student questions**:
 - *"What if a sector only has one stock in our universe?"* → We must fall back to raw absolute returns, because de-meaning a single stock against itself always yields 0%.
 - *"Why not just subtract the S&P 500 (Market-Adjusted)?"* → Sector-adjusted is more precise. Energy stocks often move independently of the broader market due to oil prices. Market-adjusting would still falsely penalize them.
+- *"Counter-intuitive thought: If a stock had a massive 20% earnings surprise a year ago, isn't it actually LESS likely to have another one today? Why penalize it now?"* → This is a brilliant observation. A one-off historical shock doesn't necessarily mean future danger; in fact, lightning rarely strikes twice. However, we filter them out because that historical 20% shock *permanently breaks the mathematical spread* in our training data. If we leave that stock in, the Cointegration test and Z-score calculations will be heavily distorted by that single past event, leading to false entry signals today. We drop the stock not because we fear it will explode again tomorrow, but because its historical data is now "polluted" and will trick our math models.
 
 **Real-world Proof (COVID-19 Crash, Jan-Jun 2020)**:
 We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" filter on the top 100 S&P 500 stocks during the 2020 COVID crash. The results perfectly demonstrate the power of this institutional technique:
