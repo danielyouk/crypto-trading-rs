@@ -1069,11 +1069,26 @@ statistical power of a shorter training window.
 5. **The "Empty Cell" (NaN) Problem**: Explain that real market data is messy. What if a stock is halted on Tuesday? What if it's a holiday?
    - *Bad approach (For-loops)*: The code crashes because it tries to subtract a number from an empty cell.
    - *Good approach (Numpy Broadcasting)*: We use `np.nanmean` and `np.nanmax`. If a cell is empty, Numpy just ignores it and calculates the average of the remaining stocks. If the whole sector is empty (holiday), the shock is simply `NaN` (empty) for that day. It's blazing fast and mathematically safe.
-**Anticipated student questions**:
-- *"What if a sector only has one stock in our universe?"* → We must fall back to raw absolute returns, because de-meaning a single stock against itself always yields 0%.
-- *"Why not just subtract the S&P 500 (Market-Adjusted)?"* → Sector-adjusted is more precise. Energy stocks often move independently of the broader market due to oil prices. Market-adjusting would still falsely penalize them.
-- *"Counter-intuitive thought: If a stock had a massive 20% earnings surprise a year ago, isn't it actually LESS likely to have another one today? Why penalize it now?"* → This is a brilliant observation. A one-off historical shock doesn't necessarily mean future danger. However, we must consider how our rolling Z-score math works: `zscore = (ratio - rolling_mean) / rolling_std`. If a 20% jump happens, the `ratio` permanently shifts to a new level. For the next `window` days (e.g., 60 days), the `rolling_mean` will slowly drag itself up to this new level, and the `rolling_std` will be artificially inflated by the step-change in the window. During this 60-day transition period, the Z-score is mathematically broken—it will stay persistently high or low, generating false entry signals, even though the stocks are just trading flat at their new fundamental prices. We filter these stocks out because their "transition periods" pollute the backtest with fake signals.
-- *"But aren't jumps and crashes a fundamental nature of stocks? If we just filter them out, aren't we ignoring reality? Is there a way to fix the math instead of throwing away the stock?"* → Yes! This leads to advanced quant techniques. Instead of a simple Simple Moving Average (SMA), we can use an Exponential Moving Average (EMA) which "forgets" old jumps faster. Better yet, we can use a **Kalman Filter** which mathematically detects a "regime change" (a permanent jump) and instantly resets the moving average to the new level, treating the post-jump spread as the "new normal" rather than an anomaly. For this course, we use the 10% exclusion filter for simplicity, but fixing the math via Kalman Filters or EMA is the true institutional approach.
+### The Dual Nature of "Jumps" in Pairs Trading
+
+**Visual**: A whiteboard split into two columns: "Training Phase (The Past)" vs. "Execution Phase (The Future)".
+**Key message**: We must completely separate how we handle historical jumps (data pollution) from how we handle future jumps (portfolio risk).
+
+**Lecture storyline**:
+1. **The Execution Risk (The Future)**:
+   - When we are holding a live position, a sudden 20% jump or drop in one leg is our worst nightmare. It blows out the spread and hits our stop-loss instantly.
+   - *How do we protect against this?* Institutional quants use alternative data (real-time news sentiment APIs, Twitter traffic spikes, options implied volatility) to detect the *symptoms* of an impending jump and exit the trade beforehand.
+   - For this course, since we are relying purely on price data, our best defense is the **Earnings Blackout Window** (avoiding scheduled jumps) and the **Sector De-meaning Filter** (avoiding stocks that have a *habit* of jumping independently of their peers).
+
+2. **The Training Risk (The Past)**:
+   - What if a stock had a 20% jump *a year ago*? Is it dangerous today?
+   - *Counter-intuitive thought*: A stock that had a massive earnings surprise a year ago is actually LESS likely to have another one today. Lightning rarely strikes twice. So why do we filter them out?
+   - *The real reason*: We filter them out because that historical 20% jump *permanently breaks our mathematical spread* in the training data. If we use a Simple Moving Average (SMA), a 20% jump creates a 60-day "ghost signal" period where the Z-score is artificially high, generating fake entry signals today even though the stock is peaceful.
+
+3. **The Ultimate Institutional Solution (Kalman Filters)**:
+   - *Student question*: "But aren't jumps a fundamental nature of stocks? If we just filter them out, aren't we ignoring reality?"
+   - *Answer*: Yes! Filtering out the top 10% volatile stocks is a blunt heuristic. The true institutional approach is to fix the math, not throw away the stock.
+   - Instead of SMA, quants use a **Kalman Filter**. When a 20% jump occurs in the training data, the Kalman Filter mathematically detects a "regime change" and instantly resets the moving average to the new price level. It treats the post-jump spread as the **"New Normal"** rather than an anomaly. This completely eliminates the data pollution without having to discard perfectly good stocks.
 
 **Real-world Proof (COVID-19 Crash, Jan-Jun 2020)**:
 We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" filter on the top 100 S&P 500 stocks during the 2020 COVID crash. The results perfectly demonstrate the power of this institutional technique:
