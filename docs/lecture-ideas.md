@@ -1054,3 +1054,27 @@ statistical power of a shorter training window.
 - **Theme**: "Macro Quant: Trading the Global Machine"
 - **Pedagogical Philosophy (Traditional First)**: Strictly focus on traditional, interpretable quant methods (Linear regression, Cointegration, Z-scores). Avoid deep learning or "black-box" AI. Students must first master market mechanics, execution infrastructure, and risk management using transparent "white-box" models where every trade's rationale can be mathematically proven and debugged.
 - **Differentiation**: While the stock course teaches *Micro* relationships (Coca-Cola vs. Pepsi), the FX/Commodity course teaches *Macro* relationships (A nation's currency vs. its primary export). It introduces concepts like interest rate differentials (Carry) and cross-asset correlation.
+
+---
+
+### Sector De-meaning (섹터 평균 차감)
+
+**Visual**: Show a chart of an Energy stock dropping 10% on a day the whole Energy sector drops 10%, compared to a Tech stock dropping 10% on a day the Tech sector is flat.
+**Key message**: Not all volatility is created equal; we must distinguish between systemic (sector-wide) shocks and idiosyncratic (company-specific) shocks.
+**Lecture storyline**:
+1. Start with the basic volatility filter: `max(abs(return))`. Explain why we need to filter out extreme shocks (fraud, M&A).
+2. Introduce the flaw: What if the whole market or sector crashes? We might accidentally filter out perfectly normal stocks just because their sector had a wild day.
+3. Introduce the institutional solution: **Sector De-meaning**. We subtract the sector's daily average return from the stock's return: `abs(return - sector_mean)`.
+4. Result: A stock that drops 10% alongside its sector has an idiosyncratic shock of 0%. It survives the filter. A stock that drops 10% alone has a shock of 10%. It gets filtered.
+5. **The "Empty Cell" (NaN) Problem**: Explain that real market data is messy. What if a stock is halted on Tuesday? What if it's a holiday?
+   - *Bad approach (For-loops)*: The code crashes because it tries to subtract a number from an empty cell.
+   - *Good approach (Numpy Broadcasting)*: We use `np.nanmean` and `np.nanmax`. If a cell is empty, Numpy just ignores it and calculates the average of the remaining stocks. If the whole sector is empty (holiday), the shock is simply `NaN` (empty) for that day. It's blazing fast and mathematically safe.
+**Anticipated student questions**:
+- *"What if a sector only has one stock in our universe?"* → We must fall back to raw absolute returns, because de-meaning a single stock against itself always yields 0%.
+- *"Why not just subtract the S&P 500 (Market-Adjusted)?"* → Sector-adjusted is more precise. Energy stocks often move independently of the broader market due to oil prices. Market-adjusting would still falsely penalize them.
+
+**Real-world Proof (COVID-19 Crash, Jan-Jun 2020)**:
+We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" filter on the top 100 S&P 500 stocks during the 2020 COVID crash. The results perfectly demonstrate the power of this institutional technique:
+1. **The Threshold Dropped:** The 90th percentile cutoff for "extreme volatility" dropped from 23.8% (Raw) to 16.2% (Sector-Adjusted). By removing the sector's baseline panic, our definition of an "idiosyncratic shock" became much sharper.
+2. **Saved from False Penalties (e.g., APA, COF):** APA (Energy) and COF (Financials) were dropped by the old filter because their prices collapsed. But the new filter saw that *their entire sectors* collapsed. It realized these stocks were just behaving normally for their sector and **saved them**.
+3. **Caught Hidden Dangers (e.g., AMZN):** Amazon (Consumer Discretionary) survived the old filter because its absolute move didn't breach the massive 23.8% threshold. But the new filter caught it! Why? Because while the rest of the Consumer Discretionary sector was stagnant or dropping, Amazon surged as a "stay-at-home" winner. It moved *against* its sector, creating a massive idiosyncratic shock (16.2%+) that would have destroyed any pair it was part of. The new filter successfully dropped it.

@@ -2,19 +2,224 @@
 
 from __future__ import annotations
 
+import logging
+import warnings
 from datetime import datetime
 from typing import Optional
 
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+logger = logging.getLogger(__name__)
+
+
+class FilterVolatileInput(BaseModel):
+    """Validated input for filter_volatile_tickers."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    prices: pd.DataFrame = Field(description="Adj Close panel (dates × tickers)")
+    max_move_quantile: float = Field(
+        default=0.90,
+        gt=0.0,
+        lt=1.0,
+        description="Drop tickers above this quantile of worst single-day move metric",
+    )
+    sector_map: Optional[dict[str, str]] = Field(
+        default=None,
+        description="Ticker → sector mapping. If provided, uses sector-adjusted shocks.",
+    )
+
+    @field_validator("sector_map")
+    @classmethod
+    def strip_empty_sector_labels(cls, v: Optional[dict[str, str]]) -> Optional[dict[str, str]]:
+        if v is None:
+            return None
+        out: dict[str, str] = {}
+        for ticker, sector in v.items():
+            if not isinstance(ticker, str) or not ticker:
+                continue
+            if not isinstance(sector, str) or not sector.strip():
+                continue
+            out[ticker] = sector.strip()
+        return out if out else None
+
+
+class FilterVolatileOutput(BaseModel):
+    """Structured output from filter_volatile_tickers."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    filtered_prices: pd.DataFrame
+    threshold: float
+    max_move_per_ticker: pd.Series
+    n_before: int
+    n_kept: int
+    n_volatile_dropped: int
+    n_no_data: int
+
+
+def _sectors_with_at_least_two_tickers(
+    tickers: list[str],
+    sector_map: dict[str, str],
+) -> set[str]:
+    """Sectors that have >= 2 panel tickers mapped (required for meaningful de-meaning)."""
+    from collections import Counter
+
+    counts: Counter[str] = Counter()
+    for t in tickers:
+        s = sector_map.get(t)
+        if s is not None:
+            counts[s] += 1
+    return {s for s, c in counts.items() if c >= 2}
+
+
+def _per_ticker_max_abs_move(
+    daily_returns: pd.DataFrame,
+    sector_map: Optional[dict[str, str]],
+) -> pd.Series:
+    """Worst single-day magnitude per ticker: sector-adjusted where valid, else raw |r|.
+    
+    Performance notes:
+        PERF-001: Uses Numpy broadcasting instead of Pandas stack/pivot.
+        This avoids creating O(D·T) long-form DataFrames and is significantly faster.
+        NaN values are safely ignored using np.nanmean and np.nanmax.
+    """
+    tickers = list(daily_returns.columns)
+    raw_max = daily_returns.abs().max()
+
+    if not sector_map:
+        return raw_max
+
+    multi = _sectors_with_at_least_two_tickers(tickers, sector_map)
+    if not multi:
+        return raw_max
+
+    # 1. Extract raw numpy array (Dates × Tickers)
+    returns_arr = daily_returns.to_numpy()
+    
+    # 2. Map tickers to sector indices for fast grouping
+    # We only care about sectors in `multi`. Others get index -1.
+    sector_list = list(multi)
+    sector_to_idx = {s: i for i, s in enumerate(sector_list)}
+    
+    ticker_sector_indices = np.array([
+        sector_to_idx.get(sector_map.get(t, ""), -1) 
+        for t in tickers
+    ])
+    
+    # 3. Calculate sector means per day (Dates × Sectors)
+    n_dates = returns_arr.shape[0]
+    n_sectors = len(sector_list)
+    sector_means = np.full((n_dates, n_sectors), np.nan)
+    
+    for sec_idx in range(n_sectors):
+        # Boolean mask for columns belonging to this sector
+        col_mask = (ticker_sector_indices == sec_idx)
+        # Extract only those columns
+        sec_data = returns_arr[:, col_mask]
+        # Calculate row-wise mean, ignoring NaNs. 
+        # Suppress RuntimeWarning for all-NaN slices (e.g., holiday for whole sector)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            sector_means[:, sec_idx] = np.nanmean(sec_data, axis=1)
+            
+    # 4. Calculate shocks (Broadcasting)
+    # Create an array of the same shape as returns_arr to hold the means
+    expanded_means = np.full_like(returns_arr, np.nan)
+    
+    # Only fill in means for tickers that belong to a valid multi-sector
+    valid_mask = (ticker_sector_indices != -1)
+    valid_indices = ticker_sector_indices[valid_mask]
+    
+    # Broadcast the sector means to the corresponding ticker columns
+    expanded_means[:, valid_mask] = sector_means[:, valid_indices]
+    
+    # Calculate idiosyncratic shock: |return - sector_mean|
+    shocks = np.abs(returns_arr - expanded_means)
+    
+    # 5. Find max shock per ticker
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        max_shocks = np.nanmax(shocks, axis=0)
+        
+    # 6. Combine results
+    # If a ticker isn't in a valid sector, or if its max_shock is NaN, fall back to raw_max
+    combined = raw_max.copy()
+    
+    for i, t in enumerate(tickers):
+        if valid_mask[i] and not np.isnan(max_shocks[i]):
+            combined[t] = max_shocks[i]
+
+    return combined
+
+
+def filter_volatile_tickers_validated(inp: FilterVolatileInput) -> FilterVolatileOutput:
+    """Pydantic-wrapped call for filtering volatile tickers."""
+    if inp.prices.shape[1] == 0:
+        return FilterVolatileOutput(
+            filtered_prices=inp.prices.copy(),
+            threshold=float("nan"),
+            max_move_per_ticker=pd.Series(dtype=float),
+            n_before=0,
+            n_kept=0,
+            n_volatile_dropped=0,
+            n_no_data=0,
+        )
+
+    panel = inp.prices.sort_index()
+    daily_returns = panel.pct_change().dropna(how="all")
+
+    max_move = _per_ticker_max_abs_move(daily_returns, inp.sector_map)
+
+    no_data = max_move.isna()
+    n_no_data = int(no_data.sum())
+    has_data = ~no_data
+
+    if not has_data.any():
+        return FilterVolatileOutput(
+            filtered_prices=panel.iloc[:, :0],
+            threshold=float("nan"),
+            max_move_per_ticker=max_move,
+            n_before=panel.shape[1],
+            n_kept=0,
+            n_volatile_dropped=0,
+            n_no_data=n_no_data,
+        )
+
+    threshold = float(max_move[has_data].quantile(inp.max_move_quantile))
+    too_volatile = has_data & (max_move > threshold)
+    keep = has_data & (max_move <= threshold)
+
+    filtered = panel.loc[:, keep]
+
+    return FilterVolatileOutput(
+        filtered_prices=filtered,
+        threshold=threshold,
+        max_move_per_ticker=max_move,
+        n_before=panel.shape[1],
+        n_kept=int(keep.sum()),
+        n_volatile_dropped=int(too_volatile.sum()),
+        n_no_data=n_no_data,
+    )
 
 
 def filter_volatile_tickers(
     prices: pd.DataFrame,
     *,
     max_move_quantile: float = 0.90,
+    sector_map: Optional[dict[str, str]] = None,
 ) -> pd.DataFrame:
     """Remove tickers with extreme single-day moves before pair selection.
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │  Raw mode:    shock = max(|daily_returns|)                  │
+    │  Sector mode: shock = max(|daily_returns - sector_mean|)    │
+    └─────────────────────────────────────────────────────────────┘
+
+    Flow:
+        prices ──→ pct_change() ──→ shock calculation ──→ quantile threshold ──→ filter
 
     Both crashes AND surges break pair equilibrium:
     - A crash (fraud, delisting) permanently destroys the spread relationship.
@@ -23,49 +228,51 @@ def filter_volatile_tickers(
       its normal band.
 
     Filter logic (per ticker):
-
-        daily_returns = Adj Close.pct_change()   (dates × tickers)
-                │
-                ▼  .abs()              →  magnitude of each daily move
-                │
-                ▼  .max()              →  max_abs_move  (1 value per ticker,
-                │                          = worst single-day move in either direction)
-                ▼  .quantile(max_move_quantile)  →  threshold
-                │
-                ▼  keep ticker if  max_abs_move <= threshold
+    - Without ``sector_map``: Uses raw absolute returns.
+    - With ``sector_map`` (Sector De-meaning): For tickers in a sector with >= 2
+      members, subtracts the sector's daily mean return to isolate idiosyncratic
+      shocks. Others fall back to raw absolute returns.
 
     Args:
         prices:            Adj Close panel (dates × tickers).
         max_move_quantile: Tickers above this quantile of worst single-day
                            absolute move are excluded.  0.90 = drop the worst 10%.
+        sector_map:        Optional ticker → sector name mapping.
 
     Returns:
         Filtered DataFrame with the same date index but fewer ticker columns.
+
+    Performance note:
+        PERF-001: Uses Numpy broadcasting instead of Pandas stack/pivot.
+        This avoids creating O(D·T) long-form DataFrames and is significantly faster.
+        NaN values are safely ignored using np.nanmean and np.nanmax.
+
+    Example:
+        >>> filtered = filter_volatile_tickers(prices, max_move_quantile=0.90)
+        >>> sec_filtered = filter_volatile_tickers(prices, sector_map={"AAPL": "Tech"})
     """
-    daily_returns = prices.pct_change().dropna(how="all")
-    max_abs_move = daily_returns.abs().max()
+    inp = FilterVolatileInput(
+        prices=prices,
+        max_move_quantile=max_move_quantile,
+        sector_map=sector_map,
+    )
+    out = filter_volatile_tickers_validated(inp)
 
-    no_data = max_abs_move.isna()
-    n_no_data = int(no_data.sum())
-    has_data = ~no_data
+    mode = (
+        "sector-adjusted shock"
+        if inp.sector_map
+        and _sectors_with_at_least_two_tickers(list(prices.columns), inp.sector_map)
+        else "raw abs return"
+    )
+    
+    print(f"filter_volatile_tickers: {out.n_before} tickers ({mode})")
+    if out.n_no_data > 0:
+        print(f"  no data in window: {out.n_no_data} tickers excluded")
+    print(f"  with data: {out.n_before - out.n_no_data} tickers")
+    print(f"  volatile (>{out.threshold:.1%} max move, p{max_move_quantile:.0%}): {out.n_volatile_dropped} dropped")
+    print(f"  kept: {out.n_kept} tickers")
 
-    threshold = float(max_abs_move[has_data].quantile(max_move_quantile))
-    too_volatile = has_data & (max_abs_move > threshold)
-    keep = has_data & (max_abs_move <= threshold)
-
-    n_before = prices.shape[1]
-    n_with_data = int(has_data.sum())
-    n_volatile = int(too_volatile.sum())
-    filtered = prices.loc[:, keep]
-
-    print(f"filter_volatile_tickers: {n_before} tickers")
-    if n_no_data > 0:
-        print(f"  no data in window: {n_no_data} tickers excluded")
-    print(f"  with data: {n_with_data} tickers")
-    print(f"  volatile (>{threshold:.1%} max abs move, p{max_move_quantile:.0%}): {n_volatile} dropped")
-    print(f"  kept: {filtered.shape[1]} tickers")
-
-    return filtered
+    return out.filtered_prices
 
 
 def compute_pairwise_return_correlations(

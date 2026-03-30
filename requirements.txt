@@ -1,9 +1,12 @@
 # Python env for notebooks/ (crypto streaming + stock pairs EDA).
 # Stock pairs reference: reference/python_pairstrading/stock-trading-eda-scheduled_eng.ipynb
 #
-# Setup: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# ⚠️ IMPORTANT: Python 3.12+ is required for this project.
+# If you  have different python versions such as Python 3.9, you must install Python 3.12 first:
+#
+# Setup: python3.12 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
 # S&P 500 helper package (Wikipedia + optional Exa fallback hooks):
-#   .venv/bin/pip install -e ./python
+#   pip install -e ./python
 
 # Jupyter / notebooks
 jupyter==1.1.1
@@ -15,6 +18,7 @@ itables==2.7.1
 
 # Core data & visualization
 pandas==3.0.1
+statsmodels==0.14.4
 # Excel .xlsx read/write (pd.read_excel / to_excel)
 openpyxl==3.1.5
 # pd.read_html (e.g. Wikipedia S&P 500 tables) needs an HTML parser

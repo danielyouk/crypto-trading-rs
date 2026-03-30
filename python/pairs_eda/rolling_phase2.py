@@ -576,6 +576,7 @@ def compute_robust_pair_scores(
         train_filtered = filter_volatile_tickers(
             prices_train,
             max_move_quantile=cfg.max_drop_quantile,
+            sector_map=sector_map,
         )
 
     if pair_universe is None:

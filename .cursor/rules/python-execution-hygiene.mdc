@@ -1,0 +1,18 @@
+---
+description: Rules for executing Python scripts and maintaining workspace hygiene.
+globs: *
+alwaysApply: true
+---
+
+# Python Execution & Workspace Hygiene
+
+## Python Virtual Environment
+Always activate the virtual environment before executing any Python scripts or tools.
+- Command: `source .venv/bin/activate`
+- Do this as the first step in any shell execution that requires Python or installed dependencies (like pandas, yfinance, etc.). For example: `source .venv/bin/activate && python test_script.py`
+
+## Temporary Files & Workspace Hygiene
+When you (the agent) create temporary scripts (e.g., `test_filter.py`, `debug.py`) to verify logic or test an idea:
+1. Run the script to get the necessary output.
+2. **IMMEDIATELY DELETE** the temporary script after use.
+3. Do not leave one-off test scripts in the workspace. Keep the project folder structure clean and professional.

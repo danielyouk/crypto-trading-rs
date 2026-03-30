@@ -38,19 +38,18 @@ Examples:
           └─────────────┬─────────────┘
                         ↓
           ┌───────────────────────────┐
-          │  Agent C (AFTER A+B)      │
-          │  quant-synthesizer        │
-          │  GPT Codex latest         │
+          │  Main Agent (AFTER A+B)   │
+          │  (Final Review & Synth)   │
+          │  Reads quant-synthesizer  │
           │  Merges <draft_a>+<draft_b>│
-          │  + Pydantic I/O models    │
-          │  + final optimization     │
+          │  + Applies final judgment │
           │  → production-ready code  │
           └───────────────────────────┘
                         ↓
                  Documentation update
 ```
 
-**Key: Agent A and Agent B are independent. Launch them in parallel.**
+**Key: Agent A and Agent B are independent sub-agents. Launch them in parallel. The Main Agent handles the final synthesis.**
 
 ---
 
@@ -68,18 +67,19 @@ Before invoking any agent, read (all in parallel):
 | Backlog | `docs/pipeline-backlog.md` |
 | Relevant source files | `python/pairs_eda/`, `python/tests/`, notebook |
 
-### Step 2: Agent A + Agent B — PARALLEL
+### Step 2: Agent A + Agent B — PARALLEL (Sub-agents)
 
-Launch both agents **simultaneously** in a single tool call batch:
+Launch both sub-agents **simultaneously** in a single tool call batch using the Task tool:
 
 - **Agent A** (`quant-perf-optimizer`): Read `.cursor/agents/quant-perf-optimizer.md`. Produce `<draft_a>`.
 - **Agent B** (`quant-risk-manager`): Read `.cursor/agents/quant-risk-manager.md`. Produce `<draft_b>`.
 
 Both receive the same task description and context. Neither depends on the other.
 
-### Step 3: Agent C — Synthesis (AFTER both A and B complete)
+### Step 3: Main Agent — Final Synthesis & Review (AFTER both A and B complete)
 
-Read `.cursor/agents/quant-synthesizer.md`. Feed both `<draft_a>` and `<draft_b>` as input.
+The **Main Agent** (You) must act as the final filter. Read `.cursor/agents/quant-synthesizer.md` to adopt the Synthesizer persona. 
+Review both `<draft_a>` and `<draft_b>`, apply your overarching judgment, and produce the final output.
 
 Produce:
 - Pydantic `BaseModel` for inputs and outputs
