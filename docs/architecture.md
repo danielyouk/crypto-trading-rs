@@ -93,6 +93,7 @@ For each rebalance window:
     ├── 2. find_candidate_pairs()         ← correlation band [0.40, 0.85]
     ├── 3. filter_cointegrated_cached()   ← Engle-Granger + smart cache
     ├── 4. compute_robust_pair_scores()   ← grid search over (window × zscore)
+    │       ├── compute_zscore()          ← Kalman Filter (handles structural breaks)
     │       ├── _evaluate_pair_surface()  ← train/validation split
     │       │     ├── train_daily > 0?    ← hard gate
     │       │     ├── z-vol consistency?  ← hard gate
@@ -103,7 +104,7 @@ For each rebalance window:
 Daily simulation loop (sim_dates):
     │
     ├── Check exits:
-    │     ├── mean_reversion (z crosses 0)  ← blocked by min_holding_days
+    │     ├── mean_reversion (z crosses exit_threshold) ← adaptive exit, blocked by min_holding_days
     │     └── stop_loss (5% of slot_notional) ← always allowed
     │
     ├── Circuit breaker check:
@@ -114,6 +115,7 @@ Daily simulation loop (sim_dates):
     │     ├── min_entry_score gate
     │     ├── sector diversification (max_sector_slots)
     │     ├── min_spread_range_pct gate
+    │     ├── max_zscore gate (reject extreme jumps > 5.0 as structural breaks)
     │     └── z-score trigger → open position
     │
     └── Record equity (realized + unrealized)
@@ -131,6 +133,10 @@ Daily simulation loop (sim_dates):
 | `max_new_entries_per_day` | 2 | Smooths equity fluctuation |
 | `min_holding_days` | 3 | Prevents ultra-fast churn |
 | `circuit_breaker_pct` | 0.12 | Portfolio-level tail risk defense |
+| `max_drop_quantile` | 0.0 | If > 0, drops the worst N% of volatile tickers |
+| `entry_zscore_default` | 2.0 | Default entry threshold |
+| `exit_zscore` | 1.0 | Adaptive exit threshold (close before 0.0) |
+| `max_zscore` | 5.0 | Rejects extreme jumps as structural breaks |
 | `stop_loss_pct` | 0.05 | Per-trade loss limit |
 | `min_entry_score` | 0.50 | Quality gate |
 | `max_sector_slots` | 2 | Sector concentration limit |
@@ -212,7 +218,8 @@ Cells 32-70 are **legacy static backtest stubs** (all commented out, superseded 
 
 - **Market-neutral by design** — long/short pairs hedge out market beta
 - **Grounded in statistics** — cointegration + z-score mean-reversion is well-established
-- **Multi-layer defense** — stop-loss (5%), circuit breaker (12%), sector limits, entry quality gate
+- **Multi-layer defense** — stop-loss (5%), circuit breaker (12%), sector limits, entry quality gate, and extreme jump rejection (`max_zscore`).
+- **Adaptive Regime Handling** — Kalman Filter quickly resets the baseline after structural breaks, preventing the system from being trapped by "ghost signals".
 - **Robust parameter selection** — not chasing the single best point, but the stable center of a high-performance region
 - **Walk-forward validation** — avoids the classic trap of in-sample overfitting
 - **Capital compounding** — slot notional recalculated each rebalance based on current equity

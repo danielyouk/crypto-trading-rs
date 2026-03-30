@@ -98,14 +98,14 @@ class TestComputeSignals:
     def test_only_valid_values(self, prices):
         pa, pb = prices
         df = compute_zscore(pa, pb, window=10)
-        sig = compute_signals(df["zscore"], threshold=2.0)
+        sig = compute_signals(df["zscore"], entry_threshold=2.0)
         assert set(sig.unique()).issubset({-1, 0, 1})
 
     def test_extreme_zscore_holds(self):
-        """Z-score >= 5 should NOT trigger a signal (NaN -> ffill)."""
+        """Z-score >= max_zscore should NOT trigger a signal (NaN -> ffill)."""
         idx = pd.date_range("2020-01-01", periods=5)
         zscore = pd.Series([0.0, 0.5, 6.0, 6.5, 0.5], index=idx)
-        sig = compute_signals(zscore, threshold=2.0)
+        sig = compute_signals(zscore, entry_threshold=2.0, max_zscore=5.0)
         assert sig.iloc[0] == 0
         assert sig.iloc[2] == 0  # extreme -> holds previous (0)
         assert sig.iloc[4] == 0  # back in neutral zone
@@ -113,10 +113,21 @@ class TestComputeSignals:
     def test_threshold_triggers(self):
         idx = pd.date_range("2020-01-01", periods=4)
         zscore = pd.Series([0.0, 3.0, -3.0, 0.0], index=idx)
-        sig = compute_signals(zscore, threshold=2.0)
+        sig = compute_signals(zscore, entry_threshold=2.0)
         assert sig.iloc[1] == -1  # zscore > threshold -> short A
         assert sig.iloc[2] == 1   # zscore < -threshold -> long A
         assert sig.iloc[3] == 0   # neutral zone
+
+    def test_adaptive_exit_threshold(self):
+        idx = pd.date_range("2020-01-01", periods=5)
+        # 0.0 -> 3.0 (enter short) -> 1.5 (hold) -> 0.8 (exit) -> -0.8 (stay neutral)
+        zscore = pd.Series([0.0, 3.0, 1.5, 0.8, -0.8], index=idx)
+        sig = compute_signals(zscore, entry_threshold=2.0, exit_threshold=1.0)
+        assert sig.iloc[0] == 0
+        assert sig.iloc[1] == -1  # Enter short
+        assert sig.iloc[2] == -1  # Hold short (1.5 is > exit_threshold)
+        assert sig.iloc[3] == 0   # Exit (0.8 is < exit_threshold)
+        assert sig.iloc[4] == 0   # Stay neutral
 
 
 # ---------------------------------------------------------------------------
@@ -127,7 +138,7 @@ class TestSummarizeSignals:
     def test_basic_structure(self, prices):
         pa, pb = prices
         df = compute_zscore(pa, pb, window=10)
-        sig = compute_signals(df["zscore"], threshold=2.0)
+        sig = compute_signals(df["zscore"], entry_threshold=2.0)
         summary = summarize_signals(df["stock1"], df["stock2"], sig)
         assert isinstance(summary, list)
         assert len(summary) > 0
@@ -142,7 +153,7 @@ class TestSummarizeSignals:
         """First period starts at first date, last period ends at last date."""
         pa, pb = prices
         df = compute_zscore(pa, pb, window=10)
-        sig = compute_signals(df["zscore"], threshold=2.0)
+        sig = compute_signals(df["zscore"], entry_threshold=2.0)
         summary = summarize_signals(df["stock1"], df["stock2"], sig)
         assert summary[0]["time_start"] == pa.index[0]
         assert summary[-1]["time_end"] == pa.index[-1]
@@ -151,7 +162,7 @@ class TestSummarizeSignals:
         """Final price of period N = start price of period N+1."""
         pa, pb = prices
         df = compute_zscore(pa, pb, window=10)
-        sig = compute_signals(df["zscore"], threshold=2.0)
+        sig = compute_signals(df["zscore"], entry_threshold=2.0)
         summary = summarize_signals(df["stock1"], df["stock2"], sig)
         for i in range(len(summary) - 1):
             assert summary[i]["stock1_final_price"] == pytest.approx(
@@ -167,7 +178,7 @@ class TestCalculateMargin:
     def _run_margin(self, prices, fractional: bool) -> dict:
         pa, pb = prices
         df = compute_zscore(pa, pb, window=10)
-        sig = compute_signals(df["zscore"], threshold=2.0)
+        sig = compute_signals(df["zscore"], entry_threshold=2.0)
         summary = summarize_signals(df["stock1"], df["stock2"], sig)
         return calculate_margin(summary, 3000.0, 0.25, fractional=fractional)
 
@@ -248,7 +259,7 @@ class TestRunPairPipeline:
         """margin_final must equal the result of manually chaining all four steps."""
         pa, pb = prices
         zdf = compute_zscore(pa, pb, window=10)
-        sig = compute_signals(zdf["zscore"], threshold=2.0)
+        sig = compute_signals(zdf["zscore"], entry_threshold=2.0)
         summary = summarize_signals(zdf["stock1"], zdf["stock2"], sig)
         manual = calculate_margin(summary, 3000.0, 0.25, fractional=True)
 
