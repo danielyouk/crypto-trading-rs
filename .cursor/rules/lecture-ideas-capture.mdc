@@ -19,12 +19,16 @@ Add an entry to `docs/lecture-ideas.md` when ANY of the following occurs during 
 
 ## How to capture
 
+- **CRITICAL RULE**: Do NOT immediately edit this file or commit changes when discussing new ideas.
+- First, brainstorm and discuss the concept with the user.
+- Propose the exact text you intend to add.
+- **WAIT for the user's explicit approval** before modifying `docs/lecture-ideas.md` and committing.
 - Append to the appropriate section in `docs/lecture-ideas.md`, or create a new section
 - Each entry should include:
-  - **Visual**: what chart/data to show
-  - **Key message**: one sentence takeaway
-  - **Lecture storyline**: step-by-step flow if applicable
-  - **Anticipated student questions**: what students might ask
+ - **Visual**: what chart/data to show
+ - **Key message**: one sentence takeaway
+ - **Lecture storyline**: step-by-step flow if applicable
+ - **Anticipated student questions**: what students might ask
 - **Write in English** — consistent with project documentation standards
 - Keep entries concise — these are raw material, not finished slides
 
