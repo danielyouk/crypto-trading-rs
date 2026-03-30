@@ -8,6 +8,7 @@
 
 ## Completed
 
+- [x] **Kalman Filter for Z-score calculation**: Replaced Simple Moving Average (SMA) with a 1D local-level Kalman Filter. Handles structural breaks (jumps) in the spread by treating post-jump spreads as the "new normal".
 - [x] Data acquisition: S&P 500 fetch (Wikipedia + Gemini fallback)
 - [x] yfinance download with retry (only failed tickers re-downloaded)
 - [x] Pair-level overlap filter: min_overlap_years=5 (replaces per-ticker MIN_HISTORY_START cutoff)
@@ -18,7 +19,6 @@
 
 ## In Progress
 
-- [ ] **Kalman Filter for Z-score calculation**: Replace Simple Moving Average (SMA) with a Kalman Filter to mathematically handle structural breaks (jumps) in the spread. This allows us to treat post-jump spreads as the "new normal" and reduces the need for aggressive volatility filtering.
 - [ ] Parameter optimization: z-score thresholds and rolling window per pair (notebook cells 17-31)
 
 ## Pending

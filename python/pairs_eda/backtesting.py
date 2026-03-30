@@ -13,12 +13,16 @@ Intraday variant:
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 import math
-from typing import Iterable, cast
+from typing import Iterable, Optional, cast
 
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel, ConfigDict, Field
+
+logger = logging.getLogger(__name__)
 
 
 def _column_as_series(frame: pd.DataFrame, column: str) -> pd.Series:
@@ -96,44 +100,151 @@ class PairPipelineState:
 # Z-Score
 # ---------------------------------------------------------------------------
 
+class KalmanParams(BaseModel):
+    """Hyperparameters for 1D local-level Kalman filter on log-ratio."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
+    process_variance: Optional[float] = Field(
+        default=None, 
+        description="State noise Q. If None, auto-calculated as R / window."
+    )
+    measurement_variance: Optional[float] = Field(
+        default=None, 
+        description="Observation noise R. If None, auto-calculated from variance of first `window` bars."
+    )
+    innovation_variance_floor: float = Field(
+        default=1e-18, 
+        ge=0.0,
+        description="Minimum S to avoid division by zero."
+    )
+
+
+def _kalman_filter_loop(
+    y: np.ndarray,
+    window: int,
+    q: Optional[float],
+    r: Optional[float],
+    floor_s: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """1D local-level Kalman filter loop with NaN handling and dynamic initialization."""
+    n = y.size
+    pred_mean = np.full(n, np.nan, dtype=np.float64)
+    pred_std = np.full(n, np.nan, dtype=np.float64)
+    z_out = np.full(n, np.nan, dtype=np.float64)
+
+    # Auto-tune R and Q if not provided, using ONLY the burn-in window (no lookahead)
+    if r is None or q is None:
+        w = max(int(window), 1)
+        m = min(w, n)
+        seg = y[:m]
+        valid_seg = seg[np.isfinite(seg)]
+        v = float(np.var(valid_seg, ddof=1)) if valid_seg.size >= 2 else 0.0
+        auto_r = v if v > 1e-18 else 1e-12
+        auto_q = auto_r / float(w)
+        
+        r = r if r is not None else auto_r
+        q = q if q is not None else auto_q
+
+    x_filt = 0.0
+    p_filt = 1e4 * r  # diffuse prior
+    initialized = False
+
+    for t in range(n):
+        yt = y[t]
+
+        if not initialized:
+            if np.isfinite(yt):
+                x_filt = yt
+                p_filt = r
+                initialized = True
+            continue
+
+        # 1. Predict (Time Update)
+        x_pred = x_filt
+        p_pred = p_filt + q
+        s = p_pred + r
+
+        pred_mean[t] = x_pred
+        pred_std[t] = math.sqrt(s)
+
+        # 2. Calculate Z-score (only if past burn-in and valid y)
+        if t >= window and np.isfinite(yt) and s >= floor_s:
+            z_out[t] = (yt - x_pred) / math.sqrt(s)
+
+        # 3. Update (Measurement Update)
+        if np.isfinite(yt) and s >= floor_s:
+            k = p_pred / s
+            x_filt = x_pred + k * (yt - x_pred)
+            p_filt = (1.0 - k) * p_pred
+        else:
+            # If NaN, state remains the same, uncertainty grows
+            x_filt = x_pred
+            p_filt = p_pred
+
+    return pred_mean, pred_std, z_out
+
+
 def compute_zscore(
     prices_a: pd.Series,
     prices_b: pd.Series,
     window: int,
+    kalman_params: Optional[KalmanParams] = None,
 ) -> pd.DataFrame:
-    """Z-score from log price ratio with rolling mean/std.
+    """Z-score from log price ratio using a 1D Kalman Filter.
 
-    Formula (look-ahead free — MA and MSD are shifted by 1 bar):
+    Replaces the legacy Simple Moving Average (SMA) with a Kalman Filter to 
+    mathematically handle structural breaks (jumps) as "regime changes" rather 
+    than anomalies.
 
-        ratio  = log(prices_a / prices_b)
-        ma     = ratio.rolling(window).mean().shift(1)
-        msd    = ratio.rolling(window).std().shift(1)
-        zscore = (ratio - ma) / msd
+    Pipeline (per time index t):
+        ratio[t] = log(price_a / price_b)
+        ma[t]    = E[ratio[t] | data up to t-1] (Predictive Mean)
+        msd[t]   = sqrt(Var(ratio[t] | data up to t-1)) (Innovation Std)
+        zscore[t]= (ratio[t] - ma[t]) / msd[t]
 
     Args:
         prices_a: Adj Close series for stock A.
         prices_b: Adj Close series for stock B (same index as prices_a).
-        window:   Rolling window size in trading days.
+        window:   Burn-in window size. First `window` rows return NaN z-scores.
+        kalman_params: Optional hyperparameters. If None, auto-tunes Q and R.
 
     Returns:
         DataFrame (same index as input) with columns:
             stock1, stock2, ratio, ma, msd, zscore.
     """
-    ratio = np.log(prices_a / prices_b)
-    ma = ratio.rolling(window=window).mean().shift(1)
-    msd = ratio.rolling(window=window).std().shift(1)
-    zscore = (ratio - ma) / msd
+    pa = prices_a.sort_index()
+    pb = prices_b.sort_index()
+    
+    if pa.index.duplicated().any() or pb.index.duplicated().any():
+        raise ValueError("prices_a and prices_b must have unique DatetimeIndex.")
+    if not pa.index.equals(pb.index):
+        raise ValueError("prices_a.index must equal prices_b.index.")
+
+    params = kalman_params or KalmanParams()
+
+    with np.errstate(divide="ignore", invalid="ignore"):
+        ratio_raw = np.log(pa.to_numpy(dtype=np.float64) / pb.to_numpy(dtype=np.float64))
+        
+    ratio = pd.Series(ratio_raw, index=pa.index)
+
+    ma_arr, msd_arr, zscore_arr = _kalman_filter_loop(
+        y=ratio_raw,
+        window=window,
+        q=params.process_variance,
+        r=params.measurement_variance,
+        floor_s=params.innovation_variance_floor,
+    )
 
     return pd.DataFrame(
         {
-            "stock1": prices_a,
-            "stock2": prices_b,
+            "stock1": pa,
+            "stock2": pb,
             "ratio": ratio,
-            "ma": ma,
-            "msd": msd,
-            "zscore": zscore,
+            "ma": ma_arr,
+            "msd": msd_arr,
+            "zscore": zscore_arr,
         },
-        index=prices_a.index,
+        index=pa.index,
     )
 
 
