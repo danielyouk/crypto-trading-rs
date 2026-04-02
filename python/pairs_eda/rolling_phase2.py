@@ -592,6 +592,44 @@ def _evaluate_pair_surface(
     best_z = float(top_k["zscore"].median())
     best_z = min(cfg.zscore_thresholds, key=lambda x: abs(x - best_z))
 
+    # --- Zero-Cost Stress Test (Neighborhood Cliff Check) ---
+    # We check the immediate neighbors of (best_window, best_z) in the computed grid.
+    # If any neighbor is unprofitable, the peak is too fragile (overfit) -> reject.
+    # If the profit drops by more than 50% in any neighboring parameter -> reject.
+    best_row = surface[(surface["window"] == best_window) & (surface["zscore"] == best_z)]
+    if best_row.empty:
+        return None
+        
+    best_profit = float(best_row["train_margin"].iloc[0])
+    
+    # Find neighbors in the grid
+    w_idx = cfg.windows.index(best_window)
+    z_idx = cfg.zscore_thresholds.index(best_z)
+    
+    neighbor_windows = [best_window]
+    if w_idx > 0: neighbor_windows.append(cfg.windows[w_idx - 1])
+    if w_idx < len(cfg.windows) - 1: neighbor_windows.append(cfg.windows[w_idx + 1])
+        
+    neighbor_zscores = [best_z]
+    if z_idx > 0: neighbor_zscores.append(cfg.zscore_thresholds[z_idx - 1])
+    if z_idx < len(cfg.zscore_thresholds) - 1: neighbor_zscores.append(cfg.zscore_thresholds[z_idx + 1])
+
+    for nw in neighbor_windows:
+        for nz in neighbor_zscores:
+            if nw == best_window and nz == best_z:
+                continue
+            
+            neighbor_row = surface[(surface["window"] == nw) & (surface["zscore"] == nz)]
+            if neighbor_row.empty:
+                # Neighbor was rejected by consistency gates (e.g. lost money in validation)
+                return None
+                
+            neighbor_profit = float(neighbor_row["train_margin"].iloc[0])
+            
+            # Cliff check: Did profit drop by more than 50% just by shifting one parameter step?
+            if neighbor_profit < best_profit * 0.5:
+                return None
+
     # (c) Z-score volatility consistency for the chosen window.
     #     The std of z-score reflects spread dynamics; it should be
     #     structurally similar across train and validation periods.
