@@ -611,12 +611,12 @@ def _evaluate_pair_surface(
     # --- Zero-Cost Stress Test (Neighborhood Cliff Check) ---
     # We check the immediate neighbors of (best_window, best_z) in the computed grid.
     # If any neighbor is unprofitable, the peak is too fragile (overfit) -> reject.
-    # If the profit drops by more than 50% in any neighboring parameter -> reject.
+    # If the return-per-trade drops by more than allowed pct in any neighboring parameter -> reject.
     best_row = surface[(surface["window"] == best_window) & (surface["zscore"] == best_z)]
     if best_row.empty:
         return None
         
-    best_profit = float(best_row["train_margin"].iloc[0])
+    best_per_trade = float(best_row["train_per_trade"].iloc[0])
     
     # Define neighbors by value (e.g. +/- 10 days for window, +/- 0.5 for z-score)
     # We only check neighbors that actually exist in our configured grid.
@@ -642,10 +642,10 @@ def _evaluate_pair_surface(
                 # Neighbor was rejected by consistency gates (e.g. lost money in validation)
                 return None
                 
-            neighbor_profit = float(neighbor_row["train_margin"].iloc[0])
+            neighbor_per_trade = float(neighbor_row["train_per_trade"].iloc[0])
             
-            # Cliff check: Did profit drop by more than allowed pct just by shifting one parameter step?
-            if neighbor_profit < best_profit * (1.0 - cfg.stress_test_max_drop_pct):
+            # Cliff check: Did return-per-trade drop by more than allowed pct just by shifting one parameter step?
+            if neighbor_per_trade < best_per_trade * (1.0 - cfg.stress_test_max_drop_pct):
                 return None
 
     # (c) Z-score volatility consistency for the chosen window.
