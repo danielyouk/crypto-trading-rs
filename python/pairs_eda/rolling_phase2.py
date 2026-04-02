@@ -79,6 +79,22 @@ class RollingPhase2Config(BaseModel):
     top_n_candidates: Optional[int] = Field(default=200, ge=1)
     windows: tuple[int, ...] = Field(default=(20, 30, 40, 60))
     zscore_thresholds: tuple[float, ...] = Field(default=(1.5, 2.0, 2.5, 3.0))
+    stress_test_window_step: int = Field(
+        default=10, ge=1,
+        description="Window interval used to find neighbors during the zero-cost stress test. "
+        "Should match the typical spacing in the `windows` tuple."
+    )
+    stress_test_zscore_step: float = Field(
+        default=0.5, gt=0.0,
+        description="Z-score interval used to find neighbors during the zero-cost stress test. "
+        "Should match the typical spacing in the `zscore_thresholds` tuple."
+    )
+    stress_test_max_drop_pct: float = Field(
+        default=0.5, ge=0.0, le=1.0,
+        description="Maximum allowed profit drop compared to the best parameter. "
+        "If any neighboring parameter's profit drops by more than this fraction, "
+        "the pair is rejected as an overfit peak. E.g., 0.5 means reject if profit halves."
+    )
     top_k_for_robustness: int = Field(default=6, ge=2)
     watchlist_size: int = Field(default=20, ge=1)
     max_slots: int = Field(default=7, ge=1)
@@ -602,17 +618,19 @@ def _evaluate_pair_surface(
         
     best_profit = float(best_row["train_margin"].iloc[0])
     
-    # Find neighbors in the grid
-    w_idx = cfg.windows.index(best_window)
-    z_idx = cfg.zscore_thresholds.index(best_z)
+    # Define neighbors by value (e.g. +/- 10 days for window, +/- 0.5 for z-score)
+    # We only check neighbors that actually exist in our configured grid.
+    window_step = cfg.stress_test_window_step
+    zscore_step = cfg.stress_test_zscore_step
     
-    neighbor_windows = [best_window]
-    if w_idx > 0: neighbor_windows.append(cfg.windows[w_idx - 1])
-    if w_idx < len(cfg.windows) - 1: neighbor_windows.append(cfg.windows[w_idx + 1])
-        
-    neighbor_zscores = [best_z]
-    if z_idx > 0: neighbor_zscores.append(cfg.zscore_thresholds[z_idx - 1])
-    if z_idx < len(cfg.zscore_thresholds) - 1: neighbor_zscores.append(cfg.zscore_thresholds[z_idx + 1])
+    neighbor_windows = [
+        w for w in cfg.windows 
+        if abs(w - best_window) <= window_step
+    ]
+    neighbor_zscores = [
+        z for z in cfg.zscore_thresholds 
+        if abs(z - best_z) <= zscore_step + 1e-9  # small epsilon for float comparison
+    ]
 
     for nw in neighbor_windows:
         for nz in neighbor_zscores:
@@ -626,8 +644,8 @@ def _evaluate_pair_surface(
                 
             neighbor_profit = float(neighbor_row["train_margin"].iloc[0])
             
-            # Cliff check: Did profit drop by more than 50% just by shifting one parameter step?
-            if neighbor_profit < best_profit * 0.5:
+            # Cliff check: Did profit drop by more than allowed pct just by shifting one parameter step?
+            if neighbor_profit < best_profit * (1.0 - cfg.stress_test_max_drop_pct):
                 return None
 
     # (c) Z-score volatility consistency for the chosen window.
