@@ -528,8 +528,29 @@ def _evaluate_pair_surface(
 
             train_strat = cast(pd.Series, train_pos_s.shift(1).fillna(0.0) * train_ret).sum()
             val_strat = cast(pd.Series, val_pos_s.shift(1).fillna(0.0) * val_ret).sum()
+            
+            # Count trades (transitions from 0 to +/-1)
+            train_entries = ((train_pos_s != 0.0) & (train_pos_s.shift(1).fillna(0.0) == 0.0)).sum()
+            val_entries = ((val_pos_s != 0.0) & (val_pos_s.shift(1).fillna(0.0) == 0.0)).sum()
+            
             if not np.isfinite(train_strat) or not np.isfinite(val_strat):
                 continue
+                
+            # --- New Consistency Gate (Per-Trade) ---
+            if train_entries == 0 or train_strat <= 0.0:
+                continue  # Must have made money in the past
+                
+            train_per_trade = float(train_strat / train_entries)
+            
+            if val_entries > 0:
+                if val_strat <= 0.0:
+                    continue  # Traded recently but lost money -> broken pattern
+                val_per_trade = float(val_strat / val_entries)
+                if val_per_trade > train_per_trade * 3.0:
+                    continue  # Abnormally high recent returns -> structural break / luck
+            else:
+                val_per_trade = 0.0  # No trades, but allowed to pass!
+
             rows.append(
                 {
                     "window": float(window),
@@ -538,12 +559,16 @@ def _evaluate_pair_surface(
                     "validation_margin": float(val_strat),
                     "train_margin_daily": float(train_strat) / n_train_days,
                     "val_margin_daily": float(val_strat) / n_val_days,
+                    "train_per_trade": train_per_trade,
+                    "val_per_trade": val_per_trade,
                 }
             )
 
     if not rows:
         return None
-    surface = pd.DataFrame(rows).sort_values("val_margin_daily", ascending=False)
+    
+    # Sort by historical robustness (train_margin) since validation might have 0 trades
+    surface = pd.DataFrame(rows).sort_values("train_margin", ascending=False)
     top_k = surface.head(min(cfg.top_k_for_robustness, len(surface)))
     if len(top_k) == 0:
         return None
@@ -559,7 +584,6 @@ def _evaluate_pair_surface(
 
     # --- Hard consistency gate (Phase 2a must confirm Phase 1) ---
     # (a) Training period must be profitable on a per-day basis.
-    #     If even the training data can't produce a profit, the pair is not viable.
     if train_daily <= 0.0:
         return None
 

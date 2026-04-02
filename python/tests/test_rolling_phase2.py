@@ -95,7 +95,7 @@ class TestRobustScoring:
         assert expected_cols.issubset(set(scored.columns))
 
     def test_consistency_gate_rejects_negative_validation(self):
-        """Pairs where validation margin <= 0 are hard-rejected."""
+        """Pairs where validation margin < 0 are hard-rejected. 0 is allowed if no trades."""
         from pairs_eda.rolling_phase2 import _evaluate_pair_surface
 
         prices = _make_daily_panel()
@@ -104,7 +104,7 @@ class TestRobustScoring:
         result = _evaluate_pair_surface(("AAA", "BBB"), train, cfg)
         if result is not None:
             assert result["train_margin"] > 0.0
-            assert result["validation_margin"] > 0.0
+            assert result["validation_margin"] >= 0.0
 
 
 class TestRollingStateMachine:
