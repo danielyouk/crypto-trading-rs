@@ -9,9 +9,6 @@ from pairs_eda.rolling_phase2 import (
     RollingPhase2Config,
     RollingPhase2Input,
     _CointCacheEntry,
-    _PairStickinessState,
-    _should_retest,
-    apply_sticky_watchlist,
     build_rolling_timeline,
     compute_robust_pair_scores,
     filter_cointegrated_cached,
@@ -54,11 +51,9 @@ def _base_config() -> RollingPhase2Config:
         windows=(15, 20, 30),
         zscore_thresholds=(1.2, 1.5, 2.0),
         watchlist_size=2,
-        watchlist_retention_buffer=1,
         max_slots=1,
         top_n_candidates=20,
-        min_overlap_years=0.5,
-        recent_years=0.5,
+        min_overlap_pct=0.5,
     )
 
 
@@ -75,18 +70,16 @@ class TestRollingTimeline:
         assert all(w.phase2_start.day == 1 for w in schedule)
 
 
-class TestRobustScoringAndStickiness:
+class TestRobustScoring:
     def test_computes_robustness_columns(self):
         """Scored df has correct columns; may be empty if consistency gate rejects all."""
         prices = _make_daily_panel()
         cfg = _base_config()
         train = prices.iloc[:500]
-        state: dict[str, _PairStickinessState] = {}
 
         scored, coint_stats = compute_robust_pair_scores(
             train,
             cfg,
-            state,
             pair_universe=[("AAA", "BBB"), ("CCC", "DDD")],
         )
         expected_cols = {
@@ -112,22 +105,6 @@ class TestRobustScoringAndStickiness:
         if result is not None:
             assert result["train_margin"] > 0.0
             assert result["validation_margin"] > 0.0
-
-    def test_sticky_watchlist_retains_buffer_pair(self):
-        cfg = _base_config()
-        state = {"AAA|BBB": _PairStickinessState(keep_streak=2, drop_streak=0)}
-        previous_watchlist = {"AAA|BBB"}
-
-        scored_pairs = pd.DataFrame(
-            [
-                {"pair_key": "CCC|DDD", "final_score": 1.00},
-                {"pair_key": "AAA|BBB", "final_score": 0.95},
-                {"pair_key": "EEE|FFF", "final_score": 0.80},
-            ]
-        )
-        active, next_state = apply_sticky_watchlist(scored_pairs, previous_watchlist, state, cfg)
-        assert "AAA|BBB" in set(active["pair_key"].tolist())
-        assert next_state["AAA|BBB"].keep_streak >= 1
 
 
 class TestRollingStateMachine:
@@ -155,26 +132,10 @@ class TestRollingStateMachine:
 class TestCointCaching:
     """Tests for cointegration cache logic."""
 
-    def test_should_retest_borderline_pair(self):
-        entry = _CointCacheEntry(p_value=0.042, passed=True, tested_at="2020-Q1")
-        assert _should_retest(entry, significance=0.05) is True
-
-    def test_should_not_retest_deep_pass(self):
-        entry = _CointCacheEntry(p_value=0.001, passed=True, tested_at="2020-Q1")
-        assert _should_retest(entry, significance=0.05) is False
-
-    def test_should_not_retest_deep_fail(self):
-        entry = _CointCacheEntry(p_value=0.30, passed=False, tested_at="2020-Q1")
-        assert _should_retest(entry, significance=0.05) is False
-
-    def test_should_retest_borderline_fail(self):
-        entry = _CointCacheEntry(p_value=0.058, passed=False, tested_at="2020-Q1")
-        assert _should_retest(entry, significance=0.05) is True
-
     def test_filter_uses_cache_for_deep_pass(self):
         prices = _make_daily_panel()
         cache: dict[str, _CointCacheEntry] = {
-            "AAA|BBB": _CointCacheEntry(p_value=0.001, passed=True, tested_at="t1"),
+            "AAA|BBB": _CointCacheEntry(p_value=0.001, passed=True, streak=1, tested_at="t1"),
         }
         passed, _, stats = filter_cointegrated_cached(
             [("AAA", "BBB")],
@@ -189,7 +150,7 @@ class TestCointCaching:
     def test_filter_uses_cache_for_deep_fail(self):
         prices = _make_daily_panel()
         cache: dict[str, _CointCacheEntry] = {
-            "AAA|BBB": _CointCacheEntry(p_value=0.50, passed=False, tested_at="t1"),
+            "AAA|BBB": _CointCacheEntry(p_value=0.50, passed=False, streak=1, tested_at="t1"),
         }
         passed, _, stats = filter_cointegrated_cached(
             [("AAA", "BBB")],
@@ -204,7 +165,7 @@ class TestCointCaching:
     def test_filter_retests_borderline_pair(self):
         prices = _make_daily_panel()
         cache: dict[str, _CointCacheEntry] = {
-            "AAA|BBB": _CointCacheEntry(p_value=0.045, passed=True, tested_at="t1"),
+            "AAA|BBB": _CointCacheEntry(p_value=0.045, passed=True, streak=1, tested_at="t1"),
         }
         _, updated_cache, stats = filter_cointegrated_cached(
             [("AAA", "BBB")],
@@ -215,6 +176,40 @@ class TestCointCaching:
         assert stats["tested"] == 1
         assert stats["cache_hit"] == 0
         assert "AAA|BBB" in updated_cache
+        assert updated_cache["AAA|BBB"].streak == 1
+
+    def test_filter_retests_old_pair(self):
+        prices = _make_daily_panel()
+        cache: dict[str, _CointCacheEntry] = {
+            "AAA|BBB": _CointCacheEntry(p_value=0.001, passed=True, streak=6, tested_at="t1"),
+        }
+        _, updated_cache, stats = filter_cointegrated_cached(
+            [("AAA", "BBB")],
+            prices,
+            cache,
+            significance=0.05,
+            max_streak=6,
+        )
+        assert stats["tested"] == 1
+        assert stats["cache_hit"] == 0
+        assert "AAA|BBB" in updated_cache
+        assert updated_cache["AAA|BBB"].streak == 1
+
+    def test_filter_evicts_missing_pairs(self):
+        prices = _make_daily_panel()
+        cache: dict[str, _CointCacheEntry] = {
+            "AAA|BBB": _CointCacheEntry(p_value=0.001, passed=True, streak=1, tested_at="t1"),
+            "CCC|DDD": _CointCacheEntry(p_value=0.001, passed=True, streak=1, tested_at="t1"),
+        }
+        # Only AAA|BBB is in the input pairs
+        passed, updated_cache, stats = filter_cointegrated_cached(
+            [("AAA", "BBB")],
+            prices,
+            cache,
+            significance=0.05,
+        )
+        assert "AAA|BBB" in updated_cache
+        assert "CCC|DDD" not in updated_cache
 
     def test_filter_tests_new_pair(self):
         prices = _make_daily_panel()

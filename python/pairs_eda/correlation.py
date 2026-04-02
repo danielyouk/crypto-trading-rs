@@ -350,15 +350,10 @@ def find_candidate_pairs(
     min_correlation: float = 0.40,
     max_correlation: float = 0.85,
     use_returns: bool = True,
-    min_overlap_years: float = 5.0,
-    recent_years: float = 3.0,
+    min_overlap_pct: float = 0.90,
 ) -> dict[tuple[str, str], float]:
     """
     Return correlated ticker pairs filtered by correlation range.
-
-    Applies a dual condition: each pair must pass the correlation band
-    over BOTH the full period AND the most recent ``recent_years``.
-    This catches pairs whose long-term relationship has degraded.
 
     Parameters
     ----------
@@ -379,56 +374,53 @@ def find_candidate_pairs(
         If True (default), compute correlation on daily returns (pct_change)
         instead of raw prices. This removes shared market trends that inflate
         price-level correlations over long periods.
-    min_overlap_years
-        Minimum years of overlapping data required for a pair.
-        Pairs with fewer overlapping trading days are excluded (NaN correlation).
-        Converted to trading days as ``int(years * 252)``.
-    recent_years
-        Window (in years) for the recency check. A pair must also pass
-        ``[min_correlation, max_correlation]`` within this recent window.
-        Set to 0 to disable the recency check.
+    min_overlap_pct
+        Minimum percentage of overlapping data required in the provided window.
+        E.g., 0.90 means the pair must have valid data for at least 90% of the days.
 
     Returns
     -------
     ``{(ticker_a, ticker_b): correlation_value, ...}`` ordered by
     full-period correlation descending. The dict preserves insertion order.
     """
-    # ── Input validation ──
+    # ── Input validation (parameters) ──
     if min_correlation > max_correlation:
         raise ValueError(
-            f"min_correlation ({min_correlation}) > max_correlation ({max_correlation})"
+            f"min_correlation ({min_correlation}) > max_correlation ({max_correlation}): "
+            f"the correlation band would be empty."
         )
     if not (-1.0 <= min_correlation <= 1.0):
-        raise ValueError(f"min_correlation ({min_correlation}) outside [-1, 1]")
+        raise ValueError(
+            f"min_correlation ({min_correlation}) outside [-1, 1] (invalid Pearson bound)."
+        )
     if not (-1.0 <= max_correlation <= 1.0):
-        raise ValueError(f"max_correlation ({max_correlation}) outside [-1, 1]")
-    if min_overlap_years < 0:
-        raise ValueError(f"min_overlap_years ({min_overlap_years}) must be >= 0")
-    if recent_years < 0:
-        raise ValueError(f"recent_years ({recent_years}) must be >= 0")
+        raise ValueError(
+            f"max_correlation ({max_correlation}) outside [-1, 1] (invalid Pearson bound)."
+        )
+    if not (0.0 <= min_overlap_pct <= 1.0):
+        raise ValueError(
+            f"min_overlap_pct ({min_overlap_pct}) must be between 0 and 1."
+        )
     if top_n is not None and top_n < 0:
-        raise ValueError(f"top_n ({top_n}) must be >= 0 or None")
+        raise ValueError(
+            f"top_n ({top_n}) must be >= 0 or None."
+        )
 
     sliced = data.loc[start:end] if (start is not None or end is not None) else data
     sliced = sliced.sort_index()
 
     if sliced.shape[1] < 2:
-        raise ValueError(f"Need at least 2 tickers, got {sliced.shape[1]}")
+        raise ValueError(
+            f"Need at least 2 ticker columns after slicing; got {sliced.shape[1]}."
+        )
 
-    min_periods = int(min_overlap_years * 252)
+    n_trading_days = int(len(sliced))
+    min_periods = int(n_trading_days * min_overlap_pct)
 
     # pct_change() on pandas >=3.0 never forward-fills gaps (fill_method removed).
     # NaN gaps stay NaN in returns; .corr() handles them via pairwise deletion.
     series = sliced.pct_change() if use_returns else sliced
     full_corr = series.corr(min_periods=min_periods)
-
-    if recent_years > 0:
-        recent_td = int(recent_years * 252)
-        recent_series = series.iloc[-recent_td:]
-        recent_min_periods = min(min_periods, len(recent_series))
-        recent_corr = recent_series.corr(min_periods=recent_min_periods)
-    else:
-        recent_corr = None
 
     n = full_corr.shape[0]
     mask = np.triu(np.ones((n, n), dtype=bool), k=1)
@@ -442,11 +434,6 @@ def find_candidate_pairs(
             continue
         if not (min_correlation <= fc <= max_correlation):
             continue
-
-        if recent_corr is not None:
-            rc = recent_corr.iloc[r, c]
-            if np.isnan(rc) or not (min_correlation <= rc <= max_correlation):
-                continue
 
         pairs_with_corr.append((float(fc), (tickers[r], tickers[c])))
 

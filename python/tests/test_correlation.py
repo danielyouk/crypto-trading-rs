@@ -10,7 +10,7 @@ DATES = pd.bdate_range("2024-01-02", periods=120)
 
 # All existing tests use short data (120 days), so min_overlap_years=0
 # disables the overlap filter. New tests below exercise overlap/recency.
-_NO_OVERLAP = dict(min_overlap_years=0, recent_years=0)
+_NO_OVERLAP = dict(min_overlap_pct=0.0)
 
 
 def _make_correlated_panel() -> pd.DataFrame:
@@ -114,19 +114,25 @@ class TestSharedBehavior:
 
 
 class TestOverlapFilter:
-    """Tests for min_overlap_years parameter."""
+    """Tests for min_overlap_pct parameter."""
 
     def test_insufficient_overlap_excluded(self) -> None:
-        """120 trading days < 1 year (252 days) → all pairs excluded with min_overlap_years=1."""
+        """120 trading days with 90% overlap means min_periods=108."""
         data = _make_correlated_panel()
-        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, min_overlap_years=1.0, recent_years=0)
-        assert len(result) == 0
+        # With min_overlap_pct=0.90, it needs 108 days.
+        # Let's create a gap so it fails.
+        data_gap = data.copy()
+        data_gap.iloc[0:20, 0] = np.nan # A has only 100 days
+        result = find_candidate_pairs(data_gap, min_correlation=-1.0, max_correlation=1.0, min_overlap_pct=0.90)
+        assert ("A", "B") not in result
 
     def test_sufficient_overlap_included(self) -> None:
-        """120 trading days > 0.4 years (101 days) → pairs included."""
+        """120 trading days with 50% overlap means min_periods=60."""
         data = _make_correlated_panel()
-        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, min_overlap_years=0.4, recent_years=0)
-        assert len(result) > 0
+        data_gap = data.copy()
+        data_gap.iloc[0:20, 0] = np.nan # A has 100 days
+        result = find_candidate_pairs(data_gap, min_correlation=-1.0, max_correlation=1.0, min_overlap_pct=0.50)
+        assert ("A", "B") in result or ("B", "A") in result
 
     def test_partial_overlap_tickers(self) -> None:
         """Ticker E starts halfway through — only pairs with enough overlap survive."""
@@ -138,54 +144,12 @@ class TestOverlapFilter:
         e_prices[400:] = 50 + np.cumsum(rng.normal(0.1, 1, 200))
         data = pd.DataFrame({"A": a, "B": b, "E": e_prices}, index=long_dates)
 
-        # min_overlap_years=1.5 → need 378 days overlap
+        # min_overlap_pct=0.50 → need 300 days overlap
         # A-B: 600 days overlap → pass
         # A-E, B-E: 200 days overlap → fail
-        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, min_overlap_years=1.5, recent_years=0)
+        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, min_overlap_pct=0.50)
         assert ("A", "B") in result or ("B", "A") in result
         assert ("A", "E") not in result and ("E", "A") not in result
-
-
-class TestRecentCorrelation:
-    """Tests for the dual condition (full + recent)."""
-
-    def test_degraded_relationship_excluded(self) -> None:
-        """A-B correlated in first half, uncorrelated in second half → excluded by recency check."""
-        rng = np.random.default_rng(77)
-        long_dates = pd.bdate_range("2020-01-02", periods=800)
-
-        a = 100 + np.cumsum(rng.normal(0.1, 1, 800))
-
-        # B tracks A for first 500 days, then diverges
-        b = np.empty(800)
-        b[:500] = a[:500] * 1.3 + rng.normal(0, 0.5, 500)
-        b[500:] = 200 + np.cumsum(rng.normal(0, 2, 300))
-
-        c = 150 + np.cumsum(rng.normal(0, 1, 800))
-        data = pd.DataFrame({"A": a, "B": b, "C": c}, index=long_dates)
-
-        # Without recency check → A-B likely passes on full period
-        no_recent = find_candidate_pairs(
-            data, min_correlation=-1.0, max_correlation=1.0,
-            min_overlap_years=0, recent_years=0,
-        )
-
-        # With recency check (last ~1 year = 252 days, within the diverged zone)
-        with_recent = find_candidate_pairs(
-            data, min_correlation=0.3, max_correlation=1.0,
-            min_overlap_years=0, recent_years=1.0,
-        )
-
-        ab_in_no_recent = ("A", "B") in no_recent
-        ab_in_with_recent = ("A", "B") in with_recent
-
-        assert ab_in_no_recent, "A-B should appear without recency check"
-        assert not ab_in_with_recent, "A-B should be excluded by recency check (relationship degraded)"
-
-    def test_recent_years_zero_disables_check(self) -> None:
-        data = _make_correlated_panel()
-        result = find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.0, min_overlap_years=0, recent_years=0)
-        assert len(result) == 6
 
 
 class TestInputValidation:
@@ -206,15 +170,12 @@ class TestInputValidation:
         with pytest.raises(ValueError, match="max_correlation.*outside"):
             find_candidate_pairs(data, min_correlation=-1.0, max_correlation=1.5, **_NO_OVERLAP)
 
-    def test_negative_overlap_years_raises(self) -> None:
+    def test_invalid_overlap_pct_raises(self) -> None:
         data = _make_correlated_panel()
-        with pytest.raises(ValueError, match="min_overlap_years"):
-            find_candidate_pairs(data, min_overlap_years=-1.0, recent_years=0)
-
-    def test_negative_recent_years_raises(self) -> None:
-        data = _make_correlated_panel()
-        with pytest.raises(ValueError, match="recent_years"):
-            find_candidate_pairs(data, min_overlap_years=0, recent_years=-1.0)
+        with pytest.raises(ValueError, match="min_overlap_pct"):
+            find_candidate_pairs(data, min_overlap_pct=-0.1)
+        with pytest.raises(ValueError, match="min_overlap_pct"):
+            find_candidate_pairs(data, min_overlap_pct=1.1)
 
     def test_negative_top_n_raises(self) -> None:
         data = _make_correlated_panel()

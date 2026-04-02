@@ -16,7 +16,7 @@ from typing import Any, Optional, cast
 
 import numpy as np
 import pandas as pd
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from pairs_eda.correlation import filter_volatile_tickers
 
@@ -52,17 +52,35 @@ class RollingPhase2Config(BaseModel):
     )
     validation_days: int = Field(default=63, ge=21)
     rebalance_frequency: str = Field(default="MS", description="Pandas offset alias, e.g. MS")
+    coint_significance: float = Field(
+        default=0.05,
+        ge=0.01,
+        le=0.20,
+        description="p-value threshold for Engle-Granger cointegration test. "
+        "Pairs with p-value < this threshold are considered cointegrated.",
+    )
+    coint_retest_margin: float = Field(
+        default=0.02,
+        ge=0.0,
+        le=0.10,
+        description="Margin of safety for cointegration cache. "
+        "If |cached_p_value - coint_significance| <= margin, the pair is retested. "
+        "Set to 1.0 to force retesting all pairs every rebalance (disable cache).",
+    )
+    coint_cache_max_streak: int = Field(
+        default=6,
+        ge=1,
+        description="Maximum number of consecutive rebalances a cached p-value can be used "
+        "before a forced retest. Prevents stale cache entries from living forever.",
+    )
     min_correlation: float = Field(default=0.40, ge=-1.0, le=1.0)
     max_correlation: float = Field(default=0.85, ge=-1.0, le=1.0)
-    min_overlap_years: float = Field(default=5.0, ge=0.0)
-    recent_years: float = Field(default=3.0, ge=0.0)
+    min_overlap_pct: float = Field(default=0.90, ge=0.0, le=1.0)
     top_n_candidates: Optional[int] = Field(default=200, ge=1)
     windows: tuple[int, ...] = Field(default=(20, 30, 40, 60))
     zscore_thresholds: tuple[float, ...] = Field(default=(1.5, 2.0, 2.5, 3.0))
     top_k_for_robustness: int = Field(default=6, ge=2)
     watchlist_size: int = Field(default=20, ge=1)
-    watchlist_retention_buffer: int = Field(default=8, ge=0)
-    max_drop_rebalances: int = Field(default=2, ge=1)
     max_slots: int = Field(default=7, ge=1)
     max_new_entries_per_day: int = Field(
         default=0, ge=0,
@@ -213,21 +231,48 @@ class RollingPhase2Output(BaseModel):
 
 
 @dataclass
-class _PairStickinessState:
-    keep_streak: int = 0
-    drop_streak: int = 0
-
-
-@dataclass
 class _OpenPosition:
+    """A live pairs trade carried across rebalance boundaries.
+
+    Created when the WFA executor opens a new position and persists in the
+    ``open_positions`` list until the Z-score crosses the exit threshold
+    (or the position is force-closed at rebalance).
+
+    Fields:
+        pair:            (ticker_a, ticker_b) tuple identifying the spread.
+        direction:       +1 = long spread (long A, short B),
+                         -1 = short spread (short A, long B).
+        window:          Look-back window (in trading days) used to compute
+                         the Z-score that triggered this entry.
+        entry_zscore:    Z-score at which the position was opened.
+        exit_zscore:     Z-score threshold for closing (typically near zero,
+                         i.e. mean-reversion target).
+        entry_date:      Timestamp when the trade was opened.
+        score_on_entry:  final_score from ``compute_robust_pair_scores`` at
+                         entry time.  Used for position sizing and audit.
+        slot_notional:   Capital allocated to this slot at entry
+                         (= current equity / max_slots).
+        qty_a:           Number of shares (or units) of ticker A.
+        qty_b:           Number of shares (or units) of ticker B.
+        entry_buy_a:     Fill price of the buy leg for ticker A.
+        entry_sell_a:    Fill price of the sell leg for ticker A.
+        entry_buy_b:     Fill price of the buy leg for ticker B.
+        entry_sell_b:    Fill price of the sell leg for ticker B.
+
+    Note:
+        For a long-spread trade (direction=+1), entry_buy_a is the actual
+        buy price and entry_sell_b is the actual sell price.  The "opposite"
+        fields (entry_sell_a, entry_buy_b) are populated at exit.
+    """
+
     pair: tuple[str, str]
-    direction: int  # +1 long spread, -1 short spread
+    direction: int
     window: int
     entry_zscore: float
     exit_zscore: float
     entry_date: pd.Timestamp
     score_on_entry: float
-    slot_notional: float  # notional at entry time (equity/max_slots)
+    slot_notional: float
     qty_a: float
     qty_b: float
     entry_buy_a: float
@@ -251,30 +296,16 @@ def _key_to_pair(key: str) -> tuple[str, str]:
 
 @dataclass
 class _CointCacheEntry:
-    """Cached Engle-Granger p-value for one pair."""
+    """Cached Engle-Granger p-value for one pair.
+
+    Example:
+        {"AAPL|MSFT": _CointCacheEntry(p_value=0.001, passed=True, streak=7)}
+    """
 
     p_value: float
     passed: bool
+    streak: int  # Number of consecutive rebalances this cached result has been used
     tested_at: str  # rebalance date string for audit trail
-
-
-_COINT_RETEST_MARGIN = 0.02
-
-
-def _should_retest(entry: _CointCacheEntry, significance: float) -> bool:
-    """True when the cached p-value is close to the decision boundary.
-
-    Pairs with p-value deep inside passed/failed territory (|p - sig| > margin)
-    are extremely unlikely to flip after a 1-month data shift.  Only borderline
-    cases need retesting.
-
-    Example with significance = 0.05, margin = 0.02:
-        p = 0.001  →  |0.001 - 0.05| = 0.049 > 0.02  →  skip (firmly passed)
-        p = 0.042  →  |0.042 - 0.05| = 0.008 < 0.02  →  retest (borderline)
-        p = 0.300  →  |0.300 - 0.05| = 0.250 > 0.02  →  skip (firmly failed)
-        p = 0.058  →  |0.058 - 0.05| = 0.008 < 0.02  →  retest (borderline)
-    """
-    return abs(entry.p_value - significance) <= _COINT_RETEST_MARGIN
 
 
 def _test_cointegration(
@@ -299,6 +330,7 @@ def _test_cointegration(
     return _CointCacheEntry(
         p_value=float(p_value),
         passed=float(p_value) < significance,
+        streak=1,
         tested_at="",
     )
 
@@ -309,20 +341,26 @@ def filter_cointegrated_cached(
     cache: dict[str, _CointCacheEntry],
     *,
     significance: float = 0.05,
+    margin: float = 0.02,
+    max_streak: int = 6,
     rebalance_label: str = "",
 ) -> tuple[list[tuple[str, str]], dict[str, _CointCacheEntry], dict[str, int]]:
     """Filter pairs by cointegration, reusing cached results when safe.
 
     Logic per pair:
-        1. If NOT in cache → full test → store result.
-        2. If in cache AND |p - significance| > margin → reuse (skip expensive test).
-        3. If in cache AND borderline → retest → update cache.
+        1. If NOT in cache → full test → store result (streak=1).
+        2. If in cache AND |p - significance| > margin AND streak < max_streak → reuse (skip test, streak+1).
+        3. If in cache AND borderline OR streak >= max_streak → retest → store result (streak=1).
+        
+    Note: Pairs not in the `pairs` input list are implicitly evicted from the returned cache.
 
     Args:
         pairs:            Candidate pairs (post-correlation filter).
         prices:           Phase 1 training price panel.
         cache:            Mutable dict keyed by "A|B" → _CointCacheEntry.
         significance:     p-value cut-off for Engle-Granger (default 0.05).
+        margin:           Margin around significance that forces a retest.
+        max_streak:       Max consecutive uses before forced retest.
         rebalance_label:  Tag for audit trail (e.g. "2005-Q1").
 
     Returns:
@@ -330,6 +368,7 @@ def filter_cointegrated_cached(
         stats keys: "tested", "cache_hit", "passed"
     """
     passed: list[tuple[str, str]] = []
+    new_cache: dict[str, _CointCacheEntry] = {}
     tested = 0
     cache_hit = 0
 
@@ -337,23 +376,32 @@ def filter_cointegrated_cached(
         key = _pair_to_key(pair)
         entry = cache.get(key)
 
-        if entry is not None and not _should_retest(entry, significance):
-            cache_hit += 1
-            if entry.passed:
-                passed.append(pair)
-            continue
+        if entry is not None:
+            needs_retest = (entry.streak >= max_streak) or (abs(entry.p_value - significance) <= margin)
+            if not needs_retest:
+                cache_hit += 1
+                new_entry = _CointCacheEntry(
+                    p_value=entry.p_value,
+                    passed=entry.passed,
+                    streak=entry.streak + 1,
+                    tested_at=entry.tested_at,
+                )
+                new_cache[key] = new_entry
+                if new_entry.passed:
+                    passed.append(pair)
+                continue
 
         new_entry = _test_cointegration(pair, prices, significance)
         if new_entry is None:
             continue
         tested += 1
         new_entry.tested_at = rebalance_label
-        cache[key] = new_entry
+        new_cache[key] = new_entry
         if new_entry.passed:
             passed.append(pair)
 
     stats = {"tested": tested, "cache_hit": cache_hit, "passed": len(passed)}
-    return passed, cache, stats
+    return passed, new_cache, stats
 
 
 def build_rolling_timeline(inp: RollingPhase2Input) -> list[RebalanceWindow]:
@@ -553,27 +601,99 @@ def _evaluate_pair_surface(
 def compute_robust_pair_scores(
     prices_train: pd.DataFrame,
     cfg: RollingPhase2Config,
-    stickiness_state: dict[str, _PairStickinessState],
     pair_universe: Optional[list[tuple[str, str]]] = None,
     coint_cache: Optional[dict[str, _CointCacheEntry]] = None,
     rebalance_label: str = "",
+    sector_map: Optional[dict[str, str]] = None,
 ) -> tuple[pd.DataFrame, dict[str, int]]:
-    """Score candidate pairs by robustness, then apply persistence-aware adjustments.
+    """Score candidate pairs by robustness.
 
-    Pipeline within one rebalance:
-        1. Correlation filter (find_candidate_pairs) → coarse candidates
-        2. Cointegration filter (with cache) → structurally sound pairs
-        3. Surface evaluation (train/validation split) → scored pairs
-        4. Persistence adjustments → final_score
+    Called once per rebalance date inside the WFA loop. This is the heart of
+    Phase 1: it takes a trailing price panel, runs the 4-step pair selection
+    funnel, and returns scored candidates for the watchlist.
+
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │  prices_train (dates × tickers)                                     │
+    │       │                                                             │
+    │       ├─ 1. filter_volatile_tickers  → remove extreme movers        │
+    │       ├─ 2. find_candidate_pairs     → correlation band [0.40,0.85] │
+    │       ├─ 3. filter_cointegrated      → Engle-Granger ADF (cached)   │
+    │       └─ 4. _evaluate_pair_surface   → train/val robustness grid    │
+    │                                                                     │
+    │  Output: scored DataFrame sorted by final_score descending          │
+    └─────────────────────────────────────────────────────────────────────┘
+
+    Args:
+        prices_train:
+            Adj Close panel shaped (dates × tickers). DatetimeIndex required.
+            This is the Phase 1 trailing window (e.g. 36 months of daily prices)
+            sliced by the caller as ``prices.loc[phase1_start:phase1_end]``.
+            Must contain at least 2 ticker columns and enough rows to cover
+            ``max(cfg.windows) + cfg.validation_days``.
+        cfg:
+            Rolling Phase 2 configuration (correlation band, overlap pct,
+            cointegration significance, z-score thresholds, etc.).
+        pair_universe:
+            Optional pre-filtered list of (ticker_a, ticker_b) tuples.
+            If provided, skips Step 1-2 (volatile filter + correlation filter)
+            and uses these pairs directly for cointegration + scoring.
+            Useful for debugging or restricting the universe manually.
+        coint_cache:
+            Mutable dict tracking cached Engle-Granger p-values per pair.
+            Keyed by "TICKER_A|TICKER_B" → _CointCacheEntry. Persists across
+            rebalances. If None, cointegration filtering is skipped entirely.
+        rebalance_label:
+            Human-readable tag for the current rebalance date (e.g. "2020-01-01").
+            Stored in _CointCacheEntry.tested_at for audit trail / debugging.
+        sector_map:
+            Optional ticker → GICS sector mapping (e.g. {"AAPL": "Information Technology"}).
+            Passed to filter_volatile_tickers for sector-adjusted shock calculation.
+            If None, raw absolute returns are used for volatility filtering.
 
     Returns:
         (scored_df, coint_stats)
-        scored_df columns:
-            pair_key, ticker_a, ticker_b, window, entry_zscore,
-            dist_window, dist_zscore, train_margin, validation_margin,
-            diff_margin, base_score, final_score.
-        coint_stats: {"tested": N, "cache_hit": N, "passed": N}
+
+        scored_df:
+            DataFrame with columns: pair_key, ticker_a, ticker_b, window,
+            entry_zscore, dist_window, dist_zscore, train_margin,
+            validation_margin, diff_margin, base_score, final_score.
+            Sorted by final_score descending. Empty DataFrame (with correct
+            columns) if no pairs survive the funnel.
+        coint_stats:
+            {"tested": N, "cache_hit": N, "passed": N} — diagnostics for
+            the cointegration cache performance at this rebalance.
+
+    Raises:
+        ValueError: If prices_train has fewer than 2 tickers or is not
+            indexed by DatetimeIndex.
+
+    Example:
+        >>> scored, stats = compute_robust_pair_scores(
+        ...     prices.loc["2017-01":"2019-12"],
+        ...     cfg=wfa_config,
+        ...     coint_cache=cache,
+        ...     rebalance_label="2020-01-01",
+        ...     sector_map={"AAPL": "Information Technology", "XOM": "Energy"},
+        ... )
+        >>> scored.head(3)[["pair_key", "final_score"]]
     """
+    # ── Input validation ──
+    if not isinstance(prices_train.index, pd.DatetimeIndex):
+        raise ValueError(
+            f"prices_train must have a DatetimeIndex, got {type(prices_train.index).__name__}."
+        )
+    if prices_train.shape[1] < 2:
+        raise ValueError(
+            f"prices_train must contain at least 2 tickers, got {prices_train.shape[1]}."
+        )
+    min_rows_needed = max(cfg.windows) + cfg.validation_days
+    if len(prices_train) < min_rows_needed:
+        raise ValueError(
+            f"prices_train has {len(prices_train)} rows, but needs at least "
+            f"{min_rows_needed} (max window {max(cfg.windows)} + validation_days "
+            f"{cfg.validation_days})."
+        )
+
     coint_stats: dict[str, int] = {"tested": 0, "cache_hit": 0, "passed": 0}
 
     train_filtered = prices_train
@@ -591,8 +711,7 @@ def compute_robust_pair_scores(
             max_correlation=cfg.max_correlation,
             top_n=cfg.top_n_candidates,
             use_returns=True,
-            min_overlap_years=cfg.min_overlap_years,
-            recent_years=cfg.recent_years,
+            min_overlap_pct=cfg.min_overlap_pct,
         )
         pairs = list(candidate_map.keys())
     else:
@@ -603,7 +722,9 @@ def compute_robust_pair_scores(
             pairs,
             prices_train,
             coint_cache,
-            significance=0.05,
+            significance=cfg.coint_significance,
+            margin=cfg.coint_retest_margin,
+            max_streak=cfg.coint_cache_max_streak,
             rebalance_label=rebalance_label,
         )
 
@@ -613,11 +734,7 @@ def compute_robust_pair_scores(
         if evaluated is None:
             continue
         key = _pair_to_key(cast(tuple[str, str], evaluated["pair"]))
-        sticky = stickiness_state.get(key, _PairStickinessState())
-
-        persistence_bonus = min(0.15, 0.03 * sticky.keep_streak)
-        turnover_penalty = min(0.10, 0.02 * sticky.drop_streak)
-        final_score = float(evaluated["base_score"]) + persistence_bonus - turnover_penalty
+        final_score = float(evaluated["base_score"])
 
         rows.append(
             {
@@ -632,8 +749,6 @@ def compute_robust_pair_scores(
                 "validation_margin": float(evaluated["validation_margin"]),
                 "diff_margin": float(evaluated["diff_margin"]),
                 "base_score": float(evaluated["base_score"]),
-                "persistence_bonus": persistence_bonus,
-                "turnover_penalty": turnover_penalty,
                 "final_score": final_score,
             }
         )
@@ -651,8 +766,6 @@ def compute_robust_pair_scores(
             "validation_margin",
             "diff_margin",
             "base_score",
-            "persistence_bonus",
-            "turnover_penalty",
             "final_score",
         ]
     )
@@ -660,60 +773,6 @@ def compute_robust_pair_scores(
         return empty_df, coint_stats
     scored = pd.DataFrame(rows).sort_values("final_score", ascending=False).reset_index(drop=True)
     return scored, coint_stats
-
-
-def apply_sticky_watchlist(
-    scored_pairs: pd.DataFrame,
-    previous_watchlist: set[str],
-    stickiness_state: dict[str, _PairStickinessState],
-    cfg: RollingPhase2Config,
-) -> tuple[pd.DataFrame, dict[str, _PairStickinessState]]:
-    """Apply retention/persistence rules to reduce watchlist churn."""
-
-    if scored_pairs.empty:
-        for key in list(stickiness_state.keys()):
-            st = stickiness_state[key]
-            st.drop_streak += 1
-            st.keep_streak = 0
-            if st.drop_streak > cfg.max_drop_rebalances:
-                stickiness_state.pop(key, None)
-        return scored_pairs, stickiness_state
-
-    ranked = scored_pairs.sort_values("final_score", ascending=False).reset_index(drop=True)
-    ranked["rank"] = np.arange(1, len(ranked) + 1)
-    rank_map = dict(zip(ranked["pair_key"], ranked["rank"]))
-
-    core_keys = set(cast(list[str], ranked.head(cfg.watchlist_size)["pair_key"].tolist()))
-    retention_cap_rank = cfg.watchlist_size + cfg.watchlist_retention_buffer
-    retained_keys = {
-        key
-        for key in previous_watchlist
-        if key in rank_map and int(rank_map[key]) <= retention_cap_rank
-    }
-
-    active_keys = core_keys | retained_keys
-    active = ranked[ranked["pair_key"].isin(active_keys)].copy()
-    active = active.sort_values("final_score", ascending=False).head(retention_cap_rank)
-    active_keys = set(cast(list[str], active["pair_key"].tolist()))
-
-    for key in active_keys:
-        st = stickiness_state.get(key, _PairStickinessState())
-        st.keep_streak += 1
-        st.drop_streak = 0
-        stickiness_state[key] = st
-
-    for key in list(stickiness_state.keys()):
-        if key in active_keys:
-            continue
-        st = stickiness_state[key]
-        st.drop_streak += 1
-        st.keep_streak = 0
-        if st.drop_streak > cfg.max_drop_rebalances:
-            stickiness_state.pop(key, None)
-        else:
-            stickiness_state[key] = st
-
-    return active.reset_index(drop=True), stickiness_state
 
 
 def _compute_unrealized_pnl(position: _OpenPosition, price_a: float, price_b: float) -> float:
@@ -757,14 +816,14 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
     """Run full rolling Phase 2 simulation.
 
     Pipeline:
-        timeline → rebalance scoring (with cointegration cache) → sticky watchlist
+        timeline → rebalance scoring (with cointegration cache)
         → daily slot simulation → metrics
 
     Cointegration caching:
         A persistent cache maps each pair key to its last Engle-Granger p-value.
-        At each rebalance, only borderline pairs (p near 0.05) are retested.
-        Deep-pass (p << 0.05) and deep-fail (p >> 0.05) pairs reuse the cache,
-        cutting ~80% of the cointegration computation across turns.
+        At each rebalance, only borderline pairs (p near 0.05) or old entries
+        (streak >= max_streak) are retested. Deep-pass and deep-fail pairs reuse
+        the cache, cutting ~80% of the cointegration computation across turns.
     """
 
     cfg = inp.config
@@ -774,8 +833,6 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
     if len(schedule) == 0:
         raise ValueError("No valid rolling schedule. Adjust date range/training settings.")
 
-    stickiness_state: dict[str, _PairStickinessState] = {}
-    previous_watchlist: set[str] = set()
     watchlist_by_rebalance: dict[pd.Timestamp, pd.DataFrame] = {}
     rebalance_rows: list[dict[str, Any]] = []
     coint_cache: dict[str, _CointCacheEntry] = {}
@@ -787,26 +844,22 @@ def run_phase2_rolling(inp: RollingPhase2Input) -> RollingPhase2Output:
         scored, coint_stats = compute_robust_pair_scores(
             phase1,
             cfg,
-            stickiness_state,
             pair_universe=inp.pair_universe,
             coint_cache=coint_cache,
             rebalance_label=rebalance_label,
+            sector_map=sector_map,
         )
         coint_stats_all.append({
             "rebalance": rebalance_label,
             **coint_stats,
         })
-        active_watchlist, stickiness_state = apply_sticky_watchlist(
-            scored,
-            previous_watchlist,
-            stickiness_state,
-            cfg,
-        )
-        previous_watchlist = set(cast(list[str], active_watchlist["pair_key"].tolist()))
+        
+        # Take top N pairs as the active watchlist
+        active_watchlist = scored.head(cfg.watchlist_size).copy()
         watchlist_by_rebalance[window.rebalance_date] = active_watchlist
 
         if not active_watchlist.empty:
-            snap = active_watchlist.head(cfg.watchlist_size).copy()
+            snap = active_watchlist.copy()
             snap["rebalance_date"] = window.rebalance_date
             rebalance_rows.extend(snap.to_dict("records"))
 
