@@ -94,11 +94,11 @@ For each rebalance window:
     ├── 3. filter_cointegrated_cached()   ← Engle-Granger + smart cache
     ├── 4. compute_robust_pair_scores()   ← grid search over (window × zscore)
     │       ├── compute_zscore()          ← Kalman Filter (handles structural breaks)
-    │       ├── _evaluate_pair_surface()  ← train/validation split
-    │       │     ├── train_daily > 0?    ← hard gate
-    │       │     ├── z-vol consistency?  ← hard gate
-    │       │     └── stable region median → best_window, best_z
-    │       └── apply_sticky_watchlist()  ← persistence bonus
+    │       └── _evaluate_pair_surface()  ← train/validation split
+    │             ├── train_per_trade > 0? ← hard gate (past profit)
+    │             ├── val_per_trade > 0?   ← hard gate (recent profit)
+    │             ├── val_per_trade < 3x?  ← hard gate (reject luck/structural break)
+    │             └── stable region median → best_window, best_z
     │
     ▼
 Daily simulation loop (sim_dates):
