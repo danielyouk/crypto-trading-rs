@@ -97,7 +97,7 @@ For each rebalance window:
     │       └── _evaluate_pair_surface()  ← train/validation split
     │             ├── train_per_trade > 0? ← hard gate (past profit)
     │             ├── val_per_trade > 0?   ← hard gate (recent profit)
-    │             ├── val_per_trade < 3x?  ← hard gate (reject luck/structural break)
+    │             ├── val_per_trade < 5x?  ← hard gate (reject luck/structural break)
     │             └── stable region median → best_window, best_z
     │
     ▼
@@ -125,17 +125,17 @@ Daily simulation loop (sim_dates):
 
 | Parameter | Value | Purpose |
 |-----------|-------|---------|
-| `training_months` | 48 | Rolling window size |
-| `validation_days` | 84 | Phase 2a consistency check |
+| `training_months` | 36 | Rolling window size |
+| `validation_days` | 180 | Phase 2a consistency check (~6 months) |
 | `rebalance_frequency` | "MS" | Monthly rebalance |
 | `leverage` | 3.0 | Position sizing multiplier |
 | `max_slots` | 7 | Max concurrent positions |
 | `max_new_entries_per_day` | 2 | Smooths equity fluctuation |
 | `min_holding_days` | 3 | Prevents ultra-fast churn |
 | `circuit_breaker_pct` | 0.12 | Portfolio-level tail risk defense |
-| `max_drop_quantile` | 0.0 | If > 0, drops the worst N% of volatile tickers |
+| `max_drop_quantile` | 0.90 | Drop worst-10% volatile tickers per rebalance |
 | `entry_zscore_default` | 2.0 | Default entry threshold |
-| `exit_zscore` | 1.0 | Adaptive exit threshold (close before 0.0) |
+| `exit_zscore` | 0.0 | Exit when z-score reverts to 0 |
 | `max_zscore` | 5.0 | Rejects extreme jumps as structural breaks |
 | `stop_loss_pct` | 0.05 | Per-trade loss limit |
 | `min_entry_score` | 0.50 | Quality gate |
@@ -143,7 +143,56 @@ Daily simulation loop (sim_dates):
 
 ---
 
-## 4. Notebook Flow (Active Path)
+## 4. Hybrid Strategy — Macro Regime Switching
+
+Pairs trading is a bear-market hedge, not a growth engine. The hybrid
+strategy holds the S&P 500 in normal markets and switches to Pairs
+Trading only during corrections:
+
+```
+            S&P 500 drawdown from peak
+            │
+            │  Normal: hold S&P 500
+            │
+    ────────┼──────── EXIT_DD = -5% ─── (switch BACK to S&P 500)
+            │
+            │  Bear: run Pairs Trading
+            │
+    ────────┼──────── ENTRY_DD = -10% ── (switch TO Pairs Trading)
+            │
+            ▼ deeper drawdown
+```
+
+**Rules:**
+- When S&P 500 drawdown hits **-10%**, sell S&P 500 and switch 100% to Pairs Trading.
+- When drawdown recovers to **-5%** (having passed through -10%), switch back to S&P 500.
+- The -5% exit is **conditional** on already being in bear mode — it's never triggered in a normal bull market.
+- On switch day, the WFA engine runs immediately on existing historical data (no warm-up delay).
+
+**On-demand WFA architecture (`run_hybrid_backtest`):**
+
+The WFA engine is expensive (176 grid combos × 200 pairs × monthly rebalances).
+Since pairs trading is only active ~10-15% of the time, we avoid running WFA
+over the full 20+ year history:
+
+```
+Step 1: find_bear_episodes()        ← scan S&P 500 drawdown (milliseconds)
+        → [(2000-09, 2003-05), (2007-11, 2009-08), (2020-02, 2020-05), ...]
+
+Step 2: For each bear episode ONLY:
+        → run_phase2_rolling()      ← expensive, but only for 2-3 year windows
+
+Step 3: Bull periods between:
+        → compound S&P 500 returns  ← zero computation
+
+Step 4: Stitch equity curves
+```
+
+This cuts WFA computation by **~85-90%** compared to running it full-period.
+
+---
+
+## 5. Notebook Flow (Active Path)
 
 The notebook has 88 cells, but the **active execution path** is:
 
@@ -152,16 +201,17 @@ The notebook has 88 cells, but the **active execution path** is:
 | Setup | 0-5 | Imports, S&P 500 list, sector map, download prices |
 | EDA | 10-11 | Correlation histogram, interactive pair chart |
 | Demo | 17-28 | Single-pair pipeline walkthrough (educational) |
-| **WFA Config** | **72** | Define `RollingPhase2Config`, helper functions, **run sensitivity sweep + robust selection + holdout** |
-| **WFA Showcase** | **74** | Full-period run with robust params, summary |
-| Diagnostics | 76-83 | Equity curve, period table, heatmap, 2023 analysis, filter impact |
+| **WFA Config** | **72** | Define `RollingPhase2Config` + `RollingPhase2Input` |
+| **WFA Run** | **74** | Full-period `run_phase2_rolling()` |
+| **Hybrid** | **76** | S&P 500 + Pairs hedge equity curve (regime switching) |
+| Diagnostics | 78-83 | Period table, heatmap, filter impact |
 | Trade/Rebalance | 85-87 | Trade stats, rebalance history, cointegration cache |
 
 Cells 32-70 are **legacy static backtest stubs** (all commented out, superseded by WFA).
 
 ---
 
-## 5. Code Strengths
+## 6. Code Strengths
 
 ### Architecture
 - **Clean separation**: library (`pairs_eda/`) vs. notebook vs. docs vs. rules
@@ -186,7 +236,7 @@ Cells 32-70 are **legacy static backtest stubs** (all commented out, superseded 
 
 ---
 
-## 6. Code Weaknesses & Technical Debt
+## 7. Code Weaknesses & Technical Debt
 
 ### Architecture
 - **Notebook is too large** (88 cells, ~6500 lines with outputs). Hard to navigate. Cells 32-70 are dead code that should be removed entirely.
@@ -214,7 +264,7 @@ Cells 32-70 are **legacy static backtest stubs** (all commented out, superseded 
 
 ---
 
-## 7. Investment Strategy Strengths
+## 8. Investment Strategy Strengths
 
 - **Market-neutral by design** — long/short pairs hedge out market beta
 - **Grounded in statistics** — cointegration + z-score mean-reversion is well-established
@@ -227,7 +277,7 @@ Cells 32-70 are **legacy static backtest stubs** (all commented out, superseded 
 
 ---
 
-## 8. Investment Strategy Weaknesses
+## 9. Investment Strategy Weaknesses
 
 ### Structural Limitations
 - **Survivorship bias** — uses current S&P 500 constituents for the entire historical period. Delisted/removed tickers are missing from the universe.
@@ -255,7 +305,7 @@ Cells 32-70 are **legacy static backtest stubs** (all commented out, superseded 
 
 ---
 
-## 9. Recommended Next Steps (Priority Order)
+## 10. Recommended Next Steps (Priority Order)
 
 1. **Clean up notebook** — remove 40 dead cells (32-70), move helper functions to library
 2. **Split `rolling_phase2.py`** — config, timeline, scoring, simulation as separate modules

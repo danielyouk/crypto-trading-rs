@@ -258,19 +258,10 @@ def filter_volatile_tickers(
     )
     out = filter_volatile_tickers_validated(inp)
 
-    mode = (
-        "sector-adjusted shock"
-        if inp.sector_map
-        and _sectors_with_at_least_two_tickers(list(prices.columns), inp.sector_map)
-        else "raw abs return"
+    print(
+        f"filter_volatile: {out.n_before}→{out.n_kept} tickers "
+        f"(dropped {out.n_volatile_dropped} volatile, {out.n_no_data} no-data)"
     )
-    
-    print(f"filter_volatile_tickers: {out.n_before} tickers ({mode})")
-    if out.n_no_data > 0:
-        print(f"  no data in window: {out.n_no_data} tickers excluded")
-    print(f"  with data: {out.n_before - out.n_no_data} tickers")
-    print(f"  volatile (>{out.threshold:.1%} max move, p{max_move_quantile:.0%}): {out.n_volatile_dropped} dropped")
-    print(f"  kept: {out.n_kept} tickers")
 
     return out.filtered_prices
 
