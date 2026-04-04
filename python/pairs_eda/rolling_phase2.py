@@ -895,6 +895,9 @@ def _create_feature_cache(
 ProgressCallback = Callable[[pd.Timestamp, float, int, int], None]
 """Signature: (date, equity, step_index, total_steps) -> None"""
 
+HybridProgressCallback = Callable[[pd.Timestamp, float, float, float, int, int], None]
+"""Signature: (date, hybrid_equity, sp500_equity, sp500_drawdown, step_index, total_steps) -> None"""
+
 
 def run_phase2_rolling(
     inp: RollingPhase2Input,
@@ -1353,7 +1356,7 @@ def run_hybrid_backtest(
     *,
     entry_dd: float = -0.10,
     exit_dd: float = -0.05,
-    on_step: Optional[ProgressCallback] = None,
+    on_step: Optional[HybridProgressCallback] = None,
     step_interval: int = 20,
 ) -> HybridBacktestOutput:
     """Run hybrid backtest: S&P 500 in bull markets, Pairs Trading in bear markets.
@@ -1367,7 +1370,7 @@ def run_hybrid_backtest(
                          Used for drawdown calculation and bull-market returns.
         entry_dd:        S&P 500 drawdown to trigger switch to Pairs Trading.
         exit_dd:         S&P 500 drawdown recovery to switch back to S&P 500.
-        on_step:         Optional callback for live progress updates.
+        on_step:         Optional callback: (date, hybrid_eq, sp500_eq, sp500_dd, step, total).
         step_interval:   How often to fire on_step (in trading days). Default 20.
 
     Returns:
@@ -1451,7 +1454,7 @@ def run_hybrid_backtest(
         if on_step is not None:
             day_idx = len(daily_equities) - 1
             if day_idx % step_interval == 0 or day_idx == len(sim_dates) - 1:
-                on_step(day_ts, equity, day_idx, len(sim_dates))
+                on_step(day_ts, equity, sp500_eq, sp500_dd, day_idx, len(sim_dates))
 
     hybrid_equity = pd.Series(daily_equities, index=sim_dates, name="hybrid_equity")
     sp500_equity_s = pd.Series(sp500_equities, index=sim_dates, name="sp500_equity")

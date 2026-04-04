@@ -46,6 +46,7 @@ from pairs_eda.vectorized_backtest import (
 )
 from pairs_eda.rolling_phase2 import (
     HybridBacktestOutput,
+    HybridProgressCallback,
     ProgressCallback,
     RebalanceWindow,
     RollingPhase2Config,
@@ -103,6 +104,7 @@ __all__ = [
     "run_pairs_backtest_vectorized",
     "run_phase2_rolling",
     "HybridBacktestOutput",
+    "HybridProgressCallback",
     "ProgressCallback",
     "find_bear_episodes",
     "run_hybrid_backtest",

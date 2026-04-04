@@ -257,12 +257,6 @@ def filter_volatile_tickers(
         sector_map=sector_map,
     )
     out = filter_volatile_tickers_validated(inp)
-
-    print(
-        f"filter_volatile: {out.n_before}→{out.n_kept} tickers "
-        f"(dropped {out.n_volatile_dropped} volatile, {out.n_no_data} no-data)"
-    )
-
     return out.filtered_prices
 
 
