@@ -41,6 +41,9 @@ joblib==1.5.3
 google-genai==1.68.0
 python-dotenv==1.2.2
 
+# Live monitoring dashboard
+streamlit==1.56.0
+
 # Testing
 pytest==8.4.1
 

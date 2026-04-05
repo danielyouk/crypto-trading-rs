@@ -11,6 +11,15 @@ Always activate the virtual environment before executing any Python scripts or t
 - Command: `source .venv/bin/activate`
 - Do this as the first step in any shell execution that requires Python or installed dependencies (like pandas, yfinance, etc.). For example: `source .venv/bin/activate && python test_script.py`
 
+## Dependency Management via requirements.txt
+When installing any new Python package:
+1. **Check the installed version**: `pip show <package> | grep Version`
+2. **Add to `requirements.txt`** with the exact pinned version (e.g., `streamlit==1.56.0`)
+3. **Install via requirements.txt**: `pip install -r requirements.txt`
+4. **NEVER** install a package with just `pip install <package>` without updating `requirements.txt`
+
+This ensures all environments (Mac, Windows, CI) stay in sync.
+
 ## Temporary Files & Workspace Hygiene
 When you (the agent) create temporary scripts (e.g., `test_filter.py`, `debug.py`) to verify logic or test an idea:
 1. Run the script to get the necessary output.

@@ -1403,7 +1403,7 @@ def run_hybrid_backtest(
 
     active_episode_idx = 0
     in_bear = False
-    bear_wfa_result: Optional[RollingPhase2Output] = None
+    bear_wfa_daily_ret: Optional[pd.Series] = None
 
     for day in sim_dates:
         day_ts = pd.Timestamp(day)
@@ -1415,7 +1415,6 @@ def run_hybrid_backtest(
 
         if not in_bear and sp500_dd <= entry_dd and active_episode_idx < len(episodes):
             in_bear = True
-            ep = episodes[active_episode_idx]
 
             ep_inp = inp.model_copy(deep=True)
             ep_cfg = cfg.model_copy(deep=True)
@@ -1424,26 +1423,33 @@ def run_hybrid_backtest(
             ep_inp.config = ep_cfg
             ep_inp.initial_capital = equity
 
+            wfa_on_step: Optional[ProgressCallback] = None
+            if on_step is not None:
+                frozen_sp500_eq = sp500_eq
+                frozen_sp500_dd = sp500_dd
+                def _wfa_bridge(day: pd.Timestamp, wfa_eq: float, si: int, total: int) -> None:
+                    on_step(day, wfa_eq, frozen_sp500_eq, frozen_sp500_dd, si, total)
+                wfa_on_step = _wfa_bridge
+
             try:
-                bear_wfa_result = run_phase2_rolling(ep_inp)
+                bear_wfa_result = run_phase2_rolling(
+                    ep_inp, on_step=wfa_on_step, step_interval=step_interval,
+                )
                 episode_results.append(bear_wfa_result)
+                bear_wfa_daily_ret = bear_wfa_result.daily_return
             except (ValueError, IndexError):
-                bear_wfa_result = None
+                bear_wfa_daily_ret = None
                 in_bear = False
 
-        if in_bear and bear_wfa_result is not None:
-            if day_ts in bear_wfa_result.daily_equity.index:
-                wfa_eq_today = float(bear_wfa_result.daily_equity.loc[day_ts])
-                wfa_eq_start = float(bear_wfa_result.daily_equity.iloc[0])
-                if wfa_eq_start > 0:
-                    scale = equity / wfa_eq_start
-                    equity = wfa_eq_today * scale
+        if in_bear and bear_wfa_daily_ret is not None:
+            wfa_ret = float(bear_wfa_daily_ret.get(day_ts, 0.0))
+            equity *= (1.0 + wfa_ret)
             regime_labels.append("pairs")
 
             if sp500_dd >= exit_dd:
                 in_bear = False
                 active_episode_idx += 1
-                bear_wfa_result = None
+                bear_wfa_daily_ret = None
         else:
             equity *= (1.0 + sp500_daily_ret)
             regime_labels.append("sp500")
