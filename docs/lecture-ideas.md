@@ -1093,3 +1093,13 @@ We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" 
 1. **The Threshold Dropped:** The 90th percentile cutoff for "extreme volatility" dropped from 23.8% (Raw) to 16.2% (Sector-Adjusted). By removing the sector's baseline panic, our definition of an "idiosyncratic shock" became much sharper.
 2. **Saved from False Penalties (e.g., APA, COF):** APA (Energy) and COF (Financials) were dropped by the old filter because their prices collapsed. But the new filter saw that *their entire sectors* collapsed. It realized these stocks were just behaving normally for their sector and **saved them**.
 3. **Caught Hidden Dangers (e.g., AMZN):** Amazon (Consumer Discretionary) survived the old filter because its absolute move didn't breach the massive 23.8% threshold. But the new filter caught it! Why? Because while the rest of the Consumer Discretionary sector was stagnant or dropping, Amazon surged as a "stay-at-home" winner. It moved *against* its sector, creating a massive idiosyncratic shock (16.2%+) that would have destroyed any pair it was part of. The new filter successfully dropped it.
+
+## FX Noise and Regime Decoupling (The Dollar Smile)
+- **Visual**: A chart showing SPY in USD vs. SPY converted to KRW/EUR, highlighting how FX volatility creates false "drawdown" signals in the local currency curve.
+- **Key message**: Never mix currency volatility with equity trend signals; use native USD for regime detection, but embrace the "Dollar Smile" for portfolio hedging.
+- **Lecture storyline**: 
+  1. Introduce the problem: A Korean investor wants to switch to pairs trading when the market drops. 
+  2. Show the trap: If they use KRW-converted SPY to calculate drawdowns, the choppy FX rate triggers false regime switches.
+  3. The Solution: Decouple the signal. Calculate the -10% drawdown trigger using pure USD SPY.
+  4. The Bonus: Explain the "Dollar Smile". When the USD SPY drops -10% (global crisis), USD/KRW usually spikes. By switching to USD-denominated Pairs Trading, the investor is fully protected from the market crash AND gains massive FX profits from holding USD cash.
+- **Anticipated student questions**: "Should I use a currency-hedged ETF instead?" (Answer: You can, but unhedged is actually a better crisis hedge for emerging market investors due to the Dollar Smile).
