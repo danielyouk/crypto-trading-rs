@@ -1096,10 +1096,12 @@ We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" 
 
 ## FX Noise and Regime Decoupling (The Dollar Smile)
 - **Visual**: A chart showing SPY in USD vs. SPY converted to KRW/EUR, highlighting how FX volatility creates false "drawdown" signals in the local currency curve.
-- **Key message**: Never mix currency volatility with equity trend signals; use native USD for regime detection, but embrace the "Dollar Smile" for portfolio hedging.
+- **Key message**: Never mix currency volatility with equity trend signals; use native USD for regime detection, but embrace the "Dollar Smile" for portfolio hedging depending on your brokerage execution.
 - **Lecture storyline**: 
   1. Introduce the problem: A Korean investor wants to switch to pairs trading when the market drops. 
   2. Show the trap: If they use KRW-converted SPY to calculate drawdowns, the choppy FX rate triggers false regime switches.
   3. The Solution: Decouple the signal. Calculate the -10% drawdown trigger using pure USD SPY.
-  4. The Bonus: Explain the "Dollar Smile". When the USD SPY drops -10% (global crisis), USD/KRW usually spikes. By switching to USD-denominated Pairs Trading, the investor is fully protected from the market crash AND gains massive FX profits from holding USD cash.
-- **Anticipated student questions**: "Should I use a currency-hedged ETF instead?" (Answer: You can, but unhedged is actually a better crisis hedge for emerging market investors due to the Dollar Smile).
+  4. The Execution Reality (Crucial Detail): Explain how the "Dollar Smile" hedge depends entirely on the brokerage account structure:
+     - **Scenario A (Direct USD Account)**: You physically exchange KRW for USD to buy SPY. When the signal triggers, you sell SPY and hold actual USD cash. You use this USD as margin for the Long/Short pair. Result: You are fully protected from the stock crash AND you gain massive FX profits from holding USD cash during a crisis (The Dollar Smile).
+     - **Scenario B (Local Currency Collateral / CFDs)**: You deposit KRW/EUR as collateral to trade USD-denominated pairs. Since you are Long $10k and Short $10k, your net USD exposure is $0. Your principal remains in KRW/EUR. Result: You are protected from the stock crash, but you do NOT get the FX gain on your principal.
+- **Anticipated student questions**: "Should I use a currency-hedged ETF instead?" (Answer: You can, but unhedged is actually a better crisis hedge for emerging market investors due to the Dollar Smile, provided you use a Direct USD Account).
