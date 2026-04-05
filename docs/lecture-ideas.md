@@ -1105,3 +1105,13 @@ We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" 
      - **Scenario A (Direct USD Account)**: You physically exchange KRW for USD to buy SPY. When the signal triggers, you sell SPY and hold actual USD cash. You use this USD as margin for the Long/Short pair. Result: You are fully protected from the stock crash AND you gain massive FX profits from holding USD cash during a crisis (The Dollar Smile).
      - **Scenario B (Local Currency Collateral / CFDs)**: You deposit KRW/EUR as collateral to trade USD-denominated pairs. Since you are Long $10k and Short $10k, your net USD exposure is $0. Your principal remains in KRW/EUR. Result: You are protected from the stock crash, but you do NOT get the FX gain on your principal.
 - **Anticipated student questions**: "Should I use a currency-hedged ETF instead?" (Answer: You can, but unhedged is actually a better crisis hedge for emerging market investors due to the Dollar Smile, provided you use a Direct USD Account).
+
+## Interest Rates and Pairs Trading Mechanics
+- **Visual**: A breakdown of the cash flow for a Long/Short pair (e.g., Long $10k AAPL, Short $10k MSFT) showing margin loan interest vs. short rebate interest.
+- **Key message**: Pairs trading is not just about price spread; it is highly sensitive to interest rates. The cost of carrying the trade is the difference between the margin loan rate (paid on the long leg) and the short rebate rate (earned on the short leg).
+- **Lecture storyline**:
+  1. The Long Leg: You borrow cash to buy the long stock. You pay the broker's margin interest rate (e.g., Fed Funds + 1.5%).
+  2. The Short Leg: You sell the short stock and receive cash. The broker holds this cash as collateral and pays you a "short rebate" interest rate (e.g., Fed Funds - 0.5%).
+  3. The Net Cost of Carry: The difference between what you pay and what you earn is the "cost of carry." If rates are high, the absolute spread between the margin rate and rebate rate usually widens, making pairs trading more expensive to hold over long periods.
+  4. Hard-to-Borrow (HTB) Stocks: Explain that if the short leg is a popular short target (HTB), the rebate rate can become negative (you pay a fee to borrow the stock), drastically increasing the cost of the trade.
+- **Anticipated student questions**: "Do I still pay interest if I have enough cash in my account?" (Answer: Yes, for the short leg's collateral, but for the long leg, it depends on whether you use margin or your own cash. If using your own cash, you lose the 'opportunity cost' of earning interest on that cash).
