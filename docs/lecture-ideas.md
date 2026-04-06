@@ -9,6 +9,7 @@
 3. [Pipeline Design & Architecture](#pipeline-design--architecture)
    - [The Stress Test Trap: Grid Spacing vs. Neighborhood Size](#the-stress-test-trap-grid-spacing-vs-neighborhood-size)
    - [Structural Bear Detection: Why Drawdown Alone Fails](#structural-bear-detection-why-drawdown-alone-fails)
+   - [The "Two Eras" of Pairs vs. S&P 500](#the-two-eras-of-pairs-vs-sp-500)
    - [Hybrid Strategy Results: The Lecture-Ready Story](#hybrid-strategy-results-the-lecture-ready-story)
 4. [Risk Management & Execution](#risk-management--execution)
 5. [FX Risk Management for Non-USD Traders](#fx-risk-management-for-non-usd-traders-course-2)
@@ -236,6 +237,31 @@ In live trading, this bias does not exist."
   - "Why not just use -20% (standard bear market definition)?" → -20% is too late. By -20%, you've already lost a lot. -15% + slope catches it earlier while still filtering corrections.
   - "What about Change Point Analysis or Hidden Markov Models?" → Great for research. For a practical course, MA slope is transparent, debuggable, and produces nearly identical results.
   - "Why 100 days for the MA?" → ~5 months of data. Short enough to detect regime changes within a quarter, long enough to ignore noise. 200d is too slow (misses COVID), 50d is too noisy.
+
+### The "Two Eras" of Pairs vs. S&P 500
+
+- **Visual**: Split the 30-year chart into two panels. Left panel: 2000–2009. Right panel: 2009–2024. Highlight that the winner flips.
+- **Key message**: Pairs trading crushes S&P 500 in the "Lost Decade" (2000–2009), but S&P 500 crushes pairs trading in the post-QE bull run (2009–2024). Neither is always better. This is WHY the hybrid exists.
+- **The Numbers**:
+
+  | Period | S&P 500 | Pairs Trading | Why |
+  |---|---|---|---|
+  | 2000–2009 | ~Flat (two crashes) | Steady positive | Market-neutral earns spread regardless of direction |
+  | 2009–2024 | ~14%/yr avg | Lower | Bull market's equity risk premium (~8-10%/yr) exceeds any spread |
+
+- **Why Pairs Can't Beat Bulls**: Pairs trading is market-neutral — it earns the spread between two correlated stocks, not the market's upward drift. In a strong bull market, the entire market is lifting all boats. The equity risk premium (~8-10%/yr long-term average) simply doesn't exist in a market-neutral portfolio.
+- **Why S&P 500 Can't Survive Bears**: The flip side — S&P 500 captures the full equity risk premium, but gives it ALL back in crashes (-49% in dot-com, -57% in GFC, -34% in COVID).
+- **The Hybrid Thesis in One Sentence**: "Take S&P 500's bull market returns (which pairs can't match) and switch to pairs in bear markets (where S&P 500 loses 30-50%)."
+- **Lecture storyline**:
+  1. Show the full 30-year chart: "Full pairs trading looks amazing! Should we always trade pairs?"
+  2. Zoom into 2009–2024: "Wait... S&P 500 is actually way ahead in the last 15 years."
+  3. Zoom into 2000–2009: "But pairs trading was the only game in town during the Lost Decade."
+  4. **The Punchline**: "No single strategy dominates across all regimes. The question isn't 'which is better?' — it's 'which is better RIGHT NOW?'"
+  5. Introduce the hybrid: "What if we could automatically switch between them?"
+- **Anticipated student questions**:
+  - "If S&P 500 averages 14%/yr since 2009, why not just buy and hold forever?" → Show the 2000-2009 chart. "Someone who started in 2000 waited 13 years to break even."
+  - "Can pairs trading ever beat a bull market?" → No, structurally. Market-neutral = no market exposure. You cannot capture what you're hedged against.
+  - "What about leveraged pairs to match bull returns?" → Higher leverage amplifies both gains AND drawdowns. At 3x, a 5% stop loss hits in a day. Leverage is a knob, not a fix.
 
 ### Hybrid Strategy Results: The Lecture-Ready Story
 
