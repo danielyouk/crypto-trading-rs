@@ -1314,3 +1314,15 @@ For investors who don't want to manage FX positions:
   - "Does the interest grow as my SPY position grows?" → No. Interest compounds only on the initial margin loan, not on the appreciation. But the unhedged FX exposure grows with your P&L.
   - "What about Pairs Trading carry?" → For pairs, long+short positions naturally cancel FX exposure. The carry cost is only the margin rate minus short rebate (~2%/yr), regardless of FX.
 - **Backtest integration**: Use `fx_hedge_carry_bps = 350` (realistic IBKR) or `fx_hedge_carry_bps = 0~50` (MES futures). The `pairs_carry_bps = 200` remains unchanged.
+
+## The "Office Hours" Live Coaching Model
+- **Concept**: A high-ticket (300k KRW) evergreen course with an exclusive Slack community and ad-hoc weekend live sessions ("Office Hours").
+- **Key message**: This model is not a rigid cohort. It is a continuous community where the instructor acts as a senior quant mentor. Live sessions are driven by actual student questions and current market events, not a fixed syllabus.
+- **Instructor Requirement (Crucial)**: The instructor must have absolute, 100% mastery over every line of the codebase. During live sessions, students will ask unpredictable questions ("Why did my pair get rejected here?", "Can we change the Kalman Filter Q matrix?"). The instructor must be able to open the code, debug live, and explain the architectural reasoning on the spot.
+- **Lecture storyline (How to run a session)**:
+  1. Gather questions from Slack during the week.
+  2. Announce the weekend live session time and agenda.
+  3. Start the session by addressing the pre-submitted questions, walking through the code live.
+  4. Open the floor for live Q&A.
+  5. Discuss current market conditions (e.g., "SPY is nearing the -10% drawdown trigger, here is how the system is reacting").
+- **Anticipated student questions**: "I tried running the WFA on Korean stocks and it crashed. Can you help?" (Answer: The instructor must be ready to live-debug data formatting issues or explain why the correlation filters might behave differently in other markets).
