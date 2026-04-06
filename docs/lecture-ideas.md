@@ -1347,3 +1347,13 @@ For investors who don't want to manage FX positions:
   3. The Conversion (Website/Slack): The GitHub `README.md` explicitly states that PR reviews, Issue resolution, and deep architectural explanations are reserved for the Premium Community (hosted on your website/Slack).
   4. Bottom of Funnel (Premium): Students who want to actually deploy the system and get their code reviewed pay the premium fee to join the Slack and weekend Live Sessions.
 - **Anticipated student questions**: "How do I manage a bilingual GitHub repo?" (Answer: Use English as the primary language for code, variables, and commit messages. Provide a `README.md` and `README_KR.md`. For complex architectural docs like `architecture.md`, provide both languages or use clear, universal diagrams).
+
+## Managing Global Time Zones (The Live Session Policy)
+- **Concept**: When hosting the global English live session, time zone conflicts are inevitable. You cannot please everyone in the US, Europe, and Asia simultaneously.
+- **Key message**: Set a strict, unmoving schedule based on the instructor's time zone, and rely heavily on asynchronous participation (recordings + pre-submitted PRs).
+- **Lecture storyline (Policy to enforce)**:
+  1. The Fixed Anchor: Choose one UTC time that works best for you (e.g., Saturday 14:00 UTC = 10 AM NY, 3 PM London, 11 PM Seoul). State this clearly on the sales page so there are no surprises.
+  2. Asynchronous PR Reviews: If a student in Australia cannot attend the 10 AM NY session, they can still submit their PR or questions in Slack. The instructor reviews it live on the video.
+  3. The Vault: All live sessions are recorded and uploaded within 24 hours to a private premium vault.
+  4. The Slack Buffer: Time zone complaints are mitigated by having a highly responsive async Slack community.
+- **Anticipated student questions**: "I live in Sydney and the live session is at 2 AM for me. Is the premium course still worth it?" (Answer: Yes, because you can submit your code/questions in advance, watch the personalized review in the recording, and discuss it in Slack).
