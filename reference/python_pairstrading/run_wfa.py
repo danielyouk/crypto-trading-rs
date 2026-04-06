@@ -9,13 +9,28 @@ Writes progress to docs/wfa-progress.json for Streamlit dashboard.
 
 import datetime
 import json
+import logging
 import sys
+import traceback
 from pathlib import Path
 
 import pandas as pd
 import yfinance as yf
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "python"))
+
+LOG_FILE = Path(__file__).resolve().parent.parent.parent / "docs" / "wfa-run.log"
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_FILE, mode="w"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger("wfa")
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -82,12 +97,11 @@ def on_step(day, equity, sp500_eq, sp500_dd, step_idx, total):
 
 
 def main():
-    print("=" * 60)
-    print("WFA Hybrid Backtest Runner")
-    print("=" * 60)
+    log.info("=" * 60)
+    log.info("WFA Hybrid Backtest Runner")
+    log.info("=" * 60)
 
-    # ── Step 1: Fetch S&P 500 constituents ──
-    print("\n[1/4] Fetching S&P 500 constituents...")
+    log.info("[1/4] Fetching S&P 500 constituents...")
     exa_backend = default_gemini_backend()
     sp500 = fetch_sp500_constituents_table(
         on_failure="exa", exa_backend=exa_backend,
@@ -95,20 +109,18 @@ def main():
     )
     sp500_list = sp500["Symbol"].tolist()
     sp500_sector_map = fetch_sp500_sector_map(verbose=True)
-    print(f"  {len(sp500_list)} symbols, {len(sp500_sector_map)} with sector data")
+    log.info(f"  {len(sp500_list)} symbols, {len(sp500_sector_map)} with sector data")
 
-    # ── Step 2: Download price data ──
-    print("\n[2/4] Downloading price data...")
+    log.info("[2/4] Downloading price data...")
     DOWNLOAD_START = "1990-01-01"
     sp500_daily_prices = download_with_retry(
         sp500_list, start=DOWNLOAD_START,
         end=datetime.datetime.today(), interval="1d",
         progress=True, threads=True, auto_adjust=False, max_retries=2,
     )
-    print(f"  {sp500_daily_prices.shape[1]} tickers, {sp500_daily_prices.shape[0]} trading days")
+    log.info(f"  {sp500_daily_prices.shape[1]} tickers, {sp500_daily_prices.shape[0]} trading days")
 
-    # ── Step 3: Configure WFA ──
-    print("\n[3/4] Configuring WFA...")
+    log.info("[3/4] Configuring WFA...")
     wfa_config = RollingPhase2Config(
         training_months=36,
         expanding_window=False,
@@ -148,12 +160,11 @@ def main():
     )
 
     grid_size = len(wfa_config.windows) * len(wfa_config.zscore_thresholds)
-    print(f"  Grid: {len(wfa_config.windows)} windows × {len(wfa_config.zscore_thresholds)} z-thresholds = {grid_size} combos")
-    print(f"  Capital: ${initial_capital:,.0f}, Leverage: {wfa_config.leverage:.0f}x")
+    log.info(f"  Grid: {len(wfa_config.windows)} windows × {len(wfa_config.zscore_thresholds)} z-thresholds = {grid_size} combos")
+    log.info(f"  Capital: ${initial_capital:,.0f}, Leverage: {wfa_config.leverage:.0f}x")
 
-    # ── Step 4: Run hybrid backtest ──
-    print("\n[4/4] Running hybrid backtest...")
-    print("  Downloading SPY benchmark...")
+    log.info("[4/4] Running hybrid backtest...")
+    log.info("  Downloading SPY benchmark...")
     spy_raw = yf.download(
         "SPY", start=sp500_daily_prices.index[0],
         end=sp500_daily_prices.index[-1], progress=False,
@@ -162,37 +173,56 @@ def main():
     sp500_benchmark.index = sp500_benchmark.index.tz_localize(None)
 
     ENTRY_DD = -0.10
-    EXIT_DD = -0.05
-    print(f"  Bear entry: {ENTRY_DD:.0%}, Bear exit: {EXIT_DD:.0%}")
-    print(f"  Progress file: {PROGRESS_FILE}")
-    print()
+    EXIT_MA_WINDOW = 100
+    EXIT_SLOPE_WINDOW = 20
+    EXIT_SLOPE_CONFIRM = 15
+    MIN_BEAR_DAYS = 60
+    COOLDOWN_DAYS = 40
+    PAIRS_CARRY_BPS = 200.0     # margin rate - short rebate ≈ 2%/yr
+    FX_HEDGE_CARRY_BPS = 350.0  # realistic IBKR margin spread ≈ 3.5%/yr (always a cost)
+
+    log.info(f"  Bear entry: drawdown ≤ {ENTRY_DD:.0%}")
+    log.info(f"  Bear exit:  {EXIT_MA_WINDOW}d MA slope (avg over {EXIT_SLOPE_CONFIRM}d) > 0, "
+             f"min {MIN_BEAR_DAYS}d in bear, {COOLDOWN_DAYS}d cooldown")
+    log.info(f"  Carry costs: pairs={PAIRS_CARRY_BPS:.0f}bps/yr, FX hedge={FX_HEDGE_CARRY_BPS:.0f}bps/yr")
+    log.info(f"  Progress file: {PROGRESS_FILE}")
 
     hybrid_result = run_hybrid_backtest(
         wfa_input, sp500_benchmark,
-        entry_dd=ENTRY_DD, exit_dd=EXIT_DD,
+        entry_dd=ENTRY_DD,
+        exit_ma_window=EXIT_MA_WINDOW,
+        exit_slope_window=EXIT_SLOPE_WINDOW,
+        exit_slope_confirm_days=EXIT_SLOPE_CONFIRM,
+        min_bear_days=MIN_BEAR_DAYS,
+        cooldown_days=COOLDOWN_DAYS,
+        pairs_carry_bps=PAIRS_CARRY_BPS,
+        fx_hedge_carry_bps=FX_HEDGE_CARRY_BPS,
         on_step=on_step, step_interval=1,
     )
 
     save_progress("Complete")
 
-    # ── Summary ──
-    print("\n\n" + "=" * 60)
-    print("RESULTS")
-    print("=" * 60)
-    print(f"Bear episodes   : {int(hybrid_result.summary['bear_episodes'])}")
-    print(f"Days in pairs   : {int(hybrid_result.summary['days_in_pairs'])}/{int(hybrid_result.summary['days_total'])} ({hybrid_result.summary['pairs_pct']:.1%})")
-    print(f"{'─' * 50}")
+    log.info("")
+    log.info("=" * 60)
+    log.info("RESULTS")
+    log.info("=" * 60)
+    log.info(f"Bear episodes   : {int(hybrid_result.summary['bear_episodes'])}")
+    log.info(f"Days in pairs   : {int(hybrid_result.summary['days_in_pairs'])}/{int(hybrid_result.summary['days_total'])} ({hybrid_result.summary['pairs_pct']:.1%})")
+    log.info(f"{'─' * 50}")
     for k, v in hybrid_result.summary.items():
         if "pct" in k or "return" in k or "drawdown" in k:
-            print(f"  {k:30s}  {v:>10.2%}")
+            log.info(f"  {k:30s}  {v:>10.2%}")
         else:
-            print(f"  {k:30s}  {v:>10.2f}")
+            log.info(f"  {k:30s}  {v:>10.2f}")
 
-    # Save final result as JSON for later analysis
     result_file = PROGRESS_FILE.parent / "wfa-result.json"
     result_file.write_text(json.dumps(hybrid_result.summary, indent=2))
-    print(f"\nFinal summary saved to {result_file}")
+    log.info(f"Final summary saved to {result_file}")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        log.error("FATAL: unhandled exception\n%s", traceback.format_exc())
+        sys.exit(1)

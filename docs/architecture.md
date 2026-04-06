@@ -147,27 +147,45 @@ Daily simulation loop (sim_dates):
 
 Pairs trading is a bear-market hedge, not a growth engine. The hybrid
 strategy holds the S&P 500 in normal markets and switches to Pairs
-Trading only during corrections:
+Trading only during corrections.
+
+**Entry is fast (protect capital), exit is slow (confirm recovery):**
 
 ```
-            S&P 500 drawdown from peak
-            │
-            │  Normal: hold S&P 500
-            │
-    ────────┼──────── EXIT_DD = -5% ─── (switch BACK to S&P 500)
-            │
-            │  Bear: run Pairs Trading
-            │
-    ────────┼──────── ENTRY_DD = -10% ── (switch TO Pairs Trading)
-            │
-            ▼ deeper drawdown
+  ENTRY (fast):  S&P 500 drawdown from peak hits -10%
+                 → immediately switch to Pairs Trading
+
+  EXIT (slow):   100-day MA slope (averaged over 15 days) turns positive
+                 AND at least 60 trading days in bear mode
+                 AND 40-day cooldown before re-entry allowed
+                 → switch back to S&P 500
 ```
 
-**Rules:**
-- When S&P 500 drawdown hits **-10%**, sell S&P 500 and switch 100% to Pairs Trading.
-- When drawdown recovers to **-5%** (having passed through -10%), switch back to S&P 500.
-- The -5% exit is **conditional** on already being in bear mode — it's never triggered in a normal bull market.
-- On switch day, the WFA engine runs immediately on existing historical data (no warm-up delay).
+```
+S&P 500 price
+│         ╱╲
+│        ╱  ╲               ← dd = -10%: ENTER pairs (fast trigger)
+│       ╱    ╲
+│      ╱      ╲  ___
+│     ╱        ╲╱   ╲___    ← MA slope still negative (stay in pairs)
+│    ╱                   ╲___╱── ← MA slope avg > 0 for 15d: EXIT
+│   ╱                              (after min 60d in bear)
+└──────────────────────────────── time
+```
+
+**Anti-whipsaw filters (asymmetric sensitivity):**
+
+| Parameter | Default | Purpose |
+|-----------|---------|---------|
+| `entry_dd` | -10% | Drawdown threshold to enter pairs mode |
+| `exit_ma_window` | 100 days | MA window — wide to ignore noise |
+| `exit_slope_window` | 20 days | Days over which to measure MA slope |
+| `exit_slope_confirm_days` | 15 days | Avg slope must be positive over this window |
+| `min_bear_days` | 60 days | Minimum stay in bear mode (~3 months) |
+| `cooldown_days` | 40 days | No re-entry for ~2 months after exit |
+
+Why asymmetric? Being late to *enter* pairs costs real money (unhedged crash).
+Being late to *exit* pairs costs only opportunity (pairs still earn, just less than S&P 500).
 
 **On-demand WFA architecture (`run_hybrid_backtest`):**
 
@@ -176,19 +194,47 @@ Since pairs trading is only active ~10-15% of the time, we avoid running WFA
 over the full 20+ year history:
 
 ```
-Step 1: find_bear_episodes()        ← scan S&P 500 drawdown (milliseconds)
-        → [(2000-09, 2003-05), (2007-11, 2009-08), (2020-02, 2020-05), ...]
-
-Step 2: For each bear episode ONLY:
-        → run_phase2_rolling()      ← expensive, but only for 2-3 year windows
-
-Step 3: Bull periods between:
-        → compound S&P 500 returns  ← zero computation
-
-Step 4: Stitch equity curves
+For each day in simulation:
+  1. Track S&P 500 drawdown from peak
+  2. If drawdown hits -10% (and cooldown satisfied):
+     → run_phase2_rolling() on full history   ← expensive, but only triggered 2-3× per decade
+     → use WFA daily returns during bear mode
+  3. If MA slope recovery detected (after min 60 days):
+     → switch back to S&P 500 returns         ← zero computation
 ```
 
 This cuts WFA computation by **~85-90%** compared to running it full-period.
+
+**Carry costs (realistic friction):**
+
+The backtest includes two carry cost adjustments applied daily:
+
+| Regime | Cost | Default | Rationale |
+|--------|------|---------|-----------|
+| Pairs Trading | `pairs_carry_bps` | 200 bps/yr | IBKR margin rate - short rebate spread |
+| S&P 500 (FX hedged) | `fx_hedge_carry_bps` | 350 bps/yr | Realistic IBKR margin spread (see below) |
+
+For non-USD investors (KRW, EUR), FX hedging during S&P 500 mode is essential.
+During pairs trading, long+short positions naturally cancel FX exposure — no hedge needed.
+
+**Why 350 bps, not the theoretical interest rate differential?**
+
+In academic theory (Covered Interest Rate Parity), hedging cost = local rate - USD rate.
+In practice, IBKR applies a **Brokerage Interest Spread (Haircut)**:
+- USD margin loan: benchmark + ~1.5% markup
+- Local currency deposit: benchmark - ~0.5% (or 0% for small balances)
+
+```
+Theoretical (CIP):  KRW 3.0% - USD 4.5% = -1.5% (earn 1.5%)
+Actual (IBKR):      Earn 0~2.5% on KRW - Pay 6.0% on USD = -3.5% (pay 3.5%)
+```
+
+The broker's spread makes retail hedging **always a cost**, regardless of rate environment.
+
+**Pro alternative: MES Futures (Micro E-mini S&P 500)**
+- Traded on CME at institutional wholesale rates, bypassing IBKR's retail interest spread
+- Hedging cost converges to true CIP (much cheaper)
+- Set `fx_hedge_carry_bps ≈ 0-50` when using MES instead of SPY margin
 
 ---
 

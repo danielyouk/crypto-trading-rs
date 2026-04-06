@@ -1154,25 +1154,42 @@ Month 3: SPY = $10,500 → FX buy $300 back (total $10,500)
 
 IBKR FX cost: ~$2/trade. Monthly rebalance = ~$24/year.
 
-### FX Hedging Cost = Interest Rate Differential
+### FX Hedging Cost — Theory vs. IBKR Reality
 
-The "hidden" cost of FX hedging is the difference between local currency and USD
-interest rates (Covered Interest Rate Parity):
+In academic theory (Covered Interest Rate Parity), hedging cost = local rate - USD rate.
+In practice, IBKR applies a **Brokerage Interest Spread (Haircut)** that makes retail
+hedging **always a cost**, regardless of the rate environment:
 
-| Base Currency | Local Rate | USD Rate | Net Cost | Direction |
-|---------------|-----------|----------|----------|-----------|
-| KRW | 3.0% | 4.5% | **-1.5%** | Hedging earns ~1.5%/yr |
-| EUR | 2.5% | 4.5% | **-2.0%** | Hedging earns ~2.0%/yr |
-| KRW (if rates flip) | 5.0% | 3.0% | **+2.0%** | Hedging costs 2.0%/yr |
+| | Theoretical (CIP) | Actual (IBKR Retail) |
+|---|---|---|
+| **USD loan rate** | Benchmark (4.5%) | Benchmark + 1.5% (**6.0%**) |
+| **KRW deposit rate** | Benchmark (3.0%) | Benchmark - 0.5% (**2.5%**, or 0% for small balances) |
+| **Net hedging cost** | -1.5%/yr (earn) | **+3.5%/yr (pay)** |
 
-When USD rates are higher, FX hedging actually **earns** money for non-USD investors.
-This is because the FX forward market compensates for the rate differential.
+Even in low-rate environments (2020-2021), the broker spread dominates:
+
+| Period | USD Rate | KRW Rate | Theoretical | Actual IBKR |
+|--------|---------|---------|------------|------------|
+| 2020-21 (low rates) | 0.25% | 0.5% | +0.25% (earn) | **~1.75%** (cost) |
+| 2024-now (high rates) | 4.5% | 3.0% | -1.5% (earn) | **~3.5%** (cost) |
+
+**Bottom line**: For retail investors using IBKR margin loans, the hedging cost is
+always positive (~1.75-3.5%/yr depending on rate environment). The theoretical CIP
+"earnings" never materialize because the broker's spread eats them.
+
+**Pro solution: Micro E-mini S&P 500 Futures (MES)**
+
+Futures contracts trade on the institutional CME market where pricing reflects true
+wholesale interest rates, completely bypassing IBKR's retail interest spread.
+By buying MES instead of SPY on margin, a retail investor gets institutional-grade
+hedging costs (~0-50bps vs ~350bps).
 
 ### Backtest Integration
 
 In the hybrid backtest, we approximate FX hedging cost as a daily carry adjustment:
 - Pairs trading days: deduct `pairs_carry_bps / 252` (margin rate - short rebate ≈ 200bps)
-- S&P 500 days: deduct `fx_hedge_carry_bps / 252` (local rate - USD rate, can be negative)
+- S&P 500 days: deduct `fx_hedge_carry_bps / 252` (realistic IBKR margin spread ≈ 350bps)
+- For MES futures users: set `fx_hedge_carry_bps ≈ 0-50` (institutional pricing)
 
 ### Simplest Alternative: Currency-Hedged ETF
 
@@ -1189,11 +1206,18 @@ For investors who don't want to manage FX positions:
 6. Apply carry costs to backtest, show realistic returns
 
 ## The Reality of Brokerage Interest Spreads (The IBKR Haircut)
-- **Visual**: A simple diagram showing the "Theoretical Interest Rate Differential" (e.g., KRW 3.5% vs USD 4.5% = 1.0% cost) versus the "Actual IBKR Margin Spread" (e.g., Earn 0% on KRW collateral, Pay 6.8% on USD Margin = 6.8% cost).
-- **Key message**: In theory, FX hedging costs equal the interest rate differential. In reality, retail brokers apply massive spreads (haircuts) to interest rates. You almost never earn the full local interest rate on collateral, but you always pay a premium on margin loans.
+- **Visual**: A simple diagram showing the "Theoretical Interest Rate Differential" (e.g., KRW 3.0% vs USD 4.5% = -1.5% theoretical earn) versus the "Actual IBKR Margin Spread" (e.g., Earn 0~2.5% on KRW collateral, Pay 6.0% on USD margin = 3.5% cost).
+- **Key message**: In theory, FX hedging costs equal the interest rate differential. In reality, retail brokers apply massive spreads (haircuts) to interest rates. You almost never earn the full local interest rate on collateral, but you always pay a premium on margin loans. **Retail hedging is always a cost — never a profit.**
 - **Lecture storyline**:
-  1. The Theory: If KRW rates are higher than USD rates, you should get paid to hedge (a negative cost of carry).
+  1. The Theory (CIP): If KRW rates are higher than USD rates, you should get paid to hedge.
   2. The Reality: Brokers like IBKR don't pass the central bank rate directly to you.
-  3. The Spread: IBKR pays you very little (or 0%) interest on small KRW cash balances. However, they charge you a premium (Benchmark + 1.5%) on the USD you borrow to buy SPY.
-  4. The Result: Even if KRW rates are 5% and USD rates are 2%, your actual hedging cost using a margin loan might still be negative (a cost, not a profit) because of the broker's spread.
-- **Anticipated student questions**: "So how do I avoid this broker spread?" (Answer: By using Futures (MES) instead of Margin Loans. Futures pricing is determined by the institutional market, which uses true wholesale interest rates, bypassing the retail broker's interest rate spread).
+  3. The Spread: IBKR pays you very little (or 0% for balances under ~$10K) interest on KRW cash. However, they charge you a premium (Benchmark + 1.5%) on the USD you borrow to buy SPY.
+  4. The Math: You pay 6.0% (USD loan) and earn 0~2.5% (KRW deposit). Net cost: ~3.5%/yr.
+  5. Even in low-rate environments (2020-2021, US rate 0.25%), the broker spread means you still pay ~1.75%/yr. **There is no rate environment where retail margin loan hedging is free.**
+  6. **The Interest Compounds on the Initial Loan Only**: If you buy $10,000 SPY and it grows to $100,000 over 10 years, the margin interest applies to the **original $10,000 loan** (plus accumulated interest), NOT the $100,000 SPY value. However, the unhedged P&L ($90,000) grows over time and becomes increasingly FX-exposed.
+  7. **Long-term rebalancing**: For long-term holdings, periodic conversion of USD profits to KRW (e.g., annually) keeps the FX hedge effective. Alternatively, sell additional USD.KRW on IBKR FX market ($2/trade) to cover the growing P&L.
+- **Anticipated student questions**:
+  - "So how do I avoid this broker spread?" → By using **Micro E-mini S&P 500 Futures (MES)** instead of SPY margin loans. MES trades on CME at institutional wholesale rates, bypassing IBKR's retail interest spread entirely.
+  - "Does the interest grow as my SPY position grows?" → No. Interest compounds only on the initial margin loan, not on the appreciation. But the unhedged FX exposure grows with your P&L.
+  - "What about Pairs Trading carry?" → For pairs, long+short positions naturally cancel FX exposure. The carry cost is only the margin rate minus short rebate (~2%/yr), regardless of FX.
+- **Backtest integration**: Use `fx_hedge_carry_bps = 350` (realistic IBKR) or `fx_hedge_carry_bps = 0~50` (MES futures). The `pairs_carry_bps = 200` remains unchanged.

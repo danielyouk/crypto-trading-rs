@@ -1355,33 +1355,53 @@ def run_hybrid_backtest(
     sp500_benchmark: pd.Series,
     *,
     entry_dd: float = -0.10,
-    exit_dd: float = -0.05,
+    exit_ma_window: int = 100,
+    exit_slope_window: int = 20,
+    exit_slope_confirm_days: int = 15,
+    min_bear_days: int = 60,
+    cooldown_days: int = 40,
+    pairs_carry_bps: float = 200.0,
+    fx_hedge_carry_bps: float = 350.0,
     on_step: Optional[HybridProgressCallback] = None,
     step_interval: int = 20,
 ) -> HybridBacktestOutput:
     """Run hybrid backtest: S&P 500 in bull markets, Pairs Trading in bear markets.
 
-    Only invokes the expensive WFA engine during bear episodes, saving
-    ~85-90% of computation compared to running WFA over the full period.
+    Entry: S&P 500 drawdown from peak hits ``entry_dd`` (fast — protect capital).
+    Exit:  MA slope of S&P 500 turns positive on average over ``exit_slope_confirm_days``
+           AND at least ``min_bear_days`` have elapsed (slow — confirm recovery).
+
+    Carry costs (applied daily):
+        - Pairs mode: ``pairs_carry_bps`` per year (margin rate - short rebate, ~200bps).
+        - S&P 500 mode: ``fx_hedge_carry_bps`` per year (realistic IBKR margin spread).
+          Theoretical CIP says cost = local rate - USD rate, but IBKR's retail
+          spreads (~1.5% on loans, ~0.5% off deposits) make it always positive.
 
     Args:
-        inp:             Standard WFA input (prices, config, initial_capital, etc.).
-        sp500_benchmark: Daily S&P 500 price series covering the full period.
-                         Used for drawdown calculation and bull-market returns.
-        entry_dd:        S&P 500 drawdown to trigger switch to Pairs Trading.
-        exit_dd:         S&P 500 drawdown recovery to switch back to S&P 500.
-        on_step:         Optional callback: (date, hybrid_eq, sp500_eq, sp500_dd, step, total).
-        step_interval:   How often to fire on_step (in trading days). Default 20.
-
-    Returns:
-        HybridBacktestOutput with equity curves, regime labels, and per-episode results.
+        inp:                      Standard WFA input (prices, config, initial_capital, etc.).
+        sp500_benchmark:          Daily S&P 500 price series (e.g. SPY).
+        entry_dd:                 Drawdown threshold to enter pairs mode (default -10%).
+        exit_ma_window:           MA window for exit slope calculation (default 100 days).
+        exit_slope_window:        Days over which to measure MA slope (default 20).
+        exit_slope_confirm_days:  Days over which average slope must be positive (default 15).
+        min_bear_days:            Minimum trading days in bear before exit allowed (default 60).
+        cooldown_days:            Days after exiting bear before re-entry allowed (default 40).
+        pairs_carry_bps:          Annual carry cost in bps during pairs trading (default 200).
+        fx_hedge_carry_bps:       Annual FX hedge carry cost in bps during S&P 500 (default 350).
+                                  Always positive for retail investors due to IBKR margin spread.
+                                  Use ~0 for MES futures (institutional-grade pricing).
+        on_step:                  Optional callback for live progress updates.
+        step_interval:            How often to fire on_step (in trading days).
     """
     cfg = inp.config
 
     sp500_aligned = sp500_benchmark.reindex(inp.prices.index).ffill().dropna()
     sp500_ret = sp500_aligned.pct_change().fillna(0.0)
 
-    episodes = find_bear_episodes(sp500_aligned, entry_dd=entry_dd, exit_dd=exit_dd)
+    # Pre-compute MA slope signal (backward-looking only — no future leak)
+    sp500_ma = sp500_aligned.rolling(exit_ma_window, min_periods=exit_ma_window).mean()
+    sp500_ma_slope = sp500_ma.diff(exit_slope_window) / exit_slope_window
+    exit_signal = sp500_ma_slope.rolling(exit_slope_confirm_days, min_periods=1).mean()
 
     all_dates = cast(pd.DatetimeIndex, sp500_aligned.index)
     first_date = all_dates[0]
@@ -1392,18 +1412,23 @@ def run_hybrid_backtest(
     if len(sim_dates) == 0:
         raise ValueError("Not enough data after training buffer.")
 
+    pairs_daily_carry = pairs_carry_bps / 10_000.0 / 252.0
+    fx_daily_carry = fx_hedge_carry_bps / 10_000.0 / 252.0
+
     equity = float(inp.initial_capital)
     daily_equities: list[float] = []
     regime_labels: list[str] = []
     sp500_equities: list[float] = []
-    pairs_only_equities: list[float] = []
 
     sp500_eq = float(inp.initial_capital)
     episode_results: list[RollingPhase2Output] = []
+    recorded_episodes: list[BearEpisode] = []
 
-    active_episode_idx = 0
     in_bear = False
     bear_wfa_daily_ret: Optional[pd.Series] = None
+    bear_entry_day: Optional[pd.Timestamp] = None
+    bear_day_count = 0
+    days_since_exit = cooldown_days  # start with cooldown satisfied
 
     for day in sim_dates:
         day_ts = pd.Timestamp(day)
@@ -1413,8 +1438,16 @@ def run_hybrid_backtest(
 
         sp500_dd = sp500_eq / max(sp500_equities) - 1.0
 
-        if not in_bear and sp500_dd <= entry_dd and active_episode_idx < len(episodes):
+        if not in_bear:
+            days_since_exit += 1
+
+        # ── ENTRY: drawdown hits threshold + cooldown satisfied ──
+        if (not in_bear
+                and sp500_dd <= entry_dd
+                and days_since_exit >= cooldown_days):
             in_bear = True
+            bear_entry_day = day_ts
+            bear_day_count = 0
 
             ep_inp = inp.model_copy(deep=True)
             ep_cfg = cfg.model_copy(deep=True)
@@ -1423,44 +1456,49 @@ def run_hybrid_backtest(
             ep_inp.config = ep_cfg
             ep_inp.initial_capital = equity
 
-            wfa_on_step: Optional[ProgressCallback] = None
-            if on_step is not None:
-                frozen_sp500_eq = sp500_eq
-                frozen_sp500_dd = sp500_dd
-                def _wfa_bridge(day: pd.Timestamp, wfa_eq: float, si: int, total: int) -> None:
-                    on_step(day, wfa_eq, frozen_sp500_eq, frozen_sp500_dd, si, total)
-                wfa_on_step = _wfa_bridge
-
             try:
-                bear_wfa_result = run_phase2_rolling(
-                    ep_inp, on_step=wfa_on_step, step_interval=step_interval,
-                )
+                bear_wfa_result = run_phase2_rolling(ep_inp)
                 episode_results.append(bear_wfa_result)
                 bear_wfa_daily_ret = bear_wfa_result.daily_return
-            except (ValueError, IndexError):
+                _nonzero = (bear_wfa_daily_ret != 0.0).sum()
+                print(f"\n  [BEAR] entered at {day_ts.date()}, dd={sp500_dd:.1%}, "
+                      f"WFA trades={len(bear_wfa_result.trades)}, "
+                      f"non-zero days={_nonzero}/{len(bear_wfa_daily_ret)}")
+            except (ValueError, IndexError) as e:
+                print(f"\n  [BEAR] WFA failed at {day_ts.date()}: {e}")
                 bear_wfa_daily_ret = None
                 in_bear = False
 
+        # ── BEAR MODE: use WFA returns + pairs carry cost ──
         if in_bear and bear_wfa_daily_ret is not None:
+            bear_day_count += 1
             wfa_ret = float(bear_wfa_daily_ret.get(day_ts, 0.0))
-            equity *= (1.0 + wfa_ret)
+            equity *= (1.0 + wfa_ret - pairs_daily_carry)
             regime_labels.append("pairs")
 
-            if sp500_dd >= exit_dd:
+            # ── EXIT: MA slope positive (averaged) + min duration met ──
+            slope_val = float(exit_signal.get(day_ts, float("nan")))
+            if bear_day_count >= min_bear_days and slope_val > 0:
+                print(f"  [BEAR] exited at {day_ts.date()} after {bear_day_count}d, "
+                      f"slope={slope_val:.4f}")
+                recorded_episodes.append(BearEpisode(start=bear_entry_day, end=day_ts))
                 in_bear = False
-                active_episode_idx += 1
                 bear_wfa_daily_ret = None
+                days_since_exit = 0
         else:
-            equity *= (1.0 + sp500_daily_ret)
+            equity *= (1.0 + sp500_daily_ret - fx_daily_carry)
             regime_labels.append("sp500")
 
         daily_equities.append(equity)
-        pairs_only_equities.append(equity)  # placeholder
 
         if on_step is not None:
             day_idx = len(daily_equities) - 1
             if day_idx % step_interval == 0 or day_idx == len(sim_dates) - 1:
                 on_step(day_ts, equity, sp500_eq, sp500_dd, day_idx, len(sim_dates))
+
+    # Close any unclosed bear episode
+    if in_bear and bear_entry_day is not None:
+        recorded_episodes.append(BearEpisode(start=bear_entry_day, end=sim_dates[-1]))
 
     hybrid_equity = pd.Series(daily_equities, index=sim_dates, name="hybrid_equity")
     sp500_equity_s = pd.Series(sp500_equities, index=sim_dates, name="sp500_equity")
@@ -1483,7 +1521,7 @@ def run_hybrid_backtest(
         "sharpe_ratio": hybrid_sharpe,
         "max_drawdown": hybrid_mdd,
         "volatility_annualized": hybrid_vol,
-        "bear_episodes": float(len(episodes)),
+        "bear_episodes": float(len(recorded_episodes)),
         "days_in_pairs": float((regime_s == "pairs").sum()),
         "days_total": float(len(regime_s)),
         "pairs_pct": float((regime_s == "pairs").sum() / max(len(regime_s), 1)),
@@ -1494,7 +1532,7 @@ def run_hybrid_backtest(
         pairs_equity=pairs_result.daily_equity,
         hybrid_equity=hybrid_equity,
         regime=regime_s,
-        episodes=episodes,
+        episodes=recorded_episodes,
         episode_results=episode_results,
         summary=summary,
     )
