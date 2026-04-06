@@ -1113,5 +1113,87 @@ We ran a simulation comparing the old "Raw" filter vs the new "Sector-Adjusted" 
   1. The Long Leg: You borrow cash to buy the long stock. You pay the broker's margin interest rate (e.g., Fed Funds + 1.5%).
   2. The Short Leg: You sell the short stock and receive cash. The broker holds this cash as collateral and pays you a "short rebate" interest rate (e.g., Fed Funds - 0.5%).
   3. The Net Cost of Carry: The difference between what you pay and what you earn is the "cost of carry." If rates are high, the absolute spread between the margin rate and rebate rate usually widens, making pairs trading more expensive to hold over long periods.
-  4. Hard-to-Borrow (HTB) Stocks: Explain that if the short leg is a popular short target (HTB), the rebate rate can become negative (you pay a fee to borrow the stock), drastically increasing the cost of the trade.
+  4. Hard-to-Borrow (HTB) Stocks: For S&P 500 large-caps, borrow fees are almost always under 1%/yr — essentially a non-issue. HTB risk mainly affects small-cap and meme stocks. This is another reason we restrict our universe to S&P 500.
 - **Anticipated student questions**: "Do I still pay interest if I have enough cash in my account?" (Answer: Yes, for the short leg's collateral, but for the long leg, it depends on whether you use margin or your own cash. If using your own cash, you lose the 'opportunity cost' of earning interest on that cash).
+
+## FX Hedging for Non-USD Investors — IBKR Implementation
+
+### The Asymmetry in Our Hybrid Strategy
+
+| Regime | USD Exposure | FX Risk | Hedging |
+|--------|-------------|---------|---------|
+| Pairs Trading (bear) | ~$0 (long+short cancel) | Naturally hedged | None needed |
+| S&P 500 (bull) | 100% long USD | Fully exposed | **Hedge required** |
+
+### IBKR FX Hedging Mechanics
+
+When holding SPY, the investor sells USD.KRW (or USD.EUR) in IBKR's FX market
+to lock in the exchange rate. This creates a **negative USD cash balance** (margin loan)
+that offsets the positive USD exposure from SPY.
+
+```
+Account state after hedging:
+  SPY position:     +$10,000 (USD asset)
+  FX hedge:         -$10,000 (USD liability / margin loan)
+  KRW cash:         +10,000 × exchange_rate
+  Net USD exposure: $0
+```
+
+**Key insight (the $800 question)**: When SPY grows from $10,000 to $10,800,
+the hedge needs to increase by $800. The investor does NOT sell stocks — they
+simply sell $800 more USD.KRW on IBKR. This creates $800 more negative USD
+balance (margin loan). SPY itself serves as collateral for this loan.
+
+### Monthly Rebalancing
+
+```
+Month 1: SPY = $10,000 → FX sell $10,000
+Month 2: SPY = $10,800 → FX sell $800 more (total $10,800)
+Month 3: SPY = $10,500 → FX buy $300 back (total $10,500)
+```
+
+IBKR FX cost: ~$2/trade. Monthly rebalance = ~$24/year.
+
+### FX Hedging Cost = Interest Rate Differential
+
+The "hidden" cost of FX hedging is the difference between local currency and USD
+interest rates (Covered Interest Rate Parity):
+
+| Base Currency | Local Rate | USD Rate | Net Cost | Direction |
+|---------------|-----------|----------|----------|-----------|
+| KRW | 3.0% | 4.5% | **-1.5%** | Hedging earns ~1.5%/yr |
+| EUR | 2.5% | 4.5% | **-2.0%** | Hedging earns ~2.0%/yr |
+| KRW (if rates flip) | 5.0% | 3.0% | **+2.0%** | Hedging costs 2.0%/yr |
+
+When USD rates are higher, FX hedging actually **earns** money for non-USD investors.
+This is because the FX forward market compensates for the rate differential.
+
+### Backtest Integration
+
+In the hybrid backtest, we approximate FX hedging cost as a daily carry adjustment:
+- Pairs trading days: deduct `pairs_carry_bps / 252` (margin rate - short rebate ≈ 200bps)
+- S&P 500 days: deduct `fx_hedge_carry_bps / 252` (local rate - USD rate, can be negative)
+
+### Simplest Alternative: Currency-Hedged ETF
+
+For investors who don't want to manage FX positions:
+- **KRW**: TIGER S&P500선물(H) on KRX — KRW-hedged, no FX management needed
+- **EUR**: XDPE.DE (Xtrackers S&P 500 EUR Hedged) — expense ratio 0.09%
+
+### Lecture Flow (Module 6: Hidden Costs)
+1. "Our backtest shows 15% returns. But that's in USD."
+2. Show unhedged USD/KRW chart — "Your 15% could become 5% or 25% depending on FX"
+3. "Pairs trading is auto-hedged (long+short cancel). But S&P 500 mode isn't."
+4. Demonstrate IBKR FX hedge in 3 lines of code
+5. "The cost? Interest rate differential. Right now, it's actually negative — you earn money hedging."
+6. Apply carry costs to backtest, show realistic returns
+
+## The Reality of Brokerage Interest Spreads (The IBKR Haircut)
+- **Visual**: A simple diagram showing the "Theoretical Interest Rate Differential" (e.g., KRW 3.5% vs USD 4.5% = 1.0% cost) versus the "Actual IBKR Margin Spread" (e.g., Earn 0% on KRW collateral, Pay 6.8% on USD Margin = 6.8% cost).
+- **Key message**: In theory, FX hedging costs equal the interest rate differential. In reality, retail brokers apply massive spreads (haircuts) to interest rates. You almost never earn the full local interest rate on collateral, but you always pay a premium on margin loans.
+- **Lecture storyline**:
+  1. The Theory: If KRW rates are higher than USD rates, you should get paid to hedge (a negative cost of carry).
+  2. The Reality: Brokers like IBKR don't pass the central bank rate directly to you.
+  3. The Spread: IBKR pays you very little (or 0%) interest on small KRW cash balances. However, they charge you a premium (Benchmark + 1.5%) on the USD you borrow to buy SPY.
+  4. The Result: Even if KRW rates are 5% and USD rates are 2%, your actual hedging cost using a margin loan might still be negative (a cost, not a profit) because of the broker's spread.
+- **Anticipated student questions**: "So how do I avoid this broker spread?" (Answer: By using Futures (MES) instead of Margin Loans. Futures pricing is determined by the institutional market, which uses true wholesale interest rates, bypassing the retail broker's interest rate spread).
