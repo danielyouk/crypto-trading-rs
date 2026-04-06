@@ -1326,3 +1326,14 @@ For investors who don't want to manage FX positions:
   4. Open the floor for live Q&A.
   5. Discuss current market conditions (e.g., "SPY is nearing the -10% drawdown trigger, here is how the system is reacting").
 - **Anticipated student questions**: "I tried running the WFA on Korean stocks and it crashed. Can you help?" (Answer: The instructor must be ready to live-debug data formatting issues or explain why the correlation filters might behave differently in other markets).
+
+## The Open-Source "Contributor" Model for Premium Courses
+- **Concept**: The core codebase is public (Open Source) for visibility and marketing, but Issue creation, Pull Request (PR) reviews, and direct code mentorship are gated behind the premium course fee.
+- **Key message**: You are not just buying a course; you are buying the right to have a Senior Quant review your code and merge your ideas into a production-grade trading engine.
+- **Lecture storyline (How to run the community)**:
+  1. The Repository: The code is public. Anyone can see the architecture. This acts as a massive lead magnet.
+  2. The Gated Access: Only paying students are invited to the private Slack and given a "Contributor Pass."
+  3. The Mechanics: A student finds a bug or wants to add a feature (e.g., "Add a new volatility filter"). They submit a PR.
+  4. The Mentorship (The Real Value): During the weekend Live Session, the instructor does a live Code Review of the student's PR. The instructor explains *why* the code is good or bad, refactors it live, and merges it.
+  5. The Limitation (Crucial for Sanity): To prevent abuse, each student gets a limited number of "Review Tokens" (e.g., 4 to 8 PR/Issue reviews within 3 months of purchase).
+- **Anticipated student questions**: "Why should I pay if the code is free?" (Answer: The code is just a tool. The real value is the architectural understanding, the live mentorship, and having your own trading ideas validated by a professional).
