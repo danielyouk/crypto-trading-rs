@@ -1357,3 +1357,13 @@ For investors who don't want to manage FX positions:
   3. The Vault: All live sessions are recorded and uploaded within 24 hours to a private premium vault.
   4. The Slack Buffer: Time zone complaints are mitigated by having a highly responsive async Slack community.
 - **Anticipated student questions**: "I live in Sydney and the live session is at 2 AM for me. Is the premium course still worth it?" (Answer: Yes, because you can submit your code/questions in advance, watch the personalized review in the recording, and discuss it in Slack).
+
+## Scaling and Burnout Prevention (The Instructor Firewall)
+- **Concept**: If a course scales successfully, the instructor will be crushed by Udemy Q&A and Premium PRs. Strict boundaries ("Firewalls") must be established to protect the instructor's time while maintaining perceived value.
+- **Key message**: You are a Senior Quant, not a 24/7 debugging service. Set strict rules for what gets your attention.
+- **Lecture storyline (How to manage the load)**:
+  1. **The Udemy Firewall**: State in Lecture 1: "Due to the volume of students, I do not debug personal code or review custom strategies in the Udemy Q&A. The Q&A is strictly for clarifying video content." If they ask complex questions, upsell them: "Great question! We do deep architectural reviews like this in the Premium Masterclass."
+  2. **The Premium PR Curation**: If 60 premium students submit PRs, you do NOT review 60 PRs live. You curate the top 2-3 most *educational* PRs for the weekend live session. The rest get quick async text reviews (e.g., "LGTM" or "Fails CI, please fix").
+  3. **The Strict PR Template**: Force students to do the hard work. Require a strict PR template: "If your PR does not include a backtest log showing how this improves the Sharpe ratio, it will be automatically closed." This eliminates 80% of low-effort PRs.
+  4. **Question Batching**: If 5 people ask about the Kalman Filter in Slack, don't answer 5 times. Say, "I see a lot of questions about the Kalman Filter. I will do a 20-minute deep dive on this during Saturday's live session."
+- **Anticipated student questions**: "Why was my PR closed without a live review?" (Answer: "Your code was good, but we only feature PRs in the live session that introduce new architectural concepts beneficial to the whole class. I left some text feedback on your PR!").
