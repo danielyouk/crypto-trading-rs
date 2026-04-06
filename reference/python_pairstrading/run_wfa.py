@@ -46,47 +46,62 @@ from pairs_eda.rolling_phase2 import (
     RollingPhase2Config,
     RollingPhase2Input,
     run_hybrid_backtest,
+    run_phase2_rolling,
 )
 
 # ── Progress file ──
 PROGRESS_FILE = Path(__file__).resolve().parent.parent.parent / "docs" / "wfa-progress.json"
 PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-_sp500_x: list[str] = []
+_dates: list[str] = []
 _sp500_y: list[float] = []
-_hybrid_x: list[str] = []
 _hybrid_y: list[float] = []
+_pairs_y: list[float] = []
 _sp500_dd_y: list[float] = []
 _hybrid_dd_y: list[float] = []
+_pairs_dd_y: list[float] = []
 _hybrid_peak = 0.0
+_pairs_peak = 0.0
+_regime_events: list[dict] = []
+_pairs_equity_lookup: dict[str, float] = {}
 
 
 def save_progress(pct_label: str = ""):
     data = {
-        "dates": _sp500_x,
+        "dates": _dates,
         "sp500_equity": _sp500_y,
         "hybrid_equity": _hybrid_y,
+        "pairs_equity": _pairs_y,
         "sp500_dd": _sp500_dd_y,
         "hybrid_dd": _hybrid_dd_y,
+        "pairs_dd": _pairs_dd_y,
+        "regime_events": _regime_events,
         "pct": pct_label,
-        "progress": len(_sp500_x),
+        "progress": len(_dates),
     }
     PROGRESS_FILE.write_text(json.dumps(data))
 
 
 def on_step(day, equity, sp500_eq, sp500_dd, step_idx, total):
-    global _hybrid_peak
+    global _hybrid_peak, _pairs_peak
 
     day_str = day.strftime("%Y-%m-%d")
-    _sp500_x.append(day_str)
+    _dates.append(day_str)
     _sp500_y.append(sp500_eq)
-    _hybrid_x.append(day_str)
     _hybrid_y.append(equity)
+
+    pairs_eq = _pairs_equity_lookup.get(day_str, float("nan"))
+    _pairs_y.append(pairs_eq)
 
     _hybrid_peak = max(_hybrid_peak, equity)
     hybrid_dd = equity / _hybrid_peak - 1.0 if _hybrid_peak > 0 else 0.0
     _sp500_dd_y.append(sp500_dd)
     _hybrid_dd_y.append(hybrid_dd)
+
+    if pairs_eq == pairs_eq:  # not NaN
+        _pairs_peak = max(_pairs_peak, pairs_eq)
+    pairs_dd = pairs_eq / _pairs_peak - 1.0 if _pairs_peak > 0 and pairs_eq == pairs_eq else 0.0
+    _pairs_dd_y.append(pairs_dd)
 
     pct = (step_idx + 1) / total * 100
     label = f"{pct:.0f}% ({day.strftime('%Y-%m')})"
@@ -94,6 +109,11 @@ def on_step(day, equity, sp500_eq, sp500_dd, step_idx, total):
     if step_idx % 10 == 0 or step_idx == total - 1:
         save_progress(label)
         print(f"\r  Progress: {label}", end="", flush=True)
+
+
+def on_regime_change(event: dict):
+    _regime_events.append(event)
+    save_progress("")
 
 
 def main():
@@ -126,27 +146,29 @@ def main():
         expanding_window=False,
         validation_days=180,
         rebalance_frequency="MS",
-        coint_significance=0.05,
+        coint_significance=0.10,
         coint_retest_margin=0.02,
         min_correlation=0.40,
         max_correlation=0.85,
-        min_overlap_pct=0.90,
+        min_overlap_pct=0.80,
         top_n_candidates=200,
         windows=tuple(range(10, 32, 2)),
-        zscore_thresholds=tuple(round(1.5 + i * 0.1, 1) for i in range(16)),
-        watchlist_size=20,
-        max_slots=7,
-        max_new_entries_per_day=2,
+        zscore_thresholds=tuple(round(1.0 + i * 0.1, 1) for i in range(16)),
+        stress_test_window_step=2,
+        stress_test_zscore_step=0.1,
+        watchlist_size=200,  # effectively disable watchlist bottleneck (keep almost all scored pairs)
+        max_slots=10,
+        max_new_entries_per_day=3,
         leverage=3.0,
         max_drop_quantile=0.90,
         entry_zscore_default=2.0,
         exit_zscore=0.0,
-        stop_loss_pct=0.05,
+        stop_loss_pct=0.08,
         min_holding_days=3,
         circuit_breaker_pct=0.12,
-        min_entry_score=0.5,
-        max_sector_slots=2,
-        min_spread_range_pct=0.05,
+        min_entry_score=0.3,
+        max_sector_slots=3,
+        min_spread_range_pct=0.03,
         commission_per_leg_bps=0.5,
         slippage_per_leg_bps=0.5,
     )
@@ -172,16 +194,18 @@ def main():
     sp500_benchmark = spy_raw["Close"].squeeze()
     sp500_benchmark.index = sp500_benchmark.index.tz_localize(None)
 
-    ENTRY_DD = -0.10
+    ENTRY_DD = -0.15
+    ENTRY_SLOPE_CONFIRM = 15
     EXIT_MA_WINDOW = 100
     EXIT_SLOPE_WINDOW = 20
     EXIT_SLOPE_CONFIRM = 15
     MIN_BEAR_DAYS = 60
     COOLDOWN_DAYS = 40
-    PAIRS_CARRY_BPS = 200.0     # margin rate - short rebate ≈ 2%/yr
-    FX_HEDGE_CARRY_BPS = 350.0  # realistic IBKR margin spread ≈ 3.5%/yr (always a cost)
+    PAIRS_CARRY_BPS = 0.0       # assume long/short financing offsets for course baseline
+    FX_HEDGE_CARRY_BPS = 0.0    # no FX carry in bull — hold SP500 as-is
 
-    log.info(f"  Bear entry: drawdown ≤ {ENTRY_DD:.0%}")
+    log.info(f"  Bear entry: drawdown ≤ {ENTRY_DD:.0%} AND {EXIT_MA_WINDOW}d MA slope < 0 "
+             f"(avg {ENTRY_SLOPE_CONFIRM}d)")
     log.info(f"  Bear exit:  {EXIT_MA_WINDOW}d MA slope (avg over {EXIT_SLOPE_CONFIRM}d) > 0, "
              f"min {MIN_BEAR_DAYS}d in bear, {COOLDOWN_DAYS}d cooldown")
     log.info(f"  Carry costs: pairs={PAIRS_CARRY_BPS:.0f}bps/yr, FX hedge={FX_HEDGE_CARRY_BPS:.0f}bps/yr")
@@ -190,6 +214,7 @@ def main():
     hybrid_result = run_hybrid_backtest(
         wfa_input, sp500_benchmark,
         entry_dd=ENTRY_DD,
+        entry_slope_confirm_days=ENTRY_SLOPE_CONFIRM,
         exit_ma_window=EXIT_MA_WINDOW,
         exit_slope_window=EXIT_SLOPE_WINDOW,
         exit_slope_confirm_days=EXIT_SLOPE_CONFIRM,
@@ -197,7 +222,9 @@ def main():
         cooldown_days=COOLDOWN_DAYS,
         pairs_carry_bps=PAIRS_CARRY_BPS,
         fx_hedge_carry_bps=FX_HEDGE_CARRY_BPS,
-        on_step=on_step, step_interval=1,
+        on_step=on_step, on_regime_change=on_regime_change,
+        step_interval=1,
+        _pairs_result_precomputed=None,
     )
 
     save_progress("Complete")
