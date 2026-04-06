@@ -12,6 +12,7 @@ from pairs_eda.sp500 import (
     fetch_sp500_constituents_table,
     fetch_sp500_sector_map,
 )
+from pairs_eda.sp500_history import Sp500History, download_all_historical_prices
 from pairs_eda.correlation import (
     compute_pairwise_return_correlations,
     filter_volatile_tickers,
@@ -108,4 +109,6 @@ __all__ = [
     "ProgressCallback",
     "find_bear_episodes",
     "run_hybrid_backtest",
+    "Sp500History",
+    "download_all_historical_prices",
 ]

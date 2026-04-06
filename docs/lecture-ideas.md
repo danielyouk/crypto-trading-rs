@@ -12,6 +12,7 @@
    - [The "Two Eras" of Pairs vs. S&P 500](#the-two-eras-of-pairs-vs-sp-500)
    - [Survivorship Bias: Why Early Backtest Returns Are Too Good](#survivorship-bias-why-early-backtest-returns-are-too-good)
    - [The Double-Edged Sword: Survivorship Bias Is WORST in Bear Markets](#the-double-edged-sword-survivorship-bias-is-worst-in-bear-markets)
+   - [Fixing Survivorship Bias: Point-in-Time (PIT) Backtest Implementation](#fixing-survivorship-bias-point-in-time-pit-backtest-implementation)
    - [Hybrid Strategy Results: The Lecture-Ready Story](#hybrid-strategy-results-the-lecture-ready-story)
 4. [Risk Management & Execution](#risk-management--execution)
 5. [FX Risk Management for Non-USD Traders](#fx-risk-management-for-non-usd-traders-course-2)
@@ -333,6 +334,34 @@ In live trading, this bias does not exist."
   - "So does pairs trading even work in bear markets?" → Directionally yes — spread mean-reversion doesn't stop just because the market falls. But returns are lower than our backtest suggests, and tail risk is higher.
   - "Wouldn't the stop-loss protect us?" → For individual pairs, yes. For portfolio-wide systemic events, partially. Show the 2020 COVID episode (survivorship bias is minimal there) as the most honest stress test.
   - "Then why use the hybrid strategy at all?" → The alternative is holding S&P 500 through -50% drawdowns (2008) or -34% (2020). Even with survivorship bias deflated, doing *something* in bear markets is better than passively holding.
+
+### Fixing Survivorship Bias: Point-in-Time (PIT) Backtest Implementation
+
+- **Visual**: Side-by-side equity curves on `pairs_pit_dashboard.py` (port 8503) — purple dotted line (biased) vs. green solid line (PIT honest).
+- **Key message**: We built a survivorship-bias-free backtest using historical S&P 500 membership data. For each monthly rebalance, we only consider tickers that were actually in the S&P 500 on that date.
+- **Data source**: `hanshof/sp500_constituents` (GitHub, MIT license) — 3,482 daily snapshots of S&P 500 membership from 1996-01-02 to present.
+- **Key stats from the dataset**:
+  - 1,126 unique tickers ever appeared in S&P 500 (vs. 503 current)
+  - 657 tickers were added over the years (new entrants)
+  - 313 tickers were removed (delisted, acquired, bankrupt)
+  - The "missing" tickers include: ENRNQ (Enron), LEHMQ (Lehman), WAMUQ (WaMu), BSC (Bear Stearns)
+- **Implementation approach**:
+  1. Download prices for ALL 1,126 unique tickers (cached to parquet, ~10 min first time)
+  2. For each rebalance window, filter columns to match that date's S&P 500 membership
+  3. Everything else (WFA, z-scores, stress tests) runs identically
+  4. Result: the "honest" equity curve that includes Enron, Lehman, etc. as trading candidates
+- **Lecture storyline**:
+  1. "Let's run the same backtest, but with a critical difference."
+  2. "Instead of using today's S&P 500 list, we'll use the ACTUAL S&P 500 on each rebalance date."
+  3. "In September 2008, our universe now includes Lehman Brothers, Bear Stearns, AIG."
+  4. Show the PIT result: "The returns are lower. Substantially lower."
+  5. Show the side-by-side comparison: "This gap is the cost of survivorship bias."
+  6. "The 2015+ period is almost identical — because the universe IS nearly the same."
+  7. "The early period is where all the inflation lives."
+- **Anticipated student questions**:
+  - "What about delisted tickers with no Yahoo Finance data?" → Some bankrupt companies have no price data available. We proceed with what's available (~70-80% coverage). This means our PIT result is STILL slightly biased, but much less so.
+  - "Can we get 100% accurate data?" → Yes, with CRSP ($$$) or Sharadar (~$30/mo). For a course, the free dataset is sufficient to demonstrate the concept.
+- **Run instructions**: `bash reference/python_pairstrading/run_pairs_pit.sh` → dashboard on port 8503
 
 ### Hybrid Strategy Results: The Lecture-Ready Story
 

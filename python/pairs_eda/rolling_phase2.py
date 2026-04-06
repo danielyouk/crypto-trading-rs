@@ -187,9 +187,17 @@ class RollingPhase2Input(BaseModel):
 
     Args:
         prices: Daily adjusted-close panel shaped (dates x tickers).
+                Should contain ALL tickers needed across all rebalance windows.
         initial_capital: Starting portfolio equity.
         config: Rolling configuration.
         pair_universe: Optional pre-filtered pairs to avoid full pair search each rebalance.
+        sector_map: Optional ticker → GICS sector mapping.
+        universe_fn: Optional callable ``(pd.Timestamp) -> Collection[str]`` that returns
+                     the valid ticker universe for a given date.  When provided,
+                     each rebalance window filters ``phase1.columns`` to the intersection
+                     of ``prices.columns`` and ``universe_fn(rebalance_date)``.
+                     When ``None`` (default), all columns in ``prices`` are used
+                     for every window — the existing behavior.
     """
 
     prices: pd.DataFrame
@@ -197,6 +205,7 @@ class RollingPhase2Input(BaseModel):
     config: RollingPhase2Config
     pair_universe: Optional[list[tuple[str, str]]] = None
     sector_map: Optional[dict[str, str]] = None
+    universe_fn: Optional[Callable[[pd.Timestamp], frozenset[str]]] = None
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -942,6 +951,14 @@ def run_phase2_rolling(
 
     for window in schedule:
         phase1 = prices.loc[window.phase1_start:window.phase1_end]
+
+        if inp.universe_fn is not None:
+            pit_members = inp.universe_fn(window.rebalance_date)
+            valid_cols = [c for c in phase1.columns if c in pit_members]
+            if len(valid_cols) < 2:
+                continue
+            phase1 = phase1[valid_cols]
+
         rebalance_label = str(window.rebalance_date.date())
         scored, coint_stats = compute_robust_pair_scores(
             phase1,
