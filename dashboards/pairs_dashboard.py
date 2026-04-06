@@ -11,7 +11,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-PROGRESS_FILE = Path(__file__).resolve().parent.parent.parent / "docs" / "pairs-progress.json"
+PROGRESS_FILE = Path(__file__).resolve().parent.parent / "docs" / "pairs-progress.json"
 
 st.set_page_config(page_title="Full Pairs WFA Monitor", layout="wide")
 st.title("Full Pairs Trading — Live Monitor")

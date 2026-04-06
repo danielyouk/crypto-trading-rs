@@ -9,8 +9,8 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 *.egg-info/
-python/build/
-python/dist/
+build/
+dist/
 
 # Cursor IDE (keep root .cursor/rules/ but ignore nested ones)
 reference/.cursor/

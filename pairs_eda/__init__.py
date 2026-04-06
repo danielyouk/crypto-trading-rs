@@ -97,7 +97,6 @@ __all__ = [
     "RollingPhase2Config",
     "RollingPhase2Input",
     "RollingPhase2Output",
-    "apply_sticky_watchlist",
     "build_rolling_timeline",
     "compute_robust_pair_scores",
     "filter_cointegrated_cached",

@@ -15,8 +15,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-PIT_PROGRESS = Path(__file__).resolve().parent.parent.parent / "docs" / "pairs-pit-progress.json"
-BIASED_PROGRESS = Path(__file__).resolve().parent.parent.parent / "docs" / "pairs-progress.json"
+PIT_PROGRESS = Path(__file__).resolve().parent.parent / "docs" / "pairs-pit-progress.json"
+BIASED_PROGRESS = Path(__file__).resolve().parent.parent / "docs" / "pairs-progress.json"
 
 st.set_page_config(page_title="PIT Pairs WFA — Survivorship Bias Fix", layout="wide")
 st.title("Pairs Trading — Survivorship Bias Comparison")

@@ -1,13 +1,10 @@
-"""Survivorship-bias-free Pairs Trading WFA using point-in-time S&P 500 membership.
-
-Uses the hanshof/sp500_constituents dataset to ensure each rebalance window
-only considers tickers that were actually in the S&P 500 on that date.
+"""Standalone Full Pairs Trading WFA runner (no hybrid, no regime switching).
 
 Usage:
     source .venv/bin/activate
-    python reference/python_pairstrading/run_pairs_pit.py
+    python reference/python_pairstrading/run_pairs_only.py
 
-Writes progress to docs/pairs-pit-progress.json for Streamlit dashboard.
+Writes progress to docs/pairs-progress.json for Streamlit dashboard.
 """
 
 import datetime
@@ -19,9 +16,9 @@ from pathlib import Path
 
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "python"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-LOG_FILE = Path(__file__).resolve().parent.parent.parent / "docs" / "pairs-pit-run.log"
+LOG_FILE = Path(__file__).resolve().parent.parent / "docs" / "pairs-run.log"
 LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(
@@ -32,19 +29,25 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout),
     ],
 )
-log = logging.getLogger("pairs-pit")
+log = logging.getLogger("pairs")
 
 from dotenv import load_dotenv
 load_dotenv()
 
-from pairs_eda.sp500_history import Sp500History, download_all_historical_prices
+from pairs_eda import (
+    ExaRunMode,
+    default_gemini_backend,
+    download_with_retry,
+    fetch_sp500_constituents_table,
+    fetch_sp500_sector_map,
+)
 from pairs_eda.rolling_phase2 import (
     RollingPhase2Config,
     RollingPhase2Input,
     run_phase2_rolling,
 )
 
-PROGRESS_FILE = Path(__file__).resolve().parent.parent.parent / "docs" / "pairs-pit-progress.json"
+PROGRESS_FILE = Path(__file__).resolve().parent.parent / "docs" / "pairs-progress.json"
 PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 _dates: list[str] = []
@@ -56,8 +59,8 @@ _peak = 0.0
 def save_progress(pct_label: str = ""):
     data = {
         "dates": _dates,
-        "pit_equity": _equity_y,
-        "pit_dd": _dd_y,
+        "pairs_equity": _equity_y,
+        "pairs_dd": _dd_y,
         "pct": pct_label,
         "progress": len(_dates),
     }
@@ -85,21 +88,29 @@ def on_step(day, equity, step_idx, total):
 
 def main():
     log.info("=" * 60)
-    log.info("Point-in-Time (PIT) Pairs Trading WFA Runner")
-    log.info("  Survivorship-bias-free backtest")
+    log.info("Full Pairs Trading WFA Runner")
     log.info("=" * 60)
 
-    log.info("[1/3] Loading historical S&P 500 membership...")
-    history = Sp500History.from_csv()
-    summary = history.summary()
-    for k, v in summary.items():
-        log.info(f"  {k}: {v}")
+    log.info("[1/3] Fetching S&P 500 constituents...")
+    exa_backend = default_gemini_backend()
+    sp500 = fetch_sp500_constituents_table(
+        on_failure="exa", exa_backend=exa_backend,
+        exa_mode=ExaRunMode.LIVE, verbose=True,
+    )
+    sp500_list = sp500["Symbol"].tolist()
+    sp500_sector_map = fetch_sp500_sector_map(verbose=True)
+    log.info(f"  {len(sp500_list)} symbols, {len(sp500_sector_map)} with sector data")
 
-    log.info("[2/3] Downloading/loading price data for ALL historical tickers...")
-    all_prices = download_all_historical_prices(history, verbose=True)
-    log.info(f"  {all_prices.shape[1]} tickers, {all_prices.shape[0]} trading days")
+    log.info("[2/3] Downloading price data...")
+    DOWNLOAD_START = "1990-01-01"
+    sp500_daily_prices = download_with_retry(
+        sp500_list, start=DOWNLOAD_START,
+        end=datetime.datetime.today(), interval="1d",
+        progress=True, threads=True, auto_adjust=False, max_retries=2,
+    )
+    log.info(f"  {sp500_daily_prices.shape[1]} tickers, {sp500_daily_prices.shape[0]} trading days")
 
-    log.info("[3/3] Configuring & running PIT pairs WFA...")
+    log.info("[3/3] Configuring & running full pairs WFA...")
     wfa_config = RollingPhase2Config(
         training_months=36,
         expanding_window=False,
@@ -133,19 +144,15 @@ def main():
     )
 
     initial_capital = 10_000.0
-
-    universe_fn = history.universe_fn()
-    log.info(f"  Universe function: PIT membership lookup ({summary['unique_tickers_ever']} unique tickers)")
-
     wfa_input = RollingPhase2Input(
-        prices=all_prices,
+        prices=sp500_daily_prices,
         initial_capital=initial_capital,
         config=wfa_config,
-        universe_fn=universe_fn,
+        sector_map=sp500_sector_map,
     )
 
     grid_size = len(wfa_config.windows) * len(wfa_config.zscore_thresholds)
-    log.info(f"  Grid: {len(wfa_config.windows)} windows x {len(wfa_config.zscore_thresholds)} z-thresholds = {grid_size} combos")
+    log.info(f"  Grid: {len(wfa_config.windows)} windows × {len(wfa_config.zscore_thresholds)} z-thresholds = {grid_size} combos")
     log.info(f"  Capital: ${initial_capital:,.0f}, Leverage: {wfa_config.leverage:.0f}x")
     log.info(f"  Progress file: {PROGRESS_FILE}")
 
@@ -156,23 +163,20 @@ def main():
 
     log.info("")
     log.info("=" * 60)
-    log.info("RESULTS (Point-in-Time, survivorship-bias-free)")
+    log.info("RESULTS")
     log.info("=" * 60)
     log.info(f"Total trades : {len(result.trades)}")
-    final_eq = result.daily_equity.iloc[-1]
-    start_eq = result.daily_equity.iloc[0]
-    cum_ret = final_eq / start_eq - 1
-    log.info(f"Final equity : ${final_eq:,.0f}")
+    log.info(f"Final equity : ${result.equity.iloc[-1]:,.0f}")
+    cum_ret = result.equity.iloc[-1] / result.equity.iloc[0] - 1
     log.info(f"Cumulative   : {cum_ret:.1%}")
 
-    result_file = PROGRESS_FILE.parent / "pairs-pit-result.json"
-    result_summary = {
+    result_file = PROGRESS_FILE.parent / "pairs-result.json"
+    summary = {
         "total_trades": len(result.trades),
-        "final_equity": float(final_eq),
+        "final_equity": float(result.equity.iloc[-1]),
         "cumulative_return": float(cum_ret),
-        "max_drawdown": float(result.summary.get("max_drawdown", 0)),
     }
-    result_file.write_text(json.dumps(result_summary, indent=2))
+    result_file.write_text(json.dumps(summary, indent=2))
     log.info(f"Summary saved to {result_file}")
 
 

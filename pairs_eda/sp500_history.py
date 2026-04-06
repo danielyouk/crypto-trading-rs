@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_CSV = Path(__file__).resolve().parent.parent.parent / "data" / "sp500_historical_components.csv"
+_DEFAULT_CSV = Path(__file__).resolve().parent.parent / "data" / "sp500_historical_components.csv"
 
 
 class Sp500History:
@@ -129,7 +129,7 @@ class Sp500History:
         }
 
 
-_DEFAULT_PARQUET = Path(__file__).resolve().parent.parent.parent / "data" / "sp500_all_prices.parquet"
+_DEFAULT_PARQUET = Path(__file__).resolve().parent.parent / "data" / "sp500_all_prices.parquet"
 
 
 def download_all_historical_prices(
