@@ -7,6 +7,9 @@
 1. [Course Structure & Strategy](#course-structure--strategy)
 2. [Data & Correlation](#data--correlation)
 3. [Pipeline Design & Architecture](#pipeline-design--architecture)
+   - [The Stress Test Trap: Grid Spacing vs. Neighborhood Size](#the-stress-test-trap-grid-spacing-vs-neighborhood-size)
+   - [Structural Bear Detection: Why Drawdown Alone Fails](#structural-bear-detection-why-drawdown-alone-fails)
+   - [Hybrid Strategy Results: The Lecture-Ready Story](#hybrid-strategy-results-the-lecture-ready-story)
 4. [Risk Management & Execution](#risk-management--execution)
 5. [FX Risk Management for Non-USD Traders](#fx-risk-management-for-non-usd-traders-course-2)
 6. [Performance Measurement & Metrics](#performance-measurement--metrics)
@@ -191,6 +194,70 @@ In live trading, this bias does not exist."
   - "If adaptiveness is good, why not replace all pairs immediately each month?"
   - "How do we choose retention length without overfitting?"
   - "Is this still market-neutral if watchlist members persist across rebalances?"
+
+### The Stress Test Trap: Grid Spacing vs. Neighborhood Size
+
+- **Visual**: Side-by-side comparison — a 3×3 neighborhood (8 checks, passes easily) vs. an 11×11 neighborhood (120 checks, almost nothing passes).
+- **Key message**: When your parameter grid is dense (e.g., windows every 2 days, z-scores every 0.1), but your stress test neighborhood is wide (e.g., ±10 days, ±0.5), you're not checking "immediate neighbors" — you're demanding that *almost every combination in the grid* is profitable. This silently kills nearly all candidate pairs.
+- **The Bug We Found**: Default `stress_test_window_step=10` was designed for a sparse grid (windows spaced by 10). But our dense grid (spaced by 2) meant the neighborhood covered ALL 11 windows × 11 z-scores = 120 neighbors. If even ONE was empty or dropped too much → pair rejected.
+- **The Fix**: Match step sizes to actual grid spacing: `window_step=2`, `zscore_step=0.1` → 3×3-1=8 neighbors.
+- **Lecture storyline**:
+  1. "We relaxed every filter but pairs trading is still flat. Why?"
+  2. Count the actual neighborhood size: `windows in ±10 of best` with grid step 2 = 11 windows. "We're checking 120 neighbors."
+  3. Show before/after: 0 trades per bear episode → 100+ trades per episode.
+  4. **Key Takeaway**: "Robustness tests are essential, but they must match your grid resolution. A test that's too strict is the same as no trading at all."
+- **Anticipated student questions**:
+  - "Doesn't reducing the neighborhood make overfitting more likely?" → Yes, slightly. But 8 immediate neighbors still catches fragile peaks. 120 neighbors demands the entire surface is profitable, which is unrealistic.
+  - "How do I choose the right neighborhood size?" → Rule of thumb: ±1 grid step in each dimension. The stress test should ask "is this a plateau or a spike?" not "is every parameter combination profitable?"
+
+### Structural Bear Detection: Why Drawdown Alone Fails
+
+- **Visual**: S&P 500 equity curve 1996–2004 with bear episodes marked. Version A (drawdown -10%): 10+ false episodes including 1997, 1999 corrections. Version B (drawdown -15% AND MA slope < 0): only real bears caught.
+- **Key message**: A fixed drawdown threshold (e.g., -10%) triggers on normal corrections, not structural bear markets. Adding a trend confirmation signal (MA slope) filters V-shaped recoveries that aren't real regime changes.
+- **The Evolution**:
+  1. **V1 (Naive)**: Enter bear when drawdown ≤ -10% → 10 false positives in 8 years
+  2. **V2 (Slope entry)**: Drawdown ≤ -5% AND 100d MA slope < 0 → filtered 1997, but still caught 1999 at -7.6%
+  3. **V3 (Final)**: Drawdown ≤ -15% AND 100d MA slope < 0 → only real bears (dot-com, GFC, COVID)
+- **Why symmetric entry/exit is elegant**:
+  - Entry: drawdown threshold + slope < 0 (fast entry, structural confirmation)
+  - Exit: slope > 0 + min duration (slow exit, recovery confirmation)
+  - Both use the same 100d MA slope signal — students learn one concept, applied symmetrically.
+- **Anti-Whipsaw Filters**:
+  - `min_bear_days=60`: Don't exit too early
+  - `cooldown_days=40`: Don't re-enter immediately after exiting
+  - `exit_slope_confirm_days=15`: Average slope over 15 days, not just one day
+- **Lecture storyline**:
+  1. Show the -10% version: "Look at all these bear markets! ...wait, 1997 wasn't a bear market."
+  2. Overlay S&P 500 actual performance — most "bears" were V-shaped corrections.
+  3. Add slope condition: "Now we're asking: is the market structurally declining, or just dipping?"
+  4. Show the final version with only real bears marked.
+  5. **Key Takeaway**: "Regime detection is not about levels (how far did it fall?), it's about structure (is the trend broken?)."
+- **Anticipated student questions**:
+  - "Why not just use -20% (standard bear market definition)?" → -20% is too late. By -20%, you've already lost a lot. -15% + slope catches it earlier while still filtering corrections.
+  - "What about Change Point Analysis or Hidden Markov Models?" → Great for research. For a practical course, MA slope is transparent, debuggable, and produces nearly identical results.
+  - "Why 100 days for the MA?" → ~5 months of data. Short enough to detect regime changes within a quarter, long enough to ignore noise. 200d is too slow (misses COVID), 50d is too noisy.
+
+### Hybrid Strategy Results: The Lecture-Ready Story
+
+- **Visual**: The completed hybrid backtest chart showing S&P 500 vs. Hybrid over 30 years with bear episodes shaded red, regime transition table below.
+- **Key message**: The hybrid strategy (S&P 500 in bull, pairs trading in bear) reduces drawdowns while maintaining comparable returns. During bear markets, pairs trading earns small but positive returns — it doesn't need to beat the market, just not lose with it.
+- **The Numbers (approximate from our run)**:
+  - 14 bear episodes detected over ~28 years
+  - Hybrid outperforms S&P 500 primarily through drawdown reduction
+  - In most bear episodes, pairs trading generates 60/60 active trading days (100% utilization)
+  - Exception: COVID-2020 — too fast and violent for pairs trading to adapt
+- **Why this is great for teaching**:
+  1. Students see a real strategy that *isn't* a magic money machine
+  2. The drawdown chart shows concrete risk reduction
+  3. COVID failure teaches humility — no strategy works everywhere
+  4. The regime transition table gives explainable, auditable decisions
+- **Lecture storyline**:
+  1. "Imagine you're managing a client's retirement fund."
+  2. Show S&P 500 drawdown to -50% in GFC. "Your client just lost half their savings."
+  3. Show hybrid: same bull returns, but bear drawdown cut by ~50%.
+  4. "The pairs trading doesn't make you rich in bear markets. It just keeps you from panicking."
+  5. Show the COVID exception: "No model is perfect. This is why we have circuit breakers."
+  6. **Key Takeaway**: "The goal isn't to time the market perfectly. It's to have a systematic, explainable plan for when things go wrong."
 
 ---
 
