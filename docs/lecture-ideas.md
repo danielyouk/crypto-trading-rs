@@ -1564,3 +1564,13 @@ For investors who don't want to manage FX positions:
   3. The Core Principle: Hedging is not an investment designed to make money. It is **insurance**. You pay the 4% to guarantee your return, regardless of whether the USD goes up 20% or crashes 20%.
   4. The Institutional Standard: Explain why institutions either "Always Hedge" (to isolate pure equity alpha) or "Never Hedge" (to embrace the Dollar Smile), but rarely do "Tactical Hedging" (because it requires predicting the unpredictable FX market).
 - **Anticipated student questions**: "But if the cost is 4%, isn't it mathematically better to just take the FX risk?" (Answer: Only if your risk tolerance allows for a sudden 20% currency loss. Quants hate unquantifiable risk).
+
+## The Math of Margin Hedging (Brokerage Interest Breakdown)
+- **Concept**: When using a margin loan to hedge FX risk, the true cost of the hedge is not just the difference between national interest rates. It is heavily influenced by the broker's spread (the difference between what they charge for loans and what they pay for deposits).
+- **Key message**: To calculate the exact cost of an FX hedge using a margin loan, you must separate the USD loan rate (what you pay) from the KRW deposit rate (what you earn).
+- **Lecture storyline (The Math Breakdown)**:
+  1. The Setup: You deposit 13M KRW and borrow $10k USD to buy SPY.
+  2. The USD Loan (The Cost): The broker charges you the US Benchmark Rate + a Broker Spread (e.g., 5.0% + 1.5% = 6.5%). You owe $650 in interest.
+  3. The KRW Deposit (The Income): The broker pays you the KRW Benchmark Rate - a Broker Spread (e.g., 3.5% - 0.5% = 3.0%). You earn 390,000 KRW in interest.
+  4. The Net Cost: The difference between the USD interest paid and the KRW interest earned is the true "Cost of Carry" for the hedge.
+- **Anticipated student questions**: "Why doesn't the broker just give me the benchmark rate?" (Answer: Because they are a business. The spread is how they make money on your cash balances).
