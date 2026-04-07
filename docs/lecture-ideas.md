@@ -1574,3 +1574,13 @@ For investors who don't want to manage FX positions:
   3. The KRW Deposit (The Income): The broker pays you the KRW Benchmark Rate - a Broker Spread (e.g., 3.5% - 0.5% = 3.0%). You earn 390,000 KRW in interest.
   4. The Net Cost: The difference between the USD interest paid and the KRW interest earned is the true "Cost of Carry" for the hedge.
 - **Anticipated student questions**: "Why doesn't the broker just give me the benchmark rate?" (Answer: Because they are a business. The spread is how they make money on your cash balances).
+
+## The Math of Hybrid Capital Allocation (MES to Pairs)
+- **Concept**: Transitioning from a highly leveraged Futures contract (MES) to a Long/Short Pairs Trading portfolio requires careful capital matching to avoid liquidation and maintain consistent exposure.
+- **Key message**: You do not trade MES at maximum leverage. You use MES to *synthetically replicate* a 1x or 2x SPY position. The excess cash sits safely in your account to prevent margin calls.
+- **Lecture storyline (The Capital Flow)**:
+  1. The Setup: You have $25,000 in actual cash (KRW equivalent). 
+  2. The Bull Market (MES): You want 1x SPY exposure ($25,000). You buy exactly 1 MES contract (Notional value = $25,000). IBKR locks up $1,300 as margin. The remaining $23,700 sits in your account as a massive safety buffer. You will never be liquidated unless the S&P 500 drops 95% in one day.
+  3. The Regime Switch: The S&P 500 hits a -10% drawdown. You sell the 1 MES contract. Your $1,300 margin is released. You now have your full cash balance available.
+  4. The Bear Market (Pairs): You deploy your $25,000 cash into the Pairs Trading WFA engine. If your config uses 3x leverage, you open $75,000 worth of gross exposure ($37.5k Long / $37.5k Short). 
+- **Anticipated student questions**: "Isn't futures trading too risky? What about margin calls?" (Answer: Futures are only risky if you over-leverage. If you have $25,000 in cash and buy 1 MES contract, you are effectively using 1x leverage. It is mathematically identical to holding SPY, just with better capital efficiency and zero FX risk).
