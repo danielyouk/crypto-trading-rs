@@ -1594,3 +1594,15 @@ For investors who don't want to manage FX positions:
   3. The Calculation: Start with $25,000. Margin is $1,300. Free cash is $23,700. You lose $2,500. Your new total cash is $22,500. Since $22,500 is still vastly larger than the $1,300 required margin, the broker is perfectly happy.
   4. The Liquidation Trigger: You only get a margin call when your *Total Cash* drops below the *Maintenance Margin*. For a 1x leveraged position, this requires a 95% market crash.
 - **Anticipated student questions**: "So the margin is just a locked deposit, and my free cash acts as the actual shield?" (Answer: Exactly. This is why matching your notional value to your total cash makes futures as safe as buying an ETF).
+
+## Automating the Hybrid Strategy (IBKR API & MES Rolling)
+- **Concept**: Moving from a backtest to a fully automated live trading system using Interactive Brokers (IBKR) API. Handling the regime switch and the quarterly futures roll automatically.
+- **Key message**: Automation is not just about placing orders; it's about state management. The bot must know if it's in "Bull Mode" (MES) or "Bear Mode" (Pairs), and it must automatically handle the mundane tasks like rolling expiring futures contracts.
+- **Lecture storyline (The Automation Blueprint)**:
+  1. The Tech Stack: Python + `ib_insync` library + IB Gateway. Run daily via cron or a cloud scheduler.
+  2. The Daily Check: The bot wakes up, fetches SPY daily data, and calculates the current drawdown.
+  3. The Regime Switch Logic: 
+     - If DD <= -10% and currently holding MES: Sell MES, run Pairs WFA, execute Long/Short basket.
+     - If DD >= -5% and currently holding Pairs: Liquidate all pairs, calculate total cash, buy N contracts of MES (Total Cash / $25,000).
+  4. The Auto-Roll Logic: If holding MES and today is 5 days before the 3rd Friday of Mar/Jun/Sep/Dec, the bot sends a "Calendar Spread" order to simultaneously sell the expiring month and buy the next month.
+- **Anticipated student questions**: "What if the bot crashes during a regime switch?" (Answer: Build reconciliation logic. The bot should always check actual IBKR portfolio positions vs. expected target positions before sending any orders).
