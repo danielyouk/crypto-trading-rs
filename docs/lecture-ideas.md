@@ -1554,3 +1554,13 @@ For investors who don't want to manage FX positions:
   3. The Power of Compounding: If you have a stable remote income, you don't need your trading system to make 100% a year. You just need it to steadily compound (like the Hybrid Strategy) while you sleep.
   4. The Education Flywheel: Once your system works, teaching it to others (via premium courses) creates a third, highly scalable income stream.
 - **Anticipated student questions**: "Do I need a PhD in Math to succeed?" (Answer: No. You need extreme discipline, a solid engineering foundation, and the ability to manage your own psychology and time—skills that are highly trainable).
+
+## The Illusion of "Tactical" FX Hedging
+- **Concept**: Since FX hedging costs (interest rate differentials) are known in advance, it seems logical to only hedge when it's "cheap" and not hedge when it's "expensive." However, this is a trap that turns a quant strategy into a currency speculation gamble.
+- **Key message**: Knowing the *cost* of insurance does not mean you know if the house will burn down. Tactical hedging requires predicting future exchange rates, which is mathematically proven to be nearly impossible (a random walk).
+- **Lecture storyline**:
+  1. The Logical Trap: Show a scenario where hedging costs 4% a year. A student asks: "Why pay 4%? Just don't hedge when it's this expensive!"
+  2. The Reality Check: What if you don't pay the 4% fee, but the USD drops 15% against the KRW that year? You saved 4% but lost 15%. You are down 11%.
+  3. The Core Principle: Hedging is not an investment designed to make money. It is **insurance**. You pay the 4% to guarantee your return, regardless of whether the USD goes up 20% or crashes 20%.
+  4. The Institutional Standard: Explain why institutions either "Always Hedge" (to isolate pure equity alpha) or "Never Hedge" (to embrace the Dollar Smile), but rarely do "Tactical Hedging" (because it requires predicting the unpredictable FX market).
+- **Anticipated student questions**: "But if the cost is 4%, isn't it mathematically better to just take the FX risk?" (Answer: Only if your risk tolerance allows for a sudden 20% currency loss. Quants hate unquantifiable risk).
