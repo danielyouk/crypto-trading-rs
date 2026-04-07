@@ -1584,3 +1584,13 @@ For investors who don't want to manage FX positions:
   3. The Regime Switch: The S&P 500 hits a -10% drawdown. You sell the 1 MES contract. Your $1,300 margin is released. You now have your full cash balance available.
   4. The Bear Market (Pairs): You deploy your $25,000 cash into the Pairs Trading WFA engine. If your config uses 3x leverage, you open $75,000 worth of gross exposure ($37.5k Long / $37.5k Short). 
 - **Anticipated student questions**: "Isn't futures trading too risky? What about margin calls?" (Answer: Futures are only risky if you over-leverage. If you have $25,000 in cash and buy 1 MES contract, you are effectively using 1x leverage. It is mathematically identical to holding SPY, just with better capital efficiency and zero FX risk).
+
+## The Margin Call Myth (Why 1x Futures Never Blow Up)
+- **Concept**: A common misunderstanding in futures trading is that if your unrealized loss exceeds your Initial Margin, you get liquidated. This is false. Losses are deducted from your *Total Cash Balance*, not just the margin portion.
+- **Key message**: Margin is just a minimum collateral requirement, not a loss limit. If you have a massive cash buffer, you can sustain losses far exceeding the margin requirement without ever facing a margin call.
+- **Lecture storyline (The Math of Survival)**:
+  1. The Misconception: "I put up $1,300 in margin. The market dropped and I lost $2,500. Why didn't the broker close my position?"
+  2. The Reality (Mark-to-Market): Explain that the broker deducts the $2,500 loss from your *Free Cash*, not your margin. 
+  3. The Calculation: Start with $25,000. Margin is $1,300. Free cash is $23,700. You lose $2,500. Your new total cash is $22,500. Since $22,500 is still vastly larger than the $1,300 required margin, the broker is perfectly happy.
+  4. The Liquidation Trigger: You only get a margin call when your *Total Cash* drops below the *Maintenance Margin*. For a 1x leveraged position, this requires a 95% market crash.
+- **Anticipated student questions**: "So the margin is just a locked deposit, and my free cash acts as the actual shield?" (Answer: Exactly. This is why matching your notional value to your total cash makes futures as safe as buying an ETF).
