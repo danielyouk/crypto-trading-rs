@@ -1797,3 +1797,13 @@ For investors who don't want to manage FX positions:
   4. The Daily Reset Magic: IBKR forces a server reset every night (e.g., 11:45 PM). IBC intercepts this. Instead of letting the Gateway close and demand a new 2FA tap, IBC gracefully restarts the Gateway using a cached session token, bypassing 2FA for the rest of the week.
   5. The `TWOFA_TIMEOUT_ACTION=exit` Safety Net: If you try to script the Sunday login but fall asleep and miss the phone tap, IBC waits. If the timeout hits, it kills the process (`exit`). Why? Because a hanging, half-logged-in Gateway blocks the port and breaks your Python trading bot. Killing it ensures a clean state for when you wake up and manually fix it.
 - **Anticipated student questions**: "Can I just log in on Saturday to get it out of the way?" (Answer: Yes, the 5-day token starts from your manual login. But Sunday evening right before futures open is the safest anchor point).
+
+## The GUI Myth: IB Gateway vs. TWS
+- **Concept**: A very common misconception (even among AI assistants) is that IB Gateway is a pure Command Line Interface (CLI) tool. It is not. Both TWS and IB Gateway are Java-based GUI applications.
+- **Key message**: You cannot run IB Gateway on a headless Linux server without a virtual display (like Xvfb or a lightweight desktop environment). It requires a window manager to render its login screen and connection status panel.
+- **Lecture storyline (The Headless Server Setup)**:
+  1. The Myth: "I'll just SSH into my Ubuntu server and run `./ibgateway.sh` in the terminal." (Result: Java `HeadlessException` crash).
+  2. The Reality: Show a screenshot of the IB Gateway GUI. It is a small, stripped-down window, but it is still a window. It needs a display.
+  3. The Solution (Xvfb + VNC): Explain the standard quant setup. You install `Xvfb` (X Virtual FrameBuffer) to trick Java into thinking there is a monitor. You run IB Gateway inside this invisible monitor. You use VNC or RDP to look at this invisible monitor once a week to click the 2FA button.
+  4. Why use Gateway instead of TWS? If both need a GUI, why use Gateway? Because TWS uses 2GB+ of RAM to render charts and news feeds. Gateway uses ~300MB of RAM because it only renders a tiny connection status box. This allows you to run it on a cheap, low-tier Oracle VM.
+- **Anticipated student questions**: "Can I completely bypass the GUI using the new IBKR Web API?" (Answer: The Web API (CPAPI) is stateless and designed for simple web apps, not robust, continuous algorithmic trading. The desktop Gateway + `ib_insync` remains the institutional standard for stability).
