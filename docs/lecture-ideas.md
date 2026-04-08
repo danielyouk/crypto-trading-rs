@@ -1717,3 +1717,12 @@ For investors who don't want to manage FX positions:
      - **Exponential Backoff**: If login fails, wait 1 min, then 2 mins, then 4 mins.
      - **Kill Switch & Alert**: After 5 failed attempts, kill the process completely and send a Telegram/Slack alert to the human.
 - **Anticipated student questions**: "Isn't a cloud VM immune to internet drops?" (Answer: Cloud VMs are stable, but IBKR's own servers restart daily, and transient network routing issues happen. You must code for failure).
+
+## Cloud Infrastructure Reliability (Oracle VM vs. AWS)
+- **Concept**: Retail traders often worry about their cloud VM losing internet connection. While multi-region failover (spinning up a backup VM) is possible, it is usually overkill for a daily/swing trading strategy.
+- **Key message**: Cloud providers like Oracle (OCI) and AWS offer 99.9% to 99.99% uptime SLAs. The real risk is not the VM losing internet; it is the broker (IBKR) going down for maintenance or your bot crashing silently.
+- **Lecture storyline (Infrastructure Reality Check)**:
+  1. The Oracle VM Reliability: Oracle Cloud Infrastructure (OCI) offers an SLA of 99.9% availability. That means a maximum of ~43 minutes of downtime per month. In reality, it is usually much less.
+  2. The Multi-VM Failover (Overkill): Explain that having a secondary VM spin up automatically if the primary VM loses internet is standard for High-Frequency Trading (HFT), but dangerous for our strategy. If both VMs accidentally connect to IBKR at the same time, IBKR will terminate the first session, causing chaos.
+  3. The "Dead Man's Switch" (Slack Alerts): Instead of complex failovers, build a simple heartbeat monitor. A separate, tiny script (even running on a free AWS Lambda or your home PC) pings your main Oracle VM every 3 minutes. If it doesn't get a response, it sends a Slack/Telegram alert: *"URGENT: Trading VM is offline."*
+- **Anticipated student questions**: "Should I use AWS instead of Oracle for better reliability?" (Answer: Oracle's Always Free tier is perfectly fine for this strategy. The 0.01% difference in uptime is not worth paying $50/month for AWS EC2 when you are trading daily/monthly timeframes).
