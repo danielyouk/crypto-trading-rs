@@ -19,6 +19,14 @@
 5. [FX Risk Management for Non-USD Traders](#fx-risk-management-for-non-usd-traders-course-2)
 6. [Performance Measurement & Metrics](#performance-measurement--metrics)
 7. [Open Source & Community](#open-source--community)
+8. [Backtest Integrity & Honest Disclosure](#backtest-integrity--honest-disclosure)
+   - [Config Parameter Audit — "35 Knobs, but How Many Matter?"](#config-parameter-audit--35-knobs-but-how-many-matter)
+   - [Carry Cost Reality Check — "Where Does the 5.5% Annual Drag Come From?"](#carry-cost-reality-check--where-does-the-55-annual-drag-come-from)
+   - [FX Forward Hedging — "Insurance, Not Conversion"](#fx-forward-hedging--insurance-not-conversion)
+   - [The Fixed 350bps Simplification](#the-fixed-350bps-simplification--when-conservative-becomes-inaccurate)
+9. [Lecture Pedagogy & Deployment](#lecture-pedagogy--deployment)
+   - [Lecture Pedagogy — Architecture Over Syntax](#lecture-pedagogy--architecture-over-syntax)
+   - [Production Deployment — Oracle Free VM + IB Gateway + IBC](#production-deployment--oracle-free-vm--ib-gateway--ibc)
 
 ---
 
@@ -1626,3 +1634,74 @@ For investors who don't want to manage FX positions:
   3. The "Bleed" (Contango): As the year passes, the futures price slowly decays down to meet the spot price at expiration. If the market stays perfectly flat at $500, the futures buyer loses $25 over the year.
   4. The Hedge Cost Connection: That $25 loss is exactly the "Interest Cost" of holding the position. By buying the future, you are paying the wholesale interest rate (the "Risk-Free Rate") built directly into the price, completely bypassing the retail broker's greedy margin spread.
 - **Anticipated student questions**: "Wait, so I'm guaranteed to lose money just by holding the future if the market stays flat?" (Answer: Yes. That is the cost of leverage and hedging. But it is much cheaper than paying 6.5% to your broker for a margin loan!).
+
+## Config Parameter Audit — "35 Knobs, but How Many Matter?"
+- **Concept**: The backtest system has 35+ tunable parameters in `RollingPhase2Config`. A natural concern is that iterative tuning (run → inspect → adjust → re-run) creates implicit overfitting. This section systematically audits each parameter and shows that most are well-defended.
+- **Key message**: Not all parameters carry equal overfitting risk. The key is understanding *why* each value was chosen and what safeguards exist.
+- **Visual**: Show a 3-tier table categorizing all 35 parameters by overfitting risk (High / Medium / Low).
+- **Lecture storyline (The Defense)**:
+  1. **Leverage 3.0**: "Isn't 3x dangerous?" → No. Pairs trading is market-neutral. Industry standard for stat-arb desks is 3x-6x. At 1x, capital efficiency is terrible (1-5% spread returns on full notional).
+  2. **Grid size 176 (11 windows × 16 z-scores)**: "Doesn't a bigger grid overfit?" → No, because the Zero-Cost Stress Test checks ALL neighbors of the chosen parameter. If any neighbor's profit drops by >50%, the pair is rejected. Larger grid = more neighbors to validate = *higher* confidence in plateau vs. spike.
+  3. **Slippage 0.5 bps**: "Is that realistic?" → Yes for S&P 500 constituents. These are among the most liquid stocks in the world. Bid-ask spreads are 1-2 cents on $100+ stocks (1-2 bps). 0.5 bps slippage per leg is realistic for institutional-grade execution.
+  4. **The real remaining risk**: Not any single parameter, but the iterative human-in-the-loop process itself. This is the hardest bias to quantify.
+- **Anticipated student questions**: "If the grid search is protected by the stress test, what IS the actual overfitting risk?" (Answer: The researcher's iterative tuning process — running backtests, looking at results, adjusting configs. Each cycle implicitly fits to the historical period. Document this honestly.)
+
+## Carry Cost Reality Check — "Where Does the 5.5% Annual Drag Come From?"
+- **Concept**: The hybrid backtest deducts two separate carry costs that total 2-3.5% annually depending on the regime. This is a significant drag that most retail backtests ignore entirely.
+- **Key message**: Our backtest is more conservative than most because it already accounts for these real-world costs. The 2,805% PIT hybrid return is *after* these deductions.
+- **Visual**: Show the code line `equity *= (1.0 + sp500_daily_ret - fx_daily_carry)` and explain each component.
+- **Lecture storyline (Two Hidden Taxes)**:
+  1. **Bull Mode (S&P 500): FX Hedge Cost = 350 bps/yr**. A Korean investor holding USD assets pays this to lock in the KRW exchange rate via FX forwards. This is NOT a currency conversion — it's a side-bet (derivative) settled in USD that neutralizes FX risk.
+  2. **Bear Mode (Pairs): Margin + Borrow Cost = 200 bps/yr**. Pairs trading is self-financing (long proceeds ≈ short proceeds), but you still pay: short borrow fee (~25-50 bps for S&P 500 easy-to-borrow), margin interest on leveraged portion (~100-150 bps), minus a small short rebate.
+  3. **Weighted average**: With ~75% bull / ~25% bear historically, the blended annual drag is ~3.1%.
+  4. **Comparison**: Most retail backtests on YouTube or blogs show ZERO carry cost. Our result already includes this drag — if anything, we are being conservative.
+- **Anticipated student questions**: "If carry costs are already included, why should I be skeptical of the results?" (Answer: The fixed 350 bps hedge cost is a simplification — real cost varies with interest rate differentials over 30 years. Also, the iterative tuning process itself is a separate bias source.)
+
+## FX Forward Hedging — "Insurance, Not Conversion"
+- **Concept**: Most students confuse FX hedging with currency conversion. This section uses a concrete 3-scenario example to show that hedging is a derivative contract (insurance) that stays in USD.
+- **Key message**: FX forward hedging locks your KRW-denominated return regardless of exchange rate movements. You pay a known annual premium for certainty.
+- **Visual**: 3-column comparison table (USD/KRW up 10%, flat, down 10%) showing Hedged vs Unhedged outcomes.
+- **Lecture storyline (The Insurance Analogy)**:
+  1. Setup: Korean investor, 13M KRW → $10,000, SPY +10% = $11,000.
+  2. **Unhedged outcomes**: Case A (원화 약세 10%) → KRW +21%. Case B (flat) → KRW +10%. Case C (원화 강세 10%) → KRW -1%. Same SPY return, wildly different KRW outcomes.
+  3. **Hedged outcome**: Always KRW +6.5% (= SPY 10% - hedge cost 3.5%), regardless of FX movement.
+  4. The money flow: KRW → USD (once) → SPY → sell SPY → USD cash → Pairs → USD cash → ... → KRW (final exit only). **No intermediate KRW conversion ever happens.** The FX forward is a separate USD-settled derivative.
+  5. **The forward rate is NOT a forecast**: It's determined by arbitrage (CIP): `F = S × (1 + r_KRW) / (1 + r_USD)`. No prediction involved — purely mechanical.
+- **Anticipated student questions**: "Why not just hedge when it's cheap and skip when it's expensive?" (Answer: That requires predicting future FX movements. The hedge cost is known, but the FX direction is unknown. Tactical hedging = FX forecasting, which is essentially random walk.)
+
+## The Fixed 350bps Simplification — "When Conservative Becomes Inaccurate"
+- **Concept**: The backtest applies a fixed 350 bps/yr FX hedge cost for the entire 30-year period. In reality, hedge cost varies dramatically with interest rate differentials.
+- **Key message**: The fixed cost is likely over-conservative during the 2009-2022 low-rate era (true cost ~100-200 bps) and roughly accurate for 2023-2025.
+- **Visual**: Timeline showing historical KR-US rate differential alongside the fixed 350bps line.
+- **Lecture storyline**:
+  1. Hedge cost = (r_USD - r_KRW) + IBKR spread (~2.0%)
+  2. 1996-2000: Korean rates 5-15%, US 5-6% → cost could be 2-12% (Asian crisis era)
+  3. 2008-2015: Both near zero → cost ≈ 2% (just the broker spread)
+  4. 2020-2022: US near 0%, Korea ~1% → cost ≈ 1% (cheapest hedging ever)
+  5. 2023-2025: US 5%, Korea 3% → cost ≈ 4% (near our 350bps assumption)
+  6. Conclusion: Fixed 350bps is a rough long-term average that errs on the conservative side for most of our backtest period.
+- **Anticipated student questions**: "Can we use actual historical interest rates instead of fixed 350bps?" (Answer: Yes, with FRED data for US rates and Bank of Korea data for Korean rates. This would be a good Course 2 enhancement.)
+
+## Lecture Pedagogy — Architecture Over Syntax
+- **Concept**: For an advanced, practice-oriented course targeting working professionals, the lecture format must prioritize system architecture and decision-making over Python syntax.
+- **Key message**: Students at this level can read Python. What they can't do alone is architect a production quant system, debug subtle biases, or make the right design trade-offs.
+- **Lecture storyline (The Format)**:
+  1. **Anti-pattern**: Screen-sharing a Jupyter notebook, typing `import pandas as pd`, explaining line by line. This is a beginner course format that doesn't scale to this complexity (~4,500 lines of library code).
+  2. **Better pattern**: Architecture diagrams first (data flow, module dependencies), then zoom into key decision points. Use the code as *evidence*, not as the primary teaching vehicle.
+  3. **Live debugging sessions**: The most valuable teaching happens when something breaks. Show real debugging: "Why is the PIT backtest returning higher returns than biased? Let's investigate." Walk through the discovery process, not just the answer.
+  4. **Hybrid format**: Pre-recorded lectures for architecture + concepts. Live sessions for debugging, Q&A, and code walkthroughs. This respects different time zones while keeping the high-value interactive component.
+  5. **The "Honest Disclosure" slide**: Every backtest presentation should include a slide listing all known biases, simplifications, and their estimated impact. This builds credibility and teaches students to think critically.
+- **Anticipated student questions**: "Can I just run the code and see results without understanding the architecture?" (Answer: You can, but you won't know when the results are wrong. The architecture knowledge is what lets you debug the inevitable failures in live trading.)
+
+## Production Deployment — Oracle Free VM + IB Gateway + IBC
+- **Concept**: Moving from backtest to live automated trading requires a 24/7 infrastructure that handles IBKR's daily forced restarts, network drops, and state recovery.
+- **Key message**: The hardest part of automated trading is not the strategy — it's keeping the system running reliably every single day.
+- **Visual**: Architecture diagram: Oracle Free VM → IB Gateway (headless) → IBC (auto-login) → Python bot → systemd supervisor → Slack alerts.
+- **Lecture storyline (The DevOps of Trading)**:
+  1. **The Problem**: IBKR forces a daily restart (~11:45 PM ET). API connection drops. Without automation, you must manually log in every day.
+  2. **IB Gateway vs TWS**: Gateway is headless (no GUI, ~400MB RAM). TWS needs a monitor/VNC (~1.5GB RAM). For a cloud VM, Gateway is the only practical choice.
+  3. **IBC (IB Controller)**: Open-source tool that auto-fills login credentials and handles 2FA after each restart. Combined with Gateway's auto-restart setting, this achieves ~4 minutes daily downtime (during market close — zero impact).
+  4. **Oracle Cloud Free Tier**: ARM VM with 4 OCPU + 24GB RAM, permanently free. More than enough for Gateway + Python bot. Cost: $0/month.
+  5. **State Recovery**: After reconnect, the bot must reconcile its internal state with actual IBKR positions. Never assume — always verify.
+  6. **Docker containerization**: Package the entire stack in Docker for instant migration if Oracle changes its free tier policy.
+- **Anticipated student questions**: "What if Oracle stops offering the free tier?" (Answer: They'll give 30-90 day notice. The Docker container can move to AWS t3.micro ($5/mo), a Raspberry Pi at home ($50 one-time), or any other cloud provider in minutes.)
