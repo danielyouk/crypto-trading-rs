@@ -1786,3 +1786,14 @@ For investors who don't want to manage FX positions:
   3. The Proof of Work: The recruiter doesn't care if the course was sold on Inflearn (a local platform). They care that the code is clean, the architecture is documented in English, and the logic is mathematically sound.
   4. The Dual Engine: You can use this exact codebase to trade your own money AND as a portfolio piece to secure high-paying remote consulting/contracting gigs.
 - **Anticipated student questions**: "Will international companies respect an open-source project over a real finance degree?" (Answer: In the remote tech/AI world, a working codebase with complex architecture beats a theoretical degree 9 times out of 10).
+
+## The Reality of 2FA and Headless Auto-Login (The Sunday Ritual)
+- **Concept**: Interactive Brokers (IBKR) mandates 2-Factor Authentication (2FA) for live trading accounts. You cannot bypass this completely. The goal of automation is not to eliminate 2FA, but to reduce it to a single manual "Sunday Ritual" while running on a headless (no GUI) cloud VM.
+- **Key message**: True 100% "set and forget" automation does not exist in regulated finance. You must authenticate once a week. The magic of IBC (IB Controller) is that it keeps that single authentication alive for 5 straight days of trading.
+- **Lecture storyline (Mastering the Headless Gateway)**:
+  1. TWS vs. Gateway: Explain that `StartGateway.bat` still uses the `TWS_MAJOR_VRSN` variable because the IB Gateway is literally just the TWS engine with the graphical interface stripped out. They share the same core files.
+  2. The Headless Problem: How do you log in manually on an Oracle VM that has no monitor or GUI? You don't use a pure terminal. You install a lightweight desktop environment (like XFCE) and access it via VNC or RDP. You open the Gateway GUI *once* a week.
+  3. The Sunday Ritual: On Sunday evening, you remote into the VM, launch the Gateway, type your password, and tap your phone (2FA). 
+  4. The Daily Reset Magic: IBKR forces a server reset every night (e.g., 11:45 PM). IBC intercepts this. Instead of letting the Gateway close and demand a new 2FA tap, IBC gracefully restarts the Gateway using a cached session token, bypassing 2FA for the rest of the week.
+  5. The `TWOFA_TIMEOUT_ACTION=exit` Safety Net: If you try to script the Sunday login but fall asleep and miss the phone tap, IBC waits. If the timeout hits, it kills the process (`exit`). Why? Because a hanging, half-logged-in Gateway blocks the port and breaks your Python trading bot. Killing it ensures a clean state for when you wake up and manually fix it.
+- **Anticipated student questions**: "Can I just log in on Saturday to get it out of the way?" (Answer: Yes, the 5-day token starts from your manual login. But Sunday evening right before futures open is the safest anchor point).
