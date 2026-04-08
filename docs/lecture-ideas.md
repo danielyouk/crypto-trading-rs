@@ -1807,3 +1807,13 @@ For investors who don't want to manage FX positions:
   3. The Solution (Xvfb + VNC): Explain the standard quant setup. You install `Xvfb` (X Virtual FrameBuffer) to trick Java into thinking there is a monitor. You run IB Gateway inside this invisible monitor. You use VNC or RDP to look at this invisible monitor once a week to click the 2FA button.
   4. Why use Gateway instead of TWS? If both need a GUI, why use Gateway? Because TWS uses 2GB+ of RAM to render charts and news feeds. Gateway uses ~300MB of RAM because it only renders a tiny connection status box. This allows you to run it on a cheap, low-tier Oracle VM.
 - **Anticipated student questions**: "Can I completely bypass the GUI using the new IBKR Web API?" (Answer: The Web API (CPAPI) is stateless and designed for simple web apps, not robust, continuous algorithmic trading. The desktop Gateway + `ib_insync` remains the institutional standard for stability).
+
+## The Containerized Trading Node (Dockerizing IB Gateway)
+- **Concept**: Setting up Xvfb, VNC, and IBC manually on a raw Linux VM is tedious, error-prone, and hard to replicate. The modern quant standard is to containerize the entire trading node using Docker.
+- **Key message**: You don't need to manually configure virtual displays or install Java on your host machine. You pull a pre-built Docker image that contains IB Gateway, IBC, Xvfb, and a VNC server all perfectly configured out of the box.
+- **Lecture storyline (The Docker Advantage)**:
+  1. The Old Way: Explain the pain of manually installing Xvfb, configuring VNC passwords, setting up IBC config files, and dealing with Java version conflicts on a raw Ubuntu VM.
+  2. The Modern Way (Docker): Introduce the concept of a containerized trading node. You run one command (`docker run...`), and within 30 seconds, you have a fully functional, isolated IB Gateway running on port 4001, with a VNC server exposed on port 5900.
+  3. The VNC Connection: Show how to connect to the Docker container's VNC port using a standard viewer (or a web-based noVNC client) to perform the Sunday 2FA ritual.
+  4. The Port Mapping: Explain how your Python bot (running on the host VM or in another container) simply talks to `localhost:4001` to send trades, completely unaware of the complex GUI/Xvfb setup happening inside the container.
+- **Anticipated student questions**: "Which Docker image should I use?" (Answer: Point them to established open-source projects like `extvos/ib-gateway` or `ghcr.io/gnzsnz/ib-gateway`, which are actively maintained by the quant community).
