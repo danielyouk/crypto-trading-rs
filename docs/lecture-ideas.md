@@ -1746,3 +1746,13 @@ For investors who don't want to manage FX positions:
   3. The Code Mapping (The Trees): Open `rolling_phase2.py` and say, "That specific box we just talked about in the diagram? That is exactly implemented in these 30 lines of code."
   4. The Live Workshop (The Forge): Reserve the weekend live sessions entirely for PR reviews, live debugging of edge cases, and architectural debates. Never teach syntax live.
 - **Anticipated student questions**: "I don't understand this specific Pandas function on line 412." (Answer: "The exact Pandas syntax isn't the focus. What matters is that this line drops the bottom 10% of volatile stocks to protect our Kalman Filter from structural breaks. You can ask ChatGPT to explain the Pandas syntax!").
+
+## The Leverage Paradox (FX Risk vs. Equity Risk)
+- **Concept**: A common misconception is that if you perfectly hedge FX risk (Net USD = $0), you can safely increase your leverage on the underlying equity position (e.g., 3x on SPY). This is a fatal flaw in risk assessment.
+- **Key message**: Hedging FX risk only removes *currency* volatility. It does absolutely nothing to protect you from *equity* volatility. A 3x leveraged SPY position will still wipe out 30% of your account if the S&P 500 drops 10%, regardless of whether your USD exposure is perfectly hedged.
+- **Lecture storyline (The Two Independent Risks)**:
+  1. The Setup: You have $10k KRW. You borrow $30k USD to buy $30k of SPY. You are 3x leveraged. Your Net USD exposure is $0 (Perfect FX Hedge).
+  2. The Illusion of Safety: Because you have no FX risk, you feel safe. The Dollar crashes 20%, but your account doesn't care. The hedge worked perfectly.
+  3. The Reality Check (Equity Risk): The S&P 500 drops 10%. Your $30k SPY position loses $3,000. 
+  4. The Margin Call: You started with $10k KRW. You just lost $3k. Your account is down 30% in a single move. If the S&P 500 drops 33%, your equity goes to zero and you are liquidated, *even though your FX was perfectly hedged*.
+- **Anticipated student questions**: "But Pairs Trading uses 3x leverage safely, and it's also FX hedged. What's the difference?" (Answer: Pairs Trading is safe because it hedges *both* FX risk AND Equity Market risk (Long/Short). SPY only hedges FX risk, leaving you fully exposed to a directional market crash).
