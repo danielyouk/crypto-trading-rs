@@ -34,13 +34,14 @@ The core idea: find pairs of stocks whose price ratio is *cointegrated* (statist
 linked), compute a Kalman-filtered z-score, trade when the spread deviates, and exit
 when it reverts.
 
-The system operates in three modes:
+The system operates in two active modes:
 
 | Mode | Description | Entry Point |
 |------|-------------|-------------|
-| **Full Pairs** | All-period pairs trading | `run_pairs_only.py` |
-| **Hybrid** | S&P 500 in bull, Pairs in bear | `run_wfa.py` |
-| **PIT Pairs** | Survivorship-bias-free pairs | `run_pairs_pit.py` |
+| **Hybrid** | S&P 500 in bull, Pairs in bear | `runners/run_wfa.py` |
+| **PIT Hybrid** | Survivorship-bias-free hybrid | `runners/run_wfa_pit.py` |
+
+> Archived: pure pairs-only runners/dashboards live in `reference/pairs_only/` for student Q&A reference.
 
 **Total library code**: ~4,500 lines Python (13 modules)
 **Total test code**: ~1,290 lines Python (4 test modules, 85 tests)
@@ -73,20 +74,30 @@ crypto-trading-rs/
 │   ├── test_rolling_phase2.py      242  #   WFA engine tests
 │   └── test_yfinance_tools.py      249  #   Data download tests
 │
-├── reference/python_pairstrading/       # ── Runners & Dashboards ──────────
-│   ├── run_wfa.py                       #   Hybrid WFA runner (S&P 500 + Pairs)
-│   ├── run_pairs_only.py                #   Full pairs-only WFA runner
-│   ├── run_pairs_pit.py                 #   PIT pairs WFA runner (bias-free)
-│   ├── wfa_dashboard.py                 #   Streamlit: hybrid WFA (port 8501)
-│   ├── pairs_dashboard.py               #   Streamlit: full pairs (port 8502)
-│   ├── pairs_pit_dashboard.py           #   Streamlit: PIT comparison (port 8503)
-│   ├── run_all.sh                       #   tmux launcher: hybrid
-│   ├── run_pairs_only.sh                #   tmux launcher: full pairs
-│   ├── run_pairs_pit.sh                 #   tmux launcher: PIT pairs
+├── runners/                                # ── Active Runners ────────────────
+│   ├── run_wfa.py                          #   Hybrid WFA runner (S&P 500 + Pairs)
+│   ├── run_wfa_pit.py                      #   PIT Hybrid WFA runner (bias-free)
+│   └── download_eodhd.py                   #   EODHD gap-fill for delisted tickers
+│
+├── dashboards/                             # ── Active Dashboards ─────────────
+│   └── wfa_dashboard.py                    #   Streamlit: hybrid WFA (port 8501)
+│
+├── scripts/                                # ── Shell Launchers ───────────────
+│   ├── run_all.sh                          #   tmux launcher: hybrid
+│   └── run_wfa_pit.sh                      #   tmux launcher: PIT hybrid
+│
+├── reference/pairs_only/                   # ── Archived (student Q&A) ────────
+│   ├── run_pairs_only.py                   #   Full pairs-only WFA runner
+│   ├── run_pairs_pit.py                    #   PIT pairs WFA runner
+│   ├── pairs_dashboard.py                  #   Streamlit: full pairs
+│   ├── pairs_pit_dashboard.py              #   Streamlit: PIT comparison
+│   ├── run_pairs_only.sh                   #   tmux launcher: full pairs
+│   └── run_pairs_pit.sh                    #   tmux launcher: PIT pairs
+│
+├── reference/python_pairstrading/          # ── Original Reference Code ───────
 │   └── stock-trading-eda-scheduled_eng.ipynb  # Main notebook (88 cells)
 │
-├── scripts/                             # ── Operational Scripts ───────────
-│   └── download_eodhd_missing.py        #   EODHD gap-fill for delisted tickers
+├── docs/                                # ── Documentation & Progress ──────
 │
 ├── data/                                # ── Cached Data (gitignored) ──────
 │   ├── sp500_historical_components.csv  #   hanshof daily S&P 500 membership
@@ -756,25 +767,25 @@ def _candidate_symbols(hanshof_ticker: str) -> list[str]:
              └──────────────────────────────────────────────┘
 ```
 
-### Three Independent Pipelines
+### Active Pipelines
 
 | Pipeline | Runner | Dashboard | Port | tmux Session | Progress File |
 |----------|--------|-----------|------|-------------|---------------|
-| Hybrid | `run_wfa.py` | `wfa_dashboard.py` | 8501 | `wfa` | `wfa-progress.json` |
-| Full Pairs | `run_pairs_only.py` | `pairs_dashboard.py` | 8502 | `pairs` | `pairs-progress.json` |
-| PIT Pairs | `run_pairs_pit.py` | `pairs_pit_dashboard.py` | 8503 | `pairs-pit` | `pairs-pit-progress.json` |
+| Hybrid | `runners/run_wfa.py` | `dashboards/wfa_dashboard.py` | 8501 | `wfa` | `wfa-progress.json` |
+| PIT Hybrid | `runners/run_wfa_pit.py` | `dashboards/wfa_dashboard.py` | 8504 | `wfa-pit` | `wfa-pit-progress.json` |
+
+> Archived pipelines (pure pairs-only) are in `reference/pairs_only/`.
 
 ### Launching
 
 ```bash
-# Start any pipeline (tmux handles background + persistence):
-bash reference/python_pairstrading/run_all.sh         # hybrid
-bash reference/python_pairstrading/run_pairs_only.sh  # full pairs
-bash reference/python_pairstrading/run_pairs_pit.sh   # PIT pairs
+# Start active pipelines (tmux handles background + persistence):
+bash scripts/run_all.sh         # hybrid
+bash scripts/run_wfa_pit.sh     # PIT hybrid
 
 # Monitor:
-tmux attach -t wfa         # or pairs, pairs-pit
-open http://localhost:8501  # or 8502, 8503
+tmux attach -t wfa         # or wfa-pit
+open http://localhost:8501  # or 8504
 
 # Stop:
 tmux kill-session -t wfa
@@ -811,7 +822,7 @@ result = run_phase2_rolling(inp, on_step=on_step, step_interval=1)
 
 ## 12. Configuration Reference
 
-### WFA Parameters (current active — `run_pairs_pit.py`)
+### WFA Parameters (current active — `runners/run_wfa_pit.py`)
 
 | Parameter | Value | Purpose |
 |-----------|-------|---------|
