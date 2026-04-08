@@ -1705,3 +1705,15 @@ For investors who don't want to manage FX positions:
   5. **State Recovery**: After reconnect, the bot must reconcile its internal state with actual IBKR positions. Never assume — always verify.
   6. **Docker containerization**: Package the entire stack in Docker for instant migration if Oracle changes its free tier policy.
 - **Anticipated student questions**: "What if Oracle stops offering the free tier?" (Answer: They'll give 30-90 day notice. The Docker container can move to AWS t3.micro ($5/mo), a Raspberry Pi at home ($50 one-time), or any other cloud provider in minutes.)
+
+## Production Engineering: Surviving Network Drops & IBKR Lockouts
+- **Concept**: In live trading, internet disconnections happen. If your auto-login script (like IBC) blindly spams login attempts during a network outage, IBKR's security system will lock your account, leaving your bot blind when the internet recovers.
+- **Key message**: Never trust a "dumb" auto-restarter. You must build a "Network-Aware Watchdog" with exponential backoff to protect your account from being locked out by the broker's anti-DDoS security.
+- **Lecture storyline (The Edge Case)**:
+  1. The Stress Test: A student unplugs their router for 3 minutes. The bot tries to reconnect 20 times. The internet comes back, but IBKR says "Too many attempts, account locked." The bot is now dead during live market hours.
+  2. Why it happens: The auto-login script (IBC) is a simple process manager. It sees the Gateway is down and blindly fires the login script. IBKR's servers see rapid, incomplete handshakes and block the IP.
+  3. The Engineering Fix: 
+     - **Ping Check**: Before launching the Gateway, the script must `ping 8.8.8.8`. If it fails, sleep and wait. Do NOT attempt login.
+     - **Exponential Backoff**: If login fails, wait 1 min, then 2 mins, then 4 mins.
+     - **Kill Switch & Alert**: After 5 failed attempts, kill the process completely and send a Telegram/Slack alert to the human.
+- **Anticipated student questions**: "Isn't a cloud VM immune to internet drops?" (Answer: Cloud VMs are stable, but IBKR's own servers restart daily, and transient network routing issues happen. You must code for failure).
