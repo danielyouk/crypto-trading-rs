@@ -1766,3 +1766,13 @@ For investors who don't want to manage FX positions:
   3. The "Fully Hedged Pairs Trade" (Long/Short with USD Margin): You eliminated FX Risk (Net USD = $0) AND you eliminated Equity Risk (Long Delta + Short Delta = 0). If the market crashes, you don't lose money.
   4. The Leverage Rule: Because FX-Hedged SPY still carries full Equity Risk, you cannot use leverage (1x max). Because Pairs Trading carries near-zero Equity Risk, you can safely use leverage (3x).
 - **Anticipated student questions**: "So the Hybrid Strategy is basically switching from a 1-Dimensional Hedge (Bull Market) to a 2-Dimensional Hedge (Bear Market)?" (Answer: Exactly! That is the most elegant way to summarize the entire architecture).
+
+## The Whipsaw Trap (Stop-Losses on the S&P 500)
+- **Concept**: A common retail idea is to use leverage on the S&P 500 but set a strict "circuit breaker" (stop-loss) to limit the downside. In reality, this leads to "death by a thousand cuts" due to market noise (whipsaws).
+- **Key message**: A stop-loss does not make leverage safe; it just guarantees you will lock in losses during normal market corrections before the market rebounds.
+- **Lecture storyline (The Math of Whipsaws)**:
+  1. The Idea: "I will use 3x leverage on MES, but set a -10% account stop-loss. Limited downside, massive upside!"
+  2. The Math: With 3x leverage, a -10% account loss happens when the S&P 500 drops just **-3.3%**. 
+  3. The Reality (Whipsaw): The S&P 500 drops 3.3% several times a year. Your system triggers the stop-loss, sells at the bottom, and then the market immediately rallies to new all-time highs. You missed the rally and locked in a 10% loss. Do this 3 times, and your account is down 30% in a flat market.
+  4. The Solution: The current `-10% Macro-Regime Switch` at 1x leverage IS the perfect circuit breaker. It gives the market a wide enough buffer (10%) to breathe and ignore normal noise, but cuts the cord before a catastrophic 2008-style 50% crash.
+- **Anticipated student questions**: "If I want capped downside and leveraged upside, what should I use?" (Answer: Call Options. But then you pay a massive premium for time decay (Theta) and volatility (Vega). There is no free lunch).
