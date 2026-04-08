@@ -1736,3 +1736,13 @@ For investors who don't want to manage FX positions:
   3. The Slippage Buffer: Explain that the strategy's financial model already accounts for friction. If the bot wakes up 10 minutes late and executes the regime switch at a slightly worse price, that cost is already absorbed by the conservative slippage assumptions built into the backtest.
   4. The Engineering Trade-off: Building a system that can survive a 10-minute outage with zero human intervention is 10x harder and 10x more likely to break (e.g., dual-login conflicts) than simply accepting the risk. 
 - **Anticipated student questions**: "But what if the internet is down for the entire day?" (Answer: That is why the Slack alert exists. A 10-minute drop is acceptable risk. A 12-hour drop requires you to wake up, see the alert, and manually close positions on your phone app).
+
+## The "Architecture-First" Pedagogy (Teaching Systems, Not Syntax)
+- **Concept**: Teaching a production-grade quant system line-by-line like a standard Python tutorial is impossible and boring. The course must be taught top-down, starting with the architecture diagram, tracing the data flow, and mapping it to the codebase.
+- **Key message**: Students are paying 300k KRW for the blueprint of a hedge fund, not a Python 101 syntax lesson. Treat them like junior quants being onboarded by a Senior Architect.
+- **Lecture storyline (The 4-Step Teaching Method)**:
+  1. The Blueprint (The Forest): Start every module with `architecture.md` or a visual diagram. Explain the "Why" (e.g., "Why do we need a cointegration cache before the WFA grid search?").
+  2. The Data Flow (The River): Trace the life of a data point. "Prices come in here, volatile tickers are stripped out here, and the surviving pairs flow into the Kalman Filter here."
+  3. The Code Mapping (The Trees): Open `rolling_phase2.py` and say, "That specific box we just talked about in the diagram? That is exactly implemented in these 30 lines of code."
+  4. The Live Workshop (The Forge): Reserve the weekend live sessions entirely for PR reviews, live debugging of edge cases, and architectural debates. Never teach syntax live.
+- **Anticipated student questions**: "I don't understand this specific Pandas function on line 412." (Answer: "The exact Pandas syntax isn't the focus. What matters is that this line drops the bottom 10% of volatile stocks to protect our Kalman Filter from structural breaks. You can ask ChatGPT to explain the Pandas syntax!").
