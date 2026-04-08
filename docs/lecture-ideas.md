@@ -1726,3 +1726,13 @@ For investors who don't want to manage FX positions:
   2. The Multi-VM Failover (Overkill): Explain that having a secondary VM spin up automatically if the primary VM loses internet is standard for High-Frequency Trading (HFT), but dangerous for our strategy. If both VMs accidentally connect to IBKR at the same time, IBKR will terminate the first session, causing chaos.
   3. The "Dead Man's Switch" (Slack Alerts): Instead of complex failovers, build a simple heartbeat monitor. A separate, tiny script (even running on a free AWS Lambda or your home PC) pings your main Oracle VM every 3 minutes. If it doesn't get a response, it sends a Slack/Telegram alert: *"URGENT: Trading VM is offline."*
 - **Anticipated student questions**: "Should I use AWS instead of Oracle for better reliability?" (Answer: Oracle's Always Free tier is perfectly fine for this strategy. The 0.01% difference in uptime is not worth paying $50/month for AWS EC2 when you are trading daily/monthly timeframes).
+
+## Risk Acceptance and the "Sleep Test" (Handling 10-Minute Outages)
+- **Concept**: In automated trading, you cannot engineer away 100% of the risk. If your VM loses internet for 10 minutes while you are asleep, you must accept that risk rather than building an overly complex, fragile failover system.
+- **Key message**: A robust trading architecture accepts transient infrastructure failures (like a 10-minute network drop) by relying on the strategy's inherent timeframe (Daily/Swing) and built-in slippage buffers, rather than over-engineering the server architecture.
+- **Lecture storyline (The Sleep Test)**:
+  1. The Scenario: It's 3 AM. Your Oracle VM loses internet for 10 minutes. UptimeRobot sends a Slack alert, but you are asleep. What happens?
+  2. The Reality Check: Is the S&P 500 going to crash 10% in those exact 10 minutes? Statistically, no. Even during the 2020 COVID crash, circuit breakers halt the market long before a 10% drop happens in 10 minutes.
+  3. The Slippage Buffer: Explain that the strategy's financial model already accounts for friction. If the bot wakes up 10 minutes late and executes the regime switch at a slightly worse price, that cost is already absorbed by the conservative slippage assumptions built into the backtest.
+  4. The Engineering Trade-off: Building a system that can survive a 10-minute outage with zero human intervention is 10x harder and 10x more likely to break (e.g., dual-login conflicts) than simply accepting the risk. 
+- **Anticipated student questions**: "But what if the internet is down for the entire day?" (Answer: That is why the Slack alert exists. A 10-minute drop is acceptable risk. A 12-hour drop requires you to wake up, see the alert, and manually close positions on your phone app).
