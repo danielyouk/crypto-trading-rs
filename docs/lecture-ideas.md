@@ -1756,3 +1756,13 @@ For investors who don't want to manage FX positions:
   3. The Reality Check (Equity Risk): The S&P 500 drops 10%. Your $30k SPY position loses $3,000. 
   4. The Margin Call: You started with $10k KRW. You just lost $3k. Your account is down 30% in a single move. If the S&P 500 drops 33%, your equity goes to zero and you are liquidated, *even though your FX was perfectly hedged*.
 - **Anticipated student questions**: "But Pairs Trading uses 3x leverage safely, and it's also FX hedged. What's the difference?" (Answer: Pairs Trading is safe because it hedges *both* FX risk AND Equity Market risk (Long/Short). SPY only hedges FX risk, leaving you fully exposed to a directional market crash).
+
+## The Two Dimensions of Hedging (FX vs. Equity)
+- **Concept**: A common pitfall in portfolio construction is confusing FX hedging with Equity hedging. A strategy can be perfectly hedged against currency risk while remaining 100% exposed to market crash risk.
+- **Key message**: To survive a bear market, you must understand exactly *what* you are hedging. Margin-funded SPY only hedges the Dollar. Pairs Trading hedges both the Dollar and the S&P 500.
+- **Lecture storyline (The 2x2 Risk Matrix)**:
+  1. The "Unhedged SPY" (Buy SPY with KRW cash): You are exposed to BOTH Equity Risk (S&P 500 crashes) and FX Risk (Dollar crashes).
+  2. The "FX-Hedged SPY" (Borrow USD to buy SPY): You eliminated FX Risk (Net USD = $0). But you are still 100% exposed to Equity Risk. If the market crashes, you lose money.
+  3. The "Fully Hedged Pairs Trade" (Long/Short with USD Margin): You eliminated FX Risk (Net USD = $0) AND you eliminated Equity Risk (Long Delta + Short Delta = 0). If the market crashes, you don't lose money.
+  4. The Leverage Rule: Because FX-Hedged SPY still carries full Equity Risk, you cannot use leverage (1x max). Because Pairs Trading carries near-zero Equity Risk, you can safely use leverage (3x).
+- **Anticipated student questions**: "So the Hybrid Strategy is basically switching from a 1-Dimensional Hedge (Bull Market) to a 2-Dimensional Hedge (Bear Market)?" (Answer: Exactly! That is the most elegant way to summarize the entire architecture).
