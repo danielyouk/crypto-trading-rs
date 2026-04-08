@@ -1776,3 +1776,13 @@ For investors who don't want to manage FX positions:
   3. The Reality (Whipsaw): The S&P 500 drops 3.3% several times a year. Your system triggers the stop-loss, sells at the bottom, and then the market immediately rallies to new all-time highs. You missed the rally and locked in a 10% loss. Do this 3 times, and your account is down 30% in a flat market.
   4. The Solution: The current `-10% Macro-Regime Switch` at 1x leverage IS the perfect circuit breaker. It gives the market a wide enough buffer (10%) to breathe and ignore normal noise, but cuts the cord before a catastrophic 2008-style 50% crash.
 - **Anticipated student questions**: "If I want capped downside and leveraged upside, what should I use?" (Answer: Call Options. But then you pay a massive premium for time decay (Theta) and volatility (Vega). There is no free lunch).
+
+## Career Strategy: Leveraging the Portfolio for Global Remote Jobs
+- **Concept**: Students often worry that if they don't get a traditional job at a Wall Street hedge fund, their quant skills are wasted. In the AI era, there is a massive market for remote contractors (Domain Experts) to train LLMs in finance and coding.
+- **Key message**: You don't need to be a "Pro Quant" at Citadel to get high-paying remote work. You just need a world-class, English-documented GitHub repository. The repository is your global resume.
+- **Lecture storyline (The CV Blueprint)**:
+  1. The AI Boom: Companies like Turing, Scale AI, and Outlier are hiring "Subject Matter Experts" (SMEs) to do RLHF (Reinforcement Learning from Human Feedback) for financial and coding AI models. They pay $40-$100/hr for remote, flexible work.
+  2. The Resume Hack: Do not write "I took a Korean online course." Write: "Architect and Maintainer of a production-grade Python Quant Engine featuring Walk-Forward Analysis and Macro-Regime Switching." Link directly to the bilingual GitHub repo.
+  3. The Proof of Work: The recruiter doesn't care if the course was sold on Inflearn (a local platform). They care that the code is clean, the architecture is documented in English, and the logic is mathematically sound.
+  4. The Dual Engine: You can use this exact codebase to trade your own money AND as a portfolio piece to secure high-paying remote consulting/contracting gigs.
+- **Anticipated student questions**: "Will international companies respect an open-source project over a real finance degree?" (Answer: In the remote tech/AI world, a working codebase with complex architecture beats a theoretical degree 9 times out of 10).
