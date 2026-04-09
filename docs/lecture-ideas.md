@@ -1841,3 +1841,13 @@ For investors who don't want to manage FX positions:
   4. **Logic Sabotage (The Fat Finger)**: A student accidentally changes `order_size = cash * 0.1` to `order_size = cash * 1.0`. If merged, it blows up accounts.
      *Fix*: Branch Protection Rules. `main` must be locked. Require passing unit tests and strict manual review.
 - **Anticipated student questions**: "Why can't I just push my branch directly to your repo?" (Answer: "Because in the financial industry, we use Zero Trust. You must fork the repo. This protects my code from you, and your API keys from me.").
+
+## The "Disclaimer-First" Open Source Model (Protecting the Architect)
+- **Concept**: Hosting a collaborative trading repository is an incredible marketing tool, but the instructor must be legally and practically protected from student losses. You cannot guarantee 100% bug-free code, and you should not take responsibility for their live money.
+- **Key message**: The repository is strictly an educational tool designed for Paper Trading. If a student deploys it with real money, they assume 100% of the risk. The instructor's job is to protect the *repository's security* (no leaked secrets, no malicious code), not to guarantee trading profits.
+- **Lecture storyline (How to run the PR process safely)**:
+  1. The Ironclad Disclaimer: Every repository, README, and lecture must start with: *"This codebase is for educational Paper Trading only. Do not use real money. I am not a financial advisor, and I am not responsible for bugs that cause financial loss."*
+  2. The Scope of Code Review: Clarify to the students what a PR review actually is. You are reviewing the *architecture* and checking for *malicious code* (like hidden webhooks). You are NOT guaranteeing that their new trading logic is profitable or bug-free.
+  3. The "Sandbox" Approach: Instead of merging experimental student features directly into the `main` branch (which everyone uses), create a `community-experiments` branch or a `contrib/` folder. This keeps the core engine stable while still allowing students to showcase their work and get reviewed.
+  4. The Automation of Security: Rely on automated tools (GitHub Secret Scanning, CodeQL, Bandit for Python security) to catch leaked API keys and basic vulnerabilities before you even look at the PR.
+- **Anticipated student questions**: "If you merge my PR, does that mean you endorse my trading strategy?" (Answer: "No. Merging means your code is structurally sound and safe to run in a Paper Trading environment. The profitability is entirely on you to test.").
