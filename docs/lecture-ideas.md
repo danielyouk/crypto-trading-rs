@@ -1827,3 +1827,17 @@ For investors who don't want to manage FX positions:
   3. The Execution: You don't build the box; you just download it (`docker pull`). You tell the server to run the box (`docker run`). The server doesn't care what's inside; it just provides power and internet.
   4. The Result: Show a live demo of destroying an entire trading node and bringing it back online, fully configured, in under 30 seconds.
 - **Anticipated student questions**: "Do I need to learn Docker commands to be a quant?" (Answer: No. You just need to know how to run `docker-compose up -d`. We provide the blueprint; you just turn the key).
+
+## Cybersecurity in Collaborative Trading Repos (Protecting the Alpha)
+- **Concept**: Allowing students to submit Pull Requests to a trading bot repository introduces massive cybersecurity risks. A single malicious or careless PR can leak API keys, inject backdoors, or sabotage the trading logic for everyone using the code.
+- **Key message**: Security is not an afterthought; it is the foundation of a shared trading engine. You must implement a "Zero Trust" architecture for student contributions.
+- **Lecture storyline (The 4 Nightmares and How to Prevent Them)**:
+  1. **The Secret Leak (Carelessness)**: A student accidentally commits their `.env` file containing their live IBKR credentials. 
+     *Fix*: Enforce a bulletproof `.gitignore`. Enable GitHub Secret Scanning to automatically block commits containing known API key formats.
+  2. **The Supply Chain Attack (Malice)**: A student submits a PR that looks like a harmless indicator, but includes a hidden `requests.post()` that sends your server's environment variables to their server. 
+     *Fix*: The "Forking Model". Students NEVER get write access to your repo. They must Fork it, and you must manually review every single line of code before merging.
+  3. **CI/CD Hijacking (The Miner)**: A student modifies the `.github/workflows` file in their PR to run a crypto-miner on your GitHub Actions quota, or to print out your repository secrets during the automated test run.
+     *Fix*: Configure GitHub Actions to "Require approval for all outside collaborators" before running workflows on PRs.
+  4. **Logic Sabotage (The Fat Finger)**: A student accidentally changes `order_size = cash * 0.1` to `order_size = cash * 1.0`. If merged, it blows up accounts.
+     *Fix*: Branch Protection Rules. `main` must be locked. Require passing unit tests and strict manual review.
+- **Anticipated student questions**: "Why can't I just push my branch directly to your repo?" (Answer: "Because in the financial industry, we use Zero Trust. You must fork the repo. This protects my code from you, and your API keys from me.").
