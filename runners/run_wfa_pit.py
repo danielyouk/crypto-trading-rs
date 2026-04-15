@@ -139,7 +139,7 @@ def main():
         min_holding_days=3,
         circuit_breaker_pct=0.12,
         min_entry_score=0.3,
-        max_sector_slots=3,
+        max_ticker_exposure=1,
         min_spread_range_pct=0.03,
         commission_per_leg_bps=0.5,
         slippage_per_leg_bps=0.5,

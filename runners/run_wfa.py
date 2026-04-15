@@ -40,7 +40,6 @@ from pairs_eda import (
     default_gemini_backend,
     download_with_retry,
     fetch_sp500_constituents_table,
-    fetch_sp500_sector_map,
 )
 from pairs_eda.rolling_phase2 import (
     RollingPhase2Config,
@@ -128,8 +127,7 @@ def main():
         exa_mode=ExaRunMode.LIVE, verbose=True,
     )
     sp500_list = sp500["Symbol"].tolist()
-    sp500_sector_map = fetch_sp500_sector_map(verbose=True)
-    log.info(f"  {len(sp500_list)} symbols, {len(sp500_sector_map)} with sector data")
+    log.info(f"  {len(sp500_list)} symbols")
 
     log.info("[2/4] Downloading price data...")
     DOWNLOAD_START = "1990-01-01"
@@ -167,7 +165,7 @@ def main():
         min_holding_days=3,
         circuit_breaker_pct=0.12,
         min_entry_score=0.3,
-        max_sector_slots=3,
+        max_ticker_exposure=1,
         min_spread_range_pct=0.03,
         commission_per_leg_bps=0.5,
         slippage_per_leg_bps=0.5,
@@ -178,7 +176,6 @@ def main():
         prices=sp500_daily_prices,
         initial_capital=initial_capital,
         config=wfa_config,
-        sector_map=sp500_sector_map,
     )
 
     grid_size = len(wfa_config.windows) * len(wfa_config.zscore_thresholds)

@@ -145,9 +145,17 @@ class RollingPhase2Config(BaseModel):
     )
     max_sector_slots: int = Field(
         default=0, ge=0,
-        description="Max open positions sharing the same GICS sector. "
+        description="DEPRECATED — use max_ticker_exposure instead. "
+        "Max open positions sharing the same GICS sector. "
         "Requires sector_map in RollingPhase2Input. "
         "Set to 0 to disable (no sector constraint).",
+    )
+    max_ticker_exposure: int = Field(
+        default=1, ge=0,
+        description="Max number of open pairs that can share the same ticker. "
+        "E.g., 1 = AAPL can only appear in one open pair at a time. "
+        "2 = allows AAPL|MSFT and AAPL|GOOG simultaneously. "
+        "Set to 0 to disable (no ticker overlap constraint).",
     )
     min_spread_range_pct: float = Field(
         default=0.0, ge=0.0,
@@ -1144,16 +1152,14 @@ def run_phase2_rolling(
                     break
                 pair = _key_to_pair(pair_key)
 
-                # --- Sector diversification constraint ---
-                if cfg.max_sector_slots > 0 and sector_map:
-                    pair_sectors = {sector_map.get(pair[0], ""), sector_map.get(pair[1], "")} - {""}
-                    sector_counts: dict[str, int] = {}
+                # --- Ticker overlap constraint ---
+                if cfg.max_ticker_exposure > 0:
+                    ticker_counts: dict[str, int] = {}
                     for pos in open_positions.values():
                         for t in pos.pair:
-                            s = sector_map.get(t, "")
-                            if s:
-                                sector_counts[s] = sector_counts.get(s, 0) + 1
-                    if any(sector_counts.get(s, 0) >= cfg.max_sector_slots * 2 for s in pair_sectors):
+                            ticker_counts[t] = ticker_counts.get(t, 0) + 1
+                    if any(ticker_counts.get(t, 0) >= cfg.max_ticker_exposure
+                           for t in pair):
                         continue
 
                 window = int(candidate["window"])

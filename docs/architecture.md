@@ -323,7 +323,7 @@ For each trading day:
     │     │
     │     ├── max_new_entries_per_day cap (3)
     │     ├── min_entry_score gate (0.3)
-    │     ├── sector diversification (max_sector_slots=3)
+    │     ├── ticker overlap constraint (max_ticker_exposure=1)
     │     ├── min_spread_range_pct gate (reject illiquid pairs)
     │     ├── max_zscore gate (>5.0 = structural break, reject)
     │     │
@@ -850,7 +850,7 @@ result = run_phase2_rolling(inp, on_step=on_step, step_interval=1)
 | `min_holding_days` | 3 | Prevents ultra-fast churn |
 | `circuit_breaker_pct` | 0.12 | Portfolio-level tail risk defense |
 | `min_entry_score` | 0.3 | Quality gate for new entries |
-| `max_sector_slots` | 3 | Sector concentration limit |
+| `max_ticker_exposure` | 1 | Max pairs sharing the same ticker |
 | `min_spread_range_pct` | 0.03 | Reject illiquid pairs |
 | `commission_per_leg_bps` | 0.5 | Commission cost per leg |
 | `slippage_per_leg_bps` | 0.5 | Slippage assumption per leg |
