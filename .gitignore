@@ -15,3 +15,13 @@ dist/
 # Cursor IDE (keep root .cursor/rules/ but ignore nested ones)
 reference/.cursor/
 .pytest_cache/
+
+# Generated data & logs
+data/*.parquet
+data/*.txt
+data/*.json
+docs/*-progress.json
+docs/*-result.json
+docs/*-run.log
+docs/*-stdout.log
+reference/python_pairstrading/docs/
