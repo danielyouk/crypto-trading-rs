@@ -1,0 +1,93 @@
+import json
+import sys
+
+nb_path = "reference/python_pairstrading/stock-trading-eda-scheduled_eng.ipynb"
+
+with open(nb_path, "r") as f:
+    nb = json.load(f)
+
+new_cell = {
+  "cell_type": "code",
+  "execution_count": None,
+  "metadata": {},
+  "outputs": [],
+  "source": [
+    "import yfinance as yf\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "# 1. Download S&P 500 (SPY) data for the same period\n",
+    "start_date = wfa_result.daily_equity.index[0]\n",
+    "end_date = wfa_result.daily_equity.index[-1]\n",
+    "spy = yf.download(\"SPY\", start=start_date, end=end_date, progress=False)[\"Adj Close\"]\n",
+    "spy_returns = spy.pct_change().fillna(0.0)\n",
+    "spy_equity = (1 + spy_returns).cumprod() * initial_capital\n",
+    "\n",
+    "# 2. Calculate S&P 500 Drawdown\n",
+    "spy_peak = spy_equity.cummax()\n",
+    "spy_dd = (spy_equity - spy_peak) / spy_peak\n",
+    "\n",
+    "# 3. Macro-Regime Switching Logic\n",
+    "# State: 1 = SPY, 0 = Pairs Trading\n",
+    "state = 1\n",
+    "states = []\n",
+    "for dd in spy_dd:\n",
+    "    if state == 1 and dd <= wfa_config.macro_regime_entry_dd:\n",
+    "        state = 0  # Switch to Pairs Trading\n",
+    "    elif state == 0 and dd >= wfa_config.macro_regime_exit_dd:\n",
+    "        state = 1  # Switch back to SPY\n",
+    "    states.append(state)\n",
+    "\n",
+    "state_series = pd.Series(states, index=spy_dd.index)\n",
+    "\n",
+    "# 4. Calculate Hybrid Returns\n",
+    "pairs_returns = wfa_result.daily_return\n",
+    "hybrid_returns = pd.Series(0.0, index=spy_returns.index)\n",
+    "\n",
+    "for date in hybrid_returns.index:\n",
+    "    if state_series[date] == 1:\n",
+    "        hybrid_returns[date] = spy_returns[date]\n",
+    "    else:\n",
+    "        # If pairs return is not available for a specific date, assume 0\n",
+    "        hybrid_returns[date] = pairs_returns.get(date, 0.0)\n",
+    "\n",
+    "hybrid_equity = (1 + hybrid_returns).cumprod() * initial_capital\n",
+    "\n",
+    "# 5. Plot the results\n",
+    "plt.figure(figsize=(14, 7))\n",
+    "plt.plot(spy_equity, label=\"SPY Only (Buy & Hold)\", color=\"gray\", alpha=0.6)\n",
+    "plt.plot(wfa_result.daily_equity, label=\"Pairs Trading Only\", color=\"blue\", alpha=0.6)\n",
+    "plt.plot(hybrid_equity, label=\"Hybrid (Macro-Regime Switching)\", color=\"green\", linewidth=2)\n",
+    "\n",
+    "# Highlight periods where Pairs Trading is active\n",
+    "plt.fill_between(state_series.index, 0, hybrid_equity.max(), \n",
+    "                 where=(state_series == 0), color='red', alpha=0.1, label=\"Pairs Trading Active (Bear Market)\")\n",
+    "\n",
+    "plt.title(\"Macro-Regime Switching: SPY vs Pairs Trading\")\n",
+    "plt.ylabel(\"Portfolio Equity ($)\")\n",
+    "plt.yscale(\"log\")\n",
+    "plt.legend()\n",
+    "plt.grid(True, alpha=0.3)\n",
+    "plt.show()\n",
+    "\n",
+    "# Print Summary\n",
+    "def print_summary(name, eq):\n",
+    "    ret = eq.iloc[-1] / eq.iloc[0] - 1\n",
+    "    years = (eq.index[-1] - eq.index[0]).days / 365.25\n",
+    "    ann = (1 + ret) ** (1 / years) - 1\n",
+    "    peak = eq.cummax()\n",
+    "    dd = (eq - peak) / peak\n",
+    "    max_dd = dd.min()\n",
+    "    print(f\"{name:25}: Return: {ret*100:7.1f}% | Ann: {ann*100:5.1f}% | Max DD: {max_dd*100:6.1f}%\")\n",
+    "\n",
+    "print(\"\\n--- Performance Summary ---\")\n",
+    "print_summary(\"SPY Only\", spy_equity)\n",
+    "print_summary(\"Pairs Trading Only\", wfa_result.daily_equity)\n",
+    "print_summary(\"Hybrid Strategy\", hybrid_equity)\n"
+  ]
+}
+
+nb["cells"].append(new_cell)
+
+with open(nb_path, "w") as f:
+    json.dump(nb, f, indent=2)
+
