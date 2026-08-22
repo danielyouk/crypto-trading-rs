@@ -16,6 +16,9 @@ dist/
 reference/.cursor/
 .pytest_cache/
 
+# Generated lecture-note HTML (rebuild with runners/build_lecture_notes.py)
+lecture-notes/html/
+
 # Generated data & logs
 data/*.parquet
 data/*.txt

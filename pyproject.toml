@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crypto-trading-rs"
+version = "0.1.0"
+description = "Hybrid Rust/Python crypto trading automation and pairs-trading EDA"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "danielyouk", email = "daniel@datatrain.education"},
+]
+keywords = ["crypto", "trading", "pairs-trading", "quant", "rust", "python"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+dependencies = [
+    # --- Core data & computation ---
+    "pandas==3.0.1",
+    "numpy==2.4.3",
+    "statsmodels==0.14.6",
+    "pydantic==2.11.0",
+    "scikit-learn==1.8.0",
+    "joblib==1.5.3",
+    "tqdm==4.67.3",
+
+    # --- HTTP / scraping ---
+    "requests==2.32.5",
+    "lxml==6.0.2",
+    "beautifulsoup4==4.14.3",
+
+    # --- Market data ---
+    "yfinance==1.2.0",
+    "websockets==16.0",
+
+    # --- Visualization ---
+    "matplotlib==3.10.8",
+    "plotly==6.6.0",
+    "mplfinance==0.12.10b0",
+    "pillow==12.3.0",
+    "imageio==2.37.4",
+    "imageio-ffmpeg==0.6.0",
+    "koreanize-matplotlib==0.1.1",
+
+    # --- Dashboard ---
+    "streamlit==1.56.0",
+
+    # --- Jupyter / notebooks ---
+    "jupyter==1.1.1",
+    "jupyterlab==4.5.6",
+    "ipython==9.11.0",
+    "ipywidgets==8.1.8",
+    "itables==2.7.1",
+    "anywidget==0.9.21",
+
+    # --- Excel I/O ---
+    "openpyxl==3.1.5",
+    "python-pptx==1.0.2",
+
+    # --- LLM / env fallback ---
+    "google-genai==1.68.0",
+    "python-dotenv==1.2.2",
+
+    # --- Lecture notes (MD -> HTML build) ---
+    "Markdown==3.10.3",
+    "Jinja2==3.1.6",
+
+    # --- Testing ---
+    "pytest==8.4.1",
+]
+
+[project.optional-dependencies]
+# Keep the lightweight install path if you only need the S&P 500 helper package.
+gemini = ["google-genai==1.68.0", "python-dotenv==1.2.2"]
+
+[project.urls]
+Homepage = "https://github.com/danielyouk/crypto-trading-rs"
+Repository = "https://github.com/danielyouk/crypto-trading-rs"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pairs_eda*"]
+exclude = ["tests*", "reference*", "notebooks*", "dashboards*", "runners*"]
+
+[tool.setuptools.package-data]
+pairs_eda = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

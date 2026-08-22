@@ -1,0 +1,169 @@
+"""강의 노트 빌더: lecture-notes/notes/**/*.md → lecture-notes/html/.
+
+수강생용 노트(MD)를 좌측 반화면 폭에 최적화된 HTML로 변환한다.
+강사 스크립트(lecture-notes/scripts/)는 변환 대상이 아니다.
+
+실행:
+    source .venv/bin/activate && python runners/build_lecture_notes.py
+"""
+
+from __future__ import annotations
+
+import re
+import shutil
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import markdown
+from jinja2 import Environment, FileSystemLoader
+
+ROOT = Path(__file__).resolve().parent.parent
+NOTES_DIR = ROOT / "lecture-notes" / "notes"
+TEMPLATE_DIR = ROOT / "lecture-notes" / "template"
+OUTPUT_DIR = ROOT / "lecture-notes" / "html"
+
+MD_EXTENSIONS = ["extra", "sane_lists"]
+
+INT_KEYS = {"part", "chapter", "clip", "duration"}
+
+
+@dataclass
+class Note:
+    source: Path
+    part: int
+    part_title: str
+    chapter: int
+    chapter_title: str
+    clip: int
+    title: str
+    duration: int
+    practice: str = ""
+    body: str = ""
+    href: str = field(default="", compare=False)
+
+    @property
+    def note_id(self) -> str:
+        return f"p{self.part}-ch{self.chapter:02d}-c{self.clip:02d}"
+
+    @property
+    def sort_key(self) -> tuple[int, int, int]:
+        return (self.part, self.chapter, self.clip)
+
+
+def parse_note(path: Path) -> Note:
+    text = path.read_text(encoding="utf-8")
+    match = re.match(r"^---\s*\n(.*?)\n---\s*\n", text, re.DOTALL)
+    if not match:
+        raise ValueError(f"front matter가 없습니다: {path}")
+
+    meta: dict[str, object] = {}
+    for line in match.group(1).splitlines():
+        line = line.strip()
+        if not line or ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        key, value = key.strip(), value.strip()
+        meta[key] = int(value) if key in INT_KEYS else value
+
+    required = {"part", "part_title", "chapter", "chapter_title", "clip", "title", "duration"}
+    missing = required - meta.keys()
+    if missing:
+        raise ValueError(f"{path}: front matter 누락 키 {sorted(missing)}")
+
+    return Note(source=path, body=text[match.end():], **meta)  # type: ignore[arg-type]
+
+
+def render_markdown(body: str) -> str:
+    html = markdown.markdown(body, extensions=MD_EXTENSIONS)
+    # ```prompt 블록 → 복사 버튼이 붙는 프롬프트 카드
+    html = html.replace(
+        '<pre><code class="language-prompt">', '<pre class="prompt-block"><code>'
+    )
+    # "- [ ] 항목" → 체크박스 리스트
+    html = re.sub(r"<li>\[ \]\s*", '<li class="check-item"><input type="checkbox"> ', html)
+    # 이미지 슬롯 주석 → 눈에 보이는 점선 박스
+    html = re.sub(
+        r"<!--\s*IMAGE-SLOT:\s*(.*?)\s*-->",
+        r'<div class="image-slot">\1</div>',
+        html,
+    )
+    return html
+
+
+def build() -> None:
+    notes = sorted(
+        (parse_note(p) for p in NOTES_DIR.rglob("*.md")),
+        key=lambda n: n.sort_key,
+    )
+    if not notes:
+        raise SystemExit("변환할 노트가 없습니다: " + str(NOTES_DIR))
+
+    for note in notes:
+        note.href = f"part{note.part:02d}/{note.note_id}.html"
+
+    # 노트 본문은 이미 렌더링된 HTML이므로 autoescape 없이 신뢰하고 삽입한다.
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
+    page_tpl = env.get_template("page.html.j2")
+    index_tpl = env.get_template("index.html.j2")
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    assets_dir = OUTPUT_DIR / "assets"
+    assets_dir.mkdir(exist_ok=True)
+    shutil.copy2(TEMPLATE_DIR / "style.css", assets_dir / "style.css")
+
+    # 클립 페이지
+    for i, note in enumerate(notes):
+        prev_note = notes[i - 1] if i > 0 else None
+        next_note = notes[i + 1] if i < len(notes) - 1 else None
+        out_path = OUTPUT_DIR / note.href
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(
+            page_tpl.render(
+                note=note,
+                content=render_markdown(note.body),
+                css_path="../assets/style.css",
+                index_path="../index.html",
+                prev={"href": f"../{prev_note.href}", "title": prev_note.title} if prev_note else None,
+                next={"href": f"../{next_note.href}", "title": next_note.title} if next_note else None,
+            ),
+            encoding="utf-8",
+        )
+
+    # 목차 페이지: 파트 → 챕터 → 클립 트리
+    parts: list[dict] = []
+    for note in notes:
+        if not parts or parts[-1]["number"] != note.part:
+            parts.append(
+                {"number": note.part, "title": note.part_title, "chapters": [], "clip_count": 0, "minutes": 0}
+            )
+        part = parts[-1]
+        if not part["chapters"] or part["chapters"][-1]["number"] != note.chapter:
+            part["chapters"].append({"number": note.chapter, "title": note.chapter_title, "clips": []})
+        part["chapters"][-1]["clips"].append(
+            {
+                "id": note.note_id,
+                "title": note.title,
+                "href": note.href,
+                "duration": note.duration,
+                "practice": note.practice,
+            }
+        )
+        part["clip_count"] += 1
+        part["minutes"] += note.duration
+
+    (OUTPUT_DIR / "index.html").write_text(
+        index_tpl.render(
+            parts=parts,
+            css_path="assets/style.css",
+            total_clips=len(notes),
+            total_minutes=sum(n.duration for n in notes),
+        ),
+        encoding="utf-8",
+    )
+
+    print(f"빌드 완료: 노트 {len(notes)}개 → {OUTPUT_DIR}")
+    print(f"목차: {OUTPUT_DIR / 'index.html'}")
+
+
+if __name__ == "__main__":
+    build()

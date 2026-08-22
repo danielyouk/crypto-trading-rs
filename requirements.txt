@@ -1,12 +1,17 @@
-# Python env for notebooks/ (crypto streaming + stock pairs EDA).
-# Stock pairs reference: reference/python_pairstrading/stock-trading-eda-scheduled_eng.ipynb
+# DEPRECATED: This file is kept for backward compatibility only.
+# The project now uses `pyproject.toml` at the repository root as the single source of truth.
+#
+# Recommended setup:
+#   uv venv --python 3.12 .venv
+#   uv pip install -e .
+#
+# Or with pip:
+#   python3.12 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -e .
 #
 # ⚠️ IMPORTANT: Python 3.12+ is required for this project.
-# If you  have different python versions such as Python 3.9, you must install Python 3.12 first:
-#
-# Setup: python3.12 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
-# S&P 500 helper package (Wikipedia + optional Exa fallback hooks):
-#   pip install -e ./python
+# Stock pairs reference: reference/python_pairstrading/stock-trading-eda-scheduled_eng.ipynb
 
 # Jupyter / notebooks
 jupyter==1.1.1
@@ -21,6 +26,8 @@ pandas==3.0.1
 statsmodels==0.14.6
 # Excel .xlsx read/write (pd.read_excel / to_excel)
 openpyxl==3.1.5
+# PowerPoint .pptx generation
+python-pptx==1.0.2
 # pd.read_html (e.g. Wikipedia S&P 500 tables) needs an HTML parser
 lxml==6.0.2
 beautifulsoup4==4.14.3
@@ -29,6 +36,10 @@ plotly==6.6.0
 anywidget==0.9.21
 matplotlib==3.10.8
 mplfinance==0.12.10b0
+pillow==12.3.0
+imageio==2.37.4
+imageio-ffmpeg==0.6.0
+koreanize-matplotlib==0.1.1
 
 # Yahoo Finance (stock OHLCV; pulls curl_cffi, beautifulsoup4, peewee, etc.)
 yfinance==1.2.0
@@ -36,6 +47,9 @@ yfinance==1.2.0
 # Pairs notebook: LinearRegression, Parallel/delayed
 scikit-learn==1.8.0
 joblib==1.5.3
+
+# Validation (used heavily in pairs_eda.* Pydantic models)
+pydantic==2.11.0
 
 # Gemini fallback for S&P 500 (when Wikipedia fails)
 google-genai==1.68.0
@@ -51,3 +65,7 @@ pytest==8.4.1
 requests==2.32.5
 websockets==16.0
 tqdm==4.67.3
+
+# Lecture notes: MD -> HTML build
+Markdown==3.10.3
+Jinja2==3.1.6

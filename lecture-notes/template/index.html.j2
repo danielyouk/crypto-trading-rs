@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 트레이딩 강의 노트 — 전체 목차</title>
+<link rel="stylesheet" href="{{ css_path }}">
+</head>
+<body>
+<div class="topbar">
+  <span class="home">AI 알고리즘 트레이딩 강의 노트</span>
+  <span class="crumb">{{ total_clips }}클립 · {{ total_minutes }}분</span>
+</div>
+
+<div class="wrap">
+  <header class="index-head">
+    <h1>코딩 몰라도 완성하는<br>나만의 AI 알고리즘 트레이딩 시스템</h1>
+    <p>w. Claude Code · 5개 파트 · {{ total_clips }}개 클립 · 약 {{ "%.1f"|format(total_minutes / 60) }}시간 · 실습 23개</p>
+    <p>좌측에 이 노트를, 우측에 Claude Code를 띄우고 함께 진행하세요.</p>
+  </header>
+
+  {% for part in parts %}
+  <section class="part">
+    <h2>Part {{ "%02d"|format(part.number) }}. {{ part.title }}</h2>
+    <div class="part-meta">{{ part.clip_count }}클립 · {{ part.minutes }}분</div>
+    {% for chapter in part.chapters %}
+    <div class="chapter">
+      <h3>CH{{ "%02d"|format(chapter.number) }}. {{ chapter.title }}</h3>
+      <ul class="clips">
+        {% for clip in chapter.clips %}
+        <li>
+          <a href="{{ clip.href }}">
+            <span class="clip-no">{{ clip.id|upper }}</span>
+            <span class="clip-title">{{ clip.title }}</span>
+            {% if clip.practice %}<span class="mini prac">{{ clip.practice }}</span>{% endif %}
+            <span class="mini time">{{ clip.duration }}분</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </section>
+  {% endfor %}
+
+  <footer class="site">
+    본 자료는 교육 목적으로 제작된 콘텐츠이며, 특정 종목·금융상품에 대한 투자 권유 또는 추천이 아닙니다.
+  </footer>
+</div>
+</body>
+</html>
