@@ -1,6 +1,7 @@
 """강의 노트 빌더: lecture-notes/notes/**/*.md → lecture-notes/html/.
 
 수강생용 노트(MD)를 좌측 반화면 폭에 최적화된 HTML로 변환한다.
+클립 메타데이터(파트·챕터·제목·시간·실습 번호)는 lecture-notes/curriculum.json에서 읽는다.
 강사 스크립트(lecture-notes/scripts/)는 변환 대상이 아니다.
 
 실행:
@@ -9,6 +10,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import shutil
 from dataclasses import dataclass, field
@@ -19,12 +21,11 @@ from jinja2 import Environment, FileSystemLoader
 
 ROOT = Path(__file__).resolve().parent.parent
 NOTES_DIR = ROOT / "lecture-notes" / "notes"
+CURRICULUM_PATH = ROOT / "lecture-notes" / "curriculum.json"
 TEMPLATE_DIR = ROOT / "lecture-notes" / "template"
 OUTPUT_DIR = ROOT / "lecture-notes" / "html"
 
 MD_EXTENSIONS = ["extra", "sane_lists"]
-
-INT_KEYS = {"part", "chapter", "clip", "duration"}
 
 
 @dataclass
@@ -50,27 +51,17 @@ class Note:
         return (self.part, self.chapter, self.clip)
 
 
-def parse_note(path: Path) -> Note:
-    text = path.read_text(encoding="utf-8")
-    match = re.match(r"^---\s*\n(.*?)\n---\s*\n", text, re.DOTALL)
-    if not match:
-        raise ValueError(f"front matter가 없습니다: {path}")
+def parse_note(path: Path, curriculum: dict[str, dict]) -> Note:
+    meta = curriculum.get(path.stem)
+    if meta is None:
+        raise ValueError(f"curriculum.json에 없는 노트입니다: {path.stem} ({path})")
 
-    meta: dict[str, object] = {}
-    for line in match.group(1).splitlines():
-        line = line.strip()
-        if not line or ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        key, value = key.strip(), value.strip()
-        meta[key] = int(value) if key in INT_KEYS else value
+    body = path.read_text(encoding="utf-8").lstrip("\n")
+    # 첫 줄의 H1 제목은 페이지 템플릿이 렌더링하므로 본문에서 제거한다.
+    if body.startswith("# "):
+        body = body.split("\n", 1)[1] if "\n" in body else ""
 
-    required = {"part", "part_title", "chapter", "chapter_title", "clip", "title", "duration"}
-    missing = required - meta.keys()
-    if missing:
-        raise ValueError(f"{path}: front matter 누락 키 {sorted(missing)}")
-
-    return Note(source=path, body=text[match.end():], **meta)  # type: ignore[arg-type]
+    return Note(source=path, body=body, **meta)
 
 
 def render_markdown(body: str) -> str:
@@ -91,12 +82,16 @@ def render_markdown(body: str) -> str:
 
 
 def build() -> None:
+    curriculum: dict[str, dict] = json.loads(CURRICULUM_PATH.read_text(encoding="utf-8"))
     notes = sorted(
-        (parse_note(p) for p in NOTES_DIR.rglob("*.md")),
+        (parse_note(p, curriculum) for p in NOTES_DIR.rglob("*.md")),
         key=lambda n: n.sort_key,
     )
     if not notes:
         raise SystemExit("변환할 노트가 없습니다: " + str(NOTES_DIR))
+    missing = set(curriculum) - {n.note_id for n in notes}
+    if missing:
+        raise SystemExit(f"curriculum.json에는 있으나 노트 파일이 없는 클립: {sorted(missing)}")
 
     for note in notes:
         note.href = f"part{note.part:02d}/{note.note_id}.html"

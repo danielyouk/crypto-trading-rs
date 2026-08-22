@@ -102,28 +102,34 @@
 ```
 lecture-notes/
 ├── MASTER-PLAN.md            # 이 문서
+├── curriculum.json           # 43클립 메타데이터 (파트·챕터·제목·시간·실습 번호)
 ├── notes/part0N/pN-chXX-cYY.md   # 수강생용 노트 (HTML 변환 대상)
 ├── scripts/part0N/pN-chXX-cYY.md # 강사용 말하기 스크립트 (HTML 변환 제외)
 ├── template/                 # Jinja2 템플릿 + CSS
 └── html/                     # 빌드 결과물
 ```
 
-### 노트 프런트매터 (필수)
+### 클립 메타데이터 — `curriculum.json`
 
-```
----
-part: 1
-part_title: AI와 함께 시작하는 트레이딩 시스템 만들기
-chapter: 2
-chapter_title: AI 코딩 도구로 첫 결과물 만들기
-clip: 3
-title: 첫 실습: 주식 데이터를 불러와 차트로 확인하기
-duration: 20
-practice: 실습 02
----
+노트 파일에는 메타데이터를 넣지 않는다 (마크다운 미리보기가 지저분해지므로).
+클립별 메타데이터는 `curriculum.json`에 파일 ID를 키로 중앙 관리한다:
+
+```json
+"p1-ch02-c03": {
+  "part": 1,
+  "part_title": "AI와 함께 시작하는 트레이딩 시스템 만들기",
+  "chapter": 2,
+  "chapter_title": "AI 코딩 도구로 첫 결과물 만들기",
+  "clip": 3,
+  "title": "첫 실습: 주식 데이터를 불러와 차트로 확인하기",
+  "duration": 20,
+  "practice": "실습 02"
+}
 ```
 
-`practice`가 없는 클립은 키를 생략한다.
+`practice`가 없는 클립은 빈 문자열. 노트/스크립트 파일은 `# 제목` H1으로 시작하는
+순수 마크다운이며, HTML 빌드 시 첫 H1은 페이지 템플릿의 제목으로 대체된다.
+클립 제목·시간을 바꿀 때는 `curriculum.json`과 노트의 H1을 함께 수정한다.
 
 ### 노트 섹션 구성 (수강생용, 고정)
 
