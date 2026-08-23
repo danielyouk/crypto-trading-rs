@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>매수 신호를 확인한 뒤 승인하여 모의주문 실행하기 — DATATRAIN AI 트레이딩</title>
+<title>전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 /* Inlined critical CSS */
@@ -815,7 +815,7 @@ li.check-item input[type="checkbox"] {
       <span>DATATRAIN</span>
     </a>
     <div class="nav-links">
-      <span class="crumb">Part 04 · CH02</span>
+      <span class="crumb">Part 04 · CH01</span>
       <a href="../index.html">목차로 이동 ↗</a>
     </div>
   </header>
@@ -823,21 +823,21 @@ li.check-item input[type="checkbox"] {
   <!-- Note Header & GDPval-style Metadata Bar -->
   <div class="note-header">
     <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-    <h1>매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</h1>
+    <h1>전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</h1>
     
     <div class="metadata-bar">
       <div class="metadata-item">
         <span class="label">Chapter:</span>
-        <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
+        <span>CH01. 증권사와 트레이딩 시스템 연결하기</span>
       </div>
       <div class="metadata-item">
         <span class="label">예상 소요 시간:</span>
-        <span class="badge time">약 20분</span>
+        <span class="badge time">약 18분</span>
       </div>
       <div class="metadata-item">
         <span class="label">강의 유형:</span>
         
-        <span class="badge practice">실습 16 (실습 중심)</span>
+        <span class="badge">이론 및 아키텍처 브리핑</span>
         
       </div>
     </div>
@@ -846,71 +846,85 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 텔레그램에서 <strong>승인 버튼을 누른 신호만 모의주문으로 실행</strong>되고, 모의 계좌에 체결 내역이 생깁니다. 파이프라인의 핵심 고리가 완성되는 순간입니다.</p>
+<p>이 클립이 끝나면, Part 4에서 완성할 <strong>2-Tier 실전 트레이딩 시스템의 전체 설계도</strong>가 머릿속에 그려집니다. 오늘은 코딩을 하지 않고, 전체 파이프라인의 청사진과 2-Tier 거버넌스 모델을 이해합니다.</p>
 <ul>
-<li>승인 → 모의주문 접수 → 체결 결과가 텔레그램으로 회신되는 흐름</li>
-<li>거절하거나 무시한 신호는 주문이 나가지 않는 것 확인</li>
+<li><strong>Tier 1 (주간 전략 거버넌스)</strong>: 주 1회 주말 30분, Claude Code와 시장 국면을 분석하고 다음 주 매매 정책(<code>weekly_policy.json</code>) 최종 승인</li>
+<li><strong>Tier 2 (일간 무인 자동 실행 &amp; 하드 가드레일)</strong>: 평일 장 운영 시간, API를 통한 자동 주문 실행 및 사람 개입 없는 강제 손절·서킷브레이커 작동</li>
 </ul>
-<figure class="visual-figure">  <img src="../assets/03_paper_approval.gif" alt="사람이 승인하는 모의매매 흐름">  <figcaption><strong>[시스템 조감도]</strong> 사람이 승인하는 모의매매 흐름</figcaption></figure>
+<figure class="visual-figure">  <img src="../assets/03_paper_approval.gif" alt="주간 전략 승인 및 무인 자동 모의매매 흐름">  <figcaption><strong>[시스템 조감도]</strong> 주간 전략 승인 및 무인 자동 모의매매 흐름</figcaption></figure>
 
 <h2>이론 핵심</h2>
-<h3>승인 없이는 주문 없다</h3>
-<p>이 시스템에서 매수 주문이 나가는 경로는 단 하나, <strong>사람이 승인 버튼을 누른 경우</strong>뿐입니다. 시그널 엔진도, AI도, 스케줄러도 매수 주문을 직접 낼 수 없습니다. 이 원칙을 코드 구조로 강제해 두면, 나중에 어떤 기능을 추가해도 "모르는 사이에 매수가 나가는" 사고를 원천 차단할 수 있습니다.</p>
-<h3>주문에 필요한 세 가지 결정</h3>
-<p>승인 버튼을 눌렀을 때 시스템이 주문을 접수하려면 세 가지가 정해져 있어야 합니다.</p>
+<h3>왜 매 건마다 승인하지 않고 '주간 정책 승인제'인가?</h3>
+<p>기존의 단순한 봇 강의에서는 "신호 발생 → 메신저 알림 → 사람이 버튼 클릭 → 주문" 방식을 가르칩니다. 하지만 이는 실전에서 3가지 치명적 문제를 낳습니다:</p>
 <ol>
-<li><strong>수량</strong> — 미리 정한 금액(예: 신호당 100만 원)을 현재가로 나눠 계산</li>
-<li><strong>가격 방식</strong> — 시장가(즉시 체결) 또는 지정가(내가 정한 가격)</li>
-<li><strong>유효 시간</strong> — 승인이 너무 늦으면 신호 가격과 현재가가 벌어지므로, 오래된 신호는 만료 처리</li>
+<li><strong>타이밍 지연 &amp; 알림 피로</strong>: 직장인이 회의 중이거나 이동 중일 때 알림을 놓치면 매매 기회가 소멸합니다.</li>
+<li><strong>감정의 개입 (뇌동매매/공포)</strong>: 연속 손실이 발생하면 사람이 공포심에 유효한 매수 신호를 임의로 거절하여 통계적 우위를 훼손합니다.</li>
+<li><strong>과적합(Overfitting) 위험</strong>: 매일 파라미터를 바꾸는 것은 시장 노이즈에 모델을 끼워 맞추는 행위입니다.</li>
 </ol>
-<p>이 결정들은 승인 순간에 고민하는 것이 아니라 <strong>미리 규칙으로</strong> 정해 둡니다. 사람은 "이 신호를 믿을까"만 판단합니다.</p>
-<h3>접수와 체결은 다르다</h3>
-<p>주문을 보냈다고 끝이 아닙니다. <strong>접수</strong>(주문이 들어감)와 <strong>체결</strong>(실제로 거래됨)은 별개이며, 체결 결과를 다시 조회해서 텔레그램으로 회신받아야 한 사이클이 닫힙니다. "승인 → 접수 → 체결 확인"까지가 이번 실습의 완성 기준입니다.</p>
-<h2>실습 16 — 승인하면 모의주문이 나가게 연결하기</h2>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>텔레그램에서 [승인] 버튼을 누르면, 해당 신호의 종목을 모의투자 계좌에
-시장가로 주문하도록 연결해줘. 주문 금액은 신호당 100만 원 기준으로 수량을 계산해.
-주문이 체결되면 &quot;체결 완료: 종목명, 수량, 체결가&quot;가 텔레그램으로 회신되어야 하고,
-[거절]을 누르거나 아무것도 누르지 않으면 주문이 나가면 안 돼.
-테스트 신호로 승인·거절 두 경우를 모두 보여줘.
-</code></pre></div>
-<h3>내 눈으로 확인할 체크리스트</h3>
+<p>진짜 퀀트 펀드처럼 <strong>"주 1회 전략 정책을 승인(Governance)하고, 주중에는 기계가 무인으로 규율 있게 실행(Execution)"</strong>하는 2-Tier 시스템이 가장 안전하고 우수합니다.</p>
+<h3>2-Tier 파이프라인 6단계 구조</h3>
+<div class="arch-grid">
+  <div class="arch-card">
+    <h4>① 계좌 인증 & 연결</h4>
+    <p>한국투자증권 Open API 모의투자 계좌 인증 및 토큰 자동 갱신</p>
+  </div>
+  <div class="arch-card">
+    <h4>② 시장 데이터 파이프라인</h4>
+    <p>전략 대상 유니버스의 실시간 시세 및 지표 계산</p>
+  </div>
+  <div class="arch-card">
+    <h4>③ 주간 정책 합의 (Tier 1)</h4>
+    <p>Claude Code와 주간 국면 분석 후 <code>weekly_policy.json</code> 승인</p>
+  </div>
+  <div class="arch-card">
+    <h4>④ 무인 자동 발주 (Tier 2)</h4>
+    <p>승인된 조건 만족 시 증권사 API로 자동 모의주문 전송</p>
+  </div>
+  <div class="arch-card">
+    <h4>⑤ 하드 안전 가드레일</h4>
+    <p>포트폴리오 서킷브레이커 & 무조건 즉시 손절(Kill-Switch)</p>
+  </div>
+  <div class="arch-card">
+    <h4>⑥ 일일 AI 저널링</h4>
+    <p>장 마감 후 AI가 체결 내역·PnL 분석 및 일일 리포트 생성</p>
+  </div>
+</div>
+
+<h3>정책은 사람이, 손절과 실행은 규칙이</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 승인을 누르면 텔레그램에 "체결 완료: 종목명·수량·체결가" 회신이 온다</li>
-<li class="check-item"><input type="checkbox"> 한국투자증권 모의투자 화면(HTS/MTS)에서 같은 체결 내역이 보인다</li>
-<li class="check-item"><input type="checkbox"> 거절한 신호는 계좌 체결 내역에 아무것도 남지 않았다</li>
-<li class="check-item"><input type="checkbox"> 아무 버튼도 누르지 않은 신호도 주문이 나가지 않았다</li>
-<li class="check-item"><input type="checkbox"> 주문·체결 내역이 로그 파일에도 기록되었다</li>
+<li><strong>전략과 비중(Policy)</strong>: 반드시 사람이 주말에 AI 브리핑을 검토한 뒤 승인합니다. 승인된 정책 없이는 시스템이 동작하지 않습니다.</li>
+<li><strong>실행(Execution)</strong>: 장중에는 사람의 승인을 기다리지 않고 조건 부합 시 즉시 API로 자동 발주합니다.</li>
+<li><strong>손절(Stop-Loss)</strong>: 개별 종목 -3% 손실 또는 포트폴리오 -2% 일일 한도 초과 시, 사람의 판단을 묻지 않고 <strong>코드 레벨에서 즉시 강제 청산</strong>합니다.</li>
+</ul>
+<h2>따라 해보기</h2>
+<p>이번 클립은 전체 구조 이해가 중심입니다. 강의를 보며 아래 항목을 확인해 보세요.</p>
+<ul>
+<li class="check-item"><input type="checkbox"> 2-Tier 아키텍처(주간 정책 승인 vs 일간 무인 자동 실행)의 장점을 이해했다</li>
+<li class="check-item"><input type="checkbox"> 왜 매매 건별 메신저 승인이 아닌 주간 정책 승인제를 채택하는지 설명할 수 있다</li>
+<li class="check-item"><input type="checkbox"> 하드 손절과 서킷브레이커가 사람의 개입 없이 동작해야 하는 이유를 이해했다</li>
+<li class="check-item"><input type="checkbox"> 모의투자 API를 통해 실전과 동일한 파이프라인을 구축하는 목적을 확인했다</li>
 </ul>
 <h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 주문 코드 구조는 다를 수 있습니다. <strong>모의투자 화면의 체결 내역과 텔레그램 회신이 일치하는지</strong>가 판정 기준입니다.</p>
-<ul>
-<li><strong>장 시간 밖 주문</strong>: 모의투자도 장 운영 시간에만 체결됩니다. 장 밖에는 주문 거부가 정상입니다.</li>
-<li><strong>모의투자 주문 코드 구분</strong>: 모의투자와 실전은 주문 요청의 거래 코드가 다릅니다. 실전용 코드를 쓰면 거부됩니다.</li>
-<li><strong>토큰 만료 후 주문 실패</strong>: 승인 시점에 토큰이 만료되어 있으면 주문이 실패합니다.</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>승인을 눌렀는데 주문이 거부됐어. 증권사가 돌려준 오류 메시지를 그대로 보여주고,
-모의투자용 주문 설정이 맞는지 확인해서 고쳐줘. 고친 뒤 다시 승인해서
-체결 완료 회신이 오는 것까지 보여줘.
-</code></pre></div>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>체결은 됐는데 텔레그램 회신이 안 와. 체결 결과를 조회하는 부분이 실행되는지
-확인하고, 체결 후 1분 안에 회신 메시지가 오게 해줘.
-</code></pre></div>
+<blockquote>
+<p><strong>Q. 주 1회 승인이면 시장 급변에 너무 느리지 않나요?</strong><br />
+일봉/스윙 퀀트 전략에서 매일 파라미터를 바꾸는 것은 노이즈 과적합을 부릅니다. 장중 급변동은 '파라미터 수정'이 아니라 '하드 손절 및 비상 서킷브레이커'로 완벽히 방어합니다.</p>
+</blockquote>
 <h2>다음 클립 예고</h2>
-<p>매수의 관문이 완성되었습니다. 다음 클립에서는 반대 상황을 다룹니다 — 손절 알림을 보냈는데 여러분이 응답하지 못한다면? 규칙이 대신 움직이는 자동 위험 관리를 만듭니다.</p>
+<p>다음 클립에서는 한국투자증권 KIS Developers에서 앱키를 발급받고, 모의투자 계좌를 시스템에 연결합니다. 계좌 잔고가 화면에 표로 뜨는 순간이 첫 목표입니다.</p>
   </main>
 
   <!-- Pager Navigation -->
   <nav class="pager-nav">
     
-    <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/31_카카오톡과_이메일로_매매_알림_받아보기.html">
+    <a class="pager-btn prev" href="../Part03_시장변화_전략점검_개선/25_검증을_마친_전략을_매매_신호와_알림으로_연결하기.html">
       <span class="direction">← 이전 클립</span>
-      <span class="title">카카오톡과 이메일로 매매 알림 받아보기</span>
+      <span class="title">검증을 마친 전략을 매매 신호와 알림으로 연결하기</span>
     </a>
     
     
-    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/33_손절_알림에_응답하지_않았을_때_자동으로_위험_관리하기.html">
+    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/27_한국투자증권_API와_모의투자_계좌_연결하기.html">
       <span class="direction">다음 클립 →</span>
-      <span class="title">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
+      <span class="title">한국투자증권 API와 모의투자 계좌 연결하기</span>
     </a>
     
   </nav>

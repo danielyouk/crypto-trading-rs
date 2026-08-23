@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>텔레그램으로 매매 알림과 승인·거절 버튼 만들기 — DATATRAIN AI 트레이딩</title>
+<title>사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 /* Inlined critical CSS */
@@ -823,21 +823,21 @@ li.check-item input[type="checkbox"] {
   <!-- Note Header & GDPval-style Metadata Bar -->
   <div class="note-header">
     <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-    <h1>텔레그램으로 매매 알림과 승인·거절 버튼 만들기</h1>
+    <h1>사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</h1>
     
     <div class="metadata-bar">
       <div class="metadata-item">
         <span class="label">Chapter:</span>
-        <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
+        <span>CH02. 주간 전략 정책 승인과 일간 자동 실행 시스템</span>
       </div>
       <div class="metadata-item">
         <span class="label">예상 소요 시간:</span>
-        <span class="badge time">약 22분</span>
+        <span class="badge time">약 20분</span>
       </div>
       <div class="metadata-item">
         <span class="label">강의 유형:</span>
         
-        <span class="badge practice">실습 15 (실습 중심)</span>
+        <span class="badge practice">실습 16 (실습 중심)</span>
         
       </div>
     </div>
@@ -846,69 +846,75 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 매수 신호가 발생했을 때 <strong>여러분의 텔레그램으로 승인·거절 버튼이 달린 알림</strong>이 도착합니다.</p>
+<p>이 클립이 끝나면, 보유 종목에 손실이 발생하거나 포트폴리오 전체가 급락할 때 <strong>사람의 판단이나 확인을 묻지 않고 코드 레벨에서 0.1초 만에 강제 청산(Stop-Loss) 및 매매 정지(Circuit Breaker)를 집행하는 무인 안전장치</strong>가 완성됩니다.</p>
 <ul>
-<li>휴대폰 텔레그램에 "매수 신호: 종목명·가격·근거" 메시지 + [승인] [거절] 버튼</li>
-<li>버튼을 누르면 시스템이 어떤 버튼이 눌렸는지 기록하는 화면 (주문 실행은 다음다음 클립)</li>
+<li>개별 포지션 손실이 <code>-3%</code>에 도달하면 즉시 시장가 전량 매도</li>
+<li>당일 전체 계좌 평가 손실이 <code>-2%</code>에 도달하면 당일 매매 즉시 전면 중단(서킷브레이커)</li>
+<li>강제 청산 결과 및 시스템 보호 로그가 기록되는 화면 확인</li>
 </ul>
 <h2>이론 핵심</h2>
-<h3>왜 텔레그램인가</h3>
-<p>알림 채널의 조건은 세 가지입니다. 즉시 도착할 것, 어디서든 받을 것, 그리고 <strong>버튼으로 응답할 수 있을 것</strong>. 텔레그램 봇은 이 셋을 무료로 충족하고, 특히 메시지에 <strong>인라인 버튼</strong>을 붙일 수 있어 "알림을 보고 → 그 자리에서 승인"이 한 화면에서 끝납니다.</p>
-<h3>BotFather로 봇 만들기</h3>
-<p>텔레그램 봇은 텔레그램 안의 공식 계정 <strong>BotFather</strong>와 대화하면 만들어집니다.</p>
+<h3>손절은 왜 사람의 승인을 받으면 안 되는가?</h3>
+<p>트레이딩에서 망하는 99%의 이유는 "손절을 미루기 때문"입니다.</p>
 <ol>
-<li>텔레그램에서 BotFather를 검색해 <code>/newbot</code> 명령으로 봇 생성</li>
-<li>봇 이름을 정하면 <strong>봇 토큰</strong>을 받습니다 — 이 토큰이 봇의 열쇠입니다</li>
-<li>봇 토큰도 앱키와 마찬가지로 <strong><code>.env</code> 파일에만 저장</strong>합니다 (채팅·코드에 노출 금지)</li>
+<li><strong>처분 효과(Disposition Effect)</strong>: 사람은 이익은 빨리 확정 짓고, 손실은 "곧 반등하겠지"라며 회피하려는 본능이 있습니다.</li>
+<li><strong>동결 반응(Freezing)</strong>: 폭락장이 오면 당황하여 손절 버튼을 누르지 못하고 계좌가 녹아내리는 것을 지켜보게 됩니다.</li>
+<li><strong>손절의 비대칭성</strong>: 매수 기회를 놓치면 이익이 없을 뿐이지만, <strong>손절 기회를 놓치면 원금이 영구적으로 파괴</strong>됩니다.</li>
 </ol>
-<p>시스템은 이 토큰으로 여러분에게 메시지를 보내고, 버튼 응답을 받아옵니다.</p>
-<h3>승인 버튼은 안전장치다</h3>
-<p>버튼은 편의 기능이 아니라 <strong>매수의 유일한 관문</strong>입니다. 이후 클립에서 주문 실행을 붙일 때도, 승인 버튼이 눌린 기록이 있을 때만 주문이 나가도록 만듭니다. "알림이 왔는데 무시하면?" — 매수는 아무 일도 일어나지 않습니다. 그것이 정상 동작입니다.</p>
-<h2>실습 15 — 승인·거절 버튼 알림 받기</h2>
-<p>먼저 BotFather로 봇을 만들고 봇 토큰을 <code>.env</code>에 저장한 뒤 요청하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>.env 파일에 텔레그램 봇 토큰을 저장해 뒀어. 시그널 엔진에서 매수 신호가 발생하면
-내 텔레그램으로 종목명, 현재가, 발동 조건이 담긴 알림 메시지를 보내줘.
-메시지 아래에는 [승인] [거절] 인라인 버튼이 있어야 하고,
-버튼을 누르면 어떤 버튼을 눌렀는지 시스템 화면과 로그에 기록되는 게 보여야 해.
-테스트 신호를 하나 발생시켜서 실제로 알림이 오는 것까지 보여줘.
+<p>따라서 손절은 <strong>기계가 감정 없이 무조건 즉시 집행</strong>해야 합니다.</p>
+<div class="compare-box">
+  <div class="bad-panel">
+    <h4>❌ 사람이 확인 후 손절</h4>
+    <ul>
+      <li>"조금만 더 기다려보자"라는 심리적 지연</li>
+      <li>외출/회의 중 알림 미확인으로 손실폭 확대 (-3% → -15%)</li>
+      <li>계좌 영구 파괴 및 깡통 리스크</li>
+    </ul>
+  </div>
+  <div class="good-panel">
+    <h4>✅ 무인 하드 손절 (Zero-Latency)</h4>
+    <ul>
+      <li>조건 도달 즉시 0.1초 만에 시장가 전량 청산</li>
+      <li>사람의 망설임이나 부재와 무관하게 원금 보호</li>
+      <li>최악의 경우에도 사전에 정의된 최대 손실로 한정</li>
+    </ul>
+  </div>
+</div>
+
+<h2>실습 16 — 자동 하드 손절 및 포트폴리오 서킷브레이커 구축</h2>
+<p>Claude Code에게 무인 손절 및 서킷브레이커 모니터링 로직을 작성하도록 요청합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>보유 중인 모의투자 잔고를 1초마다 감시하는 안전 가드레일 스크립트를 작성해줘.
+1. 개별 종목 평가손익률이 -3.0% 이하로 떨어지면 사람의 승인 없이 즉시 시장가로 전량 매도해줘.
+2. 당일 전체 계좌 누적 손실이 -2.0%에 도달하면 즉시 모든 신규 진입을 중단하는 '포트폴리오 서킷브레이커'를 발동해줘.
+테스트용 가상 포지션으로 손절과 서킷브레이커가 즉시 발동되어 안전 로그가 찍히는 것을 보여줘.
 </code></pre></div>
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 휴대폰 텔레그램에 매수 신호 알림이 도착했다</li>
-<li class="check-item"><input type="checkbox"> 알림에 종목명·현재가·발동 조건과 [승인] [거절] 버튼이 보인다</li>
-<li class="check-item"><input type="checkbox"> 승인을 눌렀을 때 시스템 화면·로그에 "승인됨"이 기록된다</li>
-<li class="check-item"><input type="checkbox"> 거절을 눌렀을 때 "거절됨"이 기록되고 아무 일도 일어나지 않는다</li>
-<li class="check-item"><input type="checkbox"> 봇 토큰이 채팅창이나 화면에 노출되지 않았다</li>
+<li class="check-item"><input type="checkbox"> 개별 종목 평가손익이 -3%에 닿는 순간 즉시 매도 API가 자동 호출되었다</li>
+<li class="check-item"><input type="checkbox"> 사람에게 "손절할까요?"를 묻지 않고 기계가 즉시 체결을 완료했다</li>
+<li class="check-item"><input type="checkbox"> 포트폴리오 -2% 손실 시 추가 매수가 원천 차단되는 서킷브레이커 상태가 활성화되었다</li>
+<li class="check-item"><input type="checkbox"> 안전 조치 발동 내역이 로그에 타임스탬프와 함께 기록되었다</li>
 </ul>
 <h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 알림 메시지 모양은 다를 수 있습니다. 버튼이 동작하고 응답이 기록되면 정상입니다.</p>
 <ul>
-<li><strong>알림이 안 옴</strong>: 봇을 만들고 나서 <strong>내가 먼저 봇에게 말을 걸어야</strong>(대화 시작) 봇이 나에게 메시지를 보낼 수 있습니다. 채팅 ID를 못 찾는 오류가 가장 흔합니다.</li>
-<li><strong>봇 토큰 오타</strong>: <code>.env</code> 값의 앞뒤 공백을 확인하세요.</li>
-<li><strong>버튼을 눌러도 반응 없음</strong>: 버튼 응답을 받는 부분이 실행 중이 아닐 수 있습니다.</li>
+<li><strong>손절 슬리피지(Slippage)</strong>: 시장가 주문 시 급락 구간에서는 -3%보다 약간 더 낮은 가격에 체결될 수 있습니다. 이는 시스템 오류가 아니라 시장 유동성에 따른 자연스러운 현상입니다.</li>
+<li><strong>너무 타이트한 손절선</strong>: -1%처럼 너무 좁은 손절선은 단순 시장 노이즈에 털리게 만듭니다. 전략별 변동성(ATR)을 고려하여 -3%~-5% 수준을 권장합니다.</li>
 </ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>텔레그램 알림이 안 와. 봇 토큰과 채팅 ID를 제대로 읽었는지 확인하고,
-봇이 나에게 테스트 메시지 &quot;연결 확인&quot;을 보내는 것부터 성공시켜줘.
-</code></pre></div>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>버튼을 눌렀는데 시스템에 아무 기록이 안 남아. 버튼 응답을 받는 부분이
-실행되고 있는지 확인하고, 승인을 누르면 3초 안에 로그에 찍히게 해줘.
-</code></pre></div>
 <h2>다음 클립 예고</h2>
-<p>텔레그램이 주 채널이지만, 사람마다 자주 보는 앱이 다릅니다. 다음 클립에서는 같은 알림을 카카오톡과 이메일로도 받아봅니다.</p>
+<p>하드 손절이 완성되었습니다. 다음 클립에서는 통신 두절, 증권사 API 오류, 플래시 크래시 등 비정상 시장 징후를 감지하고 시스템 전체를 안전하게 정지시키는 '비상 정지(Kill-Switch)' 로직을 구현합니다.</p>
   </main>
 
   <!-- Pager Navigation -->
   <nav class="pager-nav">
     
-    <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/29_설정한_조건에_따라_매매_신호_만들기.html">
+    <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
       <span class="direction">← 이전 클립</span>
-      <span class="title">설정한 조건에 따라 매매 신호 만들기</span>
+      <span class="title">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
     </a>
     
     
-    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/31_카카오톡과_이메일로_매매_알림_받아보기.html">
+    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
       <span class="direction">다음 클립 →</span>
-      <span class="title">카카오톡과 이메일로 매매 알림 받아보기</span>
+      <span class="title">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
     </a>
     
   </nav>

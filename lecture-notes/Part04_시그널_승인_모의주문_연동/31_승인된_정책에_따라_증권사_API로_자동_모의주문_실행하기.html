@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>전체 구조 이해하기: 매매 신호부터 승인과 주문까지 — DATATRAIN AI 트레이딩</title>
+<title>승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 /* Inlined critical CSS */
@@ -815,7 +815,7 @@ li.check-item input[type="checkbox"] {
       <span>DATATRAIN</span>
     </a>
     <div class="nav-links">
-      <span class="crumb">Part 04 · CH01</span>
+      <span class="crumb">Part 04 · CH02</span>
       <a href="../index.html">목차로 이동 ↗</a>
     </div>
   </header>
@@ -823,12 +823,12 @@ li.check-item input[type="checkbox"] {
   <!-- Note Header & GDPval-style Metadata Bar -->
   <div class="note-header">
     <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-    <h1>전체 구조 이해하기: 매매 신호부터 승인과 주문까지</h1>
+    <h1>승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</h1>
     
     <div class="metadata-bar">
       <div class="metadata-item">
         <span class="label">Chapter:</span>
-        <span>CH01. 증권사와 트레이딩 시스템 연결하기</span>
+        <span>CH02. 주간 전략 정책 승인과 일간 자동 실행 시스템</span>
       </div>
       <div class="metadata-item">
         <span class="label">예상 소요 시간:</span>
@@ -846,93 +846,78 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, Part 4에서 완성할 <strong>파이널 프로젝트의 전체 설계도</strong>가 머릿속에 그려집니다. 오늘은 만들지 않고, 무엇을 어떤 순서로 만들지 지도를 확인합니다.</p>
+<p>이 클립이 끝나면, <strong>주말에 승인된 <code>weekly_policy.json</code> 정책에 따라 평일 장중에 조건이 맞으면 한국투자증권 Open API를 통해 자동으로 모의주문이 발주되는 무인 실행 엔진</strong>이 완성됩니다.</p>
 <ul>
-<li>실시간 가격 → 시그널 엔진 → 알림 → <strong>사람의 승인</strong> → 모의주문 → 기록</li>
-<li>각 단계가 앞으로 어느 클립에서 만들어지는지 매핑</li>
+<li>시스템이 <code>weekly_policy.json</code>을 읽고 실시간/일봉 시세를 감시</li>
+<li>진입 조건(예: Z-Score 돌파 등) 만족 시 증권사 API로 매수 주문 자동 전송</li>
+<li>모의투자 계좌에 실제로 매수 체결이 이루어지고 주문 번호가 기록되는 화면 확인</li>
 </ul>
-<figure class="visual-figure">  <img src="../assets/03_paper_approval.gif" alt="사람이 승인하는 모의매매 흐름">  <figcaption><strong>[시스템 조감도]</strong> 사람이 승인하는 모의매매 흐름</figcaption></figure>
-
 <h2>이론 핵심</h2>
-<h3>파이프라인 여섯 단계</h3>
-<p>Part 2~3에서 검증한 전략이 실제 주문으로 이어지려면 여섯 단계가 연결되어야 합니다.</p>
-<table>
-<thead>
-<tr>
-<th>단계</th>
-<th>하는 일</th>
-<th>만드는 클립</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>① 계좌 연결</td>
-<td>한국투자증권 모의투자 계좌 인증</td>
-<td>ch01-c02</td>
-</tr>
-<tr>
-<td>② 실시간 가격</td>
-<td>감시 종목의 현재가 수신</td>
-<td>ch01-c03</td>
-</tr>
-<tr>
-<td>③ 시그널 엔진</td>
-<td>전략 조건 충족 시 매수 후보 생성 + 로그</td>
-<td>ch01-c04</td>
-</tr>
-<tr>
-<td>④ 알림</td>
-<td>텔레그램으로 승인·거절 버튼 전송</td>
-<td>ch02-c01~02</td>
-</tr>
-<tr>
-<td>⑤ 승인·주문</td>
-<td>사람이 승인하면 모의주문 실행</td>
-<td>ch02-c03</td>
-</tr>
-<tr>
-<td>⑥ 위험 관리</td>
-<td>손절 무응답 시 규칙이 자동 실행</td>
-<td>ch02-c04</td>
-</tr>
-</tbody>
-</table>
-<h3>매수는 사람이, 손절은 규칙이</h3>
-<p>이 시스템의 핵심 원칙은 <strong>인간 개입형 하이브리드</strong>입니다.</p>
+<h3>결정론적 무인 실행 (Tier 2 Execution)</h3>
+<p>주말에 사람이 정책을 승인했다면, 주중에는 기계가 0.1초의 지연이나 망설임 없이 규칙을 집행해야 합니다.</p>
+<div class="arch-grid">
+  <div class="arch-card">
+    <h4>1. 정책 로드</h4>
+    <p><code>weekly_policy.json</code>의 활성 전략 및 진입 임계값 파싱</p>
+  </div>
+  <div class="arch-card">
+    <h4>2. 시장 데이터 평가</h4>
+    <p>현재가 및 지표 계산 후 정책 조건 부합 여부 실시간 판정</p>
+  </div>
+  <div class="arch-card">
+    <h4>3. 자동 API 발주</h4>
+    <p>주문 수량 계산 후 한국투자증권 Open API로 즉시 매수 발주</p>
+  </div>
+  <div class="arch-card">
+    <h4>4. 체결 및 로그 기록</h4>
+    <p>주문 응답(체결가, 수량, 주문번호)을 트레이딩 로그에 기록</p>
+  </div>
+</div>
+
+<h3>안전 발주를 위한 사전 검증 3대 원칙</h3>
+<ol>
+<li><strong>주문 한도 검증</strong>: 1회 주문 금액이 <code>weekly_policy.json</code>에 정의된 최대 허용한도를 넘지 않는가?</li>
+<li><strong>잔고 상태 확인</strong>: 현재 예수금이 주문 필요 금액보다 충분한가?</li>
+<li><strong>중복 발주 방지</strong>: 이미 당일 체결되었거나 미체결된 주문이 존재하는가?</li>
+</ol>
+<h2>따라 해보기 — 정책 기반 자동 모의주문 파이프라인</h2>
+<p>Claude Code에게 승인된 정책 파일을 바탕으로 자동 주문을 실행하는 스크립트를 요청합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>weekly_policy.json 파일을 읽어서 조건이 충족되었을 때
+한국투자증권 모의투자 계좌로 자동으로 매수 주문을 발주하는 스크립트를 작성해줘.
+1회 최대 주문 한도와 예수금을 먼저 확인하고, 중복 발주가 일어나지 않도록 안전 검증을 포함해줘.
+테스트 모드로 1주 매수 주문을 전송하고, 체결 결과와 주문 번호가 로그에 출력되는 것을 보여줘.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li><strong>매수</strong>: 반드시 사람이 알림을 보고 승인해야 주문이 나갑니다. 승인 전에는 어떤 주문도 실행되지 않습니다.</li>
-<li><strong>손절</strong>: 빠른 대응이 필요하므로, 알림에 일정 시간 응답이 없으면 미리 정한 규칙이 자동으로 실행합니다.</li>
-</ul>
-<p>매수와 손절의 처리 방식이 왜 다른지가 이 파트 전체를 관통하는 질문입니다.</p>
-<h3>왜 모의투자부터 시작하는가</h3>
-<p>Part 4~5의 모든 주문은 <strong>모의투자 계좌</strong>에서 실행됩니다. 실제 돈이 나가는 실전 계좌는 시스템이 충분히 검증된 뒤(Part 5)에만 고려합니다. 모의투자는 실전과 동일한 API 구조를 쓰기 때문에, 여기서 완성한 시스템은 그대로 실전으로 옮길 수 있습니다.</p>
-<h2>따라 해보기</h2>
-<p>이번 클립은 설계도 이해가 중심입니다. 강의를 보며 아래 항목을 확인해 보세요.</p>
-<ul>
-<li class="check-item"><input type="checkbox"> 여섯 단계 파이프라인의 순서를 스스로 말할 수 있다</li>
-<li class="check-item"><input type="checkbox"> 매수와 손절의 처리 방식이 왜 다른지 설명할 수 있다</li>
-<li class="check-item"><input type="checkbox"> 실전이 아닌 모의투자 계좌로 시작하는 이유를 이해했다</li>
+<li class="check-item"><input type="checkbox"> <code>weekly_policy.json</code> 파일의 설정을 정확히 로드하여 실행 기준을 파악했다</li>
+<li class="check-item"><input type="checkbox"> 주문 발주 전 예수금과 1회 최대 주문 한도를 체크하는 안전 로직이 동작한다</li>
+<li class="check-item"><input type="checkbox"> 한국투자증권 모의투자 API로 정상 주문이 전송되어 주문 번호(ODNO)가 발급되었다</li>
+<li class="check-item"><input type="checkbox"> 한국투자증권 HTS/MTS 모의투자 잔고에 실제로 매수 내역이 반영되었다</li>
 </ul>
 <h2>자주 발생하는 문제</h2>
-<blockquote>
-<p>이 클립은 시청이 중심이라 실습 오류는 없습니다. 다만 "API 연동은 개발자만 하는 것 아닌가?"라는 걱정이 들 수 있습니다. 다음 클립부터 확인하겠지만, 여러분이 하는 일은 키를 발급받고 결과 화면을 확인하는 것뿐입니다. 연결 코드는 AI가 작성합니다.</p>
-</blockquote>
+<ul>
+<li><strong>장 운영 시간 외 주문 에러</strong>: 정규 장 시간이 아닐 경우 모의투자 API에서 주문 거부 에러가 반환될 수 있습니다. 이때는 예약 주문 또는 장 운영 시간에 맞춰 테스트하세요.</li>
+<li><strong>모의투자 예수금 부족</strong>: 모의투자 계좌에 잔고가 충분한지 이전 클립 잔고 조회 스크립트로 먼저 확인하세요.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>모의투자 주문 API 호출 시 반환된 에러 코드를 분석해줘.
+정규장 시간 여부와 예수금 잔고를 확인하고 정상 처리되도록 점검해줘.
+</code></pre></div>
 <h2>다음 클립 예고</h2>
-<p>다음 클립에서는 한국투자증권 KIS Developers에서 앱키를 발급받고, 모의투자 계좌를 시스템에 연결합니다. 계좌 잔고가 화면에 표로 뜨는 순간이 첫 목표입니다.</p>
+<p>주문이 자동으로 나가는 것을 확인했습니다. 다음 클립에서는 시장 급락 시 내 자산을 보호하기 위해 사람이 개입하지 않아도 0.1초 만에 동작하는 '자동 하드 손절과 서킷브레이커'를 구현합니다.</p>
   </main>
 
   <!-- Pager Navigation -->
   <nav class="pager-nav">
     
-    <a class="pager-btn prev" href="../Part03_시장변화_전략점검_개선/25_검증을_마친_전략을_매매_신호와_알림으로_연결하기.html">
+    <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
       <span class="direction">← 이전 클립</span>
-      <span class="title">검증을 마친 전략을 매매 신호와 알림으로 연결하기</span>
+      <span class="title">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
     </a>
     
     
-    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/27_한국투자증권_API와_모의투자_계좌_연결하기.html">
+    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
       <span class="direction">다음 클립 →</span>
-      <span class="title">한국투자증권 API와 모의투자 계좌 연결하기</span>
+      <span class="title">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
     </a>
     
   </nav>

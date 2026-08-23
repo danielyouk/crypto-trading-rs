@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기 — DATATRAIN AI 트레이딩</title>
+<title>장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 /* Inlined critical CSS */
@@ -823,21 +823,21 @@ li.check-item input[type="checkbox"] {
   <!-- Note Header & GDPval-style Metadata Bar -->
   <div class="note-header">
     <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-    <h1>손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</h1>
+    <h1>장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검</h1>
     
     <div class="metadata-bar">
       <div class="metadata-item">
         <span class="label">Chapter:</span>
-        <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
+        <span>CH02. 주간 전략 정책 승인과 일간 자동 실행 시스템</span>
       </div>
       <div class="metadata-item">
         <span class="label">예상 소요 시간:</span>
-        <span class="badge time">약 22분</span>
+        <span class="badge time">약 20분</span>
       </div>
       <div class="metadata-item">
         <span class="label">강의 유형:</span>
         
-        <span class="badge practice">실습 17 (실습 중심)</span>
+        <span class="badge practice">실습 18 (실습 중심)</span>
         
       </div>
     </div>
@@ -846,72 +846,77 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 보유 종목이 손절 기준에 닿았을 때 알림이 오고, <strong>일정 시간 안에 응답이 없으면 규칙이 자동으로 손절 주문을 실행</strong>하는 안전장치가 동작합니다.</p>
+<p>이 클립이 끝나면, 장이 마감된 저녁에 <strong>오늘 하루 동안 시스템이 실행한 체결 내역, 잔고 변동, 전략별 손익을 AI가 자동으로 분석하여 마크다운 및 HTML 매매 일지로 생성해 주는 일일 저널링 파이프라인</strong>이 완성됩니다.</p>
 <ul>
-<li>손절 알림 도착 → 응답 대기 → 무응답 시 자동 매도 → 결과 회신의 전체 흐름</li>
-<li>매수(사람 승인 필수)와 손절(무응답 시 자동)의 규칙이 서로 다르게 동작하는 것 확인</li>
+<li>당일 매수/매도 체결 내역 및 슬리피지 분석</li>
+<li>전략별 손익 요약 및 현재 계좌 총자산 평가</li>
+<li>내일 장에서 감시할 전략별 기준가(Threshold) 사전 산출 및 보고서 자동 저장</li>
 </ul>
 <h2>이론 핵심</h2>
-<h3>매수와 손절은 왜 규칙이 다른가</h3>
-<ul>
-<li><strong>매수를 놓치면</strong>: 기회를 잃을 뿐, 돈을 잃지는 않습니다. 그래서 사람의 승인을 기다릴 여유가 있습니다.</li>
-<li><strong>손절을 놓치면</strong>: 손실이 계속 커집니다. 회의 중이거나 잠든 사이에 -3%가 -10%가 될 수 있습니다.</li>
-</ul>
-<p>그래서 손절만은 <strong>"응답이 없으면 실행"</strong>이 기본값입니다. 사람이 개입하면 사람 판단을 따르되, 개입하지 못하는 상황에서는 미리 정한 규칙이 나를 지킵니다. 이것이 인간 개입형 하이브리드의 두 번째 축입니다.</p>
-<h3>유예 시간 설계</h3>
-<p>무응답 후 몇 분 만에 실행할지가 핵심 변수입니다.</p>
-<ul>
-<li>너무 짧으면(1분): 알림을 볼 새도 없이 자동 실행 — 사람 개입의 의미가 없음</li>
-<li>너무 길면(1시간): 자동 실행의 의미가 없음 — 그 사이 손실 확대</li>
-</ul>
-<p>이 강의에서는 <strong>10분</strong>을 기본값으로 하되, 자신의 생활 패턴에 맞게 조정합니다. 중요한 것은 값 자체가 아니라 <strong>미리 정해 두고 지킨다</strong>는 것입니다.</p>
-<h3>"손절 취소"도 기록을 남긴다</h3>
-<p>알림을 보고 "이번엔 버티겠다"며 취소하는 것도 유효한 선택입니다. 다만 그 선택은 로그에 남습니다. 나중에 Part 5에서 "손절을 취소한 거래들의 결말"을 데이터로 확인하면, 내 개입이 도움이 됐는지 방해가 됐는지 알 수 있습니다.</p>
-<h2>실습 17 — 무응답 자동 손절 만들기</h2>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>보유 중인 모의투자 종목이 매수가 대비 -3% 아래로 내려가면
-텔레그램으로 &quot;손절 알림: 종목명, 현재 손실률, [지금 손절] [이번엔 유지]&quot; 버튼을 보내줘.
-10분 안에 아무 버튼도 누르지 않으면 자동으로 시장가 매도 주문이 나가야 하고,
-실행 결과가 &quot;자동 손절 실행: 종목명, 매도가&quot;로 회신되어야 해.
-테스트에서는 유예 시간을 1분으로 줄이고, 가짜 가격 하락을 흘려서
-무응답 자동 실행 장면을 보여줘.
+<h3>왜 장 마감 후 일일 저널링인가?</h3>
+<p>장중에는 시스템이 무인으로 기계처럼 실행하지만, 장이 끝난 후에는 <strong>AI와 함께 하루의 실행 결과를 복기(Review)</strong>해야 합니다.</p>
+<div class="compare-box">
+  <div class="bad-panel">
+    <h4>❌ 장중 실시간 잔고 확인 & 스트레스</h4>
+    <ul>
+      <li>장중 1분마다 잔고를 새로고침하며 업무 집중 불가</li>
+      <li>일시적 마이너스 평가손익에 멘탈 흔들림</li>
+      <li>체결 이유와 통계에 대한 체계적 기록 부재</li>
+    </ul>
+  </div>
+  <div class="good-panel">
+    <h4>✅ 장 마감 후 AI 종합 브리핑</h4>
+    <ul>
+      <li>장중에는 100% 무인 실행에 맡기고 본업 집중</li>
+      <li>퇴근 후 AI가 작성한 깔끔한 일일 리포트 1장 확인</li>
+      <li>누적 거래 데이터가 축적되어 주말 거버넌스(Tier 1)의 기초 자료로 활용</li>
+    </ul>
+  </div>
+</div>
+
+<h3>일일 매매 일지 리포트의 4대 핵심 구성</h3>
+<ol>
+<li><strong>오늘의 체결 요약</strong>: 종목, 체결 시간, 매수가/매도가, 수량, 체결 이유</li>
+<li><strong>계좌 건강 상태</strong>: 일일 수익률, 누적 손익, 최대 낙폭(MDD), 현금 비중</li>
+<li><strong>안전 가드레일 상태</strong>: 손절 발동 여부, 서킷브레이커 상태 점검</li>
+<li><strong>내일의 실행 시나리오</strong>: 확정된 당일 종가를 바탕으로 계산된 내일 진입 기준가</li>
+</ol>
+<h2>실습 18 — AI 일일 매매 일지 생성기 구축</h2>
+<p>Claude Code에게 장 마감 데이터를 수집하고 일일 매매 일지를 생성하도록 요청합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>오늘 장 마감 후 체결 내역과 계좌 잔고 데이터를 읽어서
+'daily_report_YYYYMMDD.md' 형식의 일일 매매 일지를 생성해줘.
+1. 오늘 발생한 체결 내역과 손익 요약 표
+2. 현재 포트폴리오 잔고 및 현금 비중
+3. 내일 시장에서 감시할 종목별 진입 기준가 요약
+내용을 깔끔한 마크다운과 표로 작성해서 파일로 저장하고 화면에 출력해줘.
 </code></pre></div>
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 손실률이 기준을 넘자 손절 알림이 텔레그램에 도착했다</li>
-<li class="check-item"><input type="checkbox"> 아무 버튼도 누르지 않고 기다리자 자동 매도 주문이 실행되었다</li>
-<li class="check-item"><input type="checkbox"> "자동 손절 실행" 회신이 오고, 모의투자 화면에도 매도 체결이 보인다</li>
-<li class="check-item"><input type="checkbox"> [이번엔 유지]를 누른 경우에는 매도가 나가지 않고, 그 선택이 로그에 남았다</li>
-<li class="check-item"><input type="checkbox"> 유예 시간(테스트 1분)이 로그의 시각으로 확인된다</li>
+<li class="check-item"><input type="checkbox"> 오늘 하루 동안 실행된 모의투자 체결 내역이 빠짐없이 표로 정리되었다</li>
+<li class="check-item"><input type="checkbox"> 현재 계좌 총평가액과 당일 손익률이 정확히 계산되었다</li>
+<li class="check-item"><input type="checkbox"> 내일 적용될 전략별 기준가가 전일 종가 기준으로 올바르게 산출되었다</li>
+<li class="check-item"><input type="checkbox"> 생성된 일일 리포트가 <code>daily_report_YYYYMMDD.md</code> 파일로 저장되었다</li>
 </ul>
 <h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 타이머·상태 관리 코드는 다를 수 있습니다. <strong>무응답 시 정확히 한 번 매도가 나가는지</strong>가 기준입니다.</p>
 <ul>
-<li><strong>중복 매도</strong>: 유예 시간이 지난 뒤 알림이 또 발생해 매도가 두 번 나가는 경우가 있습니다.</li>
-<li><strong>버튼을 눌렀는데도 자동 실행</strong>: 응답 기록과 타이머가 연결되지 않은 경우입니다.</li>
-<li><strong>장 시간 밖 하락</strong>: 장이 닫혀 있으면 매도 주문이 접수되지 않습니다. 다음 장 시작 시 처리 방식을 정해야 합니다.</li>
+<li><strong>장 마감 전 실행 시 데이터 불일치</strong>: 당일 종가가 확정되는 15:30(국내장 기준) 이후에 실행해야 정확한 일일 일지와 내일 기준가가 산출됩니다.</li>
 </ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>자동 손절이 같은 종목에서 두 번 실행됐어. 한 종목의 손절 알림은
-한 번에 하나만 살아 있도록 하고, 매도가 나간 종목은 다시 알림이 뜨지 않게 해줘.
-</code></pre></div>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[이번엔 유지]를 눌렀는데도 1분 뒤 자동 매도가 나갔어. 버튼 응답이
-타이머를 멈추는지 확인해서 고치고, 유지를 선택한 기록이 로그에 남는 것도 보여줘.
-</code></pre></div>
 <h2>다음 클립 예고</h2>
-<p>장중의 안전장치까지 갖췄습니다. 다음 클립에서는 장이 끝난 뒤, 다음 거래일에 시스템이 무엇을 감시하고 어떤 조건에서 움직일지를 미리 알림으로 받아보는 기능을 만듭니다.</p>
+<p>이제 2-Tier 매매 엔진과 일일 저널링까지 모든 부품이 완성되었습니다. Part 4의 마지막 클립(Clip 35)에서는 이 시스템을 매일 직접 켜는 대신, 주식시장 운영 시간에 맞춰 자동으로 켜지고 꺼지는 백그라운드 스케줄러를 연결합니다.</p>
   </main>
 
   <!-- Pager Navigation -->
   <nav class="pager-nav">
     
-    <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
+    <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
       <span class="direction">← 이전 클립</span>
-      <span class="title">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
+      <span class="title">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
     </a>
     
     
-    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_다음_거래일의_매매_조건_미리_확인하기.html">
+    <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/35_(advanced)_주식시장_운영_시간에_맞춰_시스템을_자동으로_실행하기.html">
       <span class="direction">다음 클립 →</span>
-      <span class="title">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
+      <span class="title">(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기</span>
     </a>
     
   </nav>

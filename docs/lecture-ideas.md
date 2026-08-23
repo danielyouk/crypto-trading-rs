@@ -1872,3 +1872,18 @@ For investors who don't want to manage FX positions:
   - "Why can't GPT-4o or Claude just analyze 30 years of price data and trade 100% automatically?" (Answer: Markets are non-stationary complex adaptive systems. A model overfitted to past data will be the first to blow up when market regimes shift).
   - "If mechanical engineering and software are complex systems, how does keeping a human in the loop prevent financial ruin?" (Answer: AI lacks macro contextual awareness and risk intuition; human gatekeeping prevents automated execution during unprecedented market anomalies while hard stop-loss rules protect against emotional freezing).
 
+## 2-Tier Quant Architecture: Weekly Policy Governance vs. Daily Autonomous Execution
+
+- **Concept**: Moving from micro-managing individual order clicks to a 2-Tier Architecture: Tier 1 (Weekly Strategy & Policy Governance with AI) + Tier 2 (Daily Autonomous Execution with Zero-Latency Hard Guardrails).
+- **Key message**: You don't build wealth by staring at daily trade alerts and clicking approval buttons on your phone. You act as the CIO: approve strategy allocations and risk parameters once a week with Claude Code, and let the execution engine trade autonomously within deterministic hard guardrails during market hours.
+- **Lecture storyline (The Institutional 2-Tier Paradigm)**:
+  1. *The Fallacy of Per-Trade Approval*: Why waiting for human approval on every single trade ruins execution speed, creates notification fatigue, and re-introduces emotional hesitation/overfitting.
+  2. *The CIO Mindset (Tier 1: Weekly Governance)*: Real quant fund managers don't press the 'Buy' button; they design and approve the investment policy. Spend 30 minutes every weekend with Claude Code analyzing market regimes (bull/bear/sideways) and approving strategy weights (`weekly_policy.json`).
+  3. *Autonomous Execution (Tier 2: Weekday Engine)*: The Python/API runner reads `weekly_policy.json`, evaluates market data at designated times (market open/close), and places API orders automatically without human babysitting.
+  4. *Automated Hard Guardrails*: A hard stop-loss (-3%) and daily portfolio circuit breaker (-2%) trigger in milliseconds at the code level, protecting capital without needing manual intervention.
+  5. *Zero Daily Stress*: Checking an automated post-market daily HTML summary rather than being tethered to trading screens during work hours.
+- **Anticipated student questions**:
+  - "Isn't 1 week too slow to adapt to market changes?" (Answer: For daily/swing quant strategies, weekly parameter rebalancing is standard. Micro-adjusting parameters daily leads to curve-fitting and high transaction drag.)
+  - "What if a black swan happens mid-week?" (Answer: The pre-approved hard stop-loss and portfolio circuit-breaker immediately halt trading automatically, protecting capital without waiting for a human.)
+
+
