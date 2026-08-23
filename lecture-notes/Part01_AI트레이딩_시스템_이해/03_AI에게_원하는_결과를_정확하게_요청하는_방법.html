@@ -846,55 +846,131 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 같은 작업이라도 <strong>약한 목표</strong>와 <strong>결과까지 적힌 목표</strong>의 차이를 구분할 수 있고, 앞으로 모든 실습에서 사용할 프롬프트 골격이 손에 들어옵니다.</p>
+<p>이 클립이 끝나면, 여러분은 앞으로 모든 퀀트 개발 실습에서 사용할 <strong>'결과 정의형 프롬프트 3단계 골격'</strong>과 <strong>'AI와의 효율적인 피드백 루프'</strong>를 완전히 손에 익히게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: AI 코딩에서 가장 중요한 것은 어려운 파이썬 문법을 외우는 것이 아닙니다. AI에게 <strong>"작업이 끝났을 때 화면에 무엇이 어떻게 보여야 하는지"</strong>를 구체적이고 시각적인 언어로 선언하는 능력입니다.</p>
+</blockquote>
+<ul>
+<li><strong>약한 프롬프트(How)</strong> vs <strong>결과 정의형 프롬프트(What)</strong>의 결정적 5가지 차이점 비교</li>
+<li>실전 퀀트 개발을 위한 <strong>3대 프롬프트 골격 (맥락 Context + 산출물 Deliverable + 검증 기준 Verification)</strong></li>
+<li>AI의 <strong>'셀프 검증 편향(Self-Validation Bias)'</strong> 극복과 인간 감독관의 눈</li>
+<li>멀티모달 프롬프팅: 깨진 화면이나 이상한 차트를 빠르게 해결하는 <strong>스크린샷 캡처 활용법</strong></li>
+<li><strong>실습</strong>: 약한 프롬프트와 결과 정의형 프롬프트의 실제 산출물 차이 직접 비교하기</li>
+</ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>프롬프트는 명령서가 아니라 목표 선언이다</h3>
-<p>AI에게 절차를 일일이 지시하면 우리가 코딩을 하는 것과 다르지 않습니다. 대신 <strong>작업이 끝났을 때 화면에 뭐가 보여야 하는지</strong>를 선언합니다.</p>
+<h3>1. 프롬프트는 '코딩 명령서'가 아니라 '결과 상태 선언서'다</h3>
+<p>전통적인 프로그래밍은 컴퓨터에게 "1번 줄에서는 변수를 만들고, 2번 줄에서는 반복문을 돌리고, 3번 줄에서는..."이라며 <strong>절차(How)</strong>를 일일이 지시해야 했습니다.</p>
+<p>하지만 최신 AI 에이전트와 일할 때는 절차를 지시할수록 AI의 자율성이 제한되고 코드가 꼬이게 됩니다. 우리는 <strong>"작업이 성공적으로 끝났을 때 완성될 결과물의 모습(What)"</strong>을 선언해야 합니다.</p>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">❌ 약한 프롬프트 (절차·모호함 중심)</div>
+    <div class="steps">
+      • "주가 차트 그려줘."<br>
+      • "추세추종 백테스트 코드 짜줘."<br>
+      • "에러 나는데 고쳐줘."<br>
+      • <strong>문제점</strong>: AI가 종목, 기간, 지표, 출력 형식을 자의적으로 추측하여 엉뚱한 결과를 냄.
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">✅ 결과 정의형 프롬프트 (산출물 중심)</div>
+    <div class="steps">
+      • "삼성전자 최근 3년 일봉 차트에 20/60일 이평선을 겹치고 거래량 막대를 하단에 배치해줘."<br>
+      • "200일 이평선 돌파 전략을 10년치로 검증하고 누적 수익률 곡선과 연도별 MDD 표를 출력해줘."<br>
+      • <strong>장점</strong>: 한 번의 요청으로 완벽하게 의도에 맞는 결과물 생성.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>2. 퀀트 개발을 위한 5대 프롬프트 대조 비교표</h3>
+<p>실전 트레이딩 시스템 구축 시 자주 쓰이는 5가지 상황별 올바른 프롬프트 작성법입니다.</p>
 <table>
 <thead>
 <tr>
-<th>약한 목표</th>
-<th>결과까지 적힌 목표</th>
+<th>작업 상황</th>
+<th>❌ 약한 프롬프트 (피해야 할 예시)</th>
+<th>✅ 결과 정의형 프롬프트 (권장 예시)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>"주가 차트 그려줘"</td>
-<td>"삼성전자 최근 3년 일봉 차트를 그리고, 20일·60일 이동평균선을 겹쳐서 보여줘. 완성되면 이미지 파일 경로를 알려줘"</td>
+<td><strong>1. 데이터 수집 &amp; 차트</strong></td>
+<td>"카카오 주가 데이터 받아서 차트 보여줘."</td>
+<td>"카카오(035720)의 최근 2년치 일봉을 가져와서 상단에는 20일 이동평균선과 볼린저 밴드, 하단에는 거래량 서브플롯을 배치한 차트를 PNG 파일로 저장해줘."</td>
 </tr>
 <tr>
-<td>"백테스트 해줘"</td>
-<td>"이 전략을 최근 10년으로 백테스트하고, 누적 수익률 곡선과 연도별 수익률·MDD 표를 보여줘"</td>
+<td><strong>2. 전략 백테스트</strong></td>
+<td>"변동성 돌파 전략 백테스트 해줘."</td>
+<td>"KODEX 200 ETF에 래리 윌리엄스 변동성 돌파(k=0.5) 전략을 최근 5년간 적용하고, 슬리피지 0.1%와 매매수수료 0.015%를 반영한 최종 CAGR, MDD, 승률 성과표를 표로 출력해줘."</td>
+</tr>
+<tr>
+<td><strong>3. 결측치/이상치 처리</strong></td>
+<td>"데이터 이상한 거 정리해줘."</td>
+<td>"주가 데이터프레임에서 결측치(NaN)가 있는 날짜를 파악하고, 전일 종가 대체(ffill)를 적용한 뒤 처리 전후의 행(Row) 개수 변화를 터미널에 요약해줘."</td>
+</tr>
+<tr>
+<td><strong>4. 에러 및 디버깅</strong></td>
+<td>"차트가 안 떠요. 고쳐주세요."</td>
+<td>"스크립트 실행 중 <code>KeyError: 'Adj Close'</code>가 발생했어. 수정 후 최근 100일치 종가 차트가 정상적으로 <code>charts/</code> 폴더에 생성되는지 파일 경로로 확인시켜줘."</td>
+</tr>
+<tr>
+<td><strong>5. 리포트 생성</strong></td>
+<td>"전략 결과 요약해줘."</td>
+<td>"오늘 실행된 백테스트 결과를 <code>docs/strategy_report.md</code> 파일로 저장하고, 총 거래 횟수, 최대 낙폭(MDD) 발생 일자, 월별 수익률 히트맵 이미지를 포함해줘."</td>
 </tr>
 </tbody>
 </table>
-<h3>프롬프트 골격 (강의 내내 사용)</h3>
-<ol>
-<li><strong>배경</strong> — 무엇을 하는 중인지 한 문장</li>
-<li><strong>목표</strong> — 끝났을 때 보여야 할 결과물 (차트·표·숫자·파일)</li>
-<li><strong>확인 방법</strong> — 내가 무엇으로 성공을 판단할지</li>
-</ol>
-<p>성공 기준을 조건 목록으로 나열하지 않습니다. 목표 문장 안에 이미 결과의 모습이 들어 있으면 충분합니다.</p>
-<h3>확인은 AI가 아니라 내가 한다</h3>
-<p>AI에게 "잘 됐는지 확인해줘"라고 시키지 않습니다. AI는 자기 결과를 후하게 평가하는 경향이 있습니다. <strong>화면을 보는 것은 언제나 사람의 몫</strong>이고, 부족하면 후속 프롬프트로 좁혀 갑니다. 이것이 생각→요청→확인→개선 루프의 핵심입니다.</p>
-<h2>따라 해보기</h2>
-<p>지난 클립에서 만든 환경에 아래 두 프롬프트를 순서대로 넣고, 결과가 어떻게 달라지는지 직접 비교해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>주가 차트 그려줘.
-</code></pre></div>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>삼성전자(005930)의 최근 1년 일봉 차트를 그려줘.
-차트에는 종가 선과 20일 이동평균선이 함께 보여야 하고,
-완성되면 이미지 파일로 저장한 뒤 경로를 알려줘.
-</code></pre></div>
+<hr />
+<h3>3. 실전 퀀트 프롬프트 3단계 골격</h3>
+<p>모든 요청을 작성할 때 머릿속에 <strong>C-D-V 3단계 골격</strong>을 떠올리세요.</p>
+<pre><code class="language-text">[1. Context (맥락과 배경)] ──&gt; &quot;우리는 지금 ~전략을 ~데이터로 검증하는 중이야.&quot;
+         ↓
+[2. Deliverable (최종 산출물)] ──&gt; &quot;화면/파일에 ~차트, ~지표 성과표, ~JSON 정책이 나와야 해.&quot;
+         ↓
+[3. Verification (검증 기준)] ──&gt; &quot;완성되면 터미널에 ~수치를 출력하고 파일 저장 경로를 알려줘.&quot;
+</code></pre>
+<hr />
+<h3>4. AI의 '셀프 검증 편향'과 인간 감독관의 눈</h3>
+<p>AI는 자신이 작성한 코드를 스스로 평가할 때 매우 관대하게 "잘 작동합니다!"라고 보고하는 치명적인 약점(Self-Validation Bias)이 있습니다.</p>
 <ul>
-<li class="check-item"><input type="checkbox"> 첫 번째 프롬프트에서 AI가 종목·기간을 되묻거나 임의로 정하는 것을 보았다</li>
-<li class="check-item"><input type="checkbox"> 두 번째 프롬프트에서 원하는 요소가 모두 담긴 차트가 한 번에 나왔다</li>
+<li><strong>절대 하지 말아야 할 요청</strong>: <em>"코드가 완벽한지 네가 검토해줘."</em></li>
+<li><strong>올바른 아키텍트의 행동</strong>: AI에게는 <strong>검증 가능한 데이터(수치 표, 차트 이미지 파일, 로그)</strong>를 출력하게 만들고, <strong>인간 감독관인 내가 직접 눈으로 화면을 대조</strong>합니다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>같은 프롬프트라도 AI가 생성하는 코드는 저와 여러분이 다를 수 있습니다. 차트의 색이나 배치가 달라도 괜찮습니다. <strong>체크리스트의 요소(종가 선, 이동평균선, 파일 저장)가 갖춰졌는지만</strong> 보면 됩니다. 빠진 요소가 있으면 그 요소만 콕 집어 후속 프롬프트를 보내세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>차트에 20일 이동평균선이 빠져 있어. 추가해서 다시 저장해줘.
+<hr />
+<h2>따라 해보기 — 실습</h2>
+<p>Claude Code 대화창에서 다음 두 가지 프롬프트를 차례대로 입력하여 AI의 응답 품질 차이를 직접 체험해 보세요.</p>
+<h3>[테스트 1] 모호한 프롬프트 입력해 보기</h3>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>네이버 주가 차트 하나 그려줘.
 </code></pre></div>
+<blockquote>
+<p><strong>결과 관찰</strong>: AI가 기간을 1년으로 할지 10년으로 할지 되묻거나, 이동평균선도 없는 밋밋한 선 하나만 대충 그리고 끝납니다.</p>
+</blockquote>
+<hr />
+<h3>[테스트 2] 3단계 골격이 담긴 결과 정의형 프롬프트 입력</h3>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>한국 주식 모멘텀 전략을 분석하기 위해 차트가 필요해. (Context)
+
+NAVER(종목코드: 035420)의 최근 2년간 일봉 데이터를 불러와서,
+상단 차트에는 종가 선과 20일·60일 이동평균선을 표시하고,
+하단 차트에는 거래량 막대그래프를 배치한 2-패널 차트를 만들어줘. (Deliverable)
+
+완성된 차트는 'naver_chart.png'로 저장하고,
+최근 5일간의 종가 및 거래량 요약표를 터미널에 함께 출력해줘. (Verification)
+</code></pre></div>
+<blockquote>
+<p><strong>결과 관찰</strong>: 한 번의 요청으로 완벽하게 정돈된 2-패널 차트 이미지 파일이 생성되고 요약 데이터가 출력됩니다.</p>
+</blockquote>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 모호한 요청 시 AI의 추측으로 인해 비효율이 발생하는 현상을 목격했다.</li>
+<li class="check-item"><input type="checkbox"> 결과 정의형 요청(C-D-V)을 통해 한 번에 완성도 높은 차트 파일(<code>naver_chart.png</code>)과 요약표를 얻었다.</li>
+<li class="check-item"><input type="checkbox"> 이미지 뷰어로 생성된 차트를 열어 20일선(노란색/주황색 등)과 60일선이 정상 표시되었는지 확인했다.</li>
+</ul>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>이제 배운 골격으로 첫 실습다운 실습을 합니다. 한국 주식 데이터를 불러와 일봉 차트를 완성합니다.</p>
+<p>이제 AI와 완벽하게 대화하는 무기를 갖추었습니다.<br />
+다음 클립에서는 이 프롬프트 골격을 활용하여 <strong>한국 주식 데이터를 본격적으로 수집하고, 이동평균선과 거래량이 결합된 전문 주가 차트를 완성</strong>해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

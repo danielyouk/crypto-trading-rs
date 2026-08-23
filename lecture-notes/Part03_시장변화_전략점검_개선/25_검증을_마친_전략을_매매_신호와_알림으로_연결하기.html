@@ -846,69 +846,94 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 지금까지 만든 전략이 Part 4에서 <strong>살아 움직이는 시스템</strong>으로 바뀌는 전체 그림이 머릿속에 그려집니다.</p>
-<ul>
-<li>검증된 전략 → 매매 신호 생성 → 알림 → 사람의 승인 → 모의주문의 연결 구조</li>
-<li>각 연결 지점에서 사람이 개입하는 위치와 규칙이 실행하는 위치</li>
-</ul>
-<figure class="visual-figure">  <img src="../_core/assets/03_paper_approval.gif" alt="사람이 승인하는 모의매매 흐름">  <figcaption><strong>[시스템 조감도]</strong> 사람이 승인하는 모의매매 흐름</figcaption></figure>
-
-<h2>이론 핵심</h2>
-<h3>백테스트와 실전의 결정적 차이</h3>
-<p>지금까지의 전략은 과거 데이터 위에서 살았습니다. 실전 시스템은 세 가지가 다릅니다.</p>
-<table>
-<thead>
-<tr>
-<th>구분</th>
-<th>백테스트</th>
-<th>실전 시스템</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>데이터</td>
-<td>이미 끝난 과거</td>
-<td>지금 흘러오는 실시간 가격</td>
-</tr>
-<tr>
-<td>판단 시점</td>
-<td>한꺼번에 계산</td>
-<td>매 순간 "지금 신호인가?"</td>
-</tr>
-<tr>
-<td>실수의 비용</td>
-<td>숫자가 틀림</td>
-<td>돈이 나감</td>
-</tr>
-</tbody>
-</table>
-<p>그래서 실전 연결의 첫 단계는 실제 주문이 아니라 <strong>신호와 알림</strong>입니다. 돈이 나가는 단계는 모의계좌에서, 그것도 사람의 승인을 거쳐서만 진행합니다.</p>
-<h3>신호에서 주문까지: 다섯 정거장</h3>
-<p>Part 4에서 만들 파이프라인의 정거장은 다섯 개입니다.</p>
-<ol>
-<li><strong>실시간 가격 수신</strong> — 증권사 API로 시장 데이터 받기</li>
-<li><strong>신호 생성</strong> — 검증된 전략의 규칙대로 매수·매도 신호 판정</li>
-<li><strong>알림</strong> — 텔레그램으로 신호 내용과 근거를 사람에게 전달</li>
-<li><strong>승인</strong> — 사람이 버튼으로 승인 또는 거절 (매수는 반드시 사람이)</li>
-<li><strong>모의주문</strong> — 승인된 신호만 모의계좌에서 주문 실행</li>
-</ol>
-<p>빠른 대응이 필요한 손절만은 예외적으로 규칙이 실행합니다. 이것이 인간 개입형 하이브리드의 실체입니다.</p>
-<h3>검증 없이 연결하지 않는다</h3>
-<p>Part 3를 통과한 전략만 신호 생성기에 올립니다. 워크포워드도 거치지 않은 전략을 실시간에 연결하는 것은, 시험 한 번 안 본 파일럿에게 조종간을 맡기는 것과 같습니다. 운영 기준표(지난 클립)가 어떤 전략을 올릴지 정하는 문서입니다.</p>
-<h2>따라 해보기</h2>
-<p>Part 4를 시작하기 전에 아래를 스스로 점검해 보세요.</p>
-<ul>
-<li class="check-item"><input type="checkbox"> 다섯 정거장(가격 수신→신호→알림→승인→모의주문)을 순서대로 말할 수 있다</li>
-<li class="check-item"><input type="checkbox"> 사람이 개입하는 정거장(승인)과 규칙이 실행하는 예외(손절)를 구분할 수 있다</li>
-<li class="check-item"><input type="checkbox"> 내 운영 기준표에서 Part 4에 처음 연결할 전략 하나를 골랐다</li>
-<li class="check-item"><input type="checkbox"> 그 전략이 워크포워드 검증을 통과했는지 확인했다</li>
-</ul>
-<h2>자주 발생하는 문제</h2>
+<p>이 클립이 끝나면, 여러분은 지난 3개 파트에 걸쳐 검증하고 고도화한 4대 전략 로직을 독립적인 <strong>'시그널 생성 모듈(<code>generate_signals.py</code>)'</strong>로 패키징하고, 매일 장 시작 전(또는 장 마감 후) 실행하여 <strong>오늘 발생한 최종 매수/매도 신호와 목표 주문 수량을 표준화된 JSON 데이터(<code>signals.json</code>) 및 터미널 알림 표로 출력</strong>하는 완전한 분석 파이프라인을 구축하게 됩니다.</p>
 <blockquote>
-<p>이 클립은 큰 그림을 그리는 시간이라 실습 오류는 없습니다. 다만 "당장 실제 계좌로 하고 싶다"는 조급함이 생길 수 있습니다. Part 4~5 전체가 모의계좌에서 진행되는 이유는 단순합니다 — 시스템의 실수는 반드시 일어나고, 그 수업료는 모의계좌에서 내는 것이 가장 쌉니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 이제 백테스트(과거 분석)의 영역이 끝나고, 실전 시스템(현재와 미래 실행)으로 넘어가는 관문입니다. Part 3에서 완성한 <code>signals.json</code> 파일은 <strong>Part 4에서 증권사 API 모의주문 엔진과 그대로 연결</strong>됩니다.</p>
 </blockquote>
-<h2>다음 클립 예고</h2>
-<p>Part 3가 끝났습니다. Part 4 첫 클립에서는 매매 신호부터 승인과 주문까지의 전체 구조를 자세히 살펴보고, 한국투자증권 모의투자 계좌를 연결합니다.</p>
+<ul>
+<li>분석 코드(Backtesting Script)에서 <strong>실전 시그널 생성기(Signal Engine)</strong>로의 아키텍처 모듈화</li>
+<li>표준 시그널 데이터 규격(<code>signals.json</code>) 설계 (종목코드, 전략명, 신호유형, 목표가, 주문수량, 가드레일 손절가)</li>
+<li><strong>실습 14</strong>: <code>generate_signals.py</code> 작성 및 오늘 기준 실시간 시그널 생성 실행</li>
+<li>Part 4 (증권사 API 연결 및 주간 정책 승인 체계)로의 완벽한 징검다리 구조 정립</li>
+</ul>
+<hr />
+<h2>이론 핵심</h2>
+<h3>1. 백테스트 코드 vs 실전 시그널 엔진의 구조적 차이</h3>
+<div class="compare-box">
+  <div class="compare-card info">
+    <div class="tag">백테스트 스크립트 (과거 분석용)</div>
+    <div class="steps">
+      • 과거 10년 전체 시계열을 메모리에 로드.<br>
+      • 누적 수익률, MDD, 샤프 지수 계산 및 차트 그리기 목적.<br>
+      • 출력물: 성과표 표, PNG 차트.
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">실전 시그널 엔진 (매일 실행용)</div>
+    <div class="steps">
+      • 최근 N일치(지표 계산에 필요한 최소 일수) 최신 데이터만 로드.<br>
+      • <strong>"오늘/내일 당장 주문을 넣어야 하는가?"</strong> 단일 판단.<br>
+      • 출력물: 기계가 읽을 수 있는 <code>signals.json</code> 및 운영자 브리핑.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>2. 표준 시그널 데이터 규격 (<code>signals.json</code>)</h3>
+<pre><code class="language-json">{
+  &quot;timestamp&quot;: &quot;2026-08-23T08:30:00&quot;,
+  &quot;market_regime&quot;: &quot;BULL&quot;,
+  &quot;signals&quot;: [
+    {
+      &quot;ticker&quot;: &quot;069500&quot;,
+      &quot;name&quot;: &quot;KODEX 200&quot;,
+      &quot;strategy&quot;: &quot;TREND_FOLLOWING&quot;,
+      &quot;action&quot;: &quot;BUY&quot;,
+      &quot;target_price&quot;: 35200,
+      &quot;allocation_pct&quot;: 0.40,
+      &quot;hard_stop_loss_pct&quot;: -0.03
+    },
+    {
+      &quot;ticker&quot;: &quot;122630&quot;,
+      &quot;name&quot;: &quot;KODEX 레버리지&quot;,
+      &quot;strategy&quot;: &quot;VOLATILITY_BREAKOUT&quot;,
+      &quot;action&quot;: &quot;BUY_ON_BREAKOUT&quot;,
+      &quot;target_price&quot;: 18450,
+      &quot;allocation_pct&quot;: 0.30,
+      &quot;hard_stop_loss_pct&quot;: -0.02
+    }
+  ]
+}
+</code></pre>
+<hr />
+<h2>실습 — 실습 14: 실전 시그널 생성기 모듈 구축</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하여 실전 시그널 생성 파이썬 모듈을 완성하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>Part 2와 3에서 검증된 전략들을 통합하여 매일 아침 매매 신호를 생성하는 'generate_signals.py' 모듈을 완성해줘. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. FinanceDataReader를 통해 4대 전략 대상 종목들의 최근 250거래일 데이터를 최신 시점으로 불러와줘.
+2. 현재 시장 국면(상승/하락/횡보)을 진단하고, 4대 전략(추세, 돌파, 모멘텀, 페어)의 오늘 진입/청산/유지 신호를 계산해줘.
+3. 총 투자 가능 자산(예: 1,000만 원)을 기준으로 종목별 목표 매수 수량(주수)과 필수 안전 손절가(-3% 하드 손절)를 산출해줘.
+4. 산출된 전체 신호를 'signals.json' 파일로 저장해줘.
+5. 터미널에는 운영자가 한눈에 확인할 수 있는 '오늘의 매매 실행 브리핑 요약표'를 깔끔하게 출력해줘.
+
+실행 완료 후 터미널에 시그널 표를 출력하고 'signals.json' 파일 내용을 확인시켜줘. (Verification)
+</code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> <code>generate_signals.py</code>가 에러 없이 실행되어 최신 주가 기반으로 신호를 산출했다.</li>
+<li class="check-item"><input type="checkbox"> 터미널에 오늘 매수/매도해야 할 종목, 진입 가격, 목표 주문 수량, 손절가가 명확히 출력되었다.</li>
+<li class="check-item"><input type="checkbox"> 프로젝트 루트에 구조화된 <code>signals.json</code> 파일이 생성된 것을 확인했다.</li>
+</ul>
+<hr />
+<h2>Part 1~3 총정리 및 Part 4 로드맵</h2>
+<p>우리는 지금까지:
+1. <strong>Part 1</strong>: 제로코드 패러다임과 Claude Code 환경 구축, 프롬프트 엔지니어링 및 4단계 디버깅을 마스터했습니다.
+2. <strong>Part 2</strong>: 4대 핵심 퀀트 전략(추세추종, 변동성돌파, 듀얼모멘텀, 페어트레이딩)의 수학적 원리와 백테스트를 수행했습니다.
+3. <strong>Part 3</strong>: 과최적화를 걸러내는 워크포워드(WFA), AI 손실 진단, 거래비용 스트레스 테스트, 시그널 엔진 모듈화를 완성했습니다.</p>
+<p>이제 드디어 <strong>Part 4 (시그널 승인 &amp; 모의주문 연동)</strong>로 넘어갑니다!<br />
+한국투자증권 Open API 모의투자 계좌를 개설하고, 주말 30분 주간 거버넌스(<code>weekly_policy.json</code>) 승인 체계와 0.1초 무인 하드 손절 봇을 실제로 가동해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

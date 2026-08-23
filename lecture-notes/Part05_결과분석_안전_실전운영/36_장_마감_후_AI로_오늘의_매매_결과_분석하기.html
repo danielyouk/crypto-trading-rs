@@ -846,80 +846,68 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 장 마감 후 <strong>오늘 하루의 매매 결과가 한눈에 정리된 일일 보고서</strong>가 화면에 보입니다. 그리고 그 보고서를 AI에게 건네 "오늘 손실이 왜 났는지" 분석한 결과까지 받아봅니다.</p>
+<p>이 클립이 끝나면, 여러분은 장 마감 후 매매 데이터를 바탕으로 <strong>'체결 영수증 ➔ 손익 분해 ➔ AI 원인 진단'</strong>으로 이어지는 정밀 사후 분석 리포트를 생성하고, AI가 도출한 원인 후보와 실제 계좌 숫자를 교차 검증하는 포스트-마켓 리뷰 루틴을 완전히 마스터하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 기록 없는 투자는 도박입니다. 퀀트 시스템 트레이딩의 진정한 강점은 <strong>모든 진입과 청산, 체결 슬리피지가 1원 단위의 데이터로 남아 객관적 분석이 가능하다는 점</strong>에 있습니다.</p>
+</blockquote>
 <ul>
-<li>오늘 발생한 시그널 / 내가 승인·거절한 내역 / 실제 주문 체결 / 종목별 손익이 한 장으로 정리된 보고서</li>
-<li>보고서를 근거로 AI가 작성한 손실 원인 분석 코멘트</li>
+<li>일일 매매 성과표의 4대 핵심 축: 시그널 발생, 정책 부합 여부, 실제 체결 단가, 실현 손익</li>
+<li>AI를 활용한 <strong>'손익 기여도(PnL Attribution) 및 슬리피지 누수 분석'</strong></li>
+<li>단일 거래의 일희일비(감정)를 배제하고 통계적 이상치를 걸러내는 피드백 기법</li>
+<li><strong>실습 24</strong>: Claude Code를 통한 당일 체결 내역 심층 진단 리포트 생성</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>기록 없는 매매는 개선할 수 없다</h3>
-<p>감으로 하는 매매와 시스템 매매의 가장 큰 차이는 <strong>모든 판단이 기록으로 남는다</strong>는 점입니다. 시그널이 몇 번 나왔는지, 나는 무엇을 승인하고 무엇을 거절했는지, 그 결과 손익이 어땠는지가 남아 있어야 "다음에 뭘 고칠지"를 말할 수 있습니다.</p>
-<h3>일일 보고서에 들어가야 할 네 가지</h3>
-<table>
-<thead>
-<tr>
-<th>항목</th>
-<th>답하는 질문</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>시그널 내역</td>
-<td>오늘 시스템이 무엇을 하자고 했나?</td>
-</tr>
-<tr>
-<td>승인·거절 내역</td>
-<td>나는 어떤 판단을 했나?</td>
-</tr>
-<tr>
-<td>주문·체결 내역</td>
-<td>실제로 무엇이 실행됐나?</td>
-</tr>
-<tr>
-<td>종목별 손익</td>
-<td>그 결과는 어땠나?</td>
-</tr>
-</tbody>
-</table>
-<p>이 네 가지가 모두 있어야 "시스템이 틀렸는지, 내 판단이 틀렸는지, 운이 나빴는지"를 구분할 수 있습니다.</p>
-<h3>분석은 AI가, 결론 채택은 사람이</h3>
-<p>AI는 보고서를 읽고 손실 원인 후보를 빠르게 정리해 줍니다. 예를 들어 "손절 규칙이 늦게 작동했다", "횡보 구간에서 추세추종 시그널이 반복 손실을 냈다" 같은 가설입니다. 다만 이것은 <strong>가설</strong>이지 결론이 아닙니다. 전략을 실제로 바꾸는 것은 다음 클립에서 배울 재검증을 통과한 뒤의 일입니다.</p>
-<h2>실습 — 실습 20</h2>
-<p>Part 4에서 만든 모의매매 시스템에 일일 보고서 생성을 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>오늘 하루의 매매 결과를 정리한 일일 보고서를 만들어줘.
-보고서에는 ① 오늘 발생한 시그널 목록 ② 내가 승인/거절한 내역
-③ 실제 주문과 체결 내역 ④ 종목별 손익과 오늘의 총 손익이
-표 형태로 보이면 좋겠어. 완성되면 보고서 파일 경로를 알려줘.
+<h3>1. 일일 매매 데이터의 4단계 교차 감사</h3>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 시그널 생성 감사</div>
+    <div class="card-desc">오늘 아침 시스템이 계산한 이론적 매수/매도 신호가 전략 룰과 일치했는가?</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 정책 준수 감사</div>
+    <div class="card-desc">승인된 weekly_policy.json의 비중 한도와 종목 유니버스를 벗어나지 않았는가?</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 체결 품질 감사</div>
+    <div class="card-desc">주문 시점의 시세 대비 실제 체결 단가의 슬리피지가 0.15% 이내로 통제되었는가?</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">④ 손익 귀속 감사</div>
+    <div class="card-desc">오늘의 수익과 손실이 어떤 전략에서 얼마씩 발생했는가? (PnL Attribution)</div>
+  </div>
+</div>
+
+<hr />
+<h3>2. AI 분석 리포트의 가설 수립 메커니즘</h3>
+<p>AI에게 일일 데이터를 넘겨주면 다음과 같은 정량적 근거 기반의 가설을 도출합니다.
+- <em>"KODEX 레버리지에서 발생한 -1.8% 손실은 09:15 급등 후 14:00 이후 외인 매도세로 인한 장 후반 급락이 원인입니다."</em>
+- <em>"KB금융 페어트레이딩은 Z-Score가 1.2에서 0.3으로 정상 수렴하며 +0.9%의 차익을 안정적으로 실현했습니다."</em></p>
+<hr />
+<h2>실습 — 실습 24: AI 일일 매매 심층 분석 실행</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>오늘의 매매 체결 내역과 계좌 잔고 데이터를 바탕으로 AI 심층 성과 분석 리포트를 작성해줘. (Context)
+
+다음 요구사항에 맞춰 분석을 수행해줘: (Deliverable)
+1. orders_history.json과 daily_journal.md 데이터를 로드해줘.
+2. 각 체결 건별 [신호 발생가 vs 실제 체결가]를 대조하여 슬리피지(%)를 산출해줘.
+3. 오늘의 총 손익을 4대 전략별 기여도(추세, 돌파, 모멘텀, 페어)로 분해한 표를 터미널에 출력해줘.
+4. 오늘 발생한 손실 거래에 대해 시장 요인(KOSPI 등락)과 전략 요인을 대조한 'AI 원인 분석 의견서'를 작성하고 'docs/daily_performance_review.md'로 저장해줘.
+
+실행 완료 후 터미널에 전략별 손익 기여도 표와 AI 총평을 출력해줘. (Verification)
 </code></pre></div>
-<p>보고서가 만들어졌다면, 이어서 분석을 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>방금 만든 일일 보고서를 읽고, 오늘 손실이 난 거래가 있다면
-어떤 원인 후보가 있는지 2~3가지로 정리해줘.
-각 원인마다 보고서의 어떤 숫자를 근거로 삼았는지 함께 보여줘.
-</code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 보고서에 시그널·승인/거절·주문·손익 네 항목이 모두 표로 보인다</li>
-<li class="check-item"><input type="checkbox"> 오늘의 총 손익 숫자가 모의계좌 화면의 잔고 변화와 일치한다</li>
-<li class="check-item"><input type="checkbox"> AI의 손실 원인 분석에 보고서 속 실제 숫자가 근거로 인용되어 있다</li>
-<li class="check-item"><input type="checkbox"> 오늘 거래가 없었다면 "거래 없음"이 명확히 표시된다</li>
+<li class="check-item"><input type="checkbox"> 체결 건별 슬리피지 추정치와 수수료 합계가 명확히 계산되었다.</li>
+<li class="check-item"><input type="checkbox"> 오늘 계좌 손익이 4개 전략별로 얼마씩 기여했는지 분해된 표를 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <code>docs/daily_performance_review.md</code>에 정량적 근거가 담긴 AI 분석 보고서가 저장되었다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 보고서 형식(표 모양, 항목 순서, 파일 형태)은 다를 수 있습니다. 형식이 아니라 <strong>네 가지 항목이 모두 있고 숫자가 계좌와 맞는지</strong>를 체크리스트로 확인하세요.</p>
-<ul>
-<li>손익 숫자가 계좌와 다를 때:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>보고서의 총 손익이 모의계좌 잔고 변화와 달라.
-수수료와 미체결 주문이 손익 계산에 반영되어 있는지 확인해서
-계좌 기준과 일치하도록 고쳐줘.
-</code></pre></div>
-<ul>
-<li>분석이 두루뭉술할 때:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>&quot;시장이 안 좋았다&quot; 같은 일반론 말고, 오늘 보고서의 거래 내역
-숫자를 근거로 어떤 규칙이 어느 거래에서 손실을 키웠는지 짚어줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>다음 클립에서는 오늘 받은 손실 원인 분석을 <strong>전략 개선안</strong>으로 바꾸고, 즉흥적으로 반영하는 대신 재백테스트로 검증한 뒤에만 적용하는 안전한 개선 루프를 완성합니다.</p>
+<p>오늘 하루의 결과를 분석했습니다.<br />
+하지만 하루 손실이 났다고 해서 당장 전략을 뜯어고쳐야 할까요? 절대로 아닙니다!<br />
+다음 클립에서는 <strong>단기 노이즈에 흔들리지 않고, 주간/월간 통계를 바탕으로 전략을 안전하게 개선하고 재검증하는 '정기 전략 튜닝 사이클'</strong>을 배워보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

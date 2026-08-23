@@ -846,64 +846,106 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, <strong>주말에 승인된 <code>weekly_policy.json</code> 정책에 따라 평일 장중에 조건이 맞으면 한국투자증권 Open API를 통해 자동으로 모의주문이 발주되는 무인 실행 엔진</strong>이 완성됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 승인된 주간 정책(<code>weekly_policy.json</code>)과 실시간 시그널(<code>signals.json</code>)을 읽어들여, 조건이 충족되었을 때 <strong>한국투자증권 모의투자 API를 통해 실제 주식 매수/매도 주문을 자동으로 전송하고, 체결 영수증(주문번호, 체결가, 체결수량)을 받아 기록하는 '무인 자동 발주 엔진(<code>execute_orders.py</code>)'</strong>을 완성하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 승인되지 않은 정책(<code>status != "ACTIVE"</code>)이거나 유효기간이 지난 정책인 경우, 발주 엔진은 스스로 안전하게 멈추며 절대로 임의로 주문을 넣지 않습니다.</p>
+</blockquote>
 <ul>
-<li>시스템이 <code>weekly_policy.json</code>을 읽고 실시간/일봉 시세를 감시</li>
-<li>진입 조건(예: Z-Score 돌파 등) 만족 시 증권사 API로 매수 주문 자동 전송</li>
-<li>모의투자 계좌에 실제로 매수 체결이 이루어지고 주문 번호가 기록되는 화면 확인</li>
+<li>KIS 국내주식 주문(현금매수 <code>TTTC0802U</code> / 현금매도 <code>TTTC0801U</code>) API 규격 이해</li>
+<li>주문 유형: 시장가(01) 주문 vs 지정가(00) 주문의 장단점 및 알고리즘 적용 기준</li>
+<li>중복 주문 방지(Idempotency / Order Deduplication)를 위한 주문 상태 저장소(<code>orders_history.json</code>) 설계</li>
+<li><strong>실습 19</strong>: <code>execute_orders.py</code> 실행을 통한 KIS 모의투자 계좌 실제 1주 매수/매도 체결 테스트</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>결정론적 무인 실행 (Tier 2 Execution)</h3>
-<p>주말에 사람이 정책을 승인했다면, 주중에는 기계가 0.1초의 지연이나 망설임 없이 규칙을 집행해야 합니다.</p>
-<div class="arch-grid">
-  <div class="arch-card">
-    <h4>1. 정책 로드</h4>
-    <p><code>weekly_policy.json</code>의 활성 전략 및 진입 임계값 파싱</p>
-  </div>
-  <div class="arch-card">
-    <h4>2. 시장 데이터 평가</h4>
-    <p>현재가 및 지표 계산 후 정책 조건 부합 여부 실시간 판정</p>
-  </div>
-  <div class="arch-card">
-    <h4>3. 자동 API 발주</h4>
-    <p>주문 수량 계산 후 한국투자증권 Open API로 즉시 매수 발주</p>
-  </div>
-  <div class="arch-card">
-    <h4>4. 체결 및 로그 기록</h4>
-    <p>주문 응답(체결가, 수량, 주문번호)을 트레이딩 로그에 기록</p>
-  </div>
-</div>
+<h3>1. 무인 자동 발주 파이프라인 (Execution Flow)</h3>
+<pre><code class="language-text">[1. 사전 정책 검증] ──&gt; weekly_policy.json이 ACTIVE 상태인지 &amp; 유효기간 내인지 확인
+         ↓
+[2. 시그널 읽기]    ──&gt; signals.json에서 BUY/SELL 신호 및 목표 수량 확인
+         ↓
+[3. 중복 주문 검사] ──&gt; 이미 오늘 동일 종목으로 발주된 이력이 있는지 orders_history.json 대조
+         ↓
+[4. KIS API 주문]  ──&gt; POST /uapi/domestic-stock/v1/trading/order-cash 전송
+         ↓
+[5. 체결 확인 &amp; 로깅]──&gt; 주문번호(ODNO) 수신, 체결 결과 저장 및 텔레그램/터미널 브리핑
+</code></pre>
+<hr />
+<h3>2. KIS 주식 주문 API 필수 파라미터</h3>
+<table>
+<thead>
+<tr>
+<th>파라미터명</th>
+<th>의미</th>
+<th>예시값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CANO</code></td>
+<td>종합계좌번호 8자리</td>
+<td><code>"50123456"</code></td>
+<td><code>.env</code>에서 로드</td>
+</tr>
+<tr>
+<td><code>ACNT_PRDT_CD</code></td>
+<td>계좌상품코드 2자리</td>
+<td><code>"01"</code></td>
+<td>보통 주식 계좌 01</td>
+</tr>
+<tr>
+<td><code>PDNO</code></td>
+<td>종목코드 6자리</td>
+<td><code>"069500"</code></td>
+<td>KODEX 200 등</td>
+</tr>
+<tr>
+<td><code>ORD_DVSN</code></td>
+<td>주문구분</td>
+<td><code>"01"</code></td>
+<td><strong>"01": 시장가 (즉시 체결)</strong>, "00": 지정가</td>
+</tr>
+<tr>
+<td><code>ORD_QTY</code></td>
+<td>주문 수량</td>
+<td><code>"10"</code></td>
+<td>문자열 형태의 정수 주수</td>
+</tr>
+<tr>
+<td><code>ORD_UNPR</code></td>
+<td>주문 단가</td>
+<td><code>"0"</code></td>
+<td>시장가 주문 시에는 "0" 전달</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>실습 — 실습 19: 무인 자동 주문 발주 모듈 실행</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>승인된 weekly_policy.json을 준수하여 KIS 모의투자 계좌로 자동 주문을 전송하는 'execute_orders.py' 모듈을 완성해줘. (Context)
 
-<h3>안전 발주를 위한 사전 검증 3대 원칙</h3>
-<ol>
-<li><strong>주문 한도 검증</strong>: 1회 주문 금액이 <code>weekly_policy.json</code>에 정의된 최대 허용한도를 넘지 않는가?</li>
-<li><strong>잔고 상태 확인</strong>: 현재 예수금이 주문 필요 금액보다 충분한가?</li>
-<li><strong>중복 발주 방지</strong>: 이미 당일 체결되었거나 미체결된 주문이 존재하는가?</li>
-</ol>
-<h2>따라 해보기 — 정책 기반 자동 모의주문 파이프라인</h2>
-<p>Claude Code에게 승인된 정책 파일을 바탕으로 자동 주문을 실행하는 스크립트를 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>weekly_policy.json 파일을 읽어서 조건이 충족되었을 때
-한국투자증권 모의투자 계좌로 자동으로 매수 주문을 발주하는 스크립트를 작성해줘.
-1회 최대 주문 한도와 예수금을 먼저 확인하고, 중복 발주가 일어나지 않도록 안전 검증을 포함해줘.
-테스트 모드로 1주 매수 주문을 전송하고, 체결 결과와 주문 번호가 로그에 출력되는 것을 보여줘.
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. weekly_policy.json의 정책 상태가 'ACTIVE'이고 오늘 날짜가 유효기간 내인지 먼저 검증해줘. (비정상 시 즉각 중단)
+2. signals.json을 읽고, BUY 신호가 발생한 첫 번째 종목(또는 테스트용 1주)에 대해 KIS 주식 현금매수(TTTC0802U) API를 호출해줘.
+3. 주문 성공 시 반환되는 주문번호(ODNO)와 체결 메시지를 확인하고, 'orders_history.json'에 [주문시간, 종목코드, 주문유형, 주문수량, 주문번호]를 기록해줘.
+4. 중복 발주를 방지하기 위해 이미 발주 완료된 신호는 재주문되지 않도록 필터링해줘.
+5. 터미널에 체결 영수증 요약표를 출력해줘.
+
+실행 완료 후 터미널에 모의투자 주문 체결 영수증을 출력하여 성공을 증명해줘. (Verification)
 </code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> <code>weekly_policy.json</code> 파일의 설정을 정확히 로드하여 실행 기준을 파악했다</li>
-<li class="check-item"><input type="checkbox"> 주문 발주 전 예수금과 1회 최대 주문 한도를 체크하는 안전 로직이 동작한다</li>
-<li class="check-item"><input type="checkbox"> 한국투자증권 모의투자 API로 정상 주문이 전송되어 주문 번호(ODNO)가 발급되었다</li>
-<li class="check-item"><input type="checkbox"> 한국투자증권 HTS/MTS 모의투자 잔고에 실제로 매수 내역이 반영되었다</li>
+<li class="check-item"><input type="checkbox"> <code>weekly_policy.json</code>의 승인 상태를 검증한 뒤 발주 프로세스가 안전하게 시작되었다.</li>
+<li class="check-item"><input type="checkbox"> KIS 모의투자 API로부터 정상 응답(<code>rt_cd == "0"</code>, 주문번호 발급)을 받았다.</li>
+<li class="check-item"><input type="checkbox"> <code>orders_history.json</code>에 오늘의 주문 이력이 정확하게 기록되었다.</li>
+<li class="check-item"><input type="checkbox"> 한국투자증권 MTS/HTS 모의투자 화면에서 해당 종목의 체결 내역을 눈으로 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<ul>
-<li><strong>장 운영 시간 외 주문 에러</strong>: 정규 장 시간이 아닐 경우 모의투자 API에서 주문 거부 에러가 반환될 수 있습니다. 이때는 예약 주문 또는 장 운영 시간에 맞춰 테스트하세요.</li>
-<li><strong>모의투자 예수금 부족</strong>: 모의투자 계좌에 잔고가 충분한지 이전 클립 잔고 조회 스크립트로 먼저 확인하세요.</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>모의투자 주문 API 호출 시 반환된 에러 코드를 분석해줘.
-정규장 시간 여부와 예수금 잔고를 확인하고 정상 처리되도록 점검해줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>주문이 자동으로 나가는 것을 확인했습니다. 다음 클립에서는 시장 급락 시 내 자산을 보호하기 위해 사람이 개입하지 않아도 0.1초 만에 동작하는 '자동 하드 손절과 서킷브레이커'를 구현합니다.</p>
+<p>내 코드가 증권사 서버로 주문을 전송하여 실제 주식을 체결시켰습니다!<br />
+하지만 주가가 예상과 달리 갑자기 급락한다면 어떻게 해야 할까요? 사람이 직접 HTS를 켜서 손절 버튼을 누를 시간이 없습니다.<br />
+다음 클립에서는 <strong>사람의 확인을 묻지 않고 0.1초 만에 즉각 발동하는 '자동 하드 손절과 서킷브레이커'</strong>를 구축해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

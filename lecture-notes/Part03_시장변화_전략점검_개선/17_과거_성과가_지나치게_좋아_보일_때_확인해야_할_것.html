@@ -846,74 +846,94 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 백테스트 성과표를 볼 때 "이 숫자는 진짜일까?"를 스스로 물을 수 있게 됩니다. 화면에는 <strong>파라미터를 조금 바꿨을 때 성과가 급락하는 민감도 표</strong>가 보입니다.</p>
+<p>이 클립이 끝나면, 여러분은 백테스트에서 마법처럼 완벽해 보이는 수익률 곡선을 보았을 때 환호하는 대신 의심의 눈초리를 보내는 <strong>'철저한 퀀트 감사관(Auditor)의 눈'</strong>을 갖추게 됩니다. 실전에서 계좌를 깡통 차게 만드는 <strong>3대 백테스트 악마(과최적화, 미래 참조 편향, 생존자 편향)</strong>를 적발하는 체크리스트를 손에 넣습니다.</p>
+<blockquote>
+<p>💡 <strong>존 폰 노이만의 경고</strong>: <em>"매개변수 4개면 코끼리를 그릴 수 있고, 5개면 코끼리가 코를 흔들게 할 수도 있다." (과거 데이터에 억지로 파라미터를 맞추면 어떤 환상적인 백테스트도 조작해낼 수 있다는 의미)</em></p>
+</blockquote>
 <ul>
-<li>과최적화가 무엇이고 왜 생기는지에 대한 명확한 그림</li>
-<li>내 전략이 과최적화인지 확인하는 두 가지 점검 도구(표본 외 구간, 파라미터 민감도)</li>
+<li><strong>과최적화(Overfitting / Curve Fitting)</strong>의 본질과 파라미터 과다의 위험성</li>
+<li>백테스트 코드에 숨어 있는 <strong>미래 데이터 참조 편향(Lookahead Bias)</strong> 적발법</li>
+<li>상장폐지된 주식을 무시하여 생기는 <strong>생존자 편향(Survivorship Bias)</strong>의 왜곡</li>
+<li><strong>백테스트 신뢰성 감사 4대 체크리스트</strong></li>
+<li><strong>실습</strong>: Claude Code로 고의적인 과최적화 전략과 정상 전략의 미래 성과 붕괴 시뮬레이션</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>과최적화: 과거에만 잘 맞는 옷</h3>
-<p>과최적화(overfitting)는 전략의 파라미터가 <strong>과거 데이터의 우연한 패턴에까지 딱 맞춰진 상태</strong>입니다. 이동평균 기간을 187일로 하면 수익률이 최고라는 결과가 나왔다면, 187이라는 숫자에 어떤 논리가 있는지 물어봐야 합니다. 논리가 없다면 그것은 과거의 소음에 맞춘 것이고, 미래에는 통하지 않을 가능성이 큽니다.</p>
-<h3>표본 외 성과 붕괴</h3>
-<p>과최적화된 전략의 전형적인 증상은 <strong>파라미터를 고른 구간(표본 내)에서는 화려하고, 그 이후 구간(표본 외)에서는 성과가 무너지는 것</strong>입니다. 백테스트 수익률이 비정상적으로 높다면 기뻐하기 전에 이렇게 물어보세요.</p>
-<ul>
-<li>이 파라미터는 어느 구간의 데이터로 골랐는가?</li>
-<li>그 구간 <strong>바깥</strong>의 데이터에서도 성과가 유지되는가?</li>
-</ul>
-<h3>파라미터 민감도: 절벽 위의 최고점</h3>
-<p>건강한 전략은 파라미터를 조금 바꿔도 성과가 완만하게 변합니다. 과최적화된 전략은 특정 값에서만 뾰족하게 좋고 주변 값에서는 급락합니다.</p>
-<table>
-<thead>
-<tr>
-<th>이동평균 기간</th>
-<th>건강한 전략 수익률</th>
-<th>과최적화 전략 수익률</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>180일</td>
-<td>연 8%</td>
-<td>연 2%</td>
-</tr>
-<tr>
-<td>200일</td>
-<td>연 9%</td>
-<td>연 21%</td>
-</tr>
-<tr>
-<td>220일</td>
-<td>연 8%</td>
-<td>연 1%</td>
-</tr>
-</tbody>
-</table>
-<p>오른쪽처럼 200일에서만 튀는 전략은 절벽 위의 최고점입니다. 시장이 조금만 달라져도 떨어집니다.</p>
-<h2>따라 해보기</h2>
-<p>Part 2에서 성과가 가장 좋았던 전략 하나를 골라 민감도를 확인해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>성과가 가장 좋았던 전략의 핵심 파라미터를 기준값에서 위아래로 몇 단계씩 바꿔가며
-각각 백테스트했을 때의 연평균 수익률과 MDD를 표로 보여줘.
-파라미터 값에 따라 수익률이 어떻게 변하는지 한눈에 보이는 막대 차트도 함께 보여줘.
+<h3>1. 퀀트를 속이는 3대 백테스트 악마</h3>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 과최적화 (Overfitting)</div>
+    <div class="card-desc">
+      과거 데이터의 우연한 노이즈까지 규칙으로 암기한 상태. (예: "2019년 3월 15일에 14.7일 이동평균선과 RSI 28.3에서 매수하면 대박!"). 미래 데이터에서는 100% 박살남.
+    </div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 미래 참조 편향 (Lookahead Bias)</div>
+    <div class="card-desc">
+      오늘 09:00 시가에 진입하면서 오늘 15:30에 결정될 종가를 미리 알고 매매 신호를 내는 치명적 코드 오류. 백테스트에서는 승률 90%가 나오지만 실전에서는 실행 불가능.
+    </div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 생존자 편향 (Survivorship Bias)</div>
+    <div class="card-desc">
+      현재 상장되어 있는 종목들만으로 과거 10년을 백테스트하는 오류. 과거에 부도나서 상장폐지된 수많은 한계기업들을 제외했으므로 성과가 비정상적으로 과대평가됨.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>2. 과최적화의 시각적 증거 — 파라미터 민감도 지형도</h3>
+<p>건강한 전략은 파라미터가 조금 바뀌어도 성과가 완만하게 유지됩니다. 반면 과최적화된 전략은 특정 숫자 하나에서만 뾰족한 바늘(Spike)처럼 수익률이 치솟습니다.</p>
+<pre><code class="language-text">[건강하고 견고한 전략 (Robust Plateau)]
+이동평균 기간:  180일 ──&gt; CAGR 14.5%
+              190일 ──&gt; CAGR 15.1%
+              200일 ──&gt; CAGR 15.3% (완만한 고원 형태)
+              210일 ──&gt; CAGR 14.8%
+              220일 ──&gt; CAGR 14.2%
+
+[과최적화된 엉터리 전략 (Overfitted Needle)]
+이동평균 기간:  197일 ──&gt; CAGR -5.2%
+              198일 ──&gt; CAGR -2.1%
+              199일 ──&gt; CAGR +58.7% (우연히 과거 한 번의 급등을 맞춘 바늘!)
+              200일 ──&gt; CAGR -4.3%
+              201일 ──&gt; CAGR +1.2%
+</code></pre>
+<hr />
+<h3>3. 백테스트 감사 4대 자가진단 체크리스트</h3>
+<ol>
+<li><strong>파라미터 개수가 3개 이하인가?</strong> (지표가 5개 이상 덕지덕지 붙어 있다면 99% 과최적화)</li>
+<li><strong>신호 계산(t)과 매매 체결(t+1)에 명확한 시간 지연(Lag)이 있는가?</strong></li>
+<li><strong>슬리피지와 수수료, 세금이 충분히 가혹하게 차감되었는가?</strong> (최소 왕복 0.25% 이상)</li>
+<li><strong>인샘플(In-Sample) 최적화에 사용되지 않은 미공개 데이터(Out-of-Sample)에서도 수익이 나는가?</strong></li>
+</ol>
+<hr />
+<h2>따라 해보기 — 실습</h2>
+<p>Claude Code에게 과최적화된 파라미터 탐색 스크립트를 작성하게 하고, 학습 구간(In-Sample)에서는 환상적이었던 전략이 미래 구간(Out-of-Sample)에서 어떻게 처참하게 무너지는지 시뮬레이션해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>과최적화(Overfitting)가 실전 투자에서 왜 치명적인지 증명하는 시뮬레이션을 수행해줘. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. KODEX 200(069500)의 데이터를 두 구간으로 엄격히 분리해줘:
+   - In-Sample (학습/최적화 구간): 2015-01-01 ~ 2019-12-31 (5년)
+   - Out-of-Sample (미래 검증 구간): 2020-01-01 ~ 2024-12-31 (5년)
+2. In-Sample 구간에서 이동평균선(5일~200일)과 RSI 필터(10~90)를 무차별 조합(Grid Search)하여 가장 수익률이 높게 나온 '극단적 과최적화 파라미터'를 찾아줘.
+3. 동시에 보편적인 기본 파라미터(200일 단순 이동평균선)를 준비해줘.
+4. 두 전략(과최적화 전략 vs 기본 견고한 전략)을 Out-of-Sample(2020~2024) 구간에 그대로 적용하여 실제 미래 성과를 비교해줘.
+5. In-Sample과 Out-of-Sample 구간이 나뉜 누적 수익률 비교 차트를 'overfitting_trap_demo.png'로 저장해줘.
+
+실행 완료 후 두 전략의 In-Sample vs Out-of-Sample CAGR 및 MDD 변화를 표로 출력해줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 파라미터를 바꾼 여러 버전의 성과가 한 표에 정리되어 있다</li>
-<li class="check-item"><input type="checkbox"> 내 전략의 성과가 특정 값에서만 뾰족한지, 주변 값에서도 완만한지 눈으로 판단했다</li>
-<li class="check-item"><input type="checkbox"> "이 파라미터를 왜 이 값으로 정했는가"에 스스로 한 문장으로 답할 수 있다</li>
+<li class="check-item"><input type="checkbox"> In-Sample 구간에서는 과최적화 전략이 연 40% 이상의 압도적인 수익률을 기록하는 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> Out-of-Sample(미래 데이터)로 넘어가자마자 과최적화 전략의 수익률이 마이너스로 곤두박질치며 붕괴하는 현상을 목격했다.</li>
+<li class="check-item"><input type="checkbox"> 반면 단순하고 견고한 200일 기본 전략은 미래 구간에서도 안정적인 우상향을 유지하는 것을 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>민감도 표의 모양은 강사와 다를 수 있습니다. AI가 고른 파라미터 범위와 단계 폭이 다르기 때문입니다. 표의 숫자가 아니라 <strong>완만한지 뾰족한지의 모양</strong>을 보세요.</p>
-<ul>
-<li>파라미터 범위가 너무 좁게 나왔다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>파라미터 변화 폭이 너무 좁아서 경향이 안 보여. 범위를 더 넓게 잡고 단계도 더 촘촘하게 나눠서 다시 보여줘.
-</code></pre></div>
-<ul>
-<li>어떤 파라미터를 흔들어야 할지 모르겠다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이 전략에서 성과에 가장 큰 영향을 주는 파라미터가 무엇인지 먼저 알려주고, 그 파라미터부터 민감도 표를 만들어줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>민감도 확인은 좋은 출발이지만, 과최적화를 걸러내는 더 체계적인 방법이 있습니다. 다음 챕터에서 이 강의의 핵심 검증 도구인 <strong>워크포워드</strong>를 배웁니다.</p>
+<p>과거 데이터의 거짓말을 눈으로 확인했습니다.<br />
+그렇다면 퀀트는 과거 데이터와 미래 데이터를 어떻게 다루어야 과최적화의 덫에 걸리지 않고 실전에서도 돈을 버는 전략을 만들어낼 수 있을까요?<br />
+다음 클립에서는 퀀트 검증의 최고봉인 <strong>'워크포워드 분석(Walk-Forward Analysis, WFA)의 핵심 원리'</strong>를 배워보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

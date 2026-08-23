@@ -846,61 +846,82 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 하루 단위로 승부하는 <strong>변동성 돌파 전략</strong>의 진입 규칙을 계산식까지 말할 수 있고, 그 뿌리에 있는 <strong>모멘텀</strong>(오르던 것이 더 오른다)이라는 시장 성질을 이해하게 됩니다.</p>
-<ul>
-<li>목표가 계산: 오늘 시가 + (전일 변동폭 × k)</li>
-<li>이 전략이 강한 장과 약한 장이 언제인지 미리 파악</li>
-</ul>
-<h2>이론 핵심</h2>
-<h3>모멘텀 — 움직임에는 관성이 있다</h3>
-<p>모멘텀은 "최근에 오르던 자산이 당분간 더 오르는 경향"을 말합니다. 추세추종이 몇 달~몇 년의 긴 관성을 탄다면, 변동성 돌파는 <strong>하루 안의 짧은 관성</strong>을 탑니다. 시간의 길이만 다를 뿐, 두 전략 모두 "움직임이 확인된 뒤 올라탄다"는 같은 철학입니다.</p>
-<h3>변동성 돌파의 규칙</h3>
-<table>
-<thead>
-<tr>
-<th>단계</th>
-<th>규칙</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>목표가 계산</td>
-<td>오늘 시가 + (전일 고가 − 전일 저가) × k</td>
-</tr>
-<tr>
-<td>진입</td>
-<td>장중 가격이 목표가를 <strong>돌파하면</strong> 매수</td>
-</tr>
-<tr>
-<td>청산</td>
-<td>다음 날 시가(또는 당일 종가)에 매도</td>
-</tr>
-</tbody>
-</table>
-<p>핵심 발상은 이렇습니다. 어제 하루 움직인 폭(변동폭)의 k배(보통 0.5)만큼 오늘 가격이 <strong>위로 튀었다면</strong>, 그것은 우연한 흔들림이 아니라 강한 매수세라는 신호로 본다 — 그 관성에 하루만 올라탑니다.</p>
-<h3>k값의 의미 — 민감도 조절 손잡이</h3>
-<p>k가 작으면 자주 진입하고(신호 남발), k가 크면 확실한 돌파만 잡는 대신 기회가 줄어듭니다. 여기서 유혹이 생깁니다. 과거 데이터에 k를 이리저리 맞추면 성과표가 좋아 보이게 만들 수 있습니다 — 전형적인 <strong>과최적화</strong>입니다. k는 "과거 성과가 가장 좋았던 값"이 아니라 "값을 조금 바꿔도 성과가 무너지지 않는 값"이어야 합니다.</p>
-<h3>약점 — 허위 돌파와 횡보장</h3>
-<p>돌파 직후 가격이 되밀리는 것을 <strong>허위 돌파</strong>라고 합니다. 방향 없이 오르내리는 <strong>횡보장</strong>에서는 허위 돌파가 반복되어 잔손실과 거래비용이 계속 쌓입니다. 매일 사고파는 전략이라 거래비용의 영향이 추세추종보다 훨씬 큽니다. 다음 클립 백테스트에서 이 약점 구간을 직접 찾아냅니다.</p>
-<h2>따라 해보기</h2>
-<p>계산기를 들고 관심 종목 하나로 오늘의 목표가를 직접 계산해 보세요.</p>
-<ul>
-<li class="check-item"><input type="checkbox"> 전일 고가 − 전일 저가로 변동폭을 구했다</li>
-<li class="check-item"><input type="checkbox"> 오늘 시가 + 변동폭 × 0.5로 목표가를 계산했다</li>
-<li class="check-item"><input type="checkbox"> 오늘 실제 고가와 비교해 "오늘 진입 신호가 났을지"를 판정했다</li>
-<li class="check-item"><input type="checkbox"> 신호가 났다면 종가 기준으로 이익이었을지 손실이었을지 확인했다</li>
-</ul>
-<h2>자주 발생하는 문제</h2>
+<p>이 클립이 끝나면, 여러분은 1987년 로빈스 트레이딩 챔피언십에서 1만 달러를 114만 달러(11,376% 수익률)로 불린 래리 윌리엄스(Larry Williams)의 전설적인 <strong>'변동성 돌파(Volatility Breakout, VBO) 전략'</strong>의 수학적 수식과 당일 데이트레이딩 메커니즘을 완벽하게 이해하게 됩니다.</p>
 <blockquote>
-<p>이 클립은 이론 중심입니다. 흔한 오해 하나만 짚습니다 — "k값을 최적화하면 되는 것 아닌가요?" 과거에 가장 좋았던 k가 미래에도 좋으리라는 보장은 없습니다. 백테스트 성과가 특정 k에서만 좋다면 그 전략은 버려야 합니다.</p>
+<p>💡 <strong>래리 윌리엄스의 철학</strong>: <em>"시장의 변동성은 수축과 확장을 반복한다. 하루 동안 가격이 전일 변동폭의 일정 비율 이상 튀어 오른다면, 그 방향으로 장 마감까지 강력한 관성(모멘텀)이 유지된다."</em></p>
 </blockquote>
-<p>개념 확인이 필요하면 이렇게 요청해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>변동성 돌파 전략의 진입 원리를 그림으로 이해하고 싶어.
-비트코인 최근 한 달 일봉에서 매일의 목표가(시가 + 전일 변동폭 × 0.5)를 점선으로 표시하고,
-실제로 돌파가 일어난 날을 화살표로 표시한 차트를 보여줘.
+<ul>
+<li>변동성 돌파 전략의 핵심 파라미터인 <strong>전일 변동폭(Range = High - Low)과 $k$-계수</strong>의 원리</li>
+<li>당일 진입 후 당일 장 마감(또는 익일 시가) 전량 청산하는 <strong>오버나이트 리스크 통제 기법</strong></li>
+<li>한국 시장(KOSPI/KOSDAQ 및 레버리지 ETF)에서 변동성 돌파 전략이 유효한 이유</li>
+<li>모멘텀(Momentum)과 가격 관성의 물리학적 유추</li>
+<li><strong>실습</strong>: 실시간 일중 가격이 돌파 기준가($\text{Target Price}$)를 뚫는 메커니즘 시각화</li>
+</ul>
+<hr />
+<h2>이론 핵심</h2>
+<h3>1. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
+<p>변동성 돌파 전략은 장 시작(09:00) 직후 <strong>'목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수하여 당일 장 마감 또는 익일 시가에 전량 매도하는 단순하고 강력한 전략입니다.</p>
+<p>$$\text{Range}<em t-1="t-1">{t-1} = \text{High}</em>)$$} - \text{Low}_{t-1} \quad (\text{전일 고가 - 전일 저가</p>
+<p>$$\text{Target Price}<em t-1="t-1">t = \text{Open}_t + (\text{Range}</em> \times k)$$</p>
+<p>$$\text{Buy Condition}: \text{Current Price}_t \ge \text{Target Price}_t$$</p>
+<p>$$\text{Sell Condition}: \text{익일 시가(09:00) 또는 당일 종가(15:30) 전량 시장가 매도}$$</p>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 변동폭 계수 ($k$-factor)</div>
+    <div class="card-desc">통상 0.4 ~ 0.6 사이의 값을 사용합니다. (가장 대중적인 표준값 $k = 0.5$). $k$가 클수록 진입 횟수가 줄어들고 안전해집니다.</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 오버나이트 리스크 제로화</div>
+    <div class="card-desc">밤사이 발생하는 미국 증시 폭락이나 글로벌 악재에 노출되지 않고, 매일 장 마감 후 100% 현금 상태로 숙면할 수 있습니다.</div>
+  </div>
+</div>
+
+<hr />
+<h3>2. 변동성 돌파가 작동하는 시장 심리적 배경</h3>
+<div class="compare-box">
+  <div class="compare-card info">
+    <div class="tag">일반적인 잔파동 (Noise)</div>
+    <div class="steps">
+      • 시가 근처에서 소폭 등락을 거듭하며 특별한 추세가 없는 상태.<br>
+      • 목표가($\text{Open} + \text{Range} \times 0.5$)에 도달하지 못함.<br>
+      • <strong>시스템 행동</strong>: 관망 및 매수 미실행 (현금 100% 유지).
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">강력한 기관/외인 수급 유입 (Breakout)</div>
+    <div class="steps">
+      • 강력한 매수세가 전일 변동폭의 절반 이상을 순식간에 끌어올림.<br>
+      • 돌파 기준가를 뚫는 순간 <strong>강력한 추세 관성(Momentum)</strong> 형성.<br>
+      • <strong>시스템 행동</strong>: 즉시 편승 매수 ➔ 장 마감까지 상승 향유.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h2>따라 해보기 — 시각화 실습</h2>
+<p>Claude Code에게 특정 종목의 일별 변동성 돌파 기준선과 실제 체결 여부를 시각화하도록 요청해 보겠습니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>래리 윌리엄스 변동성 돌파 전략의 작동 메커니즘을 분석하고 시각화하고 싶어. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. FinanceDataReader를 사용해 KODEX 레버리지(122630) 또는 삼성전자의 최근 6개월 일봉 데이터를 가져와줘.
+2. 매일의 변동폭($\text{Range} = \text{High} - \text{Low}$)을 구하고, $k=0.5$ 기준의 목표 매수가($\text{Target} = \text{Open} + \text{Range} \times 0.5$)를 계산해줘.
+3. 당일의 최고가($\text{High}$)가 목표 매수가 이상인 날을 '매수 체결일'로 판정하고, 매수 체결된 날의 진입가(Target)와 익일 시가(청산가) 간의 일간 수익률을 계산해줘.
+4. 캔들스틱 차트 위에 매일의 목표 매수가 선(주황색 점선)을 긋고, 매수가 체결된 날에는 캔들 아래에 화살표를 표시한 차트를 'volatility_breakout_mechanism.png'로 저장해줘.
+
+실행 완료 후 최근 10거래일의 시가, 고가, 목표 매수가, 돌파 여부(True/False), 일간 수익률을 표로 출력해줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 매일 아침 시가($\text{Open}$)에 전일 변동폭의 50%를 더한 목표 매수가가 정확하게 계산되었다.</li>
+<li class="check-item"><input type="checkbox"> 주가가 크게 급등한 날에는 목표가를 뚫고 화살표(매수) 신호가 표시되었음을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 주가가 지지부진했던 횡보일에는 매수가 발생하지 않고 현금을 지킨 것을 확인했다.</li>
+</ul>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>다음 클립(실습 05)에서는 변동성 돌파 전략을 백테스트하고, 성과가 무너진 <strong>약점 구간</strong>을 차트에서 직접 찾아냅니다. 잘 버는 구간보다 잃는 구간을 보는 것이 이번 실습의 목적입니다.</p>
+<p>변동성 돌파의 명쾌한 원리를 확인했습니다.<br />
+하지만 변동성 돌파 전략 역시 하루 종일 주가가 올랐다가 장 마감 직전에 폭락하는 '윗꼬리 음봉'이나 횡보장에서 손실을 입을 수 있습니다.<br />
+다음 클립에서는 <strong>변동성 돌파 전략의 10년 백테스트를 수행하고, 이 전략의 취약 구간과 약점을 극복하는 보완책</strong>을 분석해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

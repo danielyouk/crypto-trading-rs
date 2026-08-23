@@ -846,75 +846,137 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 머릿속의 막연한 투자 아이디어를 <strong>AI에게 전달할 수 있는 매매 규칙</strong>으로 바꾸는 기준이 생깁니다. Part 2 전체에서 다룰 4가지 전략(추세추종·변동성 돌파·듀얼 모멘텀·페어트레이딩)이 모두 이 기준을 통과한 전략이라는 큰 그림도 함께 잡습니다.</p>
+<p>이 클립이 끝나면, 여러분은 머릿속에 맴돌던 주관적이고 모호한 투자 아이디어를 컴퓨터와 AI가 오차 없이 실행할 수 있는 <strong>'엄격하고 계량화된 알고리즘 매매 규칙(Rule-based Strategy)'</strong>으로 변환하는 프레임워크를 완벽히 마스터하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 수식을 직접 유도할 필요가 없습니다. 핵심은 투자 아이디어를 <strong>"조건(Condition) ➔ 진입(Entry) ➔ 청산(Exit) ➔ 위험관리(Risk)"</strong>라는 4대 명확한 상태 전이(State Machine) 구조로 분해하는 아키텍트의 논리적 사고력입니다.</p>
+</blockquote>
 <ul>
-<li>"쌀 때 사서 비쌀 때 판다" 같은 문장이 왜 자동화될 수 없는지 설명할 수 있다</li>
-<li>자동화 가능한 규칙의 3가지 조건을 내 아이디어에 적용해 볼 수 있다</li>
+<li>"쌀 때 사서 비쌀 때 판다" 식의 주관적 감정 매매가 시스템 트레이딩에서 100% 실패하는 이유</li>
+<li>자동화 가능한 알고리즘의 <strong>3대 절대 조건 (계량성·비모호성·재현성)</strong></li>
+<li>투자 전략을 시스템화하는 <strong>4단계 파이프라인 (아이디어 ➔ 지표화 ➔ 조건문 ➔ 상태 전이)</strong></li>
+<li>Part 2에서 백테스트할 <strong>4대 핵심 퀀트 전략(추세추종·변동성돌파·듀얼모멘텀·페어트레이딩)</strong> 조망</li>
+<li><strong>실습</strong>: 모호한 자연어 아이디어를 Claude Code와 함께 완벽한 알고리즘 규칙으로 변환하는 구조화 실습</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>자동화 가능한 규칙의 3가지 조건</h3>
-<p>컴퓨터는 애매한 지시를 실행하지 못합니다. 매매 규칙이 자동화되려면 다음 세 가지를 만족해야 합니다.</p>
+<h3>1. 감정적 매매 vs 규칙 기반(Rule-based) 시스템 트레이딩</h3>
+<p>인간 투자자가 시장에서 지속적으로 돈을 잃는 가장 큰 이유는 뇌의 진화적 본능(손실 회피 편향, 공포, 탐욕) 때문입니다. 반면 규칙 기반 시스템 트레이딩은 감정을 배제하고 수학적으로 검증된 룰에 따라 기계적으로 집행합니다.</p>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">❌ 주관적 감정 매매 (Discretionary Trading)</div>
+    <div class="steps">
+      • <strong>매수 이유</strong>: "뉴스가 호재 같고 차트 분위기가 좋아 보여서."<br>
+      • <strong>손절 기준</strong>: "더 떨어지면 손실 확정이 무서워서 버티기(존버)."<br>
+      • <strong>결과</strong>: 상승장에서는 조금 먹고 팔고, 폭락장에서는 계좌가 반토막 남.
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">✅ 규칙 기반 시스템 트레이딩 (Rule-based System)</div>
+    <div class="steps">
+      • <strong>매수 이유</strong>: "종가가 200일 SMA를 상향 돌파하고 거래량이 20일 평균의 150% 이상일 때."<br>
+      • <strong>손절 기준</strong>: "진입가 대비 -3% 도달 시 조건 불문 익일 시가 전량 청산."<br>
+      • <strong>결과</strong>: 백테스트로 과거 10년의 확률과 손익비(Payoff Ratio)를 사전에 알고 진입.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>2. 자동화 가능한 규칙의 3대 절대 조건</h3>
+<p>컴퓨터는 "적당히", "분위기를 봐서", "많이 빠졌을 때" 같은 모호한 언어를 전혀 이해하지 못합니다. 모든 매매 규칙은 다음 3대 조건을 반드시 통과해야 합니다.</p>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 계량성 (Quantifiability)</div>
+    <div class="card-desc">모든 입력 변수가 데이터(OHLCV, 재무제표, 거시경제 지표)의 명확한 숫자로 표현되어야 합니다. (예: RSI(14) < 30)</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 비모호성 (Unambiguity)</div>
+    <div class="card-desc">신호가 발생했을 때 '매수할 것인가 말 것인가'에 대한 판단이 0 또는 1(Boolean)로 즉각 판정되어야 합니다.</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 재현성 (Reproducibility)</div>
+    <div class="card-desc">동일한 과거 시계열 데이터를 입력했을 때, 어제 실행하든 10년 뒤에 실행하든 100% 동일한 거래 내역이 나와야 합니다.</div>
+  </div>
+</div>
+
+<hr />
+<h3>3. 투자 아이디어를 규칙으로 바꾸는 4단계 변환 프레임워크</h3>
+<p>우리가 앞으로 모든 전략을 구현할 때 거치는 체계적인 변환 흐름입니다.</p>
+<pre><code class="language-text">[1. 추상적 아이디어] ──&gt; &quot;주가가 강하게 상승세를 탈 때 따라붙고 싶다.&quot;
+         ↓
+[2. 지표 정의]       ──&gt; &quot;최근 200일 종가 이동평균선(SMA_200)을 추세 지표로 채택.&quot;
+         ↓
+[3. 진입/청산 조건]  ──&gt; 진입: Close(t) &gt; SMA_200(t) AND Close(t-1) &lt;= SMA_200(t-1)
+                         청산: Close(t) &lt; SMA_200(t)
+         ↓
+[4. 위험관리 규칙]   ──&gt; 단일 종목 포트폴리오 비중 20% 제한, 진입가 대비 -3% 하드 손절
+</code></pre>
+<hr />
+<h3>4. Part 2에서 마스터할 4대 핵심 퀀트 전략 미리보기</h3>
+<p>우리는 금융 역사상 수십 년간 생존해 온 대표적인 4가지 퀀트 전략을 직접 백테스트하고 검증합니다.</p>
 <table>
 <thead>
 <tr>
-<th>조건</th>
-<th>의미</th>
-<th>나쁜 예</th>
-<th>좋은 예</th>
+<th>전략명</th>
+<th>핵심 철학</th>
+<th>진입 메커니즘</th>
+<th>유리한 시장 국면</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>계량화</td>
-<td>숫자로 표현된다</td>
-<td>"많이 오르면"</td>
-<td>"종가가 200일 이동평균 위이면"</td>
+<td><strong>1. 추세추종 (Trend Following)</strong></td>
+<td>"추세는 친구다(Ride the trend)"</td>
+<td>200일 이동평균선 상향 돌파</td>
+<td>대세 상승장 (폭락장 방어)</td>
 </tr>
 <tr>
-<td>명확한 진입·청산</td>
-<td>언제 사고 파는지 정해져 있다</td>
-<td>"느낌이 안 좋으면 판다"</td>
-<td>"종가가 이평선 아래로 내려오면 전량 매도"</td>
+<td><strong>2. 변동성 돌파 (Volatility Breakout)</strong></td>
+<td>"당일의 강력한 모멘텀에 편승"</td>
+<td>당일 시가 + (전일 변동폭 × $k$) 돌파</td>
+<td>단기 추세 폭발장</td>
 </tr>
 <tr>
-<td>재현성</td>
-<td>누가 언제 돌려도 같은 판단</td>
-<td>"뉴스 분위기를 보고"</td>
-<td>"같은 데이터면 같은 신호"</td>
+<td><strong>3. 듀얼 모멘텀 (Dual Momentum)</strong></td>
+<td>"절대적 강세 + 상대적 1위 자산 보유"</td>
+<td>상대 모멘텀(1위 자산) + 절대 모멘텀(무위험수익 초과)</td>
+<td>자산군별 순환매 장세</td>
+</tr>
+<tr>
+<td><strong>4. 페어트레이딩 (Pairs Trading)</strong></td>
+<td>"영원히 벌어지는 스프레드는 없다"</td>
+<td>통계적 상관/공적분 쌍의 Z-score 이탈 시 평균회귀 베팅</td>
+<td>횡보장, 완만한 하락장</td>
 </tr>
 </tbody>
 </table>
-<h3>"쌀 때 사서 비쌀 때 판다"가 실패하는 이유</h3>
-<p>이 문장에는 <strong>'싸다'의 기준이 없습니다.</strong> 어제보다 싼 것인지, 1년 평균보다 싼 것인지, 기업 가치 대비 싼 것인지에 따라 완전히 다른 전략이 됩니다. 자동화의 첫걸음은 좋은 아이디어를 찾는 것이 아니라, <strong>아이디어를 판정 가능한 문장으로 바꾸는 것</strong>입니다.</p>
-<h3>규칙이 명확하면 AI 요청도 명확해진다</h3>
-<p>이 강의의 작업 루프(생각→요청→확인→개선)에서, 규칙이 애매하면 AI에게 보내는 프롬프트도 애매해지고 결과 확인도 불가능해집니다. 반대로 규칙이 숫자와 조건으로 정리되어 있으면 "이 규칙대로 백테스트한 결과 화면을 보여줘"라고 요청하고, 화면이 규칙과 맞는지 <strong>내 눈으로</strong> 검증할 수 있습니다.</p>
-<h3>Part 2에서 검증할 4가지 전략 미리 보기</h3>
-<ol>
-<li><strong>추세추종</strong> — 가격이 장기 이동평균 위에 있을 때만 보유</li>
-<li><strong>변동성 돌파</strong> — 전일 변동폭만큼 가격이 튀어오르면 진입</li>
-<li><strong>듀얼 모멘텀</strong> — 여러 자산 중 가장 강한 것을 골라 보유, 모두 약하면 방어자산</li>
-<li><strong>페어트레이딩</strong> — 함께 움직이는 두 종목의 가격 차이가 벌어지면 되돌림에 베팅</li>
-</ol>
-<h2>따라 해보기</h2>
-<p>코드를 만들기 전에, 내가 평소 가진 투자 아이디어 하나를 골라 아래 체크리스트로 점검해 보세요.</p>
-<ul>
-<li class="check-item"><input type="checkbox"> 내 아이디어를 한 문장으로 적어 보았다</li>
-<li class="check-item"><input type="checkbox"> 그 문장에 숫자로 표현되지 않은 단어("싸다", "많이", "분위기")가 있는지 표시했다</li>
-<li class="check-item"><input type="checkbox"> 진입 조건과 청산 조건을 각각 한 줄씩 따로 적을 수 있는지 확인했다</li>
-<li class="check-item"><input type="checkbox"> 3가지 조건 중 통과하지 못한 항목이 무엇인지 알았다</li>
-</ul>
-<h2>자주 발생하는 문제</h2>
-<blockquote>
-<p>이 클립은 이론 중심이라 실습 오류는 없습니다. 다만 자신의 아이디어를 규칙으로 바꾸다 보면 "이게 맞는 규칙인지" 확신이 서지 않을 수 있습니다. 정답 규칙은 없습니다 — 다음 클립부터 배우는 <strong>백테스트가 바로 그 판정 도구</strong>입니다.</p>
-</blockquote>
-<p>규칙 점검을 AI에게 도움받고 싶다면 이렇게 요청해 볼 수 있습니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>다음 투자 아이디어가 자동화 가능한 매매 규칙인지 점검해줘:
-&quot;거래량이 터지면서 오르는 주식을 사서 조금 오르면 판다.&quot;
-계량화·진입청산·재현성 관점에서 애매한 부분을 표로 정리하고,
-자동화 가능한 형태로 고친 규칙 예시를 보여줘.
+<hr />
+<h2>따라 해보기 — 실습</h2>
+<p>Claude Code 대화창을 열고, 여러분이 평소 생각하던 막연한 투자 아이디어를 엄격한 알고리즘 규칙으로 변환해 보도록 요청하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>내가 가진 투자 아이디어를 자동화 가능한 퀀트 매매 규칙으로 체계화하고 싶어. (Context)
+
+투자 아이디어:
+&quot;거래량이 평소보다 크게 늘어나면서 20일 이동평균선을 위로 뚫고 올라가는 주식을 사서, 
+수익이 5% 나면 절반을 팔고 나머지는 20일선을 깨고 내려올 때 전량 판다.&quot;
+
+이 아이디어를 다음 4가지 관점에서 엄격하게 분석하고 정리해줘: (Deliverable)
+1. 계량성(Quantifiability) 검토: 모호한 표현(예: '평소보다 크게')을 구체적 수치 지표로 재정의
+2. 진입 조건(Entry Rule): 수식 및 파이썬 조건문 형태
+3. 익절/손절 조건(Exit Rule): 분할 매도 및 트레일링 스탑 로직 분해
+4. 전략 상태 다이어그램(State Machine) 요약 표
+
+마지막으로 이 규칙을 파이썬 백테스트 함수로 바로 옮길 수 있는 명세서(Specification) 형태로 출력해줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 모호했던 "거래량이 크게 늘어난다"는 문장이 "당일 거래량 &gt; 20일 평균 거래량 × 2.0"처럼 명확한 수치로 정의되었다.</li>
+<li class="check-item"><input type="checkbox"> 진입(Entry), 분할 익절(Take-profit), 트레일링 청산(Exit), 손절(Stop-loss)의 조건이 참/거짓(True/False)으로 명확히 구분되었다.</li>
+<li class="check-item"><input type="checkbox"> 이 규칙을 코드로 옮겼을 때 언제 사서 언제 팔지 제3자나 컴퓨터가 오차 없이 판단할 수 있음을 확인했다.</li>
+</ul>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>규칙을 만들었다면 이제 성적표를 읽을 차례입니다. 다음 클립에서는 백테스트 성과표의 핵심 지표 — 수익률(CAGR), 최대 손실(MDD), 거래비용 — 를 읽는 법을 배웁니다.</p>
+<p>아이디어를 명확한 규칙으로 만들었다면, 이제 이 규칙이 과거 10년 동안 실제로 돈을 벌었는지 성적표를 매겨봐야 합니다.<br />
+다음 클립에서는 <strong>수익률(CAGR), 최대 낙폭(MDD), 샤프 지수, 그리고 수익을 갉아먹는 거래비용</strong>을 읽는 방법을 완벽히 마스터하겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

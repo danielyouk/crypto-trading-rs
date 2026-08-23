@@ -846,71 +846,117 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, Part 4에서 완성할 <strong>2-Tier 실전 트레이딩 시스템의 전체 설계도</strong>가 머릿속에 그려집니다. 오늘은 코딩을 하지 않고, 전체 파이프라인의 청사진과 2-Tier 거버넌스 모델을 이해합니다.</p>
+<p>이 클립이 끝나면, 여러분은 1인 퀀트 투자자가 직장 생활이나 일상을 온전히 누리면서도 기관급 헤지펀드처럼 완벽한 규율로 자산을 운용할 수 있는 <strong>'2-Tier 하이브리드 트레이딩 시스템(주간 거버넌스 + 일간 무인 자동 실행)'</strong>의 전체 아키텍처와 6단계 파이프라인의 청사진을 완벽하게 이해하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 사전 안내</strong>: 지금 당장 증권사 계좌를 켤 필요는 없습니다. 오늘은 우리가 구축할 실전 무인 매매 시스템의 <strong>전체 설계도와 작동 규칙</strong>을 뼈대부터 탄탄하게 세우는 시간입니다. 증권사 API 연동은 다음 클립(Clip 27)에서 단계별로 안전하게 진행합니다.</p>
+</blockquote>
 <ul>
-<li><strong>Tier 1 (주간 전략 거버넌스)</strong>: 주 1회 주말 30분, Claude Code와 시장 국면을 분석하고 다음 주 매매 정책(<code>weekly_policy.json</code>) 최종 승인</li>
-<li><strong>Tier 2 (일간 무인 자동 실행 &amp; 하드 가드레일)</strong>: 평일 장 운영 시간, API를 통한 자동 주문 실행 및 사람 개입 없는 강제 손절·서킷브레이커 작동</li>
+<li>기존 100% 전자동 봇과 건별 메신저 승인 봇의 <strong>3대 치명적 실패 원인</strong></li>
+<li><strong>Tier 1 (주간 전략 거버넌스)</strong>: 주 1회 주말 30분, Claude Code와 함께 시장 국면을 진단하고 <code>weekly_policy.json</code> 최종 승인</li>
+<li><strong>Tier 2 (일간 무인 자동 실행 &amp; 하드 가드레일)</strong>: 평일 장중 인간 개입 없는 무인 자동 발주 및 0.1초 즉시 강제 손절</li>
+<li>전체 6대 핵심 서브시스템 파이프라인 조감도</li>
 </ul>
-<figure class="visual-figure">  <img src="../_core/assets/03_paper_approval.gif" alt="주간 전략 승인 및 무인 자동 모의매매 흐름">  <figcaption><strong>[시스템 조감도]</strong> 주간 전략 승인 및 무인 자동 모의매매 흐름</figcaption></figure>
-
+<hr />
 <h2>이론 핵심</h2>
-<h3>왜 매 건마다 승인하지 않고 '주간 정책 승인제'인가?</h3>
-<p>기존의 단순한 봇 강의에서는 "신호 발생 → 메신저 알림 → 사람이 버튼 클릭 → 주문" 방식을 가르칩니다. 하지만 이는 실전에서 3가지 치명적 문제를 낳습니다:</p>
-<ol>
-<li><strong>타이밍 지연 &amp; 알림 피로</strong>: 직장인이 회의 중이거나 이동 중일 때 알림을 놓치면 매매 기회가 소멸합니다.</li>
-<li><strong>감정의 개입 (뇌동매매/공포)</strong>: 연속 손실이 발생하면 사람이 공포심에 유효한 매수 신호를 임의로 거절하여 통계적 우위를 훼손합니다.</li>
-<li><strong>과적합(Overfitting) 위험</strong>: 매일 파라미터를 바꾸는 것은 시장 노이즈에 모델을 끼워 맞추는 행위입니다.</li>
-</ol>
-<p>진짜 퀀트 펀드처럼 <strong>"주 1회 전략 정책을 승인(Governance)하고, 주중에는 기계가 무인으로 규율 있게 실행(Execution)"</strong>하는 2-Tier 시스템이 가장 안전하고 우수합니다.</p>
-<h3>2-Tier 파이프라인 6단계 구조</h3>
-<div class="arch-grid">
-  <div class="arch-card">
-    <h4>① 계좌 인증 & 연결</h4>
-    <p>한국투자증권 Open API 모의투자 계좌 인증 및 토큰 자동 갱신</p>
+<h3>1. 왜 '매 건마다 스마트폰 승인' 방식은 실패하는가?</h3>
+<p>시중의 많은 강의가 "매매 신호가 오면 텔레그램으로 알림을 보내고 사람이 버튼을 눌러 승인하는 봇"을 가르칩니다. 하지만 이는 실전에서 3가지 치명적 문제를 일으킵니다.</p>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">❌ 건별 메신저 승인 방식의 함정</div>
+    <div class="steps">
+      • <strong>타이밍 지연 & 알림 피로</strong>: 회의나 운전 중에 알림을 놓쳐 진입 기회 상실.<br>
+      • <strong>심리적 공포 개입</strong>: 연속 3번 손절 후 4번째 유효 신호가 왔을 때 무서워서 승인 거부 ➔ 이후 대세 상승을 놓침.<br>
+      • <strong>노이즈 과적합</strong>: 장중 흔들림에 맞춰 매일 전략을 바꾸다 계좌 파탄.
+    </div>
   </div>
-  <div class="arch-card">
-    <h4>② 시장 데이터 파이프라인</h4>
-    <p>전략 대상 유니버스의 실시간 시세 및 지표 계산</p>
-  </div>
-  <div class="arch-card">
-    <h4>③ 주간 정책 합의 (Tier 1)</h4>
-    <p>Claude Code와 주간 국면 분석 후 <code>weekly_policy.json</code> 승인</p>
-  </div>
-  <div class="arch-card">
-    <h4>④ 무인 자동 발주 (Tier 2)</h4>
-    <p>승인된 조건 만족 시 증권사 API로 자동 모의주문 전송</p>
-  </div>
-  <div class="arch-card">
-    <h4>⑤ 하드 안전 가드레일</h4>
-    <p>포트폴리오 서킷브레이커 & 무조건 즉시 손절(Kill-Switch)</p>
-  </div>
-  <div class="arch-card">
-    <h4>⑥ 일일 AI 저널링</h4>
-    <p>장 마감 후 AI가 체결 내역·PnL 분석 및 일일 리포트 생성</p>
+  <div class="compare-card good">
+    <div class="tag">✅ 2-Tier 주간 거버넌스 모델의 우수성</div>
+    <div class="steps">
+      • <strong>주말 30분 의사결정</strong>: 차분한 주말에 한 주의 전략 비중(Policy)을 승인.<br>
+      • <strong>장중 100% 무인 집행</strong>: 승인된 룰에 따라 기계가 감정 없이 0.1초 만에 실행.<br>
+      • <strong>하드 가드레일 안전망</strong>: 급락 시 사람에게 묻지 않고 기계가 즉각 손절.
+    </div>
   </div>
 </div>
 
-<h3>정책은 사람이, 손절과 실행은 규칙이</h3>
+<hr />
+<h3>2. 2-Tier 시스템의 역할 분담 체계</h3>
+<table>
+<thead>
+<tr>
+<th>계층 (Tier)</th>
+<th>주체</th>
+<th>실행 주기</th>
+<th>구체적 담당 업무</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tier 1: 주간 거버넌스</strong></td>
+<td><strong>사람 (CIO) + Claude Code</strong></td>
+<td><strong>주 1회 (주말 30분)</strong></td>
+<td>거시 시장 국면 평가, 4대 전략 가중치 결정, 주간 정책(<code>weekly_policy.json</code>) 최종 승인</td>
+</tr>
+<tr>
+<td><strong>Tier 2: 무인 자동 실행</strong></td>
+<td>시스템 (실행 엔진)</td>
+<td>평일 장중 (09:00~15:30)</td>
+<td>승인된 정책에 따라 KIS Open API로 모의주문 자동 발주 (사람 개입 없음)</td>
+</tr>
+<tr>
+<td><strong>Tier 2: 하드 가드레일</strong></td>
+<td>기계적 코드 규칙</td>
+<td>상시 감시 (0.1초 주기)</td>
+<td>개별 종목 -3% 즉각 손절, 계좌 -2% 일일 서킷브레이커 강제 청산 (질문 없이 집행)</td>
+</tr>
+<tr>
+<td><strong>Post-Market: 일일 저널</strong></td>
+<td>AI 리포터</td>
+<td>장 마감 후 (15:40)</td>
+<td>오늘의 체결·손익 분석 및 일일 매매 일지(<code>daily_journal.md</code>) 자동 작성</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>3. 실전 시스템 6대 서브시스템 파이프라인</h3>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 계좌 인증 & 연결 (Auth)</div>
+    <div class="card-desc">한국투자증권 Open API 모의투자 계좌 인증 및 OAuth2 토큰 자동 갱신 (Clip 27)</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 시장 데이터 파이프라인 (Data)</div>
+    <div class="card-desc">유니버스 종목들의 실시간 시세 및 기술적 지표 계산 (Clip 28)</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 주간 정책 합의 (Governance)</div>
+    <div class="card-desc">Claude Code와 주간 국면 분석 후 <code>weekly_policy.json</code> 서명 승인 (Clip 29~30)</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">④ 무인 자동 발주 엔진 (Execution)</div>
+    <div class="card-desc">승인된 조건 만족 시 KIS API로 주문 전송 및 체결 확인 (Clip 31)</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">⑤ 하드 안전 가드레일 (Safety)</div>
+    <div class="card-desc">0.1초 즉시 손절 및 일일 서킷브레이커, 킬스위치 비상 정지 (Clip 32~33)</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">⑥ 일일 AI 저널링 (Journal)</div>
+    <div class="card-desc">장 마감 후 AI가 체결 내역 및 손익을 분석해 자동 일지 기록 (Clip 34~35)</div>
+  </div>
+</div>
+
+<hr />
+<h2>관전 포인트 및 체크리스트</h2>
 <ul>
-<li><strong>전략과 비중(Policy)</strong>: 반드시 사람이 주말에 AI 브리핑을 검토한 뒤 승인합니다. 승인된 정책 없이는 시스템이 동작하지 않습니다.</li>
-<li><strong>실행(Execution)</strong>: 장중에는 사람의 승인을 기다리지 않고 조건 부합 시 즉시 API로 자동 발주합니다.</li>
-<li><strong>손절(Stop-Loss)</strong>: 개별 종목 -3% 손실 또는 포트폴리오 -2% 일일 한도 초과 시, 사람의 판단을 묻지 않고 <strong>코드 레벨에서 즉시 강제 청산</strong>합니다.</li>
+<li class="check-item"><input type="checkbox"> 주간 전략 정책 승인(Tier 1)과 장중 무인 실행(Tier 2)의 분리 원리를 이해했다.</li>
+<li class="check-item"><input type="checkbox"> 장중 급락 시 시스템이 사람에게 승인을 묻지 않고 즉시 하드 손절을 집행해야 하는 이유를 파악했다.</li>
+<li class="check-item"><input type="checkbox"> 6단계 파이프라인이 앞으로 Part 4에서 어떻게 구현될지 전체 흐름을 확인했다.</li>
 </ul>
-<h2>따라 해보기</h2>
-<p>이번 클립은 전체 구조 이해가 중심입니다. 강의를 보며 아래 항목을 확인해 보세요.</p>
-<ul>
-<li class="check-item"><input type="checkbox"> 2-Tier 아키텍처(주간 정책 승인 vs 일간 무인 자동 실행)의 장점을 이해했다</li>
-<li class="check-item"><input type="checkbox"> 왜 매매 건별 메신저 승인이 아닌 주간 정책 승인제를 채택하는지 설명할 수 있다</li>
-<li class="check-item"><input type="checkbox"> 하드 손절과 서킷브레이커가 사람의 개입 없이 동작해야 하는 이유를 이해했다</li>
-<li class="check-item"><input type="checkbox"> 모의투자 API를 통해 실전과 동일한 파이프라인을 구축하는 목적을 확인했다</li>
-</ul>
-<h2>자주 발생하는 문제</h2>
-<blockquote>
-<p><strong>Q. 주 1회 승인이면 시장 급변에 너무 느리지 않나요?</strong><br />
-일봉/스윙 퀀트 전략에서 매일 파라미터를 바꾸는 것은 노이즈 과적합을 부릅니다. 장중 급변동은 '파라미터 수정'이 아니라 '하드 손절 및 비상 서킷브레이커'로 완벽히 방어합니다.</p>
-</blockquote>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>다음 클립에서는 한국투자증권 KIS Developers에서 앱키를 발급받고, 모의투자 계좌를 시스템에 연결합니다. 계좌 잔고가 화면에 표로 뜨는 순간이 첫 목표입니다.</p>
+<p>전체 아키텍처를 이해했습니다.<br />
+이제 첫 번째 엔지니어링 단계로, <strong>한국투자증권 Open API에 접속하여 모의투자 계좌를 연결하고 인증 토큰을 발급받아 내 계좌의 잔고를 조회</strong>해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

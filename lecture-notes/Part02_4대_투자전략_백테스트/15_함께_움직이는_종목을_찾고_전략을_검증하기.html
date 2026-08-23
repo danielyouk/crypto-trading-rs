@@ -846,58 +846,123 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 화면에 <strong>데이터로 골라낸 종목 쌍 후보 목록</strong>과 그중 한 쌍으로 돌린 <strong>페어트레이딩 백테스트 결과</strong>가 떠 있습니다. 이것으로 프로젝트 01의 네 가지 전략 성과표가 모두 모입니다.</p>
-<ul>
-<li>후보 쌍 목록 표 → 쌍 선택 → z-score 진입·청산 백테스트 → 성과표</li>
-<li>시장이 하락한 구간에서도 전략이 수익을 냈는지 확인</li>
-</ul>
-<h2>이론 핵심</h2>
-<h3>쌍을 고르는 기준 — 닮은 차트가 아니라 안정적인 관계</h3>
-<p>후보 쌍은 같은 업종에서 찾는 것이 출발점입니다. 사업 구조가 같아야 관계가 유지될 <strong>이유</strong>가 있기 때문입니다. 데이터 검증에서는 두 종목의 움직임이 얼마나 같이 가는지(상관관계), 벌어진 스프레드가 실제로 되돌아오는 성질이 있는지를 봅니다. 차트 모양이 우연히 닮은 쌍은 이 검증에서 걸러집니다.</p>
-<h3>백테스트 규칙 요약</h3>
-<p>① z-score가 ±2를 넘으면 진입(비싼 쪽 숏, 싼 쪽 롱) ② 0 부근으로 돌아오면 청산 ③ ±3을 넘어 계속 벌어지면 <strong>관계 붕괴로 보고 손절</strong>. 손절 규칙이 없는 페어트레이딩 백테스트는 반쪽짜리입니다 — 되돌아오지 않은 쌍의 손실이 성과에 반드시 포함되어야 합니다.</p>
-<h3>성과표를 읽는 관점이 다르다</h3>
-<p>페어트레이딩은 대박 수익이 아니라 <strong>시장과 무관하게 꾸준한가</strong>를 보는 전략입니다. 성과표에서 CAGR보다 먼저 볼 것은 시장 하락 구간에서의 성과, 그리고 승률과 손절 횟수입니다.</p>
-<h2>실습 — 실습 07</h2>
-<p>두 단계로 진행합니다. 먼저 쌍 후보를 찾고, 그다음 백테스트합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>FinanceDataReader로 한국 금융지주 종목들(KB금융, 신한지주, 하나금융지주, 우리금융지주)의
-최근 5년 일봉 데이터를 불러와서, 함께 움직이는 정도가 높은 종목 쌍 순위표를 만들어줘.
-각 쌍의 상관관계와, 벌어진 가격 차이가 평균으로 되돌아오는 성질이 있는지 여부를 표로 보여줘.
-</code></pre></div>
-<p>순위표에서 가장 유망한 쌍을 하나 고른 뒤, 이어서 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>방금 찾은 1위 쌍으로 페어트레이딩 전략을 백테스트해줘.
-규칙: 스프레드 z-score가 +2 이상이면 비싼 쪽 숏·싼 쪽 롱, -2 이하면 반대로 진입,
-0으로 돌아오면 청산, ±3을 넘으면 손절. 거래비용은 매매마다 0.3% 반영.
-결과로 ① 두 종목 주가와 z-score를 함께 그린 차트(진입·청산 시점 표시)
-② 전략의 누적 수익률과 코스피 지수를 비교한 차트
-③ CAGR, MDD, 승률, 손절 횟수가 담긴 성과표를 보여줘.
-</code></pre></div>
-<h3>내 눈으로 확인할 체크리스트</h3>
-<ul>
-<li class="check-item"><input type="checkbox"> 쌍 후보 순위표에 상관관계 수치와 평균회귀 여부가 표시되어 있다</li>
-<li class="check-item"><input type="checkbox"> z-score 차트에서 진입 표시가 ±2를 넘은 지점에, 청산 표시가 0 부근에 찍혀 있다</li>
-<li class="check-item"><input type="checkbox"> 코스피가 하락한 구간에서 전략 수익 곡선이 함께 무너지지 않는 것을 확인했다</li>
-<li class="check-item"><input type="checkbox"> 성과표에 손절 횟수가 있고, 손절이 실제로 발생했다면 그 시점의 차트를 열어 보았다</li>
-<li class="check-item"><input type="checkbox"> 네 가지 전략(추세추종·변동성 돌파·듀얼 모멘텀·페어트레이딩)의 성과표가 모두 내 손에 있다</li>
-</ul>
-<h2>자주 발생하는 문제</h2>
+<p>이 클립이 끝나면, 여러분은 한국 시장 2,000여 개 종목 중에서 <strong>통계적 상관계수 및 공적분(Engle-Granger Cointegration Test)을 통과한 최적의 페어 후보군을 자동 발굴</strong>하고, 발굴된 페어를 대상으로 <strong>Z-Score 기반 페어트레이딩 5년 백테스트를 완벽하게 수행</strong>하여 횡보장과 하락장에서도 꾸준한 절대수익을 창출하는 성과표를 얻게 됩니다.</p>
 <blockquote>
-<p>쌍 선정 방법(상관계수 기준, 검정 방식)이 AI마다 달라 강사와 다른 쌍이 1위로 나올 수 있습니다. 그것도 정상입니다. 중요한 것은 어떤 쌍이든 <strong>체크리스트의 장면들이 확인되는가</strong>입니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 국내 주식 시장에서 개인 투자자가 숏(공매도)을 치기 어려운 경우, <strong>"상대적 저평가 종목만 매수하고, 균형 복귀 시 매도하는 롱 온리(Long-Only) 페어 스위칭 전략"</strong>이나 <strong>"선물/인버스 ETF 결합"</strong>으로 완벽하게 구현할 수 있습니다.</p>
 </blockquote>
 <ul>
-<li><strong>z-score 차트에 진입·청산 표시가 없을 때</strong></li>
+<li><strong>실습 07</strong>: 동일 섹터(금융, 자동차, IT) 내 종목 간 공적분(p-value &lt; 0.05) 검정 스캐너 실행</li>
+<li>Z-Score 진입 임계값($Z \le -1.5$ 또는 $\le -2.0$)과 청산 임계값($Z \ge 0.0$) 백테스트</li>
+<li><strong>롱-숏(Long-Short) 차익거래 백테스트 vs 롱 온리(Long-Only) 상대가치 스위칭 백테스트</strong></li>
+<li>페어트레이딩의 최대 위험: <strong>기업 펀더멘털의 구조적 결별(Structural Break)</strong>과 손절 안전망</li>
+<li><strong>Part 2 종합 결산</strong>: 4대 퀀트 투자 전략의 성과 매트릭스 총정리</li>
 </ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>z-score 차트에 진입 시점은 빨간 세모, 청산 시점은 파란 동그라미로 표시하고,
-각 거래의 진입일·청산일·손익을 표로 정리해줘.
+<hr />
+<h2>이론 핵심</h2>
+<h3>1. 공적분(Cointegration) 페어 발굴 알고리즘</h3>
+<p>단순히 두 종목을 눈대중으로 고르는 것이 아니라, 파이썬의 통계 패키지(<code>statsmodels</code>)를 활용해 잔차(Residual)의 정상성을 수학적으로 검정(ADF Test)합니다.</p>
+<pre><code class="language-text">[후보군 선정] ──&gt; 동일 섹터 내 시가총액 상위 종목 쌍 (예: KB금융 vs 신한지주, 현대차 vs 기아)
+      ↓
+[회귀분석]   ──&gt; Price_A = alpha + beta * Price_B + Residuals
+      ↓
+[ADF 검정]   ──&gt; 잔차(Residuals)의 p-value &lt; 0.05 판정
+                  • p &lt; 0.05 ➔ 공적분 성립 (페어트레이딩 적격)
+                  • p &gt;= 0.05 ➔ 무늬만 상관관계 (페어트레이딩 탈락)
+</code></pre>
+<hr />
+<h3>2. 롱-숏 vs 롱 온리(Long-Only) 스위칭 구현 방식</h3>
+<div class="compare-box">
+  <div class="compare-card info">
+    <div class="tag">기관/헤지펀드 방식 (Long-Short)</div>
+    <div class="steps">
+      • 저평가 종목 롱(매수) + 고평가 종목 숏(대차 공매도).<br>
+      • 완벽한 시장 중립 달성.<br>
+      • 단점: 개인 투자자는 대주 이자 및 공매도 제약 존재.
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">개인 퀀트 방식 (Long-Only Pair Switching)</div>
+    <div class="steps">
+      • 두 종목 중 Z-Score 상 <strong>상대적으로 저평가된 1개 종목만 매수 보유</strong>.<br>
+      • 스프레드가 평균으로 복귀하거나 역전되면 반대 종목으로 교체 매수.<br>
+      • <strong>장점</strong>: 공매도 없이 현물 계좌에서 100% 실행 가능하며 단순 보유 대비 알파 창출.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h2>실습 — 실습 07: 금융 섹터 페어 발굴 및 백테스트 실행</h2>
+<p>Claude Code 대화창에 아래의 페어트레이딩 백테스트 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>한국 금융지주 대표 종목(KB금융 vs 신한지주)을 대상으로 페어트레이딩 백테스트를 수행해줘. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. FinanceDataReader를 사용해 KB금융(105560)과 신한지주(055550)의 최근 5년(2019~2024) 일봉 데이터를 수집해줘.
+2. 두 종목의 가격 비율(KB금융/신한지주)을 구하고 60일 롤링 윈도우 Z-Score를 산출해줘.
+3. 롱 온리(Long-Only) 상대가치 페어 스위칭 전략 백테스트:
+   - $Z \le -1.5$: KB금융이 극단적 저평가 상태 ➔ KB금융 100% 매수 보유
+   - $Z \ge +1.5$: 신한지주가 극단적 저평가 상태 ➔ 신한지주 100% 매수 보유
+   - $-0.5 &lt; Z &lt; +0.5$: 균형 상태 ➔ 기존 포지션 유지 또는 50:50 분할
+   - 포지션 교체 시 편도 0.15% 거래비용 차감.
+4. 개별 종목 단순 보유(KB금융 B&amp;H, 신한지주 B&amp;H)와 페어 스위칭 전략의 CAGR, MDD, 샤프 지수, 총 거래 횟수를 비교하는 표를 터미널에 출력해줘.
+5. 상단에는 누적 수익률 비교 곡선, 하단에는 Z-Score 및 매매 체결 구간을 표시한 차트를 'pair_trading_backtest_result.png'로 저장해줘.
+
+실행 완료 후 터미널에 성과 비교표를 출력하고 차트 저장 경로를 알려줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li><strong>공매도가 반영됐는지 불분명할 때</strong></li>
+<li class="check-item"><input type="checkbox"> KB금융과 신한지주 간의 Z-Score 기반 페어 스위칭이 개별 종목 단순 보유 대비 더 높은 샤프 지수와 낮은 MDD를 기록함을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 생성된 <code>pair_trading_backtest_result.png</code> 차트에서 스프레드 괴리 발생 시 저평가 종목을 매수해 알파를 취하는 궤적을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> Part 2에서 다룬 4대 전략(추세추종, 변동성돌파, 듀얼모멘텀, 페어트레이딩)의 상호 보완적 특성을 이해했다.</li>
 </ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이 백테스트에서 숏 포지션의 손익이 어떻게 계산되는지 예시 거래 1건으로 설명해줘.
-숏이 빠져 있다면 롱·숏이 모두 포함된 시장중립 구조로 다시 백테스트해줘.
-</code></pre></div>
+<hr />
+<h2>Part 2 종합 결산: 4대 핵심 퀀트 전략 비교 요약</h2>
+<table>
+<thead>
+<tr>
+<th>전략명</th>
+<th>핵심 지표</th>
+<th>거래 주기</th>
+<th>최적의 시장 환경</th>
+<th>위험 요인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>추세추종</strong></td>
+<td>200일 SMA</td>
+<td>주~월 단위</td>
+<td>대세 상승장 / 대폭락장 방어</td>
+<td>잦은 횡보장 톱니(Whipsaw)</td>
+</tr>
+<tr>
+<td><strong>변동성 돌파</strong></td>
+<td>Range $\times k$</td>
+<td>당일 일중 (Day)</td>
+<td>강한 단기 추세 폭발장</td>
+<td>윗꼬리 장대음봉 / 거래세 누적</td>
+</tr>
+<tr>
+<td><strong>듀얼 모멘텀</strong></td>
+<td>6~12개월 모멘텀</td>
+<td>월간 1회</td>
+<td>자산군별 순환매 장세</td>
+<td>주식/채권 동반 침체기</td>
+</tr>
+<tr>
+<td><strong>페어트레이딩</strong></td>
+<td>공적분 Z-Score</td>
+<td>수일~수주 단위</td>
+<td>박스권 횡보장 / 시장 중립</td>
+<td>두 기업의 영구적 펀더멘털 결별</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>프로젝트 01이 완성됐습니다. 네 장의 성과표를 손에 들고 Part 3으로 넘어갑니다 — 다음 파트에서는 이 성과표들이 <strong>과연 믿을 만한지</strong>를 워크포워드 검증으로 시험합니다.</p>
+<p>축하합니다! 이제 여러분은 금융 시장을 정복할 4가지 강력한 무기를 모두 손에 넣었습니다.<br />
+하지만 백테스트에서 아무리 성과가 좋아도, <strong>과거 데이터에 억지로 맞춘 과최적화(Overfitting)</strong>라면 실전에서 반드시 깨집니다.<br />
+Part 3에서는 <strong>'과거 데이터의 거짓말을 걸러내는 워크포워드(WFA) 검증과 AI 손실 진단 루프'</strong>를 본격적으로 시작합니다!</p>
   </main>
 
   <!-- Pager Navigation -->

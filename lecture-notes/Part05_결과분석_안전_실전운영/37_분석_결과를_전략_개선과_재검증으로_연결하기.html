@@ -846,74 +846,62 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 어제의 손실 분석에서 나온 개선안이 <strong>재백테스트 결과표와 함께</strong> 화면에 보입니다. 그리고 "재검증을 통과한 개선안만 반영한다"는 일일 점검 루프의 마지막 조각이 완성됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 일일 손실에 과민반응하여 코드를 망가뜨리는 초보자의 치명적 실수를 방지하고, 최소 2주~1개월의 누적 데이터를 바탕으로 <strong>'가설 수립 ➔ 파라미터/필터 조정 ➔ 워크포워드(WFA) 재검증 ➔ 주간 정책 반영'</strong>으로 이어지는 프로 퀀트의 안전한 <strong>'전략 개선 루프(Strategy Iteration Loop)'</strong>를 마스터하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>퀀트의 제1 계명</strong>: 하루 이틀 손실이 났다고 전략을 수정하지 마세요. 그것은 전략의 결함이 아니라 금융시장의 자연스러운 분산(Variance)입니다. 전략 수정은 반드시 <strong>통계적 유의성(최소 30회 이상의 거래 표본)</strong>이 확보되었을 때만 신중하게 단행해야 합니다.</p>
+</blockquote>
 <ul>
-<li>손실 원인 → 개선안 후보 → 재백테스트 비교표 → 반영/보류 결정, 이 흐름이 한 번에 이어지는 화면</li>
-<li>개선안이 <strong>미리 허용해 둔 파라미터 범위 안</strong>에서만 만들어지는 것</li>
+<li><strong>과민 반응의 덫 (Knee-jerk Reaction)</strong>: 일일 손실 후 파라미터를 바꾸는 행위가 과최적화로 이어지는 이유</li>
+<li>전략 개선의 3단계 안전 필터: 통계 표본 검증 ➔ 가설의 보편성 검토 ➔ Out-of-Sample WFA 재검증</li>
+<li>개선된 룰셋을 안전하게 배포하는 <strong>주간 정책(<code>weekly_policy.json</code>) 버전 관리(<code>v1.1</code>, <code>v1.2</code>)</strong></li>
+<li><strong>실습 25</strong>: 누적 매매 일지를 바탕으로 한 전략 개선안 수립 및 WFA 재검증 시뮬레이션</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>즉흥 수정이 계좌를 망가뜨린다</h3>
-<p>어제 손실이 났다고 오늘 규칙을 바꾸면, 전략은 점점 "어제의 시장"에만 맞춰집니다. 이것이 Part 3에서 배운 과최적화가 실전에서 재현되는 방식입니다. 그래서 이 강의의 원칙은 하나입니다. <strong>재백테스트를 통과한 개선안만 반영한다.</strong></p>
-<h3>개선안에는 울타리가 필요하다</h3>
-<p>AI에게 "알아서 고쳐줘"라고 하면 전략의 정체성 자체를 바꿔버릴 수 있습니다. 개선안은 Part 3에서 정해 둔 <strong>허용된 알고리즘과 파라미터 범위 안</strong>에서만 나오게 합니다.</p>
-<table>
-<thead>
-<tr>
-<th>구분</th>
-<th>예시</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>허용되는 개선</td>
-<td>손절 폭을 허용 범위(예: 3~7%) 안에서 조정</td>
-</tr>
-<tr>
-<td>허용되지 않는 개선</td>
-<td>추세추종 전략을 갑자기 다른 전략으로 교체</td>
-</tr>
-</tbody>
-</table>
-<h3>개선 루프의 4단계</h3>
-<ol>
-<li><strong>분석</strong> — 일일 보고서에서 손실 원인 가설 확보 (이전 클립)</li>
-<li><strong>제안</strong> — 허용 범위 안의 개선안 후보를 AI가 생성</li>
-<li><strong>재검증</strong> — 개선안을 과거 데이터로 재백테스트, 기존안과 나란히 비교</li>
-<li><strong>결정</strong> — 수익률과 MDD가 함께 개선될 때만 사람이 반영을 승인</li>
-</ol>
-<p>"얼마나 버는가"만 보지 마세요. 수익률이 올라도 MDD가 커지면 보류가 정답일 수 있습니다.</p>
-<h2>실습 — 실습 21</h2>
-<p>이전 클립의 손실 분석을 개선안과 재검증으로 연결합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>어제 일일 보고서의 손실 원인 분석을 바탕으로, 미리 정해둔
-허용 파라미터 범위 안에서만 전략 개선안을 2가지 만들어줘.
-각 개선안을 기존 전략과 같은 기간으로 재백테스트해서,
-수익률·MDD·거래횟수를 기존안과 나란히 비교한 표를 보여줘.
-허용 범위를 벗어나는 개선안은 제안하지 말아줘.
+<h3>1. 전략 개선의 올바른 의사결정 트리</h3>
+<pre><code class="language-text">[손실 발생] 
+   └── 최근 30회 거래의 누적 승률과 손익비가 백테스트 기대치 범위 내인가?
+       ├── YES (통계적 정상 범위) ──&gt; 전략 수정 금지! 기존 정책 유지
+       └── NO  (구조적 이상 발생) ──&gt; [3단계 안전 개선 절차 착수]
+                                        ① AI 손실 진단서 작성
+                                        ② 보편적 필터(ATR, 버퍼) 가설 수립
+                                        ③ 최근 3개년 WFA 재검증 (WFE &gt;= 60% 필수)
+                                        ④ 통과 시 주간 정책 버전 업그레이드
+</code></pre>
+<hr />
+<h3>2. 주간 정책 버전 관리 (<code>weekly_policy.json</code>)</h3>
+<p>전략을 수정할 때는 기존 코드를 덮어쓰지 않고, 명확한 변경 사유(Changelog)를 기록하며 버전을 올립니다.</p>
+<pre><code class="language-json">{
+  &quot;policy_version&quot;: &quot;1.1&quot;,
+  &quot;changelog&quot;: &quot;변동성 돌파 전략에 ATR(14) 변동성 필터 추가 (WFA 재검증 WFE 68% 통과)&quot;,
+  &quot;effective_period&quot;: { &quot;start_date&quot;: &quot;2026-09-01&quot;, &quot;end_date&quot;: &quot;2026-09-05&quot; },
+  &quot;strategy_weights&quot;: { ... }
+}
+</code></pre>
+<hr />
+<h2>실습 — 실습 25: 전략 개선 가설 수립 및 WFA 재검증</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>누적 매매 결과를 바탕으로 전략 개선 가설을 수립하고 WFA 재검증을 수행해줘. (Context)
+
+다음 요구사항에 맞춰 분석과 검증을 진행해줘: (Deliverable)
+1. 최근 1개월간 발생한 횡보장 손실을 방어하기 위해 '변동성 돌파 전략에 ATR 필터 결합' 가설을 수립해줘.
+2. 기존 전략 vs 개선 가설 전략의 최근 3개년 WFA(워크포워드) 성과를 대조 검증해줘.
+3. WFE 효율성 지표와 MDD 개선폭을 산출하고, 실전 정책 반영 적격 여부를 판정해줘.
+4. 검증을 통과했다면 업그레이드된 'weekly_policy_v1.1.json' 파일을 생성해줘.
+
+실행 완료 후 터미널에 재검증 비교 성과표를 출력하고 정책 파일 생성 경로를 알려줘. (Verification)
 </code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 개선안이 미리 정한 파라미터 허용 범위 안에 있다 (범위 밖 제안이 없다)</li>
-<li class="check-item"><input type="checkbox"> 기존안과 개선안의 수익률·MDD·거래횟수가 한 표에서 비교된다</li>
-<li class="check-item"><input type="checkbox"> 재백테스트 기간이 기존안과 동일하다</li>
-<li class="check-item"><input type="checkbox"> 반영/보류를 결정하는 사람은 나이고, 시스템이 자동으로 바꾸지 않았다</li>
+<li class="check-item"><input type="checkbox"> 단일 거래가 아닌 통계적 데이터에 기반하여 개선 가설이 수립되었다.</li>
+<li class="check-item"><input type="checkbox"> WFA 재검증을 통해 새로운 필터가 미래 구간에서도 유효함을 수학적으로 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 버전과 변경 사유가 명확히 기록된 <code>weekly_policy_v1.1.json</code>이 생성되었다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 개선안 내용은 다를 수 있습니다. 어제의 거래 내역이 다르면 분석도 개선안도 달라지는 것이 정상입니다. <strong>허용 범위 준수와 비교표의 완결성</strong>을 기준으로 확인하세요.</p>
-<ul>
-<li>개선안이 허용 범위를 벗어날 때:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>제안한 개선안 중 손절 폭 10%는 허용 범위(3~7%)를 벗어났어.
-허용 범위 안의 값으로만 다시 제안하고, 각 제안이 어느 범위
-규칙을 따르는지 표시해줘.
-</code></pre></div>
-<ul>
-<li>비교표에서 개선 여부를 판단하기 어려울 때:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>비교표에 &quot;수익률과 MDD가 모두 개선됐는지&quot;를 O/X로 표시하는
-열을 추가하고, 둘 중 하나라도 나빠진 안은 보류 후보로 구분해줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>다음 클립에서는 하루 단위 개선을 넘어, 횡보장·상승장·하락장이라는 <strong>시장 국면에 따라 전략 설정을 바꾸는 방법</strong>을 배웁니다.</p>
+<p>전략을 개선하는 정석 루프를 확립했습니다.<br />
+이제 시장의 거대한 3대 사계절인 <strong>'상승장, 하락장, 횡보장'에 맞춰 내 주간 정책 비중을 유연하게 조율하는 실전 가이드라인</strong>을 정리해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

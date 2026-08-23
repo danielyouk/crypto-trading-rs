@@ -846,77 +846,64 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분이 고른 전략 하나의 <strong>워크포워드 검증 리포트</strong>가 화면에 보입니다.</p>
+<p>이 클립이 끝나면, 여러분은 한국 대표 ETF(KODEX 200 / KODEX 레버리지)를 대상으로 <strong>'단일 전략의 5단계 롤링 워크포워드(WFA) 종합 백테스트'</strong>를 완전히 실행하고, 각 윈도우별 최적 파라미터의 전이 과정과 <strong>실제 최종 WFE(워크포워드 효율성) 수치를 직접 계산 및 시각화</strong>하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 롤링 루프 코딩을 직접 작성하지 않아도 됩니다. 우리는 Claude Code에게 <strong>"3년 학습창 + 1년 검증창 롤링 WFA 엔진"</strong>을 요청하고, 산출된 윈도우별 성과표와 이어 붙인 순수익 곡선의 건전성을 판별합니다.</p>
+</blockquote>
 <ul>
-<li>구간(윈도우)별 학습 기간·검증 기간·선택된 파라미터·검증 성과가 정리된 표</li>
-<li>검증 구간 성과만 이어 붙인 누적 수익률 곡선과, 기존 단일 백테스트 곡선의 비교</li>
+<li><strong>실습 08</strong>: 2017~2024년 8개년 대상 5-Fold 롤링 워크포워드 엔진 구동</li>
+<li>In-Sample 최적 파라미터 탐색(Grid Search) vs Out-of-Sample 실전 적용</li>
+<li>5개 Out-of-Sample 구간의 누적 자산 성장 곡선 이어 붙이기(Stitched Equity Curve)</li>
+<li><strong>Fold별 인샘플 CAGR vs 아웃샘플 CAGR 대조 및 최종 WFE(%) 산출</strong></li>
+<li>일반 백테스트 곡선 vs 워크포워드(WFA) 곡선 비교를 통한 현실적 수익 기대치 정립</li>
 </ul>
-<figure class="visual-figure">  <img src="../_core/assets/01_wfa_replay.gif" alt="S&P 500 워크포워드 리플레이">  <figcaption><strong>[시스템 조감도]</strong> S&P 500 워크포워드 리플레이</figcaption></figure>
-
+<hr />
 <h2>이론 핵심</h2>
-<h3>요청하기 전에 결과 모습부터 그리기</h3>
-<p>생각→요청→확인→개선 루프의 첫 단계입니다. 워크포워드가 끝나면 화면에 뭐가 보여야 할까요?</p>
-<ol>
-<li>윈도우별 결과 표 — 각 구간에서 어떤 파라미터가 뽑혔고 검증 성과가 어땠는지</li>
-<li>검증 구간을 이어 붙인 누적 수익률 곡선</li>
-<li>기존 백테스트와의 비교 — 이 격차가 과최적화의 크기입니다</li>
-</ol>
-<h3>두 곡선의 격차를 읽는 법</h3>
-<table>
-<thead>
-<tr>
-<th>관찰</th>
-<th>해석</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>두 곡선이 비슷하다</td>
-<td>과최적화가 적다. 실전에서도 비슷한 성격 기대</td>
-</tr>
-<tr>
-<td>워크포워드 곡선이 크게 뒤처진다</td>
-<td>파라미터가 과거에만 잘 맞았다는 신호</td>
-</tr>
-<tr>
-<td>특정 구간에서만 크게 벌어진다</td>
-<td>그 구간의 시장 상황이 전략의 약점 (다음 클립 주제)</td>
-</tr>
-</tbody>
-</table>
-<h3>파라미터가 구간마다 바뀌는 것은 정상</h3>
-<p>윈도우별 결과 표를 보면 선택된 파라미터가 구간마다 다를 수 있습니다. 시장이 변하니 최적값도 변하는 것이 자연스럽습니다. 다만 <strong>매 구간 파라미터가 극단적으로 널뛴다면</strong> 전략이 불안정하다는 경고입니다.</p>
-<h2>실습 — 실습 08</h2>
-<p>Part 2에서 검증한 전략 중 하나를 골라 워크포워드를 요청하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>추세추종 전략(200일 이동평균)을 워크포워드 방식으로 검증해줘.
-끝나면 화면에 다음이 보이면 좋겠어.
-1) 구간별로 학습 기간, 검증 기간, 선택된 파라미터, 검증 수익률이 정리된 표
-2) 검증 구간 성과만 이어 붙인 누적 수익률 곡선과 기존 단일 백테스트 곡선을 겹쳐 그린 차트
-3) 두 곡선의 최종 수익률과 MDD를 비교한 요약 문장
+<h3>1. 워크포워드 엔진의 구체적 실행 단계</h3>
+<pre><code class="language-text">[Fold 1] 
+1. In-Sample(2017~2019): 이동평균 기간 N=[50, 100, 150, 200] 중 샤프 지수 1위 파라미터 N* 선택 ──&gt; (예: N*=150)
+2. Out-of-Sample(2020): N*=150을 2020년 1월 1일~12월 31일에 적용하여 실제 수익률 기록 (2020년 데이터는 학습에 전혀 쓰이지 않음)
+
+[Fold 2] 
+1. In-Sample(2018~2020): 샤프 지수 1위 파라미터 재학습 ──&gt; (예: N*=200)
+2. Out-of-Sample(2021): N*=200을 2021년 1년 동안 적용하여 실제 수익률 기록
+
+... (Fold 3, Fold 4, Fold 5 순차 실행)
+</code></pre>
+<hr />
+<h3>2. 파라미터 안정성(Stability)의 발견</h3>
+<p>WFA를 실행해 보면, 좋은 전략은 In-Sample 기간이 바뀌어도 최적 파라미터가 크게 튀지 않고 일정한 범위($N=150 \sim 200$) 안에서 머무는 것을 확인할 수 있습니다. 반면 불안정한 전략은 $N=20 \to N=180 \to N=45$처럼 극단적으로 요동칩니다.</p>
+<hr />
+<h2>실습 — 실습 08: 추세추종 5-Fold 워크포워드 검증 실행</h2>
+<p>Claude Code 대화창에 아래의 표준 WFA 백테스트 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>KODEX 200(069500) 대상 추세추종 전략의 5-Fold 워크포워드(WFA) 종합 검증을 수행해줘. (Context)
+
+다음 요구사항에 맞춰 파이썬 WFA 백테스트 스크립트를 작성하고 실행해줘: (Deliverable)
+1. 2017-01-01부터 2024-12-31까지의 KODEX 200 일봉 데이터를 불러와줘.
+2. 3년 In-Sample + 1년 Out-of-Sample의 5개 Fold로 분할해줘:
+   - Fold 1: IS(2017~2019) ➔ OOS(2020)
+   - Fold 2: IS(2018~2020) ➔ OOS(2021)
+   - Fold 3: IS(2019~2021) ➔ OOS(2022)
+   - Fold 4: IS(2020~2022) ➔ OOS(2023)
+   - Fold 5: IS(2021~2023) ➔ OOS(2024)
+3. 각 Fold의 In-Sample에서 이동평균선 파라미터 후보군(SMA 60, 100, 120, 150, 200) 중 최고 샤프 지수를 낸 최적 파라미터를 선정하고, 해당 파라미터로 Out-of-Sample 1년을 매매(왕복 0.25% 거래비용 차감)하게 해줘.
+4. 5개 Fold의 IS CAGR, OOS CAGR, 선정된 최적 파라미터, 각 Fold별 WFE(%)를 비교하는 Markdown 표를 터미널에 출력해줘.
+5. 상단에는 5개 OOS 구간을 이어 붙인 '최종 WFA 실전 누적 수익률 곡선'과 200일 고정 일반 백테스트 곡선을 겹쳐 그리고, 하단에는 Fold별 WFE 막대그래프를 그린 2-패널 차트를 'wfa_single_strategy_result.png'로 저장해줘.
+
+실행 완료 후 전체 WFA 평균 WFE(%)와 실전 배포 적격 여부(WFE &gt;= 60%)를 판정해줘. (Verification)
 </code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 윈도우별 표에서 학습 기간과 검증 기간이 겹치지 않고 시간순으로 굴러간다</li>
-<li class="check-item"><input type="checkbox"> 검증 구간을 이어 붙인 곡선과 기존 백테스트 곡선이 한 차트에 겹쳐 보인다</li>
-<li class="check-item"><input type="checkbox"> 두 곡선의 격차가 어느 정도인지(비슷/크게 뒤처짐) 내 눈으로 판단했다</li>
-<li class="check-item"><input type="checkbox"> 구간마다 선택된 파라미터가 안정적인지, 극단적으로 널뛰는지 확인했다</li>
+<li class="check-item"><input type="checkbox"> 5개 Fold별로 In-Sample에서 선택된 최적 이동평균 파라미터 목록을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> Out-of-Sample 구간만 이어 붙인 최종 WFA 수익률 곡선이 일반 백테스트보다 다소 보수적이지만 여전히 견고한 우상향을 그리는 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 전체 평균 WFE가 60% 이상으로 측정되어 실전 배포 요건을 통과했는지 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 워크포워드 결과는 다를 수 있습니다. AI가 잡은 윈도우 길이, 굴리는 간격, 파라미터 후보 범위가 다르기 때문입니다. 체크리스트의 구조(구간이 겹치지 않고 굴러가는가)가 맞는지를 먼저 보세요.</p>
-<ul>
-<li>학습·검증 구간이 어떻게 나뉘었는지 화면에 안 보인다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>각 윈도우의 학습 시작일·종료일과 검증 시작일·종료일을 표에 명시해서 다시 보여줘.
-구간이 시간순으로 겹치지 않고 굴러가는지 확인하고 싶어.
-</code></pre></div>
-<ul>
-<li>차트에 곡선이 하나만 그려졌다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>차트에 워크포워드 곡선만 있어. 기존 단일 백테스트의 누적 수익률 곡선도 같은 차트에 겹쳐서
-두 곡선을 비교할 수 있게 다시 그려줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>워크포워드 곡선에도 깊게 파인 손실 구간이 있었을 겁니다. 다음 클립에서는 그 최대 손실 구간을 확대해서 전략의 약점이 어떤 시장에서 드러나는지 분석합니다.</p>
+<p>WFA를 통해 미래 구간에서도 전략이 생존할 수 있음을 입증했습니다.<br />
+하지만 아무리 우수한 전략이라도 1년에 한두 번은 반드시 고통스러운 <strong>최대 낙폭(Drawdown) 구간</strong>을 맞이합니다.<br />
+다음 클립에서는 <strong>과거 발생했던 최악의 손실 구간을 정밀 타격하여 전략의 약점을 분석</strong>해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

@@ -846,54 +846,77 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 화면에 <strong>변동성 돌파 전략의 백테스트 결과</strong>와 함께 <strong>수익이 무너진 약점 구간이 표시된 차트</strong>가 떠 있습니다. 이번 실습의 주인공은 수익 곡선의 오른쪽 끝(최종 수익)이 아니라, 곡선이 흘러내리는 구간입니다.</p>
-<ul>
-<li>누적 수익 곡선 + 월별 수익률 표 + 낙폭(드로다운) 차트</li>
-<li>거래비용 반영 전후 비교 — 매일 매매하는 전략의 진짜 성적</li>
-</ul>
-<h2>이론 핵심</h2>
-<h3>약점 구간을 찾는 도구: 드로다운 차트</h3>
-<p>드로다운 차트는 "직전 고점 대비 몇 % 아래에 있는가"를 시간축으로 그린 것입니다. 수익 곡선에서는 잘 안 보이는 <strong>고통의 길이와 깊이</strong>가 여기서 드러납니다. 깊게 파인 골짜기가 MDD이고, 골짜기가 길게 이어지는 구간이 전략의 약점 구간입니다.</p>
-<h3>약점 구간에서 물어야 할 질문</h3>
-<p>약점 구간을 찾으면 "그때 시장이 어떤 상태였나"를 묻습니다. 변동성 돌파라면 대개 <strong>횡보장에서 허위 돌파가 반복된 구간</strong>이 범인입니다. 이 진단이 Part 3에서 배울 "시장 상황별 전략 선택"의 재료가 됩니다. 약점을 아는 전략은 쓸 수 있지만, 약점을 모르는 전략은 쓸 수 없습니다.</p>
-<h3>거래비용이 승부를 가른다</h3>
-<p>변동성 돌파는 진입한 날 바로 청산하는 고회전 전략입니다. 거래비용 0.3%면 왕복 0.6%가 매 거래마다 빠져나갑니다. 비용 반영 전에는 그럴듯했던 성과가 반영 후 마이너스로 뒤집히는 일이 흔하므로, 이번 실습에서는 <strong>반영 전후를 반드시 나란히</strong> 봅니다.</p>
-<h2>실습 — 실습 05</h2>
-<p>끝났을 때 보여야 할 것: 차트 2장(누적 수익, 드로다운)과 표 1개(월별 수익률). 이것을 목표로 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>FinanceDataReader로 KODEX 200 ETF(069500) 최근 10년 일봉 데이터를 불러와서
-변동성 돌파 전략을 백테스트해줘.
-규칙: 매일 목표가 = 당일 시가 + 전일 변동폭(고가-저가) × 0.5,
-장중 목표가 돌파 시 매수, 다음 날 시가에 매도. 거래비용은 매매마다 0.3% 반영.
-결과로 ① 누적 수익률 곡선(거래비용 반영 전후 두 선을 겹쳐서)
-② 고점 대비 낙폭을 보여주는 드로다운 차트
-③ 월별 수익률 표를 보여주고, 손실이 가장 길게 이어진 구간을 차트에 음영으로 표시해줘.
-</code></pre></div>
-<h3>내 눈으로 확인할 체크리스트</h3>
-<ul>
-<li class="check-item"><input type="checkbox"> 누적 수익률 차트에 거래비용 반영 전/후 <strong>두 선</strong>이 모두 있고, 반영 후 선이 항상 아래에 있다</li>
-<li class="check-item"><input type="checkbox"> 드로다운 차트에서 가장 깊은 골짜기(MDD)의 깊이를 숫자로 읽었다</li>
-<li class="check-item"><input type="checkbox"> 손실이 길게 이어진 음영 구간이 차트에 표시되어 있다</li>
-<li class="check-item"><input type="checkbox"> 그 구간의 원래 가격 차트를 보고 횡보장이었는지 확인했다</li>
-<li class="check-item"><input type="checkbox"> 월별 수익률 표에서 연속으로 마이너스였던 달이 몇 개월인지 세어 보았다</li>
-</ul>
-<h2>자주 발생하는 문제</h2>
+<p>이 클립이 끝나면, 여러분은 KODEX 레버리지 및 코스닥 대표 ETF를 대상으로 <strong>변동성 돌파(VBO) 전략의 다년간 백테스트를 실행</strong>하고, 높은 수익률 뒤에 도사린 <strong>'잦은 거래세/수수료 누적'</strong>과 <strong>'장 마감 직전 급락(윗꼬리 장대음봉) 트랩'</strong>이라는 약점 구간을 진단하여 이를 방어할 해결책을 수립하게 됩니다.</p>
 <blockquote>
-<p>AI마다 "다음 날 시가 매도" 대신 "당일 종가 매도"로 구현하거나, 돌파 판정에 고가 대신 종가를 쓰는 등 세부 구현이 다를 수 있습니다. 강사와 수익률 숫자가 달라도 체크리스트가 통과되면 성공입니다. 다만 규칙이 의도와 다르게 구현됐다면 바로잡아야 합니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 모든 전략에는 '유리한 환경'과 '불리한 환경'이 공존합니다. 완벽한 무적의 전략은 존재하지 않습니다. 진정한 퀀트의 실력은 <strong>전략의 약점 구간을 정확히 알고, 필터를 씌워 방어하는 능력</strong>에서 나옵니다.</p>
 </blockquote>
 <ul>
-<li><strong>매수·매도 시점이 의도와 다를 때</strong></li>
+<li><strong>실습 05</strong>: KODEX 레버리지(122630) 대상 $k=0.5$ 변동성 돌파 백테스트 엔진 가동</li>
+<li>거래비용(세금 + 수수료 + 슬리피지 편도 0.15%)이 연간 누적될 때 발생하는 충격 검증</li>
+<li>변동성 돌파의 2대 치명적 약점: <strong>가짜 돌파(False Breakout)</strong>와 <strong>지루한 박스권 횡보장</strong></li>
+<li>약점 보완책 1: <strong>이동평균선 추세 필터(Moving Average Filter)</strong> 결합</li>
+<li>약점 보완책 2: <strong>변동성 조절 자산배분(Volatility Targeting)</strong></li>
 </ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>지금 백테스트가 어떤 규칙으로 사고파는지 예시 거래 5건을 날짜·가격과 함께 표로 보여줘.
-&quot;장중 목표가 돌파 시 매수, 다음 날 시가 매도&quot;와 다르면 그 규칙대로 다시 백테스트해줘.
+<hr />
+<h2>이론 핵심</h2>
+<h3>1. 변동성 돌파 백테스트의 실제 성과 구조</h3>
+<p>변동성 돌파 전략은 연간 거래 횟수가 80~130회에 달하는 준-데이트레이딩 전략입니다. 따라서 거래비용을 0으로 둔 '이상적 백테스트'와 실제 '비용 차감 백테스트'의 차이가 극단적으로 벌어집니다.</p>
+<p>$$\text{Trade Return} = \frac{\text{Close}_t - \text{Target}_t}{\text{Target}_t} - \text{Slippage \&amp; Fees}$$</p>
+<pre><code class="language-text">[거래비용 미반영 백테스트] ──&gt; 누적 수익률 +450%, CAGR +35% (환상 속의 숫자)
+         ↓ (실제 마찰비용 왕복 0.25% 반영 시)
+[실제 순수익 백테스트]     ──&gt; 누적 수익률 +120%, CAGR +14%, MDD -18%
+</code></pre>
+<hr />
+<h3>2. 변동성 돌파의 약점 구간과 원인 분석</h3>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">약점 1: 가짜 돌파 (False Breakout & 윗꼬리 음봉)</div>
+    <div class="steps">
+      • 오전 9시 30분에 급등하여 목표가를 뚫고 매수 체결됨.<br>
+      • 오후 2시 이후 외국인/기관 매도 폭탄으로 종가가 시가 아래로 폭락.<br>
+      • <strong>결과</strong>: 당일 -4% ~ -6%의 큰 손실 발생.
+    </div>
+  </div>
+  <div class="compare-card bad">
+    <div class="tag">약점 2: 거래세 누적으로 인한 계좌 마모 (Chop Market)</div>
+    <div class="steps">
+      • 박스권 장세에서 매일 소폭 돌파 후 제자리 마감.<br>
+      • 수익률은 0%인데 매도 시마다 0.18% 거래세와 수수료가 계속 차감됨.<br>
+      • <strong>결과</strong>: 누적 거래비용으로 인해 완만한 우하향 곡선 발생.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>3. 프로 퀀트의 약점 보완 필터: 200일선 결합 (VBO + Trend Filter)</h3>
+<p>이 약점을 해결하는 가장 우아한 방법은 <strong>"대세 하락장이나 200일선 아래에서는 변동성 돌파 신호가 나와도 매수하지 않는다"</strong>는 필터를 추가하는 것입니다.</p>
+<p>$$\text{Execution Rule}: \text{Current Price} \ge \text{Target Price} \quad \mathbf{AND} \quad \text{Open}<em 200="200">t &gt; \text{SMA}</em>(t)$$</p>
+<hr />
+<h2>실습 — 실습 05: 백테스트 및 필터 개선 효과 검증</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하여 기본 변동성 돌파와 200일 이평 필터 결합형 전략의 성과를 비교해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>KODEX 레버리지(122630) 대상 변동성 돌파 전략의 백테스트 및 필터 개선 분석을 수행해줘. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. FinanceDataReader를 사용해 KODEX 레버리지의 최근 8년간(2016~2024) 일봉 데이터를 불러와줘.
+2. 다음 3가지 전략의 성과를 시뮬레이션해줘 (모두 왕복 거래비용 0.25% 차감):
+   - 전략 1: 기본 변동성 돌파 ($k=0.5$, 당일 목표가 돌파 시 매수, 당일 종가 매도)
+   - 전략 2: 필터 결합형 변동성 돌파 (목표가 돌파 + 당일 시가가 200일선 이상일 때만 매수)
+   - 벤치마크: 단순 보유(Buy &amp; Hold)
+3. 세 전략의 CAGR, MDD, 샤프 지수, 총 거래 횟수, 승률을 비교하는 Markdown 표를 터미널에 출력해줘.
+4. 누적 자산 성장 곡선과 언더워터 플롯(MDD)을 비교한 차트를 'vbo_filter_comparison.png'로 저장해줘.
+
+실행 완료 후 터미널에 결과 요약표를 출력하고 약점 구간 개선 효과를 3문장으로 설명해줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li><strong>약점 구간 표시가 없을 때</strong></li>
+<li class="check-item"><input type="checkbox"> 기본 VBO 대비 200일 이평 필터를 적용했을 때 거래 횟수가 절반 가까이 줄어들며 거래세가 절감되었다.</li>
+<li class="check-item"><input type="checkbox"> 2018년 및 2022년 하락장 구간에서 필터 결합형 전략의 MDD가 크게 방어되었다.</li>
+<li class="check-item"><input type="checkbox"> 생성된 차트 이미지(<code>vbo_filter_comparison.png</code>)에서 개선된 전략의 완만한 우상향 곡선을 확인했다.</li>
 </ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>드로다운이 -10% 아래로 내려가 있던 기간을 모두 찾아서
-누적 수익률 차트에 회색 음영으로 표시하고, 각 구간의 시작일·종료일·낙폭을 표로 정리해줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>지금까지는 한 종목 안에서의 전략이었습니다. 다음 클립에서는 여러 자산 중 <strong>무엇을 보유할지 고르는</strong> 듀얼 모멘텀과 자산배분 전략으로 시야를 넓힙니다.</p>
+<p>단일 종목이나 단일 ETF를 넘어서, 여러 자산군(미국 주식, 한국 주식, 채권, 금) 중에서 <strong>가장 강한 1위 자산을 갈아타며 수익을 내는 '게리 안토나치의 듀얼 모멘텀(Dual Momentum) 전략'</strong>의 원리를 파헤쳐 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

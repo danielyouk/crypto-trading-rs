@@ -846,75 +846,107 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 내 전략의 <strong>최대 낙폭(MDD) 구간을 확대한 분석 화면</strong>이 보입니다.</p>
+<p>이 클립이 끝나면, 여러분은 백테스트 시계열 전체에서 발생한 <strong>'상위 3대 최대 손실 구간(Top-3 Worst Drawdowns)'</strong>을 수술용 메스처럼 정밀하게 분리해내고, 각 손실 구간의 <strong>시작일·저점일·회복일(Duration &amp; Recovery Time)</strong>과 당시의 거시경제/시장 환경을 대조 분석하는 깊이 있는 포렌식 분석 역량을 갖추게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 전략이 돈을 잃는 구간을 분석하는 것은 두려운 일이 아닙니다. 어떤 시장 국면(급격한 V자 반등, 1년간의 지루한 계단식 하락 등)에서 손실이 났는지 정확히 알아야만 다음 단계에서 AI와 함께 방어 필터를 설계할 수 있습니다.</p>
+</blockquote>
 <ul>
-<li>누적 수익률 곡선 위에 MDD 구간이 색으로 표시된 차트</li>
-<li>그 구간의 시장 상황(급락장이었는지, 횡보장이었는지)과 당시 전략의 매매 내역 요약</li>
+<li><strong>언더워터 플롯(Underwater Plot)</strong>의 심층 해부: 깊이(Depth) vs 기간(Duration)</li>
+<li>최대 손실의 3단계 라이프사이클: <strong>고점 이탈(Peak) ➔ 최대 낙폭(Trough) ➔ 원금 회복(Recovery)</strong></li>
+<li>추세추종·변동성 돌파의 역사적 최악 구간 사례 (2018년 박스권 채찍질, 2020년 3월 급락 후 V자 급반등)</li>
+<li><strong>실습 09</strong>: 백테스트 시계열에서 Top-3 낙폭 구간 자동 탐색 및 국면별 특성 테이블 출력</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>MDD 구간은 전략의 약점 보고서</h3>
-<p>MDD는 숫자 하나(-23% 같은)로 요약되지만, 진짜 정보는 <strong>그 손실이 발생한 구간의 맥락</strong>에 있습니다. 같은 -23%라도 원인이 다르면 대응이 다릅니다.</p>
+<h3>1. 손실의 깊이(Depth)보다 무서운 손실의 기간(Duration)</h3>
+<p>많은 초보자가 "MDD -15%"라는 숫자만 봅니다. 하지만 진짜 투자자를 지치게 만드는 것은 <strong>원금을 회복하는 데 걸리는 시간(Time to Recovery)</strong>입니다.</p>
+<div class="compare-box">
+  <div class="compare-card info">
+    <div class="tag">급성 손실 (V-Shape Shock)</div>
+    <div class="steps">
+      • 1개월 만에 -15% 급락 ➔ 2개월 만에 전고점 회복.<br>
+      • <strong>총 소요 기간</strong>: 3개월.<br>
+      • <strong>투자자 심리</strong>: 순간적으로 놀라지만 빠르게 안도감 회복.
+    </div>
+  </div>
+  <div class="compare-card bad">
+    <div class="tag">만성 손실 (Prolonged Slump)</div>
+    <div class="steps">
+      • 1년 동안 지루하게 -12% 하락 ➔ 원금 회복에 추가로 1년 6개월 소요.<br>
+      • <strong>총 소요 기간</strong>: 2년 6개월 동안 계좌가 마이너스 상태 유지.<br>
+      • <strong>투자자 심리</strong>: "시스템이 고장 났다"고 판단하여 전략을 폐기함.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>2. Top-3 손실 구간의 정밀 분해 테이블 구조</h3>
 <table>
 <thead>
 <tr>
-<th>MDD 구간의 시장</th>
-<th>전형적인 원인</th>
-<th>시사점</th>
+<th>순위</th>
+<th>고점 일자 (Peak)</th>
+<th>저점 일자 (Trough)</th>
+<th>회복 일자 (Recovery)</th>
+<th>최대 낙폭 (MDD %)</th>
+<th>총 소요 기간</th>
+<th>주요 시장 원인</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>급락장</td>
-<td>손절이 늦거나 없음, 하락 전환을 늦게 감지</td>
-<td>위험 관리 규칙 점검</td>
+<td><strong>1위</strong></td>
+<td>2021-08-10</td>
+<td>2022-09-30</td>
+<td>2023-11-15</td>
+<td><strong>-14.2%</strong></td>
+<td>828일 (약 27개월)</td>
+<td>글로벌 금리인상 및 반도체 다운사이클</td>
 </tr>
 <tr>
-<td>횡보장</td>
-<td>잦은 진입·손절 반복(휩쏘)</td>
-<td>진입 조건이 소음에 민감한지 점검</td>
+<td><strong>2위</strong></td>
+<td>2018-01-29</td>
+<td>2018-10-30</td>
+<td>2019-04-12</td>
+<td><strong>-11.8%</strong></td>
+<td>438일 (약 14개월)</td>
+<td>미중 무역분쟁 및 국내 증시 횡보장</td>
 </tr>
 <tr>
-<td>상승장 중 조정</td>
-<td>정상적인 되돌림</td>
-<td>전략의 성격일 수 있음, 과잉 대응 주의</td>
+<td><strong>3위</strong></td>
+<td>2020-01-22</td>
+<td>2020-03-19</td>
+<td>2020-06-08</td>
+<td><strong>-9.5%</strong></td>
+<td>138일 (약 4개월)</td>
+<td>코로나19 팬데믹 단기 쇼크</td>
 </tr>
 </tbody>
 </table>
-<h3>낙폭의 깊이만큼 회복 기간도 본다</h3>
-<p>MDD 분석에서 놓치기 쉬운 것이 <strong>수중 기간(underwater period)</strong> — 고점을 회복하기까지 걸린 시간입니다. -15% 손실을 2개월 만에 회복하는 전략과 2년 걸리는 전략은 완전히 다른 경험을 줍니다. 실전에서 전략을 포기하게 만드는 것은 깊이보다 기간인 경우가 많습니다.</p>
-<h3>약점을 아는 것과 고치는 것은 다른 단계</h3>
-<p>이번 클립의 목표는 진단까지입니다. "횡보장에서 약하구나"를 알았다고 바로 전략을 바꾸면 안 됩니다. 손실을 본 직후의 즉흥적인 수정은 대부분 또 다른 과최적화로 이어집니다. 개선은 다음 챕터에서 정해진 절차(보고서 → 재검증 → 결정)로 진행합니다.</p>
-<h2>실습 — 실습 09</h2>
-<p>실습 08의 워크포워드 결과에 이어서 요청하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>방금 워크포워드 검증한 전략의 최대 낙폭(MDD) 구간을 분석해줘.
-끝나면 화면에 다음이 보이면 좋겠어.
-1) 누적 수익률 곡선에서 MDD 구간이 색으로 강조된 차트
-2) 그 구간의 시작일·종료일·낙폭 크기·고점 회복까지 걸린 기간
-3) 같은 기간 시장 지수의 움직임과 비교해서 급락장이었는지 횡보장이었는지 알 수 있는 요약
-4) 그 구간에서 전략이 실행한 매매 횟수와 손익 요약
+<hr />
+<h2>실습 — 실습 09: Top-3 최대 손실 구간 자동 탐색 및 시각화</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하여 전략의 최악 구간들을 찾아내고 확대 차트를 생성하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>추세추종 전략의 과거 7개년 백테스트에서 발생한 Top-3 최대 손실 구간을 정밀 분석하고 싶어. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. KODEX 200(069500)의 2018~2024년 200일 이평선 추세추종 일간 자산 가치 시계열을 생성해줘.
+2. 고점 대비 하락폭(Drawdown) 시계열을 계산하고, 역사상 가장 낙폭이 컸던 상위 3개 구간(Top-1, Top-2, Top-3 Drawdowns)을 자동으로 찾아줘.
+3. 각 구간별 [고점일, 저점일, 회복일, 낙폭 %, 하락 일수, 회복 일수, 총 소요 일수]를 정리한 표를 터미널에 출력해줘.
+4. 전체 언더워터 플롯 위에 Top-3 손실 구간을 서로 다른 색상의 음영(빨간색, 주황색, 노란색 박스)으로 강조 표시한 차트를 'top3_drawdown_analysis.png'로 저장해줘.
+
+실행 완료 후 터미널에 손실 분석표를 출력하고 1위 손실 구간의 원인을 2문장으로 요약해줘. (Verification)
 </code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 차트에서 MDD 구간이 색으로 표시되어 시작과 끝을 눈으로 짚을 수 있다</li>
-<li class="check-item"><input type="checkbox"> 낙폭의 깊이(%)와 회복까지 걸린 기간을 둘 다 확인했다</li>
-<li class="check-item"><input type="checkbox"> 그 구간이 급락장·횡보장·상승 중 조정 중 어디에 해당하는지 판단했다</li>
-<li class="check-item"><input type="checkbox"> "내 전략은 ~한 시장에서 약하다"를 한 문장으로 적어 보았다</li>
+<li class="check-item"><input type="checkbox"> 시계열 전체에서 가장 고통스러웠던 Top-3 손실 구간의 날짜와 낙폭 수치가 명확히 도출되었다.</li>
+<li class="check-item"><input type="checkbox"> 손실이 발생한 날짜와 원금으로 복귀한 날짜 사이의 소요 기간(일수)을 파악했다.</li>
+<li class="check-item"><input type="checkbox"> <code>top3_drawdown_analysis.png</code> 차트에서 음영으로 표시된 최악의 구간들을 시각적으로 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>MDD 구간의 위치와 깊이는 강사와 다를 수 있습니다. 워크포워드 윈도우 분할이 달랐다면 손실 구간도 다르게 잡힙니다. 중요한 것은 <strong>구간의 시장 맥락을 진단하는 과정</strong>이 같은가입니다.</p>
-<ul>
-<li>시장 상황 비교가 빠져 있다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>MDD 구간 분석에 시장 지수와의 비교가 없어. 같은 기간 코스피(또는 S&amp;P 500) 흐름을 겹쳐 그려서
-이 손실이 시장 전체의 급락 때문인지 전략 고유의 문제인지 구분할 수 있게 해줘.
-</code></pre></div>
-<ul>
-<li>MDD 구간이 여러 개 궁금하다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>가장 깊은 낙폭 구간 말고도 낙폭이 컸던 상위 3개 구간을 같은 방식으로 분석해서 비교표로 보여줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>약점 진단이 끝났습니다. 다음 챕터에서는 손실이 발생했을 때 AI에게 운영 보고서를 받아 원인을 분석하고, 정해진 범위 안에서 개선안을 고르는 절차를 배웁니다.</p>
+<p>최악의 손실 구간들이 언제, 왜 발생했는지 위치를 특정했습니다.<br />
+그렇다면 이제 이 데이터를 바탕으로 Claude Code에게 <strong>"왜 이 구간에서 손실이 났는지, 시장의 문제인지 전략 로직의 결함인지" 정밀 진단하는 AI 운영 보고서</strong>를 작성하게 해보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

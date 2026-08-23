@@ -846,45 +846,168 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 어떤 에러를 만나도 사용할 수 있는 <strong>3단계 표준 대응 절차</strong>가 손에 들어옵니다. 에러는 실패가 아니라 이 강의에서 가장 자주 반복될 일상입니다.</p>
+<p>이 클립이 끝나면, 앞으로 알고리즘 트레이딩 시스템을 구축하며 마주칠 어떤 복잡한 에러와 돌발 상황 앞에서도 당황하지 않고 해결하는 <strong>'4단계 AI 디버깅 표준 프로토콜'</strong>과 <strong>'시각적·데이터 검증 기법'</strong>을 완벽하게 체득하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 선언</strong>: 프로그래밍과 AI 코딩에서 에러는 '내가 무언가를 잘못해서 실패한 사건'이 아닙니다. 에러 메시지는 AI가 코드를 완성하기 위해 인간에게 건네는 <strong>가장 완벽하고 가치 있는 피드백 신호(Feedback Signal)</strong>입니다. 시니어 퀀트 개발자도 하루에 수십 번씩 에러를 만나며 작업합니다.</p>
+</blockquote>
+<ul>
+<li><strong>퀀트 트레이딩 4대 에러 유형</strong>(환경/데이터/침묵의 논리/시각화)의 원인과 해결 패턴 이해</li>
+<li>AI에게 에러를 전달할 때 절대로 놓쳐서는 안 되는 <strong>4단계 디버깅 프로토콜</strong> 마스터</li>
+<li>로그가 남지 않는 '침묵의 에러(차트 깨짐, NaN 결측치 전파)'를 잡는 <strong>스크린샷 캡처 및 데이터 형상 진단법</strong></li>
+<li>초보자가 흔히 저지르는 <strong>3대 디버깅 안티패턴(Anti-patterns)</strong> 탈출</li>
+</ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>에러 대응 3단계</h3>
+<h3>1. 초보자가 에러 앞에서 얼어붙는 3가지 착각 vs 진실</h3>
+<p>AI 코딩을 처음 접하는 입문자가 가장 많이 겪는 심리적 장벽은 에러 터미널의 붉은 글씨를 볼 때 느끼는 막막함입니다. 하지만 진실은 정반대입니다.</p>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">입문자의 위험한 착각</div>
+    <div class="steps">
+      • <strong>착각 1</strong>: "내가 코딩을 몰라서 시스템을 망가뜨렸다."<br>
+      • <strong>착각 2</strong>: "영어 에러 메시지를 내가 직접 해석해서 코드를 고쳐야 한다."<br>
+      • <strong>착각 3</strong>: "강사 화면과 똑같은 메시지가 안 나오면 내 환경이 잘못된 것이다."
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">에이전트 시대의 프로페셔널 진실</div>
+    <div class="steps">
+      • <strong>진실 1</strong>: 에러는 AI 개발 과정의 <strong>자연스러운 대화 정거장</strong>이다.<br>
+      • <strong>진실 2</strong>: 에러 메시지는 <strong>AI가 다음 수정안을 만들기 위한 최고의 입력값</strong>이다.<br>
+      • <strong>진실 3</strong>: OS와 라이브러리 버전에 따라 메시지는 달라도 <strong>최종 목표(차트·수익률)만 도달하면 성공</strong>이다.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>2. 퀀트 트레이딩 개발에서 마주치는 4대 에러 유형</h3>
+<p>앞으로 우리가 전략을 코딩하고 백테스트할 때 마주칠 에러는 크게 4가지 카테고리로 나뉩니다. 각 유형의 특성을 이해하면 AI에게 훨씬 명확하게 수정을 요구할 수 있습니다.</p>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 환경 및 의존성 에러 (Environment)</div>
+    <div class="card-desc">
+      <code>ModuleNotFoundError</code>, 패키지 버전 충돌(pandas 2.x vs 3.0), 가상환경 미활성화 등으로 인해 라이브러리를 불러오지 못할 때 발생합니다.
+    </div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 데이터 수집 & API 에러 (Data Ingestion)</div>
+    <div class="card-desc">
+      존재하지 않는 종목코드, 휴장일 데이터 호출로 인한 빈 데이터프레임(Empty DataFrame), <code>KeyError: 'Close'</code>, KIS API 호출 한도 초과(429) 등입니다.
+    </div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 침묵의 논리 에러 (Silent Logic)</div>
+    <div class="card-desc">
+      프로그램은 에러 없이 끝나지만 이동평균선 앞부분의 <code>NaN</code>(결측치)이 전파되어 수익률이 0이 되거나, 미래 데이터를 참조(Lookahead Bias)하는 치명적 오류입니다.
+    </div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">④ 시각화 및 UI 깨짐 에러 (Visual Glitches)</div>
+    <div class="card-desc">
+      Matplotlib 차트에서 한글 제목이 네모 상자(<code>□□□</code>)로 깨져 보이거나, 범례(Legend)와 축 라벨이 겹쳐서 판독할 수 없는 현상입니다.
+    </div>
+  </div>
+</div>
+
+<hr />
+<h3>3. AI와 함께하는 4단계 디버깅 표준 프로토콜</h3>
+<p>에러를 만났을 때 AI에게 던지는 프롬프트의 품질이 해결 속도를 결정합니다. 아래의 <strong>4단계 프로토콜</strong>을 복사기처럼 그대로 사용하세요.</p>
+<pre><code class="language-text">[Step 1: Raw Traceback] 터미널에 출력된 에러 메시지 전체 복사 (절대 요약하지 않음)
+   ↓
+[Step 2: Context Tagging] &quot;무엇을 하다가(어떤 파일을 실행하다가)&quot; 났는지 1문장 추가
+   ↓
+[Step 3: Target Re-statement] 원래 얻으려 했던 &quot;최종 결과물의 형태&quot;를 다시 선언
+   ↓
+[Step 4: Verification Request] 수정 후 정상 동작 여부를 확인하는 검증 출력 요청
+</code></pre>
+<h4>터미널 스택트레이스(Traceback)의 비밀</h4>
+<p>초보자는 흔히 터미널의 가장 마지막 한 줄(예: <code>ZeroDivisionError: division by zero</code>)만 AI에게 보냅니다. 하지만 AI에게는 <strong>중간 줄에 적힌 "몇 번째 파일, 몇 번째 라인에서 어떤 함수를 호출했는가"</strong>라는 스택트레이스가 10배 더 중요합니다. 반드시 <strong>위아래 전체를 통째로 복사</strong>하세요.</p>
+<hr />
+<h3>4. 로그가 없을 때의 무기 — 시각적 스크린샷 캡처와 데이터 형상 출력</h3>
+<p>만약 터미널에 아무런 붉은 에러 글씨가 뜨지 않는데도 결과가 이상하다면 어떻게 해야 할까요?</p>
 <ol>
-<li><strong>에러 메시지를 그대로 복사</strong> — 요약하거나 해석하지 않습니다. 전체를 그대로.</li>
-<li><strong>상황과 함께 전달</strong> — "무엇을 하다가" 났는지 한 문장을 붙입니다.</li>
-<li><strong>결과 목표를 다시 선언</strong> — 고치는 것이 목적이 아니라, 원래 만들려던 결과가 목적입니다.</li>
+<li><strong>화면 캡처 전달 (Multimodal Prompting)</strong>: 차트가 찌그러졌거나 한글이 깨졌다면 말로 구구절절 설명하지 말고 <strong>화면을 캡처해서 Cursor/Claude Code 채팅창에 붙여넣기(Ctrl+V)</strong>하세요. 최신 AI는 이미지를 보고 즉시 폰트 설정 코드(<code>plt.rc('font', family='Malgun Gothic')</code>)나 레이아웃 조절 코드(<code>plt.tight_layout()</code>)를 생성합니다.</li>
+<li><strong>데이터 형상(Shape)과 결측치 출력 요청</strong>: 숫자가 이상할 때는 AI에게 데이터의 중간 상태를 확인해 달라고 요청합니다.<blockquote>
+<p><em>"데이터프레임의 상위 5줄(<code>head()</code>), 결측치 개수(<code>isna().sum()</code>), 데이터 타입(<code>dtypes</code>)을 출력해서 이상이 없는지 먼저 진단해줘."</em></p>
+</blockquote>
+</li>
 </ol>
-<h3>화면이 곧 정보다</h3>
-<p>에러 메시지가 없는 문제(차트가 이상하게 그려짐, 숫자가 이상함)는 <strong>화면을 캡처해서 이미지로 전달</strong>합니다. AI 코딩 도구는 이미지를 읽을 수 있습니다. "뭐가 잘못됐는지 말로 설명"하려고 애쓰지 마세요. 보여주는 것이 빠르고 정확합니다.</p>
-<h3>강사와 여러분의 에러는 다르다</h3>
-<p>같은 실습이라도 컴퓨터 환경에 따라 저는 만나지 않은 에러를 여러분이 만날 수 있습니다. 그래서 이 강의는 "에러별 해결법 암기"가 아니라 <strong>어떤 에러든 통하는 절차</strong>를 가르칩니다.</p>
+<hr />
+<h3>5. 초보자가 반드시 피해야 할 3대 디버깅 안티패턴</h3>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">❌ 절대 하지 말아야 할 행동 (Anti-patterns)</div>
+    <div class="steps">
+      1. <strong>모호한 질문</strong>: "안 돼요. 왜 안 되죠? 고쳐주세요."<br>
+      2. <strong>성급한 수동 수정</strong>: 코딩 문법을 모르면서 파이썬 파일의 들여쓰기(Indentation)나 기호를 손으로 건드리다가 2차 에러 유발.<br>
+      3. <strong>무한 루프 대화</strong>: 한 대화창에서 10번 넘게 에러가 꼬였는데도 계속 붙잡고 실랑이하기.
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">✅ 프로페셔널 대응 가이드 (Best Practices)</div>
+    <div class="steps">
+      1. <strong>정확한 인풋</strong>: "상황 설명 + 전체 에러 로그 + 원래 목표" 3종 세트 제공.<br>
+      2. <strong>AI에게 수정 전담</strong>: 파일 수정과 저장, 재실행 지시까지 모두 AI에게 위임.<br>
+      3. <strong>신선한 컨텍스트 리셋</strong>: 대화가 꼬이면 과감히 <code>/clear</code>를 하거나 새 세션에서 목표를 다시 명확히 지시.
+    </div>
+  </div>
+</div>
+
+<hr />
 <h2>실습 — 실습 03</h2>
-<p>일부러 에러를 만들어 절차를 연습합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>방금 만든 차트 코드에서 종목 코드를 존재하지 않는 코드(999999)로
-바꿔서 실행해줘. 에러가 나는 것을 보고 싶어.
+<p>일부러 3가지 대표 에러를 발생시키고, 4단계 프로토콜로 우아하게 복구하는 과정을 직접 손으로 훈련합니다.</p>
+<h3>실습 03-A: [데이터 에러 유발 및 복구] 잘못된 종목코드 호출</h3>
+<p>존재하지 않는 가상의 종목코드(<code>999999</code>)를 넣어 에러를 유발하고, AI가 예외를 안전하게 처리하도록 개선합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이전 클립에서 만든 주식 데이터 수집 코드에서
+종목 코드를 존재하지 않는 '999999'로 바꿔서 실행해줘.
+어떤 에러가 발생하는지 확인하고 싶어.
 </code></pre></div>
-<p>에러가 나면, 3단계 절차대로 해결을 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>일봉 차트를 만들다가 아래 에러가 났어.
-원인을 한 문장으로 설명하고, 문제를 해결해서
-원래 목표였던 삼성전자(005930) 3년 일봉 차트를 완성해줘.
-[에러 메시지 전체 붙여넣기]
+<p>터미널에 에러가 출력되면, 4단계 프로토콜 프롬프트를 보냅니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>종목 데이터를 불러오다가 아래 에러가 발생했어.
+에러 원인을 비전공자도 이해하기 쉽게 한 문장으로 설명해주고,
+존재하지 않거나 상장폐지된 종목코드일 경우 프로그램을 중단시키지 않고
+&quot;유효하지 않은 종목코드입니다&quot;라는 경고를 띄운 뒤 정상 종료하도록 코드를 방어적으로 수정해줘.
+원래 목표였던 삼성전자(005930) 1년치 일봉 데이터 수집도 정상 완료해줘.
+
+[터미널 에러 로그 전체 붙여넣기]
 </code></pre></div>
+<hr />
+<h3>실습 03-B: [시각화 에러 복구] 한글 폰트 깨짐 및 레이아웃 자동 보정</h3>
+<p>차트를 그릴 때 한글 제목이 <code>□□□</code>로 깨지는 현상을 해결하는 OS 맞춤형 프롬프트입니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>차트를 생성했는데 한글 제목과 범례 글씨가 네모 모양(□□□)으로 깨져서 보여.
+현재 내 운영체제(Windows/Mac/Linux)를 자동으로 감지해서
+적절한 한글 폰트(맑은 고딕, AppleGothic, 나눔고딕 등)를 설정하고,
+글씨가 잘리지 않도록 tight_layout()을 적용해서 차트 이미지를 다시 깔끔하게 저장해줘.
+저장된 이미지 경로도 함께 알려줘.
+</code></pre></div>
+<hr />
+<h3>실습 03-C: [침묵의 논리 에러 복구] 이동평균선 결측치(NaN) 안전 처리</h3>
+<p>200일 이동평균선 계산 시 초반 199일의 <code>NaN</code>으로 인해 백테스트가 멈추거나 왜곡되는 현상을 선제적으로 방어합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이동평균선(20일, 60일, 200일)을 계산할 때 초반 계산 기간 부족으로 발생하는
+NaN(결측치) 데이터를 확인하고, 결측치가 백테스트나 차트 표시에 악영향을 주지 않도록
+안전하게 처리하는 코드를 추가해줘.
+처리 전후의 데이터 개수(row 수) 변화를 print()로 출력해서 보여줘.
+</code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 에러의 원인을 AI가 한 문장으로 설명해 주었다</li>
-<li class="check-item"><input type="checkbox"> 해결 후 원래 목표였던 차트가 정상적으로 완성되었다</li>
-<li class="check-item"><input type="checkbox"> 화면 캡처를 첨부해서 질문하는 방법을 한 번 시도해 보았다</li>
+<li class="check-item"><input type="checkbox"> 잘못된 종목코드를 넣었을 때 프로그램이 뻗지 않고 방어 메시지가 출력되는 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 에러 로그 전체를 복사해서 질문했을 때 AI가 원인을 명쾌하게 짚어내고 코드를 자동 수정했다.</li>
+<li class="check-item"><input type="checkbox"> 한글 폰트가 깨지지 않고 차트 제목과 축 이름이 선명한 한글로 저장되었다.</li>
+<li class="check-item"><input type="checkbox"> 데이터프레임의 결측치(NaN) 개수와 전후 데이터 행 수가 터미널에 숫자로 확인되었다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<ul>
-<li><strong>에러를 요약해서 전달했더니 해결이 안 된다</strong> → 가장 흔한 실수입니다. 메시지 전체를 그대로 붙여넣으세요. AI에게는 마지막 줄보다 중간에 있는 정보가 더 중요할 때가 많습니다.</li>
-<li><strong>해결됐다는데 결과물이 안 보인다</strong> → "고쳤다"는 말로 끝내지 않도록, 항상 결과 목표를 다시 선언하세요.</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>고쳐졌다고 했는데 차트 파일이 안 보여. 차트를 다시 저장하고
-파일 경로를 알려줘.
-</code></pre></div>
+<hr />
+<h2>자주 발생하는 문제 및 Q&amp;A</h2>
+<p><strong>Q1. AI가 코드를 고쳤다고 하는데 여전히 똑같은 에러가 반복됩니다. 어떻게 해야 하나요?</strong><br />
+AI가 이전 대화 맥락에 갇혀 같은 실수를 반복하는 현상입니다. 이럴 때는 대화창에 <code>/clear</code>를 입력해 대화 메모리를 초기화한 뒤, <strong>"프로젝트의 원래 목표 + 작업 중인 파이썬 파일 경로 + 방금 발생한 에러 로그 전체"</strong>를 하나의 프롬프트에 담아 새롭게 질문하면 즉시 해결됩니다.</p>
+<p><strong>Q2. 에러 로그가 수백 줄이 넘어서 터미널 위로 훌쩍 지나가 버립니다. 어디서부터 복사해야 하나요?</strong><br />
+터미널 창을 위로 스크롤하여 파이썬 실행 명령어(예: <code>python test.py</code>) 바로 다음 줄부터 맨 아래 프롬프트 입력창 직전까지 마우스 드래그로 긁어서 복사하면 됩니다. 터미널 출력이 너무 길다면 <code>"방금 실행한 파이썬 에러 로그를 error.log 파일로 저장해줘"</code>라고 지시해도 좋습니다.</p>
+<p><strong>Q3. 터미널에 붉은색 글씨로 긴 문장이 떴는데, 프로그램은 끝까지 실행되어 차트 파일이 나왔습니다. 이것도 에러인가요?</strong><br />
+그것은 <code>Error</code>가 아니라 <strong><code>Warning(경고)</code></strong>일 가능성이 높습니다 (예: <code>FutureWarning: Series.__getitem__ treating keys as positions is deprecated</code>). 경고는 실행을 멈추지는 않지만 향후 라이브러리 업데이트 시 에러가 될 수 있으므로, 해당 경고 문구를 AI에게 복사해 주며 <em>"이 경고가 발생하지 않도록 최신 문법으로 코드를 다듬어줘"</em>라고 요청하면 코드가 더욱 견고해집니다.</p>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>Part 1이 끝났습니다. Part 2에서는 드디어 투자 전략의 세계로 들어갑니다. 첫 주제는 "어떤 아이디어가 자동화될 수 있는가"입니다.</p>
+<p>축하합니다! 이제 여러분은 <strong>도구 설치(Clip 02) → 결과 중심 프롬프팅(Clip 03) → 시각적 결과 확인(Clip 04) → 돌발 에러 방어(Clip 05)</strong>로 이어지는 <strong>AI 코딩 4대 핵심 기본기</strong>를 완벽하게 마스터하셨습니다.</p>
+<p>Part 2부터는 이 단단한 기본기를 무기로, 실제 퀀트 헤지펀드와 전문 트레이더들이 사용하는 <strong>'4대 투자 전략(추세추종, 변동성 돌파, 듀얼 모멘텀, 페어트레이딩)'</strong>의 내부 매매 규칙을 파헤치고 과거 10년치 데이터로 직접 백테스트를 수행해보겠습니다!</p>
   </main>
 
   <!-- Pager Navigation -->

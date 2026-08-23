@@ -846,63 +846,57 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 장이 마감된 저녁에 <strong>오늘 하루 동안 시스템이 실행한 체결 내역, 잔고 변동, 전략별 손익을 AI가 자동으로 분석하여 마크다운 및 HTML 매매 일지로 생성해 주는 일일 저널링 파이프라인</strong>이 완성됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 매일 오후 3시 40분 정규 주식 시장이 마감되었을 때 자동으로 실행되어, <strong>당일의 총 체결 내역, 실현 손익, 미실현 평가손익, 슬리피지 비용을 정밀하게 분석</strong>하고, 내일 아침 개장 전 점검해야 할 사항까지 포함된 <strong>'AI 일일 매매 일지(<code>daily_journal.md</code>)'</strong>를 자동으로 생성하는 포스트-마켓(Post-Market) 자동화 파이프라인을 완성하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 매매 일지를 손으로 쓸 필요가 없습니다. KIS API에서 오늘 발생한 실제 체결 영수증 데이터를 긁어와 AI가 전문 퀀트 분석관의 어조로 일지를 작성하고 Markdown 문서로 깔끔하게 정리해 줍니다.</p>
+</blockquote>
 <ul>
-<li>당일 매수/매도 체결 내역 및 슬리피지 분석</li>
-<li>전략별 손익 요약 및 현재 계좌 총자산 평가</li>
-<li>내일 장에서 감시할 전략별 기준가(Threshold) 사전 산출 및 보고서 자동 저장</li>
+<li>장 마감 후 포스트-마켓 루틴(Post-Market Routine)의 중요성</li>
+<li>KIS API 당일 체결 내역 조회(<code>TTTC8001R</code>) 및 일간 PnL(Profit &amp; Loss) 분해 공식</li>
+<li><strong>AI 일일 매매 일지의 4대 핵심 구조</strong>:
+  1. 오늘 계좌 총 요약 (시작 자산, 마감 자산, 일일 수익률 %)
+  2. 종목별 체결 내역 (진입가, 청산가, 실현 손익, 슬리피지 추정)
+  3. 전략별 성과 기여도 (추세추종 vs 돌파 vs 모멘텀 vs 페어)
+  4. 내일 아침 실행 전 점검 사항 및 기준 가격 예고</li>
+<li><strong>실습 22</strong>: <code>daily_journal.py</code> 실행 및 <code>docs/daily_journal_YYYYMMDD.md</code> 자동 생성</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>왜 장 마감 후 일일 저널링인가?</h3>
-<p>장중에는 시스템이 무인으로 기계처럼 실행하지만, 장이 끝난 후에는 <strong>AI와 함께 하루의 실행 결과를 복기(Review)</strong>해야 합니다.</p>
-<div class="compare-box">
-  <div class="bad-panel">
-    <h4>❌ 장중 실시간 잔고 확인 & 스트레스</h4>
-    <ul>
-      <li>장중 1분마다 잔고를 새로고침하며 업무 집중 불가</li>
-      <li>일시적 마이너스 평가손익에 멘탈 흔들림</li>
-      <li>체결 이유와 통계에 대한 체계적 기록 부재</li>
-    </ul>
-  </div>
-  <div class="good-panel">
-    <h4>✅ 장 마감 후 AI 종합 브리핑</h4>
-    <ul>
-      <li>장중에는 100% 무인 실행에 맡기고 본업 집중</li>
-      <li>퇴근 후 AI가 작성한 깔끔한 일일 리포트 1장 확인</li>
-      <li>누적 거래 데이터가 축적되어 주말 거버넌스(Tier 1)의 기초 자료로 활용</li>
-    </ul>
-  </div>
-</div>
+<h3>1. 일일 손익(PnL)의 정확한 분해 공식</h3>
+<p>$$\text{Daily Total PnL} = \text{Realized PnL (실현 손익)} + \Delta \text{Unrealized PnL (평가손익 변동)} - \text{Total Friction Costs (비용)}$$</p>
+<pre><code class="language-text">[장 마감 분석 리포트 구조]
+• 시작 자산: 50,000,000원
+• 마감 자산: 50,420,000원
+• 순수익: +420,000원 (+0.84%)
+  - KODEX 레버리지 (변동성돌파): +580,000원 (익절 청산)
+  - KB금융/신한지주 (페어): -110,000원 (평가손실 진행 중)
+  - 증권거래세 및 수수료: -50,000원 차감
+</code></pre>
+<hr />
+<h2>실습 — 실습 22: AI 일일 매매 일지 자동 생성기 구동</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>장 마감 후 당일 매매 결과를 종합 분석하여 일일 매매 일지를 자동 작성하는 'daily_journal.py' 모듈을 완성해줘. (Context)
 
-<h3>일일 매매 일지 리포트의 4대 핵심 구성</h3>
-<ol>
-<li><strong>오늘의 체결 요약</strong>: 종목, 체결 시간, 매수가/매도가, 수량, 체결 이유</li>
-<li><strong>계좌 건강 상태</strong>: 일일 수익률, 누적 손익, 최대 낙폭(MDD), 현금 비중</li>
-<li><strong>안전 가드레일 상태</strong>: 손절 발동 여부, 서킷브레이커 상태 점검</li>
-<li><strong>내일의 실행 시나리오</strong>: 확정된 당일 종가를 바탕으로 계산된 내일 진입 기준가</li>
-</ol>
-<h2>실습 18 — AI 일일 매매 일지 생성기 구축</h2>
-<p>Claude Code에게 장 마감 데이터를 수집하고 일일 매매 일지를 생성하도록 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>오늘 장 마감 후 체결 내역과 계좌 잔고 데이터를 읽어서
-'daily_report_YYYYMMDD.md' 형식의 일일 매매 일지를 생성해줘.
-1. 오늘 발생한 체결 내역과 손익 요약 표
-2. 현재 포트폴리오 잔고 및 현금 비중
-3. 내일 시장에서 감시할 종목별 진입 기준가 요약
-내용을 깔끔한 마크다운과 표로 작성해서 파일로 저장하고 화면에 출력해줘.
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. KIS API를 통해 당일 체결 내역과 현재 잔고 평가액을 조회해줘.
+2. 오늘의 시작 자산 대비 총 손익(원, %), 실현 손익, 보유 종목별 평가손익을 집계해줘.
+3. 체결된 주문들의 슬리피지(주문 당시 시세 vs 실제 체결단가 차이)를 추정 계산해줘.
+4. 분석 결과를 바탕으로 전문적인 마크다운 형식의 일일 매매 일지를 'docs/daily_journal_20260824.md' 파일로 저장해줘.
+5. 터미널에는 오늘 하루의 핵심 성과 요약 카드(Total PnL, Win Rate, Key Trades)를 출력해줘.
+
+실행 완료 후 터미널에 요약 카드를 출력하고 생성된 일지 마크다운 파일 내용을 확인시켜줘. (Verification)
 </code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 오늘 하루 동안 실행된 모의투자 체결 내역이 빠짐없이 표로 정리되었다</li>
-<li class="check-item"><input type="checkbox"> 현재 계좌 총평가액과 당일 손익률이 정확히 계산되었다</li>
-<li class="check-item"><input type="checkbox"> 내일 적용될 전략별 기준가가 전일 종가 기준으로 올바르게 산출되었다</li>
-<li class="check-item"><input type="checkbox"> 생성된 일일 리포트가 <code>daily_report_YYYYMMDD.md</code> 파일로 저장되었다</li>
+<li class="check-item"><input type="checkbox"> <code>docs/daily_journal_YYYYMMDD.md</code> 파일이 정상 생성되었다.</li>
+<li class="check-item"><input type="checkbox"> 일지에 오늘 계좌의 일간 수익률과 종목별 손익 내역이 빠짐없이 기록되었다.</li>
+<li class="check-item"><input type="checkbox"> 내일 장 시작 전 확인해야 할 전략별 기준가가 정리된 것을 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<ul>
-<li><strong>장 마감 전 실행 시 데이터 불일치</strong>: 당일 종가가 확정되는 15:30(국내장 기준) 이후에 실행해야 정확한 일일 일지와 내일 기준가가 산출됩니다.</li>
-</ul>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>이제 2-Tier 매매 엔진과 일일 저널링까지 모든 부품이 완성되었습니다. Part 4의 마지막 클립(Clip 35)에서는 이 시스템을 매일 직접 켜는 대신, 주식시장 운영 시간에 맞춰 자동으로 켜지고 꺼지는 백그라운드 스케줄러를 연결합니다.</p>
+<p>매일 장 마감 후 일지까지 완벽하게 남겼습니다.<br />
+이제 Part 4의 대단원으로, <strong>이 모든 모듈(아침 시그널 ➔ 장중 매매/손절 ➔ 장 마감 일지)이 사람이 컴퓨터를 켜지 않아도 운영체제 스케줄러를 통해 스스로 돌아가게 만드는 '무인 자동화 오케스트레이션'</strong>을 배워보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

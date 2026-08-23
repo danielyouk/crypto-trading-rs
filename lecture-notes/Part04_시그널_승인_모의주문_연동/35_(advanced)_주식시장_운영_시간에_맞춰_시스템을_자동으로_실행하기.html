@@ -846,72 +846,64 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 매일 아침 컴퓨터 앞에 앉지 않아도 <strong>장 시작 전에 시스템이 자동으로 켜지고, 장 마감 후 정리 작업까지 하고 스스로 꺼지는</strong> 운영 체계가 완성됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 리눅스/Mac의 <strong>크론탭(Crontab)</strong>이나 윈도우의 <strong>작업 스케줄러(Task Scheduler)</strong>를 활용하여, 한국 주식 시장의 운영 시간표에 맞춰 <strong>아침 08:30 시그널 생성, 09:00~15:20 실시간 매매/하드 손절 감시, 15:40 일일 매매 일지 작성</strong>을 100% 무인으로 스스로 실행하는 완전한 <strong>'자동화 오케스트레이션(Automation Orchestration)'</strong>을 구축하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 크론탭 설정이 낯설더라도 걱정하지 마세요. Claude Code에게 내 운영체제(Mac/Linux/Windows)를 알려주면 정확한 스케줄러 등록 명령어와 쉘 스크립트(<code>run_pipeline.sh</code>)를 자동으로 완성해 줍니다.</p>
+</blockquote>
 <ul>
-<li>Windows 작업 스케줄러에 등록된 시작·종료 작업</li>
-<li>아침에 "시스템 시작" 알림, 저녁에 "시스템 종료 + 다음 거래일 시나리오" 알림이 자동으로 도착</li>
+<li>한국 주식 시장(KRX) 표준 운영 타임라인과 시스템 작업 맵핑</li>
+<li>크론탭(Cron Expression) 문법과 파이썬 가상환경(<code>.venv</code>) 자동 연동 기법</li>
+<li>단일 마스터 실행기 <code>run_pipeline.py</code> / <code>run_pipeline.sh</code>의 설계</li>
+<li>로그 파일 자동 분할 및 일자별 보관(<code>logs/system_YYYYMMDD.log</code>)</li>
+<li><strong>실습 23</strong>: 전체 파이프라인 무인 스케줄링 등록 및 통합 시뮬레이션</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>수동 실행의 함정</h3>
-<p>시스템이 아무리 좋아도 <strong>켜는 것을 잊으면 그날은 없는 시스템</strong>입니다. 사람의 기억력에 기대는 운영은 반드시 구멍이 납니다. 실행 자체를 자동화하면, 사람은 "켜기"가 아니라 "판단"에만 집중할 수 있습니다. 이것이 파이널 프로젝트의 마지막 조각입니다.</p>
-<h3>Windows 작업 스케줄러</h3>
-<p>Windows에 내장된 <strong>작업 스케줄러</strong>는 "매일 몇 시에 이 프로그램을 실행하라"를 등록해 두는 도구입니다. 우리가 등록할 작업은 두 개입니다.</p>
-<table>
-<thead>
-<tr>
-<th>작업</th>
-<th>시각(예시)</th>
-<th>하는 일</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>장 시작 준비</td>
-<td>평일 08:50</td>
-<td>시스템 시작 → 계좌·시세 연결 → "시작됨" 알림</td>
-</tr>
-<tr>
-<td>장 마감 정리</td>
-<td>평일 15:40</td>
-<td>시스템 종료 → 로그 정리 → 다음 거래일 시나리오 알림</td>
-</tr>
-</tbody>
-</table>
-<p>등록 자체도 AI에게 시킬 수 있습니다. 다만 <strong>등록이 됐는지, 실제로 그 시각에 돌았는지는 여러분이 작업 스케줄러 화면과 알림으로 확인</strong>합니다.</p>
-<h3>자동 실행일수록 시작 알림이 중요하다</h3>
-<p>자동화의 역설: 사람이 안 켜니까, <strong>켜졌는지도 모르게 됩니다</strong>. 그래서 시작 작업의 마지막은 반드시 "시스템 시작됨, 계좌 연결 정상" 알림이어야 합니다. 아침 알림이 안 왔다면 그 자체가 "뭔가 잘못됐다"는 신호입니다. 알림이 침묵하는 시스템은 고장을 알 방법이 없습니다.</p>
-<h2>실습 19 — 장 운영 시간에 맞춘 자동 실행 등록</h2>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>내 트레이딩 시스템을 Windows 작업 스케줄러에 등록해줘.
-평일 오전 8시 50분에 시스템이 자동 시작되어 계좌 연결과 시세 수신을 확인한 뒤
-&quot;시스템 시작: 계좌 연결 정상&quot;이 텔레그램으로 와야 하고,
-평일 오후 3시 40분에는 시스템을 종료하면서
-&quot;시스템 종료 + 다음 거래일 시나리오&quot; 알림이 와야 해.
-등록이 끝나면 작업 스케줄러에서 두 작업이 보이는 화면을 확인할 수 있게 해주고,
-지금 시작 작업을 수동으로 한 번 실행해서 시작 알림이 오는 것까지 보여줘.
+<h3>1. 주식시장 타임테이블과 시스템 작업 맵핑</h3>
+<pre><code class="language-text">[08:30] ──&gt; ① 사전 점검 &amp; 당일 시그널 생성 (generate_signals.py)
+              • 토큰 갱신, 계좌 잔고 확인, 주간 정책(weekly_policy.json) 유효성 검사
+
+[09:00] ──&gt; ② 개장 즉시 시가 주문 및 변동성 돌파 감시 시작 (execute_orders.py)
+              • 추세추종/자산배분 진입, 변동성 돌파 실시간 목표가 폴링
+
+[09:00 ~ 15:20] ──&gt; ③ 상시 하드 가드레일 감시 (risk_guard.py)
+                      • 0.5초 간격 개별 종목 -3% 손절 및 포트폴리오 -2% 서킷브레이커 감시
+
+[15:20] ──&gt; ④ 데이트레이딩(VBO) 당일 포지션 종가 청산
+[15:40] ──&gt; ⑤ 장 마감 후 일일 AI 매매 일지 작성 (daily_journal.py)
+</code></pre>
+<hr />
+<h3>2. 크론탭(Crontab) 설정 예시</h3>
+<pre><code class="language-bash"># 월~금(1-5) 평일 자동 실행 스케줄
+30 8 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/generate_signals.py &gt;&gt; /path/to/ai-trading/logs/signals.log 2&gt;&amp;1
+0 9 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/execute_orders.py &gt;&gt; /path/to/ai-trading/logs/orders.log 2&gt;&amp;1
+40 15 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/daily_journal.py &gt;&gt; /path/to/ai-trading/logs/journal.log 2&gt;&amp;1
+</code></pre>
+<hr />
+<h2>실습 — 실습 23: 무인 자동화 오케스트레이터 구축</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>한국 주식 시장 운영 시간에 맞춰 전체 퀀트 시스템을 자동으로 스케줄링하는 마스터 오케스트레이터를 완성해줘. (Context)
+
+다음 요구사항에 맞춰 스크립트를 작성하고 실행해줘: (Deliverable)
+1. 아침 시그널 생성(08:30) ➔ 장중 매매/하드손절(09:00~15:20) ➔ 장 마감 일지(15:40)를 순차적으로 제어하는 마스터 파이썬 스크립트 'orchestrator.py'를 작성해줘.
+2. 현재 OS 환경에 맞는 스케줄러 등록 가이드(Mac/Linux의 경우 crontab 파일, Windows의 경우 schtasks 스크립트)를 'docs/scheduler_setup.md'로 작성해줘.
+3. 모든 터미널 출력과 에러가 날짜별 로그 파일('logs/system_YYYYMMDD.log')로 안전하게 자동 저장되도록 로깅 시스템을 구성해줘.
+4. 전체 파이프라인의 1회 전체 순환 드라이런(Dry-run) 테스트를 실행하여 정상 작동을 증명해줘.
+
+실행 완료 후 터미널에 드라이런 완료 로그를 출력하고 스케줄러 가이드 경로를 알려줘. (Verification)
 </code></pre></div>
+<hr />
 <h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> Windows 작업 스케줄러 화면에 시작·종료 작업 두 개가 등록되어 있다</li>
-<li class="check-item"><input type="checkbox"> 시작 작업을 수동 실행하면 "시스템 시작: 계좌 연결 정상" 알림이 온다</li>
-<li class="check-item"><input type="checkbox"> 종료 작업을 수동 실행하면 종료 + 다음 거래일 시나리오 알림이 온다</li>
-<li class="check-item"><input type="checkbox"> (다음 거래일 아침) 손대지 않았는데 8시 50분에 시작 알림이 실제로 도착했다</li>
+<li class="check-item"><input type="checkbox"> 마스터 오케스트레이터(<code>orchestrator.py</code>)가 전체 모듈을 순서대로 에러 없이 호출했다.</li>
+<li class="check-item"><input type="checkbox"> <code>logs/</code> 폴더에 날짜별 통합 시스템 로그가 기록되는 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 평일 아침부터 장 마감까지 컴퓨터가 스스로 시스템을 안전하게 운용할 준비를 마쳤다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>강사와 여러분의 등록 방식(명령어·경로)은 다를 수 있습니다. 작업 스케줄러 화면에 작업이 보이고, 정해진 시각에 알림이 오면 정상입니다.</p>
-<ul>
-<li><strong>경로 문제</strong>: 스케줄러가 실행하는 환경은 여러분이 쓰던 터미널과 달라서, 프로그램·폴더 경로를 못 찾는 오류가 가장 흔합니다.</li>
-<li><strong>컴퓨터가 꺼져 있거나 절전 모드</strong>: 스케줄러는 컴퓨터가 켜져 있어야 동작합니다. 절전 해제 설정이 필요할 수 있습니다.</li>
-<li><strong>주말·휴장일</strong>: 평일 조건만으로는 공휴일에도 실행됩니다. 휴장일에는 시작 후 "오늘은 휴장일" 알림만 보내고 종료하게 할 수 있습니다.</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>작업 스케줄러에서 수동 실행하면 되는데, 정해진 시각에는 시스템이 안 켜져.
-작업의 실행 결과 코드와 실행 조건(절전, 로그인 여부)을 확인해서
-매일 아침 자동으로 켜지도록 고쳐줘.
-</code></pre></div>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>공휴일에도 시스템이 켜졌어. 시작할 때 오늘이 휴장일인지 확인해서,
-휴장일이면 &quot;오늘은 휴장일입니다&quot; 알림만 보내고 바로 종료하게 해줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>파이널 프로젝트가 완성되었습니다. Part 5에서는 이 시스템이 매일 만들어내는 결과를 AI로 분석하고, 전략을 개선하며, 실전 전환 전에 갖춰야 할 안전장치를 더합니다.</p>
+<p>축하합니다! 이제 여러분은 완전한 무인 자동 모의투자 시스템을 가동할 수 있게 되었습니다.<br />
+하지만 시스템을 지속적으로 운영하면서 자산을 불려 나가려면 <strong>실전 운영에서의 비용 관리, 시장 레짐 체인지 대응, 그리고 1인 퀀트의 일간/주간/월간 루틴</strong>이 뒷받침되어야 합니다.<br />
+마지막 <strong>Part 5 (결과 분석과 안전한 실전 운영)</strong>에서 1인 퀀트 헤지펀드의 완벽한 마침표를 찍어보겠습니다!</p>
   </main>
 
   <!-- Pager Navigation -->

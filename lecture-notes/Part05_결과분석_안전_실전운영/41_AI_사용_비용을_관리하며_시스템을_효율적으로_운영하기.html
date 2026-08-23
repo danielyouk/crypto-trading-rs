@@ -846,91 +846,68 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 내 시스템이 <strong>한 달에 AI 비용을 얼마나 쓰는지</strong> 파악하고, 그 비용을 줄이는 세 가지 방법을 내 운영 방식에 적용할 수 있습니다.</p>
+<p>이 클립이 끝나면, 여러분은 Claude Code 및 최신 LLM 에이전트를 매일 트레이딩 시스템 분석에 활용하면서도, <strong>'프롬프트 캐싱(Prompt Caching)', '컨텍스트 압축', '정액제 vs API 최적 라우팅'</strong> 기법을 적용하여 <strong>월 AI 사용 비용을 커피 한두 잔 가격(월 5,000원~10,000원 미만)</strong>으로 통제하는 초고효율 운영 노하우를 터득하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>비용 관리의 핵심</strong>: AI에게 매번 전체 프로젝트 파일 50개를 처음부터 끝까지 다 읽게 만들면 토큰 낭비가 심해집니다. 필요한 데이터와 최근 요약본만 넘겨주는 <strong>'컨텍스트 다이어트'</strong>가 비용 절감의 열쇠입니다.</p>
+</blockquote>
 <ul>
-<li>내 사용 패턴에 맞는 과금 방식(API 종량제 vs 정액제) 판단 기준</li>
-<li>작업 종류별로 모델을 나눠 쓰는 역할 분담표</li>
+<li>LLM 토큰 과금의 작동 원리 (입력 토큰 vs 출력 토큰 vs 캐시 히트 토큰)</li>
+<li><strong>프롬프트 캐싱(Prompt Caching)</strong>의 원리와 최대 90% 비용 할인 혜택 누리기</li>
+<li>장 마감 일지와 주간 분석 시 토큰 낭비를 줄이는 <strong>'3대 컨텍스트 압축 프롬프트 기법'</strong></li>
+<li>API 종량제(Pay-as-you-go) vs 구독형 정액제(Claude Pro/Team)의 손익분기점(BEP)</li>
+<li><strong>실습 29</strong>: AI 호출 토큰 사용량 측정 및 프롬프트 경량화 벤치마크</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>비용 구조부터 이해하기</h3>
-<p>AI 사용 비용은 크게 두 갈래입니다.</p>
-<table>
-<thead>
-<tr>
-<th>방식</th>
-<th>과금</th>
-<th>어울리는 경우</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>API Key (종량제)</td>
-<td>사용한 토큰만큼</td>
-<td>자동화된 일일 보고서·분석처럼 호출량이 예측되는 작업</td>
-</tr>
-<tr>
-<td>정액제 (예: Claude Code Max)</td>
-<td>월 고정 요금</td>
-<td>대화하며 개발·개선하는 작업이 많은 경우</td>
-</tr>
-</tbody>
-</table>
-<p>우리 시스템은 두 가지를 병행합니다 — 매일 자동으로 도는 보고서·분석은 API, 전략을 개선하고 기능을 추가하는 대화형 작업은 정액제 도구가 자연스럽습니다.</p>
-<h3>비용 절감의 세 가지 지렛대</h3>
-<ol>
-<li><strong>캐시 활용</strong> — 매일 반복되는 프롬프트(보고서 양식, 전략 설명 등)는 캐시가 적용되게 구성하면 같은 내용을 매번 새로 과금하지 않습니다.</li>
-<li><strong>저가 모델 혼용</strong> — 모든 작업에 최고 모델이 필요하지 않습니다. 표 정리·요약 같은 단순 작업은 저가 모델로 충분합니다.</li>
-<li><strong>호출 횟수 자체 줄이기</strong> — 장중에 불필요하게 AI를 부르지 않도록, AI 호출이 필요한 시점(장 마감 후 분석 등)을 미리 정해둡니다.</li>
-</ol>
-<h3>모델별 역할 분담</h3>
-<table>
-<thead>
-<tr>
-<th>작업</th>
-<th>필요 수준</th>
-<th>모델</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>일일 보고서 표 정리·요약</td>
-<td>낮음</td>
-<td>저가 모델</td>
-</tr>
-<tr>
-<td>손실 원인 분석·개선안 생성</td>
-<td>높음</td>
-<td>상위 모델</td>
-</tr>
-<tr>
-<td>전략 개발·기능 추가 (대화형)</td>
-<td>높음</td>
-<td>정액제 코딩 도구</td>
-</tr>
-</tbody>
-</table>
-<h2>따라 해보기</h2>
-<p>내 시스템의 비용 구조를 직접 점검해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>내 트레이딩 시스템에서 AI를 호출하는 지점을 전부 찾아서,
-각 지점의 하루 호출 횟수·사용 모델·예상 월 비용을 표로 정리해줘.
-저가 모델로 바꿔도 되는 지점이 있다면 표시하고,
-바꿨을 때 예상 절감액도 보여줘.
+<h3>1. 토큰 비용 체계와 프롬프트 캐싱의 마법</h3>
+<p>Anthropic Claude 모델(Sonnet 3.7 등)은 대화의 앞부분(시스템 프롬프트, 기본 코드 구조)이 동일할 경우 <strong>프롬프트 캐싱(Prompt Caching)</strong>을 적용하여 비용을 1/10 수준으로 깎아줍니다.</p>
+<pre><code class="language-text">[일반적인 매회 전체 호출]
+• 매번 20,000 토큰 전송 ➔ 1회당 $0.06 ➔ 매일 10회 호출 시 월 $18 (약 25,000원)
+
+[프롬프트 캐싱 &amp; 컨텍스트 압축 적용]
+• 캐시 히트(Cache Hit) 시 90% 할인 ➔ 1회당 $0.006 ➔ 매일 10회 호출 시 월 $1.8 (약 2,500원!)
+</code></pre>
+<hr />
+<h3>2. 토큰 다이어트 3대 황금률</h3>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 원시 시계열 데이터 직접 첨부 금지</div>
+    <div class="card-desc">10년치 2,500행 주가 데이터를 채팅창에 다 붙여넣지 말고, 파이썬이 요약한 핵심 통계표(5행)만 AI에게 전달.</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② 세션 초기화 (`/compact` 또는 재시작)</div>
+    <div class="card-desc">하나의 대화창에서 며칠 동안 대화를 길게 이어가면 이전 대화가 모두 누적 과금되므로, 작업 단위가 끝나면 새 세션 시작.</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 파일 경로 및 인터페이스 참조</div>
+    <div class="card-desc">코드 전체를 복사해 붙여넣지 말고 "kis_auth.py의 get_balance 함수를 수정해줘"라고 특정 함수만 콕 집어 지시.</div>
+  </div>
+</div>
+
+<hr />
+<h2>실습 — 실습 29: 토큰 경량화 프롬프트 벤치마크</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하여 토큰 사용량을 절감하는 데이터 요약 전송 기법을 실습하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>토큰 비용을 90% 절감하는 경량화된 일일 성과 분석 요청을 작성하고 실행해줘. (Context)
+
+다음 작업을 수행해줘: (Deliverable)
+1. 1년치 시계열 전체를 보내는 대신, 파이썬으로 오늘 계좌의 핵심 메트릭(일간 손익, 체결 3건, 현재 잔고)을 15줄 이내의 간결한 JSON 문자열로 요약 추출하는 헬퍼 함수 'summarize_daily_context()'를 작성해줘.
+2. 이 요약 JSON만을 Claude Code에게 전달하여 일일 분석 코멘트를 생성하게 해줘.
+3. 기존 전체 데이터 로드 방식 대비 절감된 토큰 수(입력 바이트 수)와 예상 절감 비용을 터미널에 비교 출력해줘.
+
+실행 완료 후 터미널에 토큰 절감 비교표를 보여줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 내 시스템의 AI 호출 지점과 월 예상 비용을 숫자로 안다</li>
-<li class="check-item"><input type="checkbox"> 저가 모델로 내려도 되는 작업을 한 가지 이상 찾았다</li>
-<li class="check-item"><input type="checkbox"> 종량제와 정액제 중 내 패턴에 맞는 조합을 정했다</li>
+<li class="check-item"><input type="checkbox"> 파이썬 요약 헬퍼를 통해 AI에게 전달되는 입력 데이터 크기가 1/10 이하로 줄어들었다.</li>
+<li class="check-item"><input type="checkbox"> 입력 데이터가 짧아졌음에도 AI의 분석 품질과 핵심 인사이트는 완벽하게 유지됨을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 한 달 내내 매일 시스템을 운용해도 커피 한 잔 값 수준으로 AI를 활용할 수 있음을 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>비용 추정치는 강사와 다르게 나올 수 있습니다. 모델 가격은 수시로 바뀌고 사용량도 사람마다 다르므로, 정확한 금액보다 <strong>어디서 많이 쓰는지 순위</strong>를 파악하는 것이 목적입니다.</p>
-<ul>
-<li>비용 표가 실제 청구액과 크게 다를 때:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>예상 비용이 실제 청구 내역과 달라. 최신 모델 가격표를 기준으로
-다시 계산하고, 계산에 사용한 단가를 표에 함께 표시해줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>다음 클립에서는 지금까지의 작업 방식이 Claude Code에 종속된 것이 아님을 확인합니다. <strong>같은 프롬프트 템플릿을 Codex에 적용</strong>해 도구 독립성을 검증합니다.</p>
+<p>비용 최적화까지 완벽하게 정복했습니다!<br />
+하지만 우리가 지금까지 배운 '제로코드 아키텍트의 생각 ➔ 요청 ➔ 확인 ➔ 개선 루프'는 Claude Code에만 국한된 기술일까요?<br />
+다음 클립에서는 <strong>이 작업 방식을 OpenAI Codex, Cursor 등 어떤 최신 AI 도구에도 100% 동일하게 적용하고 확장하는 범용 도구 철학</strong>을 확인해 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->

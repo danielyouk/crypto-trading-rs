@@ -846,76 +846,109 @@ li.check-item input[type="checkbox"] {
   <!-- Main Content -->
   <main>
     <h2>이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, Part 2에서 검증한 네 가지 전략(추세추종·변동성 돌파·듀얼 모멘텀 자산배분·페어트레이딩)의 성과를 <strong>한 장의 비교표</strong>로 나란히 보게 됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 Part 2에서 개별적으로 백테스트했던 <strong>4대 핵심 퀀트 전략(추세추종, 변동성 돌파, 듀얼 모멘텀 자산배분, 페어트레이딩)</strong>을 완벽하게 동일한 조건(동일 기간, 동일 자본금, 동일 마찰비용) 위에 올려놓고, <strong>수익률·MDD·샤프 지수·상관계수 히트맵을 한눈에 조망하는 통합 성과 분석 대시보드</strong>를 완성하게 됩니다.</p>
+<blockquote>
+<p>💡 <strong>수강생 안심 안내</strong>: 어느 한 전략이 모든 면에서 최고일 수는 없습니다. 수익률이 가장 높은 전략과 MDD가 가장 얕은 전략은 서로 다릅니다. 진정한 포트폴리오의 마법은 <strong>서로 다른 성격의 전략들을 결합하여 단일 전략보다 훨씬 매끄러운 우상향 곡선을 만들어내는 다각화(Diversification)</strong>에 있습니다.</p>
+</blockquote>
 <ul>
-<li>같은 기간, 같은 초기 자금, 같은 거래비용 기준으로 정렬된 비교표</li>
-<li>수익률 1등과 "덜 잃는" 1등이 서로 다른 전략이라는 사실</li>
+<li><strong>공정한 비교의 3대 조건</strong>: 동일 시계열(2018~2024), 동일 초기 자본(1,000만 원), 동일 거래비용(편도 0.15%)</li>
+<li>수익률 대비 위험 보상 평가 지표인 <strong>칼마 비율(Calmar Ratio = CAGR / |MDD|)</strong>의 중요성</li>
+<li>전략 간 일간 수익률 <strong>상관계수(Correlation Matrix) 히트맵</strong> 분석</li>
+<li>단일 전략 올인 vs 4대 전략 균등 배분(Equal-Weight Portfolio)의 성과 대조</li>
+<li><strong>실습</strong>: Claude Code로 4대 전략 통합 백테스트 대시보드 차트 및 성과표 생성</li>
 </ul>
+<hr />
 <h2>이론 핵심</h2>
-<h3>왜 같은 기준으로 다시 비교해야 하는가</h3>
-<p>Part 2에서는 전략마다 검증 기간과 대상 종목이 조금씩 달랐습니다. 기간이 다르면 상승장을 길게 탄 전략이 무조건 유리해 보입니다. 공정한 비교의 3가지 조건은 다음과 같습니다.</p>
-<ol>
-<li><strong>같은 기간</strong> — 상승장·하락장·횡보장이 모두 포함된 구간</li>
-<li><strong>같은 초기 자금</strong> — 금액이 아니라 비율(%)로 비교</li>
-<li><strong>같은 거래비용</strong> — 수수료·세금·슬리피지를 동일하게 반영</li>
-</ol>
-<h3>수익률만 보면 절반만 본 것</h3>
-<p>이 강의의 축은 "얼마나 버는가만큼 얼마나 덜 잃는가"입니다. 비교표에서 반드시 함께 봐야 할 세 숫자입니다.</p>
+<h3>1. 왜 개별 백테스트를 넘어 '통합 비교'가 필수적인가?</h3>
+<p>Part 2에서는 전략의 메커니즘을 확인하기 위해 서로 다른 자산과 기간을 사용했습니다. 하지만 실전 운용을 앞둔 퀀트는 모든 전략을 <strong>동일한 역사적 시련(2018년 미중 무역분쟁, 2020년 코로나 쇼크, 2022년 인플레이션 폭락)</strong>이라는 시험대 위에 올려놓아야 합니다.</p>
+<pre><code class="language-text">[공정한 백테스트 통제 변수]
+1. 검증 기간: 2018-01-01 ~ 2024-12-31 (약 7개년, 상승/하락/횡보 전 사이클 포함)
+2. 초기 자본: 10,000,000원
+3. 마찰 비용: 편도 0.15% (매매수수료 + 세금 + 슬리피지 합산)
+</code></pre>
+<hr />
+<h3>2. 칼마 비율(Calmar Ratio) — 고통 대비 수익의 척도</h3>
+<p>샤프 지수가 변동성 전체를 위험으로 본다면, <strong>칼마 비율</strong>은 투자자가 가장 두려워하는 <strong>최대 낙폭(MDD)</strong>만을 분모로 사용하여 전략의 가성비를 측정합니다.</p>
+<p>$$\text{Calmar Ratio} = \frac{\text{CAGR}}{|\text{MDD}|}$$</p>
 <table>
 <thead>
 <tr>
-<th>지표</th>
-<th>의미</th>
-<th>질문</th>
+<th>칼마 비율 수치</th>
+<th>평가 기준</th>
+<th>실전 투자자 체감</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>연평균 수익률(CAGR)</td>
-<td>1년에 평균 몇 % 벌었나</td>
-<td>얼마나 버는가</td>
+<td><strong>0.5 미만</strong></td>
+<td>미흡</td>
+<td>수익에 비해 고통이 너무 큼 (수면 장애)</td>
 </tr>
 <tr>
-<td>최대 낙폭(MDD)</td>
-<td>고점 대비 최대 몇 % 잃었나</td>
-<td>얼마나 덜 잃는가</td>
+<td><strong>1.0 ~ 1.5</strong></td>
+<td>우수</td>
+<td>10% 벌기 위해 감내하는 낙폭이 10% 미만</td>
 </tr>
 <tr>
-<td>수익 대비 손실 비율</td>
-<td>수익률 ÷ MDD</td>
-<td>감수한 위험 대비 벌었는가</td>
+<td><strong>2.0 이상</strong></td>
+<td>최우수</td>
+<td>극도로 안정적인 기관급 헤지펀드 전략</td>
 </tr>
 </tbody>
 </table>
-<p>MDD가 -50%라면, 원금을 회복하는 데 +100% 수익이 필요합니다. 손실은 회복이 비대칭적이라는 점이 MDD를 수익률만큼 중요하게 보는 이유입니다.</p>
-<h3>전략마다 잘하는 시장이 다르다</h3>
-<p>네 전략은 성격이 다릅니다. 추세추종은 상승장에서 강하고 횡보장에서 잦은 손절이 나옵니다. 페어트레이딩은 방향과 무관해 횡보장에서 상대적으로 안정적입니다. 이 차이가 Part 3 후반의 "시장 상황별 전략 선택"으로 이어집니다.</p>
-<h2>따라 해보기</h2>
-<p>Part 2에서 만든 백테스트 결과를 AI에게 하나의 표로 모아 달라고 요청해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>Part 2에서 백테스트한 네 가지 전략(추세추종, 변동성 돌파, 듀얼 모멘텀 자산배분, 페어트레이딩)을
-같은 기간, 같은 초기 자금, 같은 거래비용 기준으로 다시 계산해서
-연평균 수익률, 최대 낙폭(MDD), 수익 대비 손실 비율이 들어간 비교표 하나로 보여줘.
-표 아래에 각 전략의 누적 수익률 곡선을 겹쳐 그린 차트도 함께 보여줘.
+<hr />
+<h3>3. 전략 간 상관관계와 포트폴리오 다각화 효과</h3>
+<div class="compare-box">
+  <div class="compare-card bad">
+    <div class="tag">단일 전략 올인 (Single Strategy)</div>
+    <div class="steps">
+      • 추세추종만 운용: 2년간 횡보장 지속 시 연속 손절로 계좌 마모.<br>
+      • 변동성 돌파만 운용: 급락장 윗꼬리 음봉에 노출.<br>
+      • <strong>결과</strong>: 전략의 약점 국면에서 버티지 못하고 시스템 중단.
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="tag">4대 전략 통합 포트폴리오 (Multi-Strategy)</div>
+    <div class="steps">
+      • 추세추종이 쉴 때 페어트레이딩이 횡보장에서 수익 창출.<br>
+      • 주식이 폭락할 때 듀얼 모멘텀의 미국채/달러가 계좌 방어.<br>
+      • <strong>결과</strong>: 상관계수가 낮아 전체 포트폴리오의 MDD가 -8%로 급감!
+    </div>
+  </div>
+</div>
+
+<hr />
+<h2>실습 — 4대 전략 통합 비교 대시보드 구동</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하여 4대 전략의 일간 수익률을 결합하고 통합 대시보드를 생성하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>Part 2에서 다룬 4대 퀀트 전략을 동일한 조건에서 통합 비교하고 상관관계 히트맵을 분석하고 싶어. (Context)
+
+다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+1. FinanceDataReader를 사용해 2018-01-01부터 2024-12-31까지 다음 4대 전략의 일간 수익률 시계열을 산출해줘 (모두 왕복 거래비용 0.25% 차감):
+   - 전략 1: KODEX 200 추세추종 (200일 SMA)
+   - 전략 2: KODEX 레버리지 변동성 돌파 ($k=0.5$ + 200일선 필터)
+   - 전략 3: 글로벌 ETF 듀얼 모멘텀 (나스닥/코스피/미국채/단기채)
+   - 전략 4: 금융 섹터(KB금융/신한지주) 페어트레이딩 (Z-Score 스위칭)
+   - 앙상블: 위 4대 전략 25%씩 균등 투자 포트폴리오 (Ensemble)
+2. 각 전략 및 앙상블 포트폴리오의 CAGR, MDD, 샤프 지수, 칼마 비율(CAGR/MDD)을 비교하는 Markdown 표를 터미널에 출력해줘.
+3. 2개의 서브플롯 차트를 생성해줘:
+   - 상단: 4대 전략 및 앙상블의 누적 자산 성장 곡선 비교
+   - 하단: 전략 간 일간 수익률 상관계수(Correlation Matrix) 히트맵
+4. 차트 이미지 파일은 'four_strategies_integrated_dashboard.png'로 저장해줘.
+
+실행 완료 후 터미널에 종합 성과표를 출력하고 차트 저장 경로를 알려줘. (Verification)
 </code></pre></div>
+<hr />
+<h3>내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 네 전략이 한 표에 나란히 있고, 기간·비용 기준이 표 상단에 명시되어 있다</li>
-<li class="check-item"><input type="checkbox"> 수익률 1위 전략과 MDD가 가장 얕은 전략이 무엇인지 각각 확인했다</li>
-<li class="check-item"><input type="checkbox"> 누적 수익률 곡선에서 전략마다 힘든 구간(꺾이는 구간)이 서로 다른 것을 보았다</li>
+<li class="check-item"><input type="checkbox"> 4대 전략의 성과표에서 수익률 1위 전략과 MDD 방어 1위 전략이 각각 무엇인지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 4개 전략을 균등 결합한 <strong>앙상블(Ensemble) 포트폴리오가 개별 전략보다 훨씬 낮은 MDD와 높은 샤프 지수</strong>를 기록함을 목격했다.</li>
+<li class="check-item"><input type="checkbox"> 히트맵에서 추세추종과 페어트레이딩 간의 상관계수가 낮게(0.3 이하) 나타나는 다각화 효과를 확인했다.</li>
 </ul>
-<h2>자주 발생하는 문제</h2>
-<p>강사 화면의 숫자와 여러분의 숫자는 다를 수 있습니다. 데이터 기간, AI가 생성한 계산 방식이 조금씩 다르기 때문입니다. 숫자가 같은지가 아니라 <strong>네 전략이 같은 기준으로 비교되고 있는지</strong>를 체크리스트로 확인하세요.</p>
-<ul>
-<li>표에 MDD가 빠져 있다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>비교표에 최대 낙폭(MDD) 열이 빠져 있어. MDD와 수익 대비 손실 비율을 추가해서 표를 다시 보여줘.
-</code></pre></div>
-<ul>
-<li>기간이 전략마다 다르게 잡혔다면:</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>전략마다 검증 기간이 다르게 나온 것 같아. 네 전략 모두 동일한 시작일과 종료일로 맞춰서 다시 계산해줘.
-</code></pre></div>
+<hr />
 <h2>다음 클립 예고</h2>
-<p>비교표에서 유난히 성과가 좋은 전략이 보일 겁니다. 다음 클립에서는 "과거 성과가 지나치게 좋아 보일 때" 의심해야 할 과최적화를 배웁니다.</p>
+<p>4대 전략의 종합 성적표를 확인했습니다.<br />
+하지만 여기서 잠깐! 만약 어떤 전략의 백테스트 수익률이 연 50%, MDD -3%처럼 비현실적으로 완벽하게 나온다면 기뻐해야 할까요?<br />
+다음 클립에서는 퀀트 초보자를 파멸로 이끄는 <strong>'과최적화(Overfitting)와 미래 데이터 참조(Lookahead Bias)의 치명적 함정'</strong>을 낱낱이 파헤쳐 보겠습니다.</p>
   </main>
 
   <!-- Pager Navigation -->
