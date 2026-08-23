@@ -97,30 +97,30 @@
 
 ## 3. 강의 노트 작성 규칙
 
-### 파일 구조 (한국어 직관적 폴더 구조)
+### 파일 구조 (수강생 배포용 깔끔한 구조)
 
 ```
 lecture-notes/
-├── README.md                                  # 수강생용 교재 안내 & 빌드 가이드
-├── MASTER-PLAN.md                             # 이 문서 (마스터 커리큘럼 맵)
-├── curriculum.json                            # 43클립 메타데이터 (파트·챕터·제목·시간·실습 번호)
-├── build.py                                   # 수강생용 원클릭 빌더 (python build.py)
-├── index.html                                 # 전체 목차 웹페이지
-├── assets/
-│   ├── logo.png                               # DATATRAIN 기차 로고
-│   ├── style.css                              # GDPval 에디토리얼 스타일시트
-│   └── *.gif                                  # 시뮬레이션 데모 애니메이션
-├── template/                                  # Jinja2 템플릿
+├── 00_AI트레이딩_전체교재_목차.html               # 전체 목차 웹페이지 (브라우저로 바로 열기)
 ├── Part01_AI트레이딩_시스템_이해/                # 파트별 통합 폴더 (MD와 HTML이 나란히 위치)
 │   ├── 01_코딩을_몰라도_나만의_트레이딩_시스템을_만들_수_있을까.md
 │   └── 01_코딩을_몰라도_나만의_트레이딩_시스템을_만들_수_있을까.html
 ├── Part02_4대_투자전략_백테스트/
+│   └── 06_투자_아이디어를_자동화_가능한_매매_규칙으로_바꾸기.md (.html) ...
 ├── Part03_시장변화_전략점검_개선/
 ├── Part04_시그널_승인_모의주문_연동/
 ├── Part05_결과분석_안전_실전운영/
-└── scripts/                                   # 강사용 말하기 스크립트 (HTML 변환 제외)
-```
+└── _core/                                     # 내부 설정/에셋/빌더 (수강생 화면 최상단 클러터링 방지)
+    ├── README.md                              # 수강생용 교재 안내 & 빌드 가이드
+    ├── curriculum.json                        # 43클립 메타데이터 (파트·챕터·제목·시간·실습 번호)
+    ├── build.py                               # 수강생용 원클릭 재빌더 (python _core/build.py)
+    ├── assets/                                # DATATRAIN 로고 및 시뮬레이션 GIF
+    └── template/                              # Jinja2 템플릿 및 GDPval 스타일시트
 
+instructor-scripts/                            # 강사용 말하기 스크립트 (수강생 배포 폴더에서 완전 분리)
+├── Part01_AI트레이딩_시스템_이해/
+└── ...
+```
 ### 클립 메타데이터 — `curriculum.json`
 
 노트 파일에는 메타데이터를 넣지 않는다 (마크다운 미리보기가 지저분해지므로).
@@ -182,12 +182,12 @@ lecture-notes/
 
 ## 4. HTML 빌드 & 나만의 교재 커스터마이징
 
-- 빌더: `lecture-notes/build.py` (또는 루트에서 `runners/build_lecture_notes.py`)
-- 실행: `python build.py` (또는 `python runners/build_lecture_notes.py`)
-- 출력: `lecture-notes/partXX/*.html` (마크다운 파일과 같은 폴더에 1:1로 나란히 생성) + `lecture-notes/index.html`
+- 빌더: `lecture-notes/_core/build.py` (또는 루트에서 `runners/build_lecture_notes.py`)
+- 실행: `python _core/build.py` (또는 `python runners/build_lecture_notes.py`)
+- 출력: `lecture-notes/PartXX_*/*.html` (마크다운 파일과 같은 폴더에 1:1로 나란히 생성) + `lecture-notes/00_AI트레이딩_전체교재_목차.html`
 - 디자인: **화면 좌측 절반 폭(≈760px) 최적화** — 우측에 Claude Code/Cursor를 띄우고 따라하는 시나리오. 프롬프트 블록 복사 버튼, 체크리스트 스타일, 이전/다음 클립 내비게이션.
-- 강사 스크립트(`scripts/`)는 빌드 대상에서 제외.
-- **수강생 커스터마이징**: 수강생이 각 `.md` 파일에 자신만의 관심 종목이나 백테스트 메모를 적고 `python build.py`를 실행하면 즉시 자신만의 웹북이 업데이트됩니다.
+- 강사 스크립트(`instructor-scripts/`)는 수강생 배포 교재에서 완전 분리.
+- **수강생 커스터마이징**: 수강생이 각 `.md` 파일에 자신만의 관심 종목이나 백테스트 메모를 적고 `python _core/build.py`를 실행하면 즉시 자신만의 웹북이 업데이트됩니다.
 
 ## 5. 운영 방식
 

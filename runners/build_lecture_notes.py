@@ -1,11 +1,12 @@
-"""강의 노트 빌더: lecture-notes/PartXX_*/*.md → lecture-notes/PartXX_*/*.html + lecture-notes/index.html
+"""강의 노트 빌더: lecture-notes/PartXX_*/*.md → lecture-notes/PartXX_*/*.html + lecture-notes/00_AI트레이딩_전체교재_목차.html
 
 MD와 HTML이 각 한국어 Part 폴더 안에 나란히 생성되도록 빌드합니다.
+내부 설정/템플릿/에셋은 lecture-notes/_core/ 폴더에서 중앙 관리합니다.
 GDPval 스타일의 전문적인 에디토리얼 테마(DATATRAIN Base64 로고, 인라인 CSS, GIF 뷰어, 프롬프트 카드)를 적용합니다.
 
 실행:
     source .venv/bin/activate && python runners/build_lecture_notes.py
-    (또는 lecture-notes 폴더에서 python build.py)
+    (또는 lecture-notes 폴더에서 python _core/build.py)
 """
 
 from __future__ import annotations
@@ -22,9 +23,11 @@ from jinja2 import Environment, FileSystemLoader
 
 ROOT = Path(__file__).resolve().parent.parent
 LECTURE_DIR = ROOT / "lecture-notes"
-CURRICULUM_PATH = LECTURE_DIR / "curriculum.json"
-TEMPLATE_DIR = LECTURE_DIR / "template"
-ASSETS_DIR = LECTURE_DIR / "assets"
+CORE_DIR = LECTURE_DIR / "_core"
+CURRICULUM_PATH = CORE_DIR / "curriculum.json"
+TEMPLATE_DIR = CORE_DIR / "template"
+ASSETS_DIR = CORE_DIR / "assets"
+INDEX_FILENAME = "00_AI트레이딩_전체교재_목차.html"
 
 MD_EXTENSIONS = ["extra", "sane_lists", "tables"]
 
@@ -104,7 +107,7 @@ def render_markdown(body: str) -> str:
         if asset_file.exists():
             return (
                 f'<figure class="visual-figure">'
-                f'  <img src="../assets/{filename}" alt="{caption}">'
+                f'  <img src="../_core/assets/{filename}" alt="{caption}">'
                 f'  <figcaption><strong>[시스템 조감도]</strong> {caption}</figcaption>'
                 f'</figure>'
             )
@@ -130,6 +133,9 @@ def get_logo_data_uri() -> str:
 
 
 def build() -> None:
+    if not CURRICULUM_PATH.exists():
+        raise SystemExit(f"curriculum.json을 찾을 수 없습니다: {CURRICULUM_PATH}")
+
     curriculum: dict[str, dict] = json.loads(CURRICULUM_PATH.read_text(encoding="utf-8"))
     
     # Part01_* ~ Part05_* 폴더 안의 .md 파일 검색
@@ -168,10 +174,10 @@ def build() -> None:
             page_tpl.render(
                 note=note,
                 content=render_markdown(note.body),
-                css_path="../assets/style.css",
+                css_path="../_core/assets/style.css",
                 inline_css=css_content,
                 logo_data_uri=logo_data_uri,
-                index_path="../index.html",
+                index_path=f"../{INDEX_FILENAME}",
                 prev={"href": f"../{prev_note.href}", "title": prev_note.title} if prev_note else None,
                 next={"href": f"../{next_note.href}", "title": next_note.title} if next_note else None,
             ),
@@ -201,20 +207,27 @@ def build() -> None:
         part["clip_count"] += 1
         part["minutes"] += note.duration
 
-    (LECTURE_DIR / "index.html").write_text(
+    out_index_path = LECTURE_DIR / INDEX_FILENAME
+    out_index_path.write_text(
         index_tpl.render(
             parts=parts,
-            css_path="assets/style.css",
+            css_path="_core/assets/style.css",
             inline_css=css_content,
             logo_data_uri=logo_data_uri,
             total_clips=len(notes),
             total_minutes=sum(n.duration for n in notes),
+            index_filename=INDEX_FILENAME,
         ),
         encoding="utf-8",
     )
 
+    # 혹시 남아있을 수 있는 구버전 index.html 정리
+    old_index = LECTURE_DIR / "index.html"
+    if old_index.exists() and old_index != out_index_path:
+        old_index.unlink()
+
     print(f"빌드 완료: 노트 {len(notes)}개 → {LECTURE_DIR}/PartXX_*/*.html")
-    print(f"전체 목차: {LECTURE_DIR / 'index.html'}")
+    print(f"전체 목차: {out_index_path}")
 
 
 if __name__ == "__main__":
