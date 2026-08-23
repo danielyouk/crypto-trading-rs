@@ -97,36 +97,46 @@
 
 ## 3. 강의 노트 작성 규칙
 
-### 파일 구조 (단일 통합 폴더)
+### 파일 구조 (한국어 직관적 폴더 구조)
 
 ```
 lecture-notes/
-├── README.md                 # 수강생용 교재 안내 & 빌드 가이드
-├── MASTER-PLAN.md            # 이 문서 (마스터 커리큘럼 맵)
-├── curriculum.json           # 43클립 메타데이터 (파트·챕터·제목·시간·실습 번호)
-├── build.py                  # 수강생용 원클릭 빌더 (python build.py)
-├── index.html                # 전체 목차 웹페이지
-├── assets/style.css          # 좌측 반화면 최적화 스타일시트
-├── template/                 # Jinja2 템플릿
-├── part01/ ~ part05/         # 파트별 통합 폴더 (MD와 HTML이 나란히 위치)
-│   ├── pX-chXX-cYY.md        # 수강생용 노트 마크다운
-│   └── pX-chXX-cYY.html      # 빌드된 웹페이지 교재
-└── scripts/                  # 강사용 말하기 스크립트 (HTML 변환 제외)
+├── README.md                                  # 수강생용 교재 안내 & 빌드 가이드
+├── MASTER-PLAN.md                             # 이 문서 (마스터 커리큘럼 맵)
+├── curriculum.json                            # 43클립 메타데이터 (파트·챕터·제목·시간·실습 번호)
+├── build.py                                   # 수강생용 원클릭 빌더 (python build.py)
+├── index.html                                 # 전체 목차 웹페이지
+├── assets/
+│   ├── logo.png                               # DATATRAIN 기차 로고
+│   ├── style.css                              # GDPval 에디토리얼 스타일시트
+│   └── *.gif                                  # 시뮬레이션 데모 애니메이션
+├── template/                                  # Jinja2 템플릿
+├── Part01_AI트레이딩_시스템_이해/                # 파트별 통합 폴더 (MD와 HTML이 나란히 위치)
+│   ├── 01_코딩을_몰라도_나만의_트레이딩_시스템을_만들_수_있을까.md
+│   └── 01_코딩을_몰라도_나만의_트레이딩_시스템을_만들_수_있을까.html
+├── Part02_4대_투자전략_백테스트/
+├── Part03_시장변화_전략점검_개선/
+├── Part04_시그널_승인_모의주문_연동/
+├── Part05_결과분석_안전_실전운영/
+└── scripts/                                   # 강사용 말하기 스크립트 (HTML 변환 제외)
 ```
 
 ### 클립 메타데이터 — `curriculum.json`
 
 노트 파일에는 메타데이터를 넣지 않는다 (마크다운 미리보기가 지저분해지므로).
-클립별 메타데이터는 `curriculum.json`에 파일 ID를 키로 중앙 관리한다:
+클립별 메타데이터는 `curriculum.json`에 파일명(stem)을 키로 중앙 관리한다:
 
 ```json
-"p1-ch02-c03": {
+"04_첫_실습_주식_데이터를_불러와_차트로_확인하기": {
   "part": 1,
   "part_title": "AI와 함께 시작하는 트레이딩 시스템 만들기",
+  "part_folder": "Part01_AI트레이딩_시스템_이해",
   "chapter": 2,
   "chapter_title": "AI 코딩 도구로 첫 결과물 만들기",
   "clip": 3,
+  "clip_num": 4,
   "title": "첫 실습: 주식 데이터를 불러와 차트로 확인하기",
+  "filename": "04_첫_실습_주식_데이터를_불러와_차트로_확인하기",
   "duration": 20,
   "practice": "실습 02"
 }

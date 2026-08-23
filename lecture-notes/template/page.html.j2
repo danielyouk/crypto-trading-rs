@@ -6,16 +6,16 @@
 <title>{{ note.title }} — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="{{ css_path }}">
 <style>
-/* Fallback inline critical CSS */
+/* Inlined critical CSS */
 {{ inline_css }}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- Top Navigation Header -->
+  <!-- Top Navigation Header with Embedded Base64 Logo -->
   <header class="top-nav">
     <a class="brand" href="{{ index_path }}">
-      <img src="{{ logo_path }}" alt="DATATRAIN" onerror="this.style.display='none'">
+      <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
       <span>DATATRAIN</span>
     </a>
     <div class="nav-links">

@@ -11,10 +11,10 @@
 </head>
 <body>
 <div class="wrap">
-  <!-- Top Navigation Header -->
+  <!-- Top Navigation Header with Embedded Base64 Logo -->
   <header class="top-nav">
     <a class="brand" href="index.html">
-      <img src="assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
       <span>DATATRAIN</span>
     </a>
     <div class="nav-links">
@@ -46,7 +46,7 @@
         {% for clip in chapter.clips %}
         <li class="clip-item">
           <a href="{{ clip.href }}">
-            <span class="clip-id">{{ clip.id|upper }}</span>
+            <span class="clip-id">Clip {{ "%02d"|format(clip.clip_num) }}</span>
             <span class="clip-title">{{ clip.title }}</span>
             {% if clip.practice %}
             <span class="mini-tag prac">{{ clip.practice }}</span>
