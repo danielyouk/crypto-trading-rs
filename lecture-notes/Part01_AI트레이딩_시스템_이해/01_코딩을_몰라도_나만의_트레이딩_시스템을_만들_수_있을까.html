@@ -855,31 +855,20 @@ li.check-item input[type="checkbox"] {
 <li>단순계 vs 복잡계의 차이를 통해 본 <strong>'인간 개입형 하이브리드'</strong>가 유일한 생존 방식인 이유</li>
 <li>코딩 문법 암기가 아닌 <strong>'시스템 아키텍트이자 감독관'</strong>으로서 AI 에이전트와 일하는 4단계 루프 정립</li>
 </ul>
-<figure class="visual-figure">  <img src="../_core/assets/03_paper_approval.gif" alt="사람이 승인하는 모의매매 흐름 (시뮬레이션 조감도)">  <figcaption><strong>[시스템 조감도]</strong> 사람이 승인하는 모의매매 흐름 (시뮬레이션 조감도)</figcaption></figure>
+<figure class="visual-figure">  <img src="../_core/assets/03_paper_approval.gif" alt="2-Tier 주간 정책 합의 & 무인 자동 모의매매 흐름 (시스템 조감도)">  <figcaption><strong>[시스템 조감도]</strong> 2-Tier 주간 정책 합의 & 무인 자동 모의매매 흐름 (시스템 조감도)</figcaption></figure>
 
 <hr />
 <h2>이론 핵심</h2>
 <h3>1. 단순계 vs 복잡계 — 엔지니어링과 AI 현장에서 겪은 진실</h3>
 <p>시중의 수많은 강의나 광고는 "잠자는 동안 돈을 벌어다 주는 100% 전자동 매매 봇"을 약속합니다. 하지만 현실의 금융시장에서 그런 블랙박스 시스템은 반드시 실패합니다. 그 이유는 <strong>'단순계'와 '복잡계'의 본질적인 차이</strong>에 있습니다.</p>
-<div class="compare-box">
-  <div class="compare-card info">
-    <div class="tag">단순계 (Simple / Deterministic System)</div>
-    <div class="steps">
-      • <strong>특징</strong>: 입력과 출력의 인과관계가 명확하고 선형적임.<br>
-      • <strong>대표 사례</strong>: 단순 코딩, 정형화된 데이터 파이프라인, 슬라이드/장표 요약 분석.<br>
-      • <strong>AI 역량</strong>: 이미 AI가 일반인 및 전문가 수준을 뛰어넘어 완벽하게 자동화 가능.
-    </div>
-  </div>
-  <div class="compare-card bad">
-    <div class="tag">복잡계 (Complex Adaptive System)</div>
-    <div class="steps">
-      • <strong>특징</strong>: 수많은 인과관계가 상호작용하고, 규칙 자체가 시간에 따라 변하며, 예외가 지속 발생.<br>
-      • <strong>대표 사례</strong>: 실제 현장의 기계공학 개발, 80명 규모의 AI 에이전트 협업 개발, <strong>금융시장</strong>.<br>
-      • <strong>AI 역량</strong>: AI 단독으로는 완벽한 통제가 불가능하며 <strong>인간 전문가의 감독과 개입 필수</strong>.
-    </div>
-  </div>
-</div>
-
+<p>단순계 (Simple / Deterministic System)</p>
+<p>• <strong>특징</strong>: 입력과 출력의 인과관계가 명확하고 선형적임.<br />
+• <strong>대표 사례</strong>: 단순 코딩, 정형화된 데이터 파이프라인, 슬라이드/장표 요약 분석.<br />
+• <strong>AI 역량</strong>: 이미 AI가 일반인 및 전문가 수준을 뛰어넘어 완벽하게 자동화 가능.</p>
+<p>복잡계 (Complex Adaptive System)</p>
+<p>• <strong>특징</strong>: 수많은 인과관계가 상호작용하고, 규칙 자체가 시간에 따라 변하며, 예외가 지속 발생.<br />
+• <strong>대표 사례</strong>: 실제 현장의 기계공학 개발, 80명 규모의 AI 에이전트 협업 개발, <strong>금융시장</strong>.<br />
+• <strong>AI 역량</strong>: AI 단독으로는 완벽한 통제가 불가능하며 <strong>인간 전문가의 감독과 개입 필수</strong>.</p>
 <h4>강사의 경험에서 배우는 시스템의 현실</h4>
 <ul>
 <li><strong>기계공학의 반전</strong>: 학부 시절 이론으로 배울 때는 공식대로 제어 가능한 시스템 같았지만, 실제 산업 현장에서 기계공학 제품을 개발해 보니 예상치 못한 수많은 환경 변수, 공차, 간섭이 발생하는 <strong>전형적인 복잡계</strong>였습니다.</li>
@@ -940,47 +929,23 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h3>3. 우리가 완성할 시스템의 5대 핵심 서브시스템</h3>
 <p>5개 파트에 걸쳐 여러분 컴퓨터에 구축될 전체 시스템은 다음과 같이 유기적으로 연결된 5개의 독립 모듈로 구성됩니다.</p>
-<div class="arch-grid">
-  <div class="arch-card">
-    <div class="card-title">① 데이터 & 전략 시그널 엔진</div>
-    <div class="card-desc">FinanceDataReader 및 KIS API로 주가를 수신하고, 4대 전략 조건 충족 시 매매 신호를 계산합니다. (Part 1~2)</div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">② 워크포워드 검증 루프</div>
-    <div class="card-desc">실전처럼 시간 구간을 전진하며 과최적화를 걸러내고, 손실 발생 시 AI 운영 보고서로 개선안을 도출합니다. (Part 3)</div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">③ 주간 전략 정책 합의 (Tier 1)</div>
-    <div class="card-desc">주말마다 Claude Code와 시장 국면을 평가하고 다음 주 실행할 매매 정책(weekly_policy.json)을 확정합니다. (Part 4)</div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">④ 무인 자동 모의주문 엔진 (Tier 2)</div>
-    <div class="card-desc">승인된 정책에 따라 평일 장중에 조건 충족 시 한국투자증권 API로 주문을 자율 전송합니다. (Part 4)</div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">⑤ 하드 안전망 & 일일 AI 저널</div>
-    <div class="card-desc">사람의 응답 없이 0.1초 만에 실행되는 무조건 손절·서킷브레이커와 장 마감 후 일일 매매 일지를 작성합니다. (Part 4~5)</div>
-  </div>
-</div>
-
+<p>① 데이터 &amp; 전략 시그널 엔진</p>
+<p>FinanceDataReader 및 KIS API로 주가를 수신하고, 4대 전략 조건 충족 시 매매 신호를 계산합니다. (Part 1~2)</p>
+<p>② 워크포워드 검증 루프</p>
+<p>실전처럼 시간 구간을 전진하며 과최적화를 걸러내고, 손실 발생 시 AI 운영 보고서로 개선안을 도출합니다. (Part 3)</p>
+<p>③ 주간 전략 정책 합의 (Tier 1)</p>
+<p>주말마다 Claude Code와 시장 국면을 평가하고 다음 주 실행할 매매 정책(weekly_policy.json)을 확정합니다. (Part 4)</p>
+<p>④ 무인 자동 모의주문 엔진 (Tier 2)</p>
+<p>승인된 정책에 따라 평일 장중에 조건 충족 시 한국투자증권 API로 주문을 자율 전송합니다. (Part 4)</p>
+<p>⑤ 하드 안전망 &amp; 일일 AI 저널</p>
+<p>사람의 응답 없이 0.1초 만에 실행되는 무조건 손절·서킷브레이커와 장 마감 후 일일 매매 일지를 작성합니다. (Part 4~5)</p>
 <hr />
 <h3>4. 코더에서 '시스템 아키텍트(감독관)'로의 사고 전환</h3>
 <p>기존의 프로그래밍 강의는 문법, 변수, 반복문, API 통신 에러를 잡다가 지쳐서 정작 중요한 '투자 전략'은 만들어보지도 못하고 포기하게 만듭니다. 이 강의는 <strong>완전한 제로코드 패러다임</strong>을 지향합니다.</p>
-<div class="compare-box">
-  <div class="compare-card bad">
-    <div class="tag">과거의 방식 (Coder)</div>
-    <div class="steps">
-      문법 암기 ──> 라이브러리 디버깅 ──> API 래퍼 수동 구현 ──> <strong>문법 에러로 중도 포기</strong>
-    </div>
-  </div>
-  <div class="compare-card good">
-    <div class="tag">에이전트 시대의 방식 (Architect & Supervisor)</div>
-    <div class="steps">
-      아이디어 구조화 ──> 결과 모습(목표) 선언 ──> 화면으로 시각적 확인 ──> <strong>후속 개선 요청</strong>
-    </div>
-  </div>
-</div>
-
+<p>과거의 방식 (Coder)</p>
+<p>문법 암기 ──&gt; 라이브러리 디버깅 ──&gt; API 래퍼 수동 구현 ──&gt; <strong>문법 에러로 중도 포기</strong></p>
+<p>에이전트 시대의 방식 (Architect &amp; Supervisor)</p>
+<p>아이디어 구조화 ──&gt; 결과 모습(목표) 선언 ──&gt; 화면으로 시각적 확인 ──&gt; <strong>후속 개선 요청</strong></p>
 <ul>
 <li><strong>코드의 일치 여부가 아니라 화면의 일치 여부를 본다</strong>: Claude Code가 작성한 파이썬 코드가 강사의 코드와 글자 하나까지 같을 필요는 전혀 없습니다. 우리가 확인하는 것은 <strong>"차트가 제대로 그려졌는가?", "성과표의 수치가 논리적인가?", "모의투자 체결 내역이 생성되는가?"</strong>입니다.</li>
 <li><strong>생각 → 요청 → 확인 → 개선 루프</strong>:
