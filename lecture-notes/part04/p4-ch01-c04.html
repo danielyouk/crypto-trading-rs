@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>설정한 조건에 따라 매매 신호 만들기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,135 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 04 · CH01</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
+    <h1>설정한 조건에 따라 매매 신호 만들기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH01. 증권사와 트레이딩 시스템 연결하기</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 22분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 14 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 실시간 가격이 전략 조건을 충족하는 순간 <strong>매수 후보와 신호가 생성되고 로그로 기록되는 시그널 엔진</strong>이 동작합니다.</p>
+<ul>
+<li>조건 충족 시 "매수 신호: 종목명, 현재가, 발생 시각, 발동 조건"이 화면과 로그 파일에 남는 모습</li>
+<li>아직 주문은 나가지 않습니다 — 신호 생성까지가 이번 클립의 범위입니다</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>시그널 엔진이 하는 일</h3>
+<p>시그널 엔진은 실시간 가격을 계속 지켜보다가, <strong>검증된 전략의 조건이 충족되는 순간</strong> 세 가지를 합니다.</p>
+<ol>
+<li>매수 후보 생성 — 어떤 종목을, 어떤 근거로</li>
+<li>신호 발행 — 다음 단계(알림·승인)로 전달할 메시지 생성</li>
+<li>로그 기록 — 언제, 어떤 조건으로, 어떤 가격에서 신호가 났는지 파일로 남김</li>
+</ol>
+<p>여기서 쓰는 조건은 새로 발명하는 것이 아니라, <strong>Part 2~3에서 백테스트와 워크포워드로 검증을 마친 전략</strong>을 그대로 옮겨 온 것입니다. 검증 안 된 조건을 실시간에 붙이는 것이 개인 투자자의 가장 흔한 실수입니다.</p>
+<h3>신호와 주문은 반드시 분리한다</h3>
+<p>시그널 엔진은 신호만 만들고 <strong>절대 스스로 주문하지 않습니다</strong>. 신호→알림→승인→주문을 분리해 두면, 각 단계를 따로 검증할 수 있고, 승인이라는 안전장치를 중간에 끼울 수 있습니다. 이 분리가 인간 개입형 하이브리드의 뼈대입니다.</p>
+<h3>로그는 나중의 나를 위한 기록</h3>
+<p>"어제 왜 신호가 안 났지?", "이 신호는 왜 났지?"라는 질문에 답하려면 로그가 필요합니다. 신호가 난 것뿐 아니라 <strong>조건을 검사했지만 충족되지 않은 기록</strong>도 남기면, 문제가 생겼을 때 AI에게 로그를 주고 원인 분석을 시킬 수 있습니다(Part 5에서 활용).</p>
+<h2>실습 14 — 검증된 조건으로 매수 신호 만들기</h2>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>실시간 가격을 받고 있는 감시 종목에 대해, Part 3에서 검증한 변동성 돌파 조건을
+적용한 시그널 엔진을 만들어줘. 조건이 충족되면 화면에
+&quot;매수 신호: 종목명, 현재가, 발생 시각, 발동 조건&quot;이 출력되고,
+같은 내용이 로그 파일에도 저장되어야 해.
+지금 장이 닫혀 있으니, 테스트용 가짜 가격을 흘려서 신호가 실제로 발생하는
+장면을 먼저 보여줘.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 테스트 가격에서 조건 충족 시 매수 신호가 화면에 출력된다</li>
+<li class="check-item"><input type="checkbox"> 신호에 종목명·현재가·발생 시각·발동 조건이 모두 들어 있다</li>
+<li class="check-item"><input type="checkbox"> 로그 파일을 직접 열어 같은 내용이 기록된 것을 확인했다</li>
+<li class="check-item"><input type="checkbox"> 신호가 났지만 주문은 나가지 않았다 (모의 계좌 체결 내역이 비어 있음)</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 AI가 구현한 조건 계산 코드는 다를 수 있습니다. 같은 가격 흐름을 넣었을 때 <strong>같은 시점에 신호가 나는지</strong>가 기준입니다.</p>
+<ul>
+<li><strong>신호가 한 번도 안 남</strong>: 조건이 너무 엄격하거나, 테스트 가격이 조건 근처까지 가지 않는 경우입니다.</li>
+<li><strong>신호가 너무 자주 남</strong>: 같은 조건 충족이 반복 감지되어 중복 신호가 나는 경우입니다.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>같은 종목에서 매수 신호가 몇 초 만에 연달아 여러 번 발생했어.
+한 번 신호가 난 종목은 그날 다시 신호가 나지 않도록 바꿔줘.
+바꾼 뒤 테스트 가격으로 신호가 하루 한 번만 나는 것을 보여줘.
+</code></pre></div>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>테스트 가격을 흘려도 신호가 한 번도 안 나. 조건 검사 과정을 로그로 남겨서
+현재가와 돌파 기준가를 나란히 보여줘. 어디서 조건이 어긋나는지 눈으로 확인하고 싶어.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>신호가 만들어졌으니, 이제 이 신호를 여러분의 휴대폰으로 보낼 차례입니다. 다음 클립에서는 텔레그램 봇을 만들고 승인·거절 버튼이 달린 알림을 받아봅니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part04/p4-ch01-c03.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">시장의 실시간 가격 데이터를 받아오기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part04/p4-ch02-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">텔레그램으로 매매 알림과 승인·거절 버튼 만들기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

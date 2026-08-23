@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>추세추종 전략을 과거 데이터로 검증하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,135 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 02 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 02. 투자 전략을 이해하고 백테스트로 검증하기</div>
+    <h1>추세추종 전략을 과거 데이터로 검증하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. 장기 추세를 따라가는 추세추종 전략</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 20분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 04 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 내 화면에 <strong>200일 이동평균선 추세추종 전략의 백테스트 결과</strong>가 떠 있습니다. 누적 수익 곡선 차트 한 장과 CAGR·MDD·거래비용이 담긴 성과표 하나 — Part 2에서 만드는 첫 번째 성과표입니다.</p>
+<ul>
+<li>단순 보유(매수 후 보유)와 추세추종을 같은 차트에서 비교</li>
+<li>거래비용을 반영했을 때 성과가 얼마나 달라지는지 확인</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>백테스트에서 확인할 것은 세 가지</h3>
+<p>백테스트는 "과거에 이 규칙대로 했다면 어땠을까"의 재연입니다. 결과에서 볼 것은 ① 단순 보유 대비 <strong>MDD가 줄었는가</strong> ② 거래비용 반영 후에도 <strong>성과가 남는가</strong> ③ 어느 구간에서 약했는가, 이 세 가지입니다. CAGR이 단순 보유보다 낮아도 MDD가 크게 줄었다면 추세추종은 제 역할을 한 것입니다.</p>
+<h3>비교 기준선(벤치마크)이 없는 성과표는 반쪽</h3>
+<p>"CAGR 10%"는 그 자체로는 좋은지 나쁜지 알 수 없습니다. 같은 기간 <strong>그냥 사서 들고만 있었을 때</strong>와 나란히 놓아야 전략의 기여분이 보입니다. 그래서 프롬프트에 항상 비교 대상을 함께 요청합니다.</p>
+<h3>데이터 출처</h3>
+<p>한국 주식·지수 데이터는 <strong>FinanceDataReader</strong>로 불러옵니다. Part 1 실습에서 이미 설치했다면 AI가 알아서 재사용하고, 없다면 설치부터 스스로 진행합니다 — 우리는 결과 화면만 확인하면 됩니다.</p>
+<h2>실습 — 실습 04</h2>
+<p>생각→요청→확인→개선 루프대로 진행합니다. 끝났을 때 화면에 뭐가 보여야 하는지(차트 1장 + 표 1개)를 먼저 생각하고 요청하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>FinanceDataReader로 삼성전자(005930) 최근 10년 일봉 데이터를 불러와서
+200일 이동평균선 추세추종 전략(종가가 이평선 위면 보유, 아래면 현금)을 백테스트해줘.
+거래비용은 매매마다 0.3%를 반영해줘.
+결과로 ① 단순 보유와 추세추종의 누적 수익률을 한 차트에 겹쳐 그리고
+② CAGR, MDD, 총 매매 횟수, 거래비용 반영 전후 수익률이 담긴 성과표를 보여줘.
+</code></pre></div>
+<p>결과가 나오면 <strong>내 눈으로</strong> 확인합니다. AI에게 "잘 됐는지 확인해줘"라고 시키지 않습니다.</p>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 누적 수익률 차트에 단순 보유 선과 추세추종 선이 <strong>두 개 모두</strong> 그려져 있다</li>
+<li class="check-item"><input type="checkbox"> 성과표에 CAGR, MDD, 매매 횟수, 거래비용 반영 후 수익률이 모두 있다</li>
+<li class="check-item"><input type="checkbox"> 추세추종의 MDD가 단순 보유의 MDD보다 작다 (대폭락 구간에서 곡선이 덜 꺾인다)</li>
+<li class="check-item"><input type="checkbox"> 큰 하락장(예: 2020년 초) 구간에서 추세추종 곡선이 옆으로 평평해지는(현금 보유) 모습이 보인다</li>
+<li class="check-item"><input type="checkbox"> 거래비용 반영 전후 수익률 차이가 얼마인지 숫자로 말할 수 있다</li>
+</ul>
+<p>시간이 남으면 종목을 바꿔(예: KODEX 200 ETF, 069500) 같은 백테스트를 반복해 보세요.</p>
+<h2>자주 발생하는 문제</h2>
+<blockquote>
+<p>강사와 여러분의 코드는 다르게 생성되는 것이 정상입니다. 차트 색깔, 표 형식, 심지어 소수점 수익률도 조금씩 다를 수 있습니다. 체크리스트 5개가 통과되면 실습 성공입니다.</p>
+</blockquote>
+<ul>
+<li><strong>차트에 선이 하나만 보일 때</strong> — 비교 대상이 빠진 경우입니다.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>차트에 추세추종 곡선만 있어. 같은 기간 단순 보유(매수 후 보유) 곡선을
+같은 차트에 겹쳐 그려서 비교할 수 있게 해줘.
+</code></pre></div>
+<ul>
+<li><strong>거래비용이 반영됐는지 알 수 없을 때</strong></li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>성과표에 거래비용 반영 전 수익률과 반영 후 수익률을 나란히 추가해서,
+비용이 성과를 얼마나 깎았는지 한눈에 보이게 해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>추세추종은 긴 호흡의 전략이었습니다. 다음 클립에서는 정반대로 하루 단위의 짧은 움직임을 노리는 <strong>변동성 돌파 전략</strong>의 원리를 배웁니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part02/p2-ch02-c01.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">추세추종 전략 이해하기: 200일 이동평균선의 원리</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part02/p2-ch03-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">변동성 돌파와 모멘텀 전략의 원리 이해하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시장 상황별로 사용할 전략과 조정 범위 정하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,162 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 03 · CH04</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 03. 시장 변화에 맞춰 전략을 점검하고 개선하기</div>
+    <h1>시장 상황별로 사용할 전략과 조정 범위 정하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH04. 실전 운영을 위한 전략 선택 기준 만들기</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 18분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 나만의 <strong>전략 운영 기준표</strong> 한 장이 완성됩니다.</p>
+<ul>
+<li>시장 국면(상승/횡보/하락)별로 어떤 전략을 사용할지</li>
+<li>각 전략에서 조정을 허용할 파라미터와 그 범위</li>
+<li>이 표는 Part 5의 일일 운영 루틴에서 계속 사용됩니다</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>만능 전략은 없다, 국면별 담당이 있을 뿐</h3>
+<p>Part 3에서 확인했듯 전략마다 잘하는 시장이 다릅니다. 그래서 하나의 만능 전략을 찾는 대신, <strong>시장 국면별로 담당 전략을 미리 정해 둡니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>시장 국면</th>
+<th>특징</th>
+<th>어울리는 전략 예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>상승장</td>
+<td>추세가 이어짐</td>
+<td>추세추종, 듀얼 모멘텀</td>
+</tr>
+<tr>
+<td>횡보장</td>
+<td>방향 없이 등락 반복</td>
+<td>페어트레이딩</td>
+</tr>
+<tr>
+<td>하락장</td>
+<td>추세적 하락</td>
+<td>자산배분(방어), 현금 비중 확대</td>
+</tr>
+</tbody>
+</table>
+<p>국면 판단 자체도 규칙으로 정합니다. 예를 들어 "지수가 200일 이동평균 위이면 상승 국면"처럼 <strong>사후에 해석할 여지가 없는 기준</strong>이어야 합니다.</p>
+<h3>조정 범위를 미리 정하는 이유</h3>
+<p>기준표의 두 번째 축은 파라미터 조정 허용 범위입니다. 이것은 3챕터에서 배운 울타리를 문서로 고정하는 작업입니다.</p>
+<ul>
+<li>범위를 <strong>미리</strong> 정하면: 손실 후에도 절차대로 범위 안에서만 조정 → 과최적화 방지</li>
+<li>범위를 <strong>그때그때</strong> 정하면: 손실의 감정이 범위를 정함 → 즉흥 수정과 같은 결과</li>
+</ul>
+<h3>기준표는 계약서다</h3>
+<p>이 표는 미래의 나와 맺는 계약서입니다. 시장이 급변하고 계좌가 흔들릴 때, 판단력이 흐려진 내가 참고할 문서입니다. 그래서 지금, 시장이 평온하고 머리가 맑을 때 만들어 둡니다. 표를 바꾸고 싶다면 그것도 절차(재검증 통과)를 거쳐야 합니다.</p>
+<h2>따라 해보기</h2>
+<p>Part 3 전체의 검증 결과를 모아 기준표를 만들어 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>지금까지의 워크포워드 검증과 MDD 분석 결과를 바탕으로 나의 전략 운영 기준표를 만들어줘.
+표에는 다음이 담기면 좋겠어.
+1) 시장 국면(상승/횡보/하락)을 판단하는 명확한 규칙
+2) 국면별로 사용할 전략과 그 근거 (어떤 검증 결과 때문인지)
+3) 각 전략에서 조정을 허용할 파라미터와 허용 범위
+한 장의 표로 정리해서 markdown 문서로 저장해줘.
+</code></pre></div>
+<ul>
+<li class="check-item"><input type="checkbox"> 시장 국면 판단 규칙이 사후 해석의 여지 없이 명확하다 (숫자 기준)</li>
+<li class="check-item"><input type="checkbox"> 국면별 담당 전략에 검증 결과 기반의 근거가 붙어 있다</li>
+<li class="check-item"><input type="checkbox"> 파라미터 허용 범위가 전략마다 숫자로 적혀 있다</li>
+<li class="check-item"><input type="checkbox"> 이 표에서 내가 동의하지 않는 부분을 찾아 직접 수정했다 (표의 주인은 나)</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>AI가 제안하는 국면 판단 규칙과 전략 배치는 강사와 다를 수 있습니다. 여러분의 검증 결과가 다르니 당연합니다. 중요한 것은 <strong>모든 칸에 근거가 있고, 내가 그 근거에 동의하는가</strong>입니다.</p>
+<ul>
+<li>국면 판단 규칙이 모호하다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>'시장이 약세일 때'처럼 모호한 표현이 있어. 누가 봐도 같은 판단이 나오도록
+지수와 이동평균 같은 숫자 기준으로 국면 판단 규칙을 다시 써줘.
+</code></pre></div>
+<ul>
+<li>근거 없이 전략이 배치되어 있다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>횡보장에 페어트레이딩을 배치한 근거가 안 보여. 우리가 했던 검증 결과 중
+어떤 숫자가 이 배치를 뒷받침하는지 표에 근거 열을 추가해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>기준표가 완성됐습니다. Part 3의 마지막 클립에서는 검증을 마친 전략을 매매 신호와 알림으로 연결하는 큰 그림을 그립니다. Part 4로 가는 다리입니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part03/p3-ch03-c03.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">거래비용을 반영해 전략 변경 여부 판단하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part03/p3-ch04-c02.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">검증을 마친 전략을 매매 신호와 알림으로 연결하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

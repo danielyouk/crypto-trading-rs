@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 알고리즘 트레이딩 강의 핸드북 — 전체 목차</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+/* ==========================================================================
+   DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
+   Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
+   ========================================================================== */
+
+:root {
+  --navy-dark: #0f172a;
+  --navy-primary: #1e3a8a;
+  --navy-light: #2563eb;
+  --blue-soft: #eff6ff;
+  --blue-border: #bfdbfe;
+  --teal: #0d9488;
+  --teal-soft: #f0fdfa;
+  --amber: #d97706;
+  --amber-soft: #fffbeb;
+  --ink-main: #1e293b;
+  --ink-muted: #475569;
+  --ink-light: #64748b;
+  --line-color: #e2e8f0;
+  --line-dark: #cbd5e1;
+  --bg-page: #ffffff;
+  --bg-card: #f8fafc;
+  --bg-hover: #f1f5f9;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, "D2Coding", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: #f8fafc;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--ink-main);
+  font-family: var(--font-sans);
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 28px 100px;
+  background-color: #ffffff;
+  min-height: 100vh;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================================================
+   1. TOP NAVIGATION / HEADER (DATATRAIN LOGO + BREADCRUMB)
+   ========================================================================== */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-color);
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.top-nav .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--navy-dark);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.top-nav .brand img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+.top-nav .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13.5px;
+}
+
+.top-nav .nav-links a {
+  color: var(--navy-light);
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.top-nav .nav-links a:hover {
+  text-decoration: underline;
+}
+
+.top-nav .crumb {
+  color: var(--ink-light);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   2. NOTE HEADER & METADATA BAR (GDPval Style)
+   ========================================================================== */
+.note-header {
+  padding: 12px 0 20px;
+  border-bottom: 2px solid var(--navy-primary);
+  margin-bottom: 24px;
+}
+
+.note-header .kicker {
+  color: var(--navy-light);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.note-header h1 {
+  font-size: 29px;
+  font-weight: 800;
+  color: var(--navy-primary);
+  line-height: 1.35;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+
+/* Metadata Bar (Audience / Owner style) */
+.metadata-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+}
+
+.metadata-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metadata-item .label {
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.metadata-item .badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--line-dark);
+  background: #ffffff;
+  color: var(--ink-main);
+  font-family: var(--font-mono);
+}
+
+.metadata-item .badge.practice {
+  background: var(--teal-soft);
+  color: var(--teal);
+  border-color: #99f6e4;
+  font-weight: 700;
+}
+
+.metadata-item .badge.time {
+  background: var(--blue-soft);
+  color: var(--navy-light);
+  border-color: var(--blue-border);
+}
+
+/* ==========================================================================
+   3. CONTENT TYPOGRAPHY & CALLOUT BOXES (GDPval Style)
+   ========================================================================== */
+main {
+  font-size: 16px;
+  color: var(--ink-main);
+}
+
+main h2 {
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--navy-primary);
+  margin: 40px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+main h3 {
+  font-size: 17.5px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin: 28px 0 10px;
+}
+
+main h4 {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  margin: 20px 0 8px;
+}
+
+main p {
+  margin: 12px 0;
+  line-height: 1.8;
+}
+
+main strong {
+  color: var(--navy-dark);
+  font-weight: 700;
+}
+
+main a {
+  color: var(--navy-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+
+main a:hover {
+  color: var(--navy-primary);
+}
+
+main ul, main ol {
+  padding-left: 24px;
+  margin: 12px 0 18px;
+}
+
+main li {
+  margin: 6px 0;
+  line-height: 1.75;
+}
+
+/* Callout Lead Box (Like GDPval Lead Section) */
+blockquote, .callout-box {
+  margin: 20px 0;
+  padding: 16px 20px;
+  background-color: #f8fafc;
+  border-left: 4px solid var(--navy-primary);
+  border-top: 1px solid var(--line-color);
+  border-right: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--ink-main);
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+
+blockquote p:first-child {
+  margin-top: 0;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+blockquote strong, .callout-box strong {
+  color: var(--navy-primary);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--line-color);
+  margin: 36px 0;
+}
+
+/* ==========================================================================
+   4. TABLES (Crisp Corporate Style)
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 28px;
+  font-size: 14.5px;
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+th {
+  background: #f1f5f9;
+  color: var(--navy-dark);
+  font-weight: 700;
+  text-align: left;
+  padding: 11px 16px;
+  border-bottom: 2px solid var(--line-color);
+  font-size: 14px;
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line-color);
+  color: var(--ink-main);
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:nth-child(even) td {
+  background: #fcfdfe;
+}
+
+tr:hover td {
+  background: #f8fafc;
+}
+
+/* ==========================================================================
+   5. DIAGRAMS & FLOW CARDS (Replacing Broken ASCII Art)
+   ========================================================================== */
+.flow-diagram {
+  margin: 24px 0;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.flow-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--line-color);
+}
+
+/* Flex Architecture Grid */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.arch-card {
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-top: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+}
+
+.arch-card .card-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--navy-dark);
+  margin-bottom: 4px;
+}
+
+.arch-card .card-desc {
+  font-size: 13px;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+/* Comparison Flow */
+.compare-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+@media (max-width: 640px) {
+  .compare-box { grid-template-columns: 1fr; }
+}
+
+.compare-card {
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-color);
+}
+
+.compare-card.bad {
+  background: #fffafa;
+  border-left: 4px solid #ef4444;
+}
+
+.compare-card.good {
+  background: #f0fdf4;
+  border-left: 4px solid #22c55e;
+}
+
+.compare-card .tag {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.compare-card.bad .tag { color: #dc2626; }
+.compare-card.good .tag { color: #16a34a; }
+
+.compare-card .steps {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-main);
+}
+
+/* Code & Pre Blocks */
+pre {
+  background: #0f172a;
+  color: #f1f5f9;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 18px 0;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 2px 6px;
+  background: #f1f5f9;
+  color: var(--navy-primary);
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Prompt Card Box */
+.prompt-card {
+  position: relative;
+  background: var(--blue-soft);
+  border: 1px solid var(--blue-border);
+  border-left: 4px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+.prompt-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--blue-border);
+}
+
+.prompt-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--navy-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prompt-badge::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--navy-light);
+  border-radius: 50%;
+}
+
+.copy-btn {
+  background: #ffffff;
+  border: 1px solid var(--blue-border);
+  color: var(--navy-light);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.copy-btn:hover {
+  background: var(--navy-light);
+  color: #ffffff;
+  border-color: var(--navy-light);
+}
+
+.prompt-card pre {
+  background: transparent;
+  color: var(--navy-dark);
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+/* Interactive Checklists */
+li.check-item {
+  list-style: none;
+  margin-left: -20px;
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  transition: background 0.1s ease;
+}
+
+li.check-item:hover {
+  background: #f1f5f9;
+}
+
+li.check-item input[type="checkbox"] {
+  margin-top: 4px;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--navy-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Image Slot */
+.image-slot {
+  margin: 20px 0;
+  padding: 16px 20px;
+  border: 2px dashed #94a3b8;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  color: var(--ink-muted);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.image-slot::before {
+  content: "VISUAL ASSET";
+  font-weight: 800;
+  font-size: 11px;
+  padding: 2px 6px;
+  background: #e2e8f0;
+  color: var(--navy-dark);
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   6. PAGER NAVIGATION & FOOTER
+   ========================================================================== */
+.pager-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 50px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-color);
+}
+
+.pager-btn {
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--ink-main);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.pager-btn:hover {
+  border-color: var(--navy-light);
+  background: var(--blue-soft);
+  text-decoration: none;
+}
+
+.pager-btn .direction {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--navy-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pager-btn .title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--navy-dark);
+  line-height: 1.4;
+}
+
+.pager-btn.next {
+  text-align: right;
+  grid-column: 2;
+}
+
+.site-footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-color);
+  font-size: 13px;
+  color: var(--ink-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==========================================================================
+   7. INDEX PAGE SPECIFIC STYLES
+   ========================================================================== */
+.index-header {
+  padding: 24px 0 20px;
+  border-bottom: 2px solid var(--navy-primary);
+  margin-bottom: 30px;
+}
+
+.index-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--navy-primary);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.index-header p {
+  color: var(--ink-muted);
+  font-size: 15.5px;
+  margin: 4px 0;
+}
+
+.part-section {
+  margin-bottom: 36px;
+}
+
+.part-section-header {
+  background: var(--navy-primary);
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.part-section-header h2 {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.part-section-header .meta {
+  font-size: 12.5px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.chapter-group {
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.chapter-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 8px;
+}
+
+.clip-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.clip-item a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--ink-main);
+  font-size: 14.5px;
+  transition: all 0.15s ease;
+}
+
+.clip-item a:hover {
+  background: var(--blue-soft);
+  border-color: var(--blue-border);
+}
+
+.clip-item .clip-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy-light);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.clip-item .clip-title {
+  flex: 1;
+  font-weight: 500;
+}
+
+.clip-item .mini-tag {
+  font-size: 11.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.clip-item .mini-tag.prac {
+  background: var(--teal-soft);
+  color: var(--teal);
+  border: 1px solid #99f6e4;
+}
+
+.clip-item .mini-tag.time {
+  background: #ffffff;
+  color: var(--ink-light);
+  border: 1px solid var(--line-color);
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">43개 클립 · 약 14.4시간 분량</span>
+    </div>
+  </header>
+
+  <!-- Index Header (GDPval Style) -->
+  <div class="index-header">
+    <h1>코딩 몰라도 완성하는<br>나만의 AI 알고리즘 트레이딩 시스템</h1>
+    <p><strong>w. Claude Code</strong> — 5개 파트 · 17개 챕터 · 43개 클립 · 실습 23개 · 프로젝트 3개</p>
+    <p style="font-size: 14.5px; color: #64748b; margin-top: 6px;">
+      💡 <strong>학습 가이드</strong>: 모니터 좌측에 이 웹 교재를 띄우고, 우측에 Claude Code를 띄워 실시간으로 함께 실습하세요.
+    </p>
+  </div>
+
+  <!-- Part & Clip List -->
+  
+  <section class="part-section">
+    <div class="part-section-header">
+      <h2>Part 01. AI와 함께 시작하는 트레이딩 시스템 만들기</h2>
+      <span class="meta">5클립 · 98분</span>
+    </div>
+    
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH01. 우리가 만들 트레이딩 시스템 이해하기</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part01/p1-ch01-c01.html">
+            <span class="clip-id">P1-CH01-C01</span>
+            <span class="clip-title">코딩을 몰라도 나만의 트레이딩 시스템을 만들 수 있을까?</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH02. AI 코딩 도구로 첫 결과물 만들기</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part01/p1-ch02-c01.html">
+            <span class="clip-id">P1-CH02-C01</span>
+            <span class="clip-title">실습 준비: AI 코딩 Claude Code 도구 설치와 기본 환경 설정</span>
+            
+            <span class="mini-tag prac">실습 01</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part01/p1-ch02-c02.html">
+            <span class="clip-id">P1-CH02-C02</span>
+            <span class="clip-title">AI에게 원하는 결과를 정확하게 요청하는 방법</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part01/p1-ch02-c03.html">
+            <span class="clip-id">P1-CH02-C03</span>
+            <span class="clip-title">첫 실습: 주식 데이터를 불러와 차트로 확인하기</span>
+            
+            <span class="mini-tag prac">실습 02</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part01/p1-ch02-c04.html">
+            <span class="clip-id">P1-CH02-C04</span>
+            <span class="clip-title">오류가 발생했을 때 AI와 함께 해결하는 방법</span>
+            
+            <span class="mini-tag prac">실습 03</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </section>
+  
+  <section class="part-section">
+    <div class="part-section-header">
+      <h2>Part 02. 투자 전략을 이해하고 백테스트로 검증하기</h2>
+      <span class="meta">10클립 · 210분</span>
+    </div>
+    
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH01. 자동화할 수 있는 투자 전략의 조건</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch01-c01.html">
+            <span class="clip-id">P2-CH01-C01</span>
+            <span class="clip-title">투자 아이디어를 자동화 가능한 매매 규칙으로 바꾸기</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch01-c02.html">
+            <span class="clip-id">P2-CH01-C02</span>
+            <span class="clip-title">백테스트 성과표 이해하기: 수익률, 최대 손실과 거래비용</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH02. 장기 추세를 따라가는 추세추종 전략</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch02-c01.html">
+            <span class="clip-id">P2-CH02-C01</span>
+            <span class="clip-title">추세추종 전략 이해하기: 200일 이동평균선의 원리</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch02-c02.html">
+            <span class="clip-id">P2-CH02-C02</span>
+            <span class="clip-title">추세추종 전략을 과거 데이터로 검증하기</span>
+            
+            <span class="mini-tag prac">실습 04</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH03. 가격 움직임을 포착하는 변동성 돌파 전략</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch03-c01.html">
+            <span class="clip-id">P2-CH03-C01</span>
+            <span class="clip-title">변동성 돌파와 모멘텀 전략의 원리 이해하기</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch03-c02.html">
+            <span class="clip-id">P2-CH03-C02</span>
+            <span class="clip-title">변동성 돌파 전략을 검증하고 약점 구간 찾기</span>
+            
+            <span class="mini-tag prac">실습 05</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH04. 시장 흐름에 따라 자산을 선택하는 듀얼 모멘텀 전략</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch04-c01.html">
+            <span class="clip-id">P2-CH04-C01</span>
+            <span class="clip-title">듀얼 모멘텀과 자산배분 전략 이해하기</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch04-c02.html">
+            <span class="clip-id">P2-CH04-C02</span>
+            <span class="clip-title">ETF 데이터를 활용해 자산배분 전략 검증하기</span>
+            
+            <span class="mini-tag prac">실습 06</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH05. 두 종목의 가격 차이를 활용하는 페어트레이딩 전략</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch05-c01.html">
+            <span class="clip-id">P2-CH05-C01</span>
+            <span class="clip-title">페어트레이딩 이해하기: 하락장과 횡보장에 대응하는 원리</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part02/p2-ch05-c02.html">
+            <span class="clip-id">P2-CH05-C02</span>
+            <span class="clip-title">함께 움직이는 종목을 찾고 전략을 검증하기</span>
+            
+            <span class="mini-tag prac">실습 07</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </section>
+  
+  <section class="part-section">
+    <div class="part-section-header">
+      <h2>Part 03. 시장 변화에 맞춰 전략을 점검하고 개선하기</h2>
+      <span class="meta">10클립 · 198분</span>
+    </div>
+    
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH01. 네 가지 투자 전략의 성과 비교하기</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch01-c01.html">
+            <span class="clip-id">P3-CH01-C01</span>
+            <span class="clip-title">네 가지 전략의 수익률과 위험을 같은 기준으로 비교하기</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch01-c02.html">
+            <span class="clip-id">P3-CH01-C02</span>
+            <span class="clip-title">과거 성과가 지나치게 좋아 보일 때 확인해야 할 것</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH02. 실전 환경을 고려한 워크포워드 검증</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch02-c01.html">
+            <span class="clip-id">P3-CH02-C01</span>
+            <span class="clip-title">워크포워드 이해하기: 과거와 미래 구간을 나누어 검증하는 이유</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch02-c02.html">
+            <span class="clip-id">P3-CH02-C02</span>
+            <span class="clip-title">하나의 전략으로 워크포워드 검증해 보기</span>
+            
+            <span class="mini-tag prac">실습 08</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch02-c03.html">
+            <span class="clip-id">P3-CH02-C03</span>
+            <span class="clip-title">최대 손실 구간을 찾아 전략의 약점 분석하기</span>
+            
+            <span class="mini-tag prac">실습 09</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH03. AI 분석을 활용한 전략 개선</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch03-c01.html">
+            <span class="clip-id">P3-CH03-C01</span>
+            <span class="clip-title">손실이 발생했을 때 AI 운영 보고서로 원인 분석하기</span>
+            
+            <span class="mini-tag prac">실습 10</span>
+            
+            <span class="mini-tag time">25분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch03-c02.html">
+            <span class="clip-id">P3-CH03-C02</span>
+            <span class="clip-title">분석 결과를 반영해 전략을 다시 검증하기</span>
+            
+            <span class="mini-tag prac">실습 11</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch03-c03.html">
+            <span class="clip-id">P3-CH03-C03</span>
+            <span class="clip-title">거래비용을 반영해 전략 변경 여부 판단하기</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH04. 실전 운영을 위한 전략 선택 기준 만들기</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch04-c01.html">
+            <span class="clip-id">P3-CH04-C01</span>
+            <span class="clip-title">시장 상황별로 사용할 전략과 조정 범위 정하기</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part03/p3-ch04-c02.html">
+            <span class="clip-id">P3-CH04-C02</span>
+            <span class="clip-title">검증을 마친 전략을 매매 신호와 알림으로 연결하기</span>
+            
+            <span class="mini-tag time">15분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </section>
+  
+  <section class="part-section">
+    <div class="part-section-header">
+      <h2>Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</h2>
+      <span class="meta">10클립 · 207분</span>
+    </div>
+    
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH01. 증권사와 트레이딩 시스템 연결하기</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch01-c01.html">
+            <span class="clip-id">P4-CH01-C01</span>
+            <span class="clip-title">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch01-c02.html">
+            <span class="clip-id">P4-CH01-C02</span>
+            <span class="clip-title">한국투자증권 API와 모의투자 계좌 연결하기</span>
+            
+            <span class="mini-tag prac">실습 12</span>
+            
+            <span class="mini-tag time">25분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch01-c03.html">
+            <span class="clip-id">P4-CH01-C03</span>
+            <span class="clip-title">시장의 실시간 가격 데이터를 받아오기</span>
+            
+            <span class="mini-tag prac">실습 13</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch01-c04.html">
+            <span class="clip-id">P4-CH01-C04</span>
+            <span class="clip-title">설정한 조건에 따라 매매 신호 만들기</span>
+            
+            <span class="mini-tag prac">실습 14</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH02. 알림을 확인하고 직접 승인하는 매매 시스템</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch02-c01.html">
+            <span class="clip-id">P4-CH02-C01</span>
+            <span class="clip-title">텔레그램으로 매매 알림과 승인·거절 버튼 만들기</span>
+            
+            <span class="mini-tag prac">실습 15</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch02-c02.html">
+            <span class="clip-id">P4-CH02-C02</span>
+            <span class="clip-title">카카오톡과 이메일로 매매 알림 받아보기</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch02-c03.html">
+            <span class="clip-id">P4-CH02-C03</span>
+            <span class="clip-title">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
+            
+            <span class="mini-tag prac">실습 16</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch02-c04.html">
+            <span class="clip-id">P4-CH02-C04</span>
+            <span class="clip-title">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
+            
+            <span class="mini-tag prac">실습 17</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch02-c05.html">
+            <span class="clip-id">P4-CH02-C05</span>
+            <span class="clip-title">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
+            
+            <span class="mini-tag prac">실습 18</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH03. 정해진 시간에 트레이딩 시스템 운영하기</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part04/p4-ch03-c01.html">
+            <span class="clip-id">P4-CH03-C01</span>
+            <span class="clip-title">(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기</span>
+            
+            <span class="mini-tag prac">실습 19</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </section>
+  
+  <section class="part-section">
+    <div class="part-section-header">
+      <h2>Part 05. 매일의 결과를 분석하고 안전하게 운영하기</h2>
+      <span class="meta">8클립 · 151분</span>
+    </div>
+    
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH01. 매매 결과를 기록하고 개선하는 일일 점검 루프</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch01-c01.html">
+            <span class="clip-id">P5-CH01-C01</span>
+            <span class="clip-title">장 마감 후 AI로 오늘의 매매 결과 분석하기</span>
+            
+            <span class="mini-tag prac">실습 20</span>
+            
+            <span class="mini-tag time">22분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch01-c02.html">
+            <span class="clip-id">P5-CH01-C02</span>
+            <span class="clip-title">분석 결과를 전략 개선과 재검증으로 연결하기</span>
+            
+            <span class="mini-tag prac">실습 21</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH02. 시장 상황별 전략 설정과 위험 관리</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch02-c01.html">
+            <span class="clip-id">P5-CH02-C01</span>
+            <span class="clip-title">횡보장·상승장·하락장에 맞춰 전략 설정하기</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch02-c02.html">
+            <span class="clip-id">P5-CH02-C02</span>
+            <span class="clip-title">과도한 주문을 방지하는 주문 한도와 긴급 정지 기능 만들기</span>
+            
+            <span class="mini-tag prac">실습 22</span>
+            
+            <span class="mini-tag time">20분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch02-c03.html">
+            <span class="clip-id">P5-CH02-C03</span>
+            <span class="clip-title">모의투자에서 실제 투자로 전환하기 전 확인할 사항</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+    <div class="chapter-group">
+      <div class="chapter-title">CH03. 지속 가능한 트레이딩 시스템 운영 방법</div>
+      <ul class="clip-list">
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch03-c01.html">
+            <span class="clip-id">P5-CH03-C01</span>
+            <span class="clip-title">AI 사용 비용을 관리하며 시스템을 효율적으로 운영하기</span>
+            
+            <span class="mini-tag time">15분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch03-c02.html">
+            <span class="clip-id">P5-CH03-C02</span>
+            <span class="clip-title">같은 작업 방식을 Codex에도 적용하기</span>
+            
+            <span class="mini-tag prac">실습 23</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+        <li class="clip-item">
+          <a href="part05/p5-ch03-c03.html">
+            <span class="clip-id">P5-CH03-C03</span>
+            <span class="clip-title">나만의 일간·주간·월간 운영 루틴 완성하기</span>
+            
+            <span class="mini-tag time">18분</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </section>
+  
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>본 교육 콘텐츠의 무단 복제 및 상업적 재배포를 금합니다.</span>
+  </footer>
+</div>
+</body>
+</html>

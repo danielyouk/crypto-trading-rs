@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>페어트레이딩 이해하기: 하락장과 횡보장에 대응하는 원리 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,147 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 02 · CH05</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 02. 투자 전략을 이해하고 백테스트로 검증하기</div>
+    <h1>페어트레이딩 이해하기: 하락장과 횡보장에 대응하는 원리</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH05. 두 종목의 가격 차이를 활용하는 페어트레이딩 전략</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 22분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 시장의 방향과 무관하게 수익을 노리는 <strong>페어트레이딩</strong>의 구조 — 스프레드, z-score, 평균회귀 — 를 그림으로 설명할 수 있습니다. 지금까지의 전략과 무엇이 근본적으로 다른지도 이해합니다.</p>
+<ul>
+<li>함께 움직이는 두 종목의 <strong>가격 차이(스프레드)</strong> 가 벌어지면 되돌아온다는 데 베팅</li>
+<li>한쪽은 사고(롱) 한쪽은 파는(숏) <strong>시장중립</strong> 구조</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>방향이 아니라 관계에 베팅한다</h3>
+<p>추세추종·변동성 돌파·듀얼 모멘텀은 모두 "시장이 오른다"에 기대는 전략입니다. 페어트레이딩은 다릅니다. 같은 업종의 두 종목(예: 정유사 두 곳)은 같은 재료로 움직이므로 <strong>가격이 함께 갑니다</strong>. 잠시 벌어져도 다시 좁혀지는 경향 — 이 <strong>관계의 복원력</strong>이 수익의 원천입니다. 시장 전체가 떨어져도 두 종목의 간격만 좁혀지면 수익이 나므로, 하락장·횡보장 대응 카드가 됩니다.</p>
+<h3>스프레드와 z-score — 간격을 표준화해서 본다</h3>
+<p>두 종목의 가격 차이(또는 비율)를 <strong>스프레드</strong>라고 합니다. 스프레드가 "평소보다 얼마나 벌어졌는가"를 재는 자가 <strong>z-score</strong>입니다. z-score는 평균에서 표준편차 몇 개만큼 떨어져 있는지를 나타냅니다.</p>
+<table>
+<thead>
+<tr>
+<th>z-score</th>
+<th>해석</th>
+<th>행동</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+2 이상</td>
+<td>스프레드가 이례적으로 벌어짐</td>
+<td>비싸진 쪽 숏, 싸진 쪽 롱</td>
+</tr>
+<tr>
+<td>0 부근</td>
+<td>평소 수준으로 복귀</td>
+<td>청산</td>
+</tr>
+<tr>
+<td>-2 이하</td>
+<td>반대 방향으로 벌어짐</td>
+<td>반대 포지션</td>
+</tr>
+</tbody>
+</table>
+<p>이렇게 벌어지면 진입하고 되돌아오면 청산하는 것을 <strong>평균회귀</strong> 전략이라고 합니다.</p>
+<h3>롱·숏 동시 보유 = 시장중립</h3>
+<p>한 종목을 사는 동시에 다른 종목을 같은 금액만큼 공매도하면, 시장 전체가 오르든 내리든 그 영향은 두 포지션에서 상쇄됩니다. 남는 것은 오직 <strong>두 종목 사이의 간격 변화</strong>뿐입니다. 이것이 시장중립입니다.</p>
+<h3>최대 리스크 — 관계 자체가 무너질 때</h3>
+<p>페어트레이딩의 전제는 "두 종목의 관계가 유지된다"입니다. 한 회사에 구조적 악재(회계 부정, 산업 지형 변화)가 생기면 스프레드는 되돌아오지 않고 <strong>영원히 벌어질 수 있습니다</strong>. "벌어졌으니 언젠가 돌아온다"는 믿음으로 버티는 것이 이 전략의 가장 위험한 행동이며, 그래서 z-score가 일정 수준을 넘으면 손절하는 규칙이 반드시 필요합니다.</p>
+<h2>따라 해보기</h2>
+<p>같은 업종의 두 종목을 하나씩 떠올려 보세요 (예: 현대차와 기아, KB금융과 신한지주).</p>
+<ul>
+<li class="check-item"><input type="checkbox"> 두 종목의 최근 1년 차트를 나란히 놓고 비슷하게 움직이는지 확인했다</li>
+<li class="check-item"><input type="checkbox"> 두 차트가 잠시 어긋났다가 다시 비슷해진 구간을 하나 찾았다</li>
+<li class="check-item"><input type="checkbox"> "이 두 회사의 관계가 영원히 깨질 수 있는 시나리오"를 하나 상상해 보았다</li>
+<li class="check-item"><input type="checkbox"> 롱과 숏을 동시에 들면 시장 급락에도 왜 손실이 제한되는지 말할 수 있다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<blockquote>
+<p>이론 클립이므로 실습 오류는 없습니다. 흔한 오해 하나 — "함께 움직이는 종목 = 차트 모양이 비슷한 종목"이 아닙니다. 우연히 몇 달 비슷해 보이는 쌍은 많지만, 관계가 통계적으로 안정적인 쌍은 드뭅니다. 쌍을 고르는 검증 방법은 다음 실습에서 다룹니다.</p>
+</blockquote>
+<p>개념을 그림으로 확인하고 싶다면 이렇게 요청해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>현대차(005380)와 기아(000270)의 최근 3년 주가를 하나의 차트에 겹쳐 그리고,
+그 아래에 두 종목 가격 비율의 z-score 차트를 함께 보여줘.
+z-score가 +2와 -2를 넘은 구간을 표시해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>다음 클립(실습 07)은 Part 2의 마지막 실습입니다. 함께 움직이는 종목 쌍을 데이터로 찾아내고, 페어트레이딩 전략을 백테스트해 프로젝트 01의 네 번째 성과표를 완성합니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part02/p2-ch04-c02.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">ETF 데이터를 활용해 자산배분 전략 검증하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part02/p2-ch05-c02.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">함께 움직이는 종목을 찾고 전략을 검증하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

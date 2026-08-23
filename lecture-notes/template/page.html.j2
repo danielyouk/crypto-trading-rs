@@ -3,60 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ note.title }} — AI 트레이딩 강의</title>
+<title>{{ note.title }} — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="{{ css_path }}">
+<style>
+/* Fallback inline critical CSS */
+{{ inline_css }}
+</style>
 </head>
 <body>
-<div class="topbar">
-  <a class="home" href="{{ index_path }}">전체 목차</a>
-  <span class="crumb">Part {{ "%02d"|format(note.part) }} · CH{{ "%02d"|format(note.chapter) }}. {{ note.chapter_title }}</span>
-</div>
-
 <div class="wrap">
-  <header class="note-head">
-    <div class="kicker">Part {{ "%02d"|format(note.part) }}. {{ note.part_title }}</div>
-    <h1>{{ note.title }}</h1>
-    <div class="badges">
-      <span class="badge time">약 {{ note.duration }}분</span>
-      {% if note.practice %}
-      <span class="badge practice">{{ note.practice }}</span>
-      {% else %}
-      <span class="badge theory">이론·데모</span>
-      {% endif %}
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="{{ index_path }}">
+      <img src="{{ logo_path }}" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part {{ "%02d"|format(note.part) }} · CH{{ "%02d"|format(note.chapter) }}</span>
+      <a href="{{ index_path }}">목차로 이동 ↗</a>
     </div>
   </header>
 
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part {{ "%02d"|format(note.part) }}. {{ note.part_title }}</div>
+    <h1>{{ note.title }}</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH{{ "%02d"|format(note.chapter) }}. {{ note.chapter_title }}</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 {{ note.duration }}분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        {% if note.practice %}
+        <span class="badge practice">{{ note.practice }} (실습 중심)</span>
+        {% else %}
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
   <main>
     {{ content }}
   </main>
 
-  <nav class="pager">
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
     {% if prev %}
-    <a class="prev" href="{{ prev.href }}"><span class="dir">← 이전 클립</span>{{ prev.title }}</a>
+    <a class="pager-btn prev" href="{{ prev.href }}">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">{{ prev.title }}</span>
+    </a>
+    {% else %}
+    <div></div>
     {% endif %}
     {% if next %}
-    <a class="next" href="{{ next.href }}"><span class="dir">다음 클립 →</span>{{ next.title }}</a>
+    <a class="pager-btn next" href="{{ next.href }}">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">{{ next.title }}</span>
+    </a>
     {% endif %}
   </nav>
 
-  <footer class="site">
-    코딩 몰라도 완성하는 나만의 AI 알고리즘 트레이딩 시스템 w. Claude Code · 본 자료는 교육 목적이며 투자 권유가 아닙니다.
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
   </footer>
 </div>
 
 <script>
-document.querySelectorAll("pre").forEach(function (pre) {
-  var btn = document.createElement("button");
-  btn.className = "copy-btn";
-  btn.textContent = "복사";
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
   btn.addEventListener("click", function () {
-    var code = pre.querySelector("code");
-    navigator.clipboard.writeText(code ? code.innerText : pre.innerText).then(function () {
-      btn.textContent = "복사됨!";
-      setTimeout(function () { btn.textContent = "복사"; }, 1500);
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
     });
   });
-  pre.appendChild(btn);
 });
 </script>
 </body>

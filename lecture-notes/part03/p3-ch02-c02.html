@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>하나의 전략으로 워크포워드 검증해 보기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,158 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 03 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 03. 시장 변화에 맞춰 전략을 점검하고 개선하기</div>
+    <h1>하나의 전략으로 워크포워드 검증해 보기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. 실전 환경을 고려한 워크포워드 검증</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 22분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 08 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 여러분이 고른 전략 하나의 <strong>워크포워드 검증 리포트</strong>가 화면에 보입니다.</p>
+<ul>
+<li>구간(윈도우)별 학습 기간·검증 기간·선택된 파라미터·검증 성과가 정리된 표</li>
+<li>검증 구간 성과만 이어 붙인 누적 수익률 곡선과, 기존 단일 백테스트 곡선의 비교</li>
+</ul>
+<div class="image-slot">artifacts/course_demo/01_wfa_replay.gif — S&P 500 워크포워드 리플레이</div>
+
+<h2>이론 핵심</h2>
+<h3>요청하기 전에 결과 모습부터 그리기</h3>
+<p>생각→요청→확인→개선 루프의 첫 단계입니다. 워크포워드가 끝나면 화면에 뭐가 보여야 할까요?</p>
+<ol>
+<li>윈도우별 결과 표 — 각 구간에서 어떤 파라미터가 뽑혔고 검증 성과가 어땠는지</li>
+<li>검증 구간을 이어 붙인 누적 수익률 곡선</li>
+<li>기존 백테스트와의 비교 — 이 격차가 과최적화의 크기입니다</li>
+</ol>
+<h3>두 곡선의 격차를 읽는 법</h3>
+<table>
+<thead>
+<tr>
+<th>관찰</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>두 곡선이 비슷하다</td>
+<td>과최적화가 적다. 실전에서도 비슷한 성격 기대</td>
+</tr>
+<tr>
+<td>워크포워드 곡선이 크게 뒤처진다</td>
+<td>파라미터가 과거에만 잘 맞았다는 신호</td>
+</tr>
+<tr>
+<td>특정 구간에서만 크게 벌어진다</td>
+<td>그 구간의 시장 상황이 전략의 약점 (다음 클립 주제)</td>
+</tr>
+</tbody>
+</table>
+<h3>파라미터가 구간마다 바뀌는 것은 정상</h3>
+<p>윈도우별 결과 표를 보면 선택된 파라미터가 구간마다 다를 수 있습니다. 시장이 변하니 최적값도 변하는 것이 자연스럽습니다. 다만 <strong>매 구간 파라미터가 극단적으로 널뛴다면</strong> 전략이 불안정하다는 경고입니다.</p>
+<h2>실습 — 실습 08</h2>
+<p>Part 2에서 검증한 전략 중 하나를 골라 워크포워드를 요청하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>추세추종 전략(200일 이동평균)을 워크포워드 방식으로 검증해줘.
+끝나면 화면에 다음이 보이면 좋겠어.
+1) 구간별로 학습 기간, 검증 기간, 선택된 파라미터, 검증 수익률이 정리된 표
+2) 검증 구간 성과만 이어 붙인 누적 수익률 곡선과 기존 단일 백테스트 곡선을 겹쳐 그린 차트
+3) 두 곡선의 최종 수익률과 MDD를 비교한 요약 문장
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 윈도우별 표에서 학습 기간과 검증 기간이 겹치지 않고 시간순으로 굴러간다</li>
+<li class="check-item"><input type="checkbox"> 검증 구간을 이어 붙인 곡선과 기존 백테스트 곡선이 한 차트에 겹쳐 보인다</li>
+<li class="check-item"><input type="checkbox"> 두 곡선의 격차가 어느 정도인지(비슷/크게 뒤처짐) 내 눈으로 판단했다</li>
+<li class="check-item"><input type="checkbox"> 구간마다 선택된 파라미터가 안정적인지, 극단적으로 널뛰는지 확인했다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 워크포워드 결과는 다를 수 있습니다. AI가 잡은 윈도우 길이, 굴리는 간격, 파라미터 후보 범위가 다르기 때문입니다. 체크리스트의 구조(구간이 겹치지 않고 굴러가는가)가 맞는지를 먼저 보세요.</p>
+<ul>
+<li>학습·검증 구간이 어떻게 나뉘었는지 화면에 안 보인다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>각 윈도우의 학습 시작일·종료일과 검증 시작일·종료일을 표에 명시해서 다시 보여줘.
+구간이 시간순으로 겹치지 않고 굴러가는지 확인하고 싶어.
+</code></pre></div>
+<ul>
+<li>차트에 곡선이 하나만 그려졌다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>차트에 워크포워드 곡선만 있어. 기존 단일 백테스트의 누적 수익률 곡선도 같은 차트에 겹쳐서
+두 곡선을 비교할 수 있게 다시 그려줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>워크포워드 곡선에도 깊게 파인 손실 구간이 있었을 겁니다. 다음 클립에서는 그 최대 손실 구간을 확대해서 전략의 약점이 어떤 시장에서 드러나는지 분석합니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part03/p3-ch02-c01.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">워크포워드 이해하기: 과거와 미래 구간을 나누어 검증하는 이유</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part03/p3-ch02-c03.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">최대 손실 구간을 찾아 전략의 약점 분석하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

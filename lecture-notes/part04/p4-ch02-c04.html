@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,139 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 04 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
+    <h1>손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 22분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 17 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 보유 종목이 손절 기준에 닿았을 때 알림이 오고, <strong>일정 시간 안에 응답이 없으면 규칙이 자동으로 손절 주문을 실행</strong>하는 안전장치가 동작합니다.</p>
+<ul>
+<li>손절 알림 도착 → 응답 대기 → 무응답 시 자동 매도 → 결과 회신의 전체 흐름</li>
+<li>매수(사람 승인 필수)와 손절(무응답 시 자동)의 규칙이 서로 다르게 동작하는 것 확인</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>매수와 손절은 왜 규칙이 다른가</h3>
+<ul>
+<li><strong>매수를 놓치면</strong>: 기회를 잃을 뿐, 돈을 잃지는 않습니다. 그래서 사람의 승인을 기다릴 여유가 있습니다.</li>
+<li><strong>손절을 놓치면</strong>: 손실이 계속 커집니다. 회의 중이거나 잠든 사이에 -3%가 -10%가 될 수 있습니다.</li>
+</ul>
+<p>그래서 손절만은 <strong>"응답이 없으면 실행"</strong>이 기본값입니다. 사람이 개입하면 사람 판단을 따르되, 개입하지 못하는 상황에서는 미리 정한 규칙이 나를 지킵니다. 이것이 인간 개입형 하이브리드의 두 번째 축입니다.</p>
+<h3>유예 시간 설계</h3>
+<p>무응답 후 몇 분 만에 실행할지가 핵심 변수입니다.</p>
+<ul>
+<li>너무 짧으면(1분): 알림을 볼 새도 없이 자동 실행 — 사람 개입의 의미가 없음</li>
+<li>너무 길면(1시간): 자동 실행의 의미가 없음 — 그 사이 손실 확대</li>
+</ul>
+<p>이 강의에서는 <strong>10분</strong>을 기본값으로 하되, 자신의 생활 패턴에 맞게 조정합니다. 중요한 것은 값 자체가 아니라 <strong>미리 정해 두고 지킨다</strong>는 것입니다.</p>
+<h3>"손절 취소"도 기록을 남긴다</h3>
+<p>알림을 보고 "이번엔 버티겠다"며 취소하는 것도 유효한 선택입니다. 다만 그 선택은 로그에 남습니다. 나중에 Part 5에서 "손절을 취소한 거래들의 결말"을 데이터로 확인하면, 내 개입이 도움이 됐는지 방해가 됐는지 알 수 있습니다.</p>
+<h2>실습 17 — 무응답 자동 손절 만들기</h2>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>보유 중인 모의투자 종목이 매수가 대비 -3% 아래로 내려가면
+텔레그램으로 &quot;손절 알림: 종목명, 현재 손실률, [지금 손절] [이번엔 유지]&quot; 버튼을 보내줘.
+10분 안에 아무 버튼도 누르지 않으면 자동으로 시장가 매도 주문이 나가야 하고,
+실행 결과가 &quot;자동 손절 실행: 종목명, 매도가&quot;로 회신되어야 해.
+테스트에서는 유예 시간을 1분으로 줄이고, 가짜 가격 하락을 흘려서
+무응답 자동 실행 장면을 보여줘.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 손실률이 기준을 넘자 손절 알림이 텔레그램에 도착했다</li>
+<li class="check-item"><input type="checkbox"> 아무 버튼도 누르지 않고 기다리자 자동 매도 주문이 실행되었다</li>
+<li class="check-item"><input type="checkbox"> "자동 손절 실행" 회신이 오고, 모의투자 화면에도 매도 체결이 보인다</li>
+<li class="check-item"><input type="checkbox"> [이번엔 유지]를 누른 경우에는 매도가 나가지 않고, 그 선택이 로그에 남았다</li>
+<li class="check-item"><input type="checkbox"> 유예 시간(테스트 1분)이 로그의 시각으로 확인된다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 타이머·상태 관리 코드는 다를 수 있습니다. <strong>무응답 시 정확히 한 번 매도가 나가는지</strong>가 기준입니다.</p>
+<ul>
+<li><strong>중복 매도</strong>: 유예 시간이 지난 뒤 알림이 또 발생해 매도가 두 번 나가는 경우가 있습니다.</li>
+<li><strong>버튼을 눌렀는데도 자동 실행</strong>: 응답 기록과 타이머가 연결되지 않은 경우입니다.</li>
+<li><strong>장 시간 밖 하락</strong>: 장이 닫혀 있으면 매도 주문이 접수되지 않습니다. 다음 장 시작 시 처리 방식을 정해야 합니다.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>자동 손절이 같은 종목에서 두 번 실행됐어. 한 종목의 손절 알림은
+한 번에 하나만 살아 있도록 하고, 매도가 나간 종목은 다시 알림이 뜨지 않게 해줘.
+</code></pre></div>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[이번엔 유지]를 눌렀는데도 1분 뒤 자동 매도가 나갔어. 버튼 응답이
+타이머를 멈추는지 확인해서 고치고, 유지를 선택한 기록이 로그에 남는 것도 보여줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>장중의 안전장치까지 갖췄습니다. 다음 클립에서는 장이 끝난 뒤, 다음 거래일에 시스템이 무엇을 감시하고 어떤 조건에서 움직일지를 미리 알림으로 받아보는 기능을 만듭니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part04/p4-ch02-c03.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part04/p4-ch02-c05.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

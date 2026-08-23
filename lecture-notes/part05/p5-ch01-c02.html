@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>분석 결과를 전략 개선과 재검증으로 연결하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,155 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 05 · CH01</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 05. 매일의 결과를 분석하고 안전하게 운영하기</div>
+    <h1>분석 결과를 전략 개선과 재검증으로 연결하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH01. 매매 결과를 기록하고 개선하는 일일 점검 루프</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 20분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 21 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 어제의 손실 분석에서 나온 개선안이 <strong>재백테스트 결과표와 함께</strong> 화면에 보입니다. 그리고 "재검증을 통과한 개선안만 반영한다"는 일일 점검 루프의 마지막 조각이 완성됩니다.</p>
+<ul>
+<li>손실 원인 → 개선안 후보 → 재백테스트 비교표 → 반영/보류 결정, 이 흐름이 한 번에 이어지는 화면</li>
+<li>개선안이 <strong>미리 허용해 둔 파라미터 범위 안</strong>에서만 만들어지는 것</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>즉흥 수정이 계좌를 망가뜨린다</h3>
+<p>어제 손실이 났다고 오늘 규칙을 바꾸면, 전략은 점점 "어제의 시장"에만 맞춰집니다. 이것이 Part 3에서 배운 과최적화가 실전에서 재현되는 방식입니다. 그래서 이 강의의 원칙은 하나입니다. <strong>재백테스트를 통과한 개선안만 반영한다.</strong></p>
+<h3>개선안에는 울타리가 필요하다</h3>
+<p>AI에게 "알아서 고쳐줘"라고 하면 전략의 정체성 자체를 바꿔버릴 수 있습니다. 개선안은 Part 3에서 정해 둔 <strong>허용된 알고리즘과 파라미터 범위 안</strong>에서만 나오게 합니다.</p>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>허용되는 개선</td>
+<td>손절 폭을 허용 범위(예: 3~7%) 안에서 조정</td>
+</tr>
+<tr>
+<td>허용되지 않는 개선</td>
+<td>추세추종 전략을 갑자기 다른 전략으로 교체</td>
+</tr>
+</tbody>
+</table>
+<h3>개선 루프의 4단계</h3>
+<ol>
+<li><strong>분석</strong> — 일일 보고서에서 손실 원인 가설 확보 (이전 클립)</li>
+<li><strong>제안</strong> — 허용 범위 안의 개선안 후보를 AI가 생성</li>
+<li><strong>재검증</strong> — 개선안을 과거 데이터로 재백테스트, 기존안과 나란히 비교</li>
+<li><strong>결정</strong> — 수익률과 MDD가 함께 개선될 때만 사람이 반영을 승인</li>
+</ol>
+<p>"얼마나 버는가"만 보지 마세요. 수익률이 올라도 MDD가 커지면 보류가 정답일 수 있습니다.</p>
+<h2>실습 — 실습 21</h2>
+<p>이전 클립의 손실 분석을 개선안과 재검증으로 연결합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>어제 일일 보고서의 손실 원인 분석을 바탕으로, 미리 정해둔
+허용 파라미터 범위 안에서만 전략 개선안을 2가지 만들어줘.
+각 개선안을 기존 전략과 같은 기간으로 재백테스트해서,
+수익률·MDD·거래횟수를 기존안과 나란히 비교한 표를 보여줘.
+허용 범위를 벗어나는 개선안은 제안하지 말아줘.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 개선안이 미리 정한 파라미터 허용 범위 안에 있다 (범위 밖 제안이 없다)</li>
+<li class="check-item"><input type="checkbox"> 기존안과 개선안의 수익률·MDD·거래횟수가 한 표에서 비교된다</li>
+<li class="check-item"><input type="checkbox"> 재백테스트 기간이 기존안과 동일하다</li>
+<li class="check-item"><input type="checkbox"> 반영/보류를 결정하는 사람은 나이고, 시스템이 자동으로 바꾸지 않았다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 개선안 내용은 다를 수 있습니다. 어제의 거래 내역이 다르면 분석도 개선안도 달라지는 것이 정상입니다. <strong>허용 범위 준수와 비교표의 완결성</strong>을 기준으로 확인하세요.</p>
+<ul>
+<li>개선안이 허용 범위를 벗어날 때:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>제안한 개선안 중 손절 폭 10%는 허용 범위(3~7%)를 벗어났어.
+허용 범위 안의 값으로만 다시 제안하고, 각 제안이 어느 범위
+규칙을 따르는지 표시해줘.
+</code></pre></div>
+<ul>
+<li>비교표에서 개선 여부를 판단하기 어려울 때:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>비교표에 &quot;수익률과 MDD가 모두 개선됐는지&quot;를 O/X로 표시하는
+열을 추가하고, 둘 중 하나라도 나빠진 안은 보류 후보로 구분해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>다음 클립에서는 하루 단위 개선을 넘어, 횡보장·상승장·하락장이라는 <strong>시장 국면에 따라 전략 설정을 바꾸는 방법</strong>을 배웁니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part05/p5-ch01-c01.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">장 마감 후 AI로 오늘의 매매 결과 분석하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part05/p5-ch02-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">횡보장·상승장·하락장에 맞춰 전략 설정하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

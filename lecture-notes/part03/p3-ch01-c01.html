@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>네 가지 전략의 수익률과 위험을 같은 기준으로 비교하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,157 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 03 · CH01</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 03. 시장 변화에 맞춰 전략을 점검하고 개선하기</div>
+    <h1>네 가지 전략의 수익률과 위험을 같은 기준으로 비교하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH01. 네 가지 투자 전략의 성과 비교하기</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 18분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, Part 2에서 검증한 네 가지 전략(추세추종·변동성 돌파·듀얼 모멘텀 자산배분·페어트레이딩)의 성과를 <strong>한 장의 비교표</strong>로 나란히 보게 됩니다.</p>
+<ul>
+<li>같은 기간, 같은 초기 자금, 같은 거래비용 기준으로 정렬된 비교표</li>
+<li>수익률 1등과 "덜 잃는" 1등이 서로 다른 전략이라는 사실</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>왜 같은 기준으로 다시 비교해야 하는가</h3>
+<p>Part 2에서는 전략마다 검증 기간과 대상 종목이 조금씩 달랐습니다. 기간이 다르면 상승장을 길게 탄 전략이 무조건 유리해 보입니다. 공정한 비교의 3가지 조건은 다음과 같습니다.</p>
+<ol>
+<li><strong>같은 기간</strong> — 상승장·하락장·횡보장이 모두 포함된 구간</li>
+<li><strong>같은 초기 자금</strong> — 금액이 아니라 비율(%)로 비교</li>
+<li><strong>같은 거래비용</strong> — 수수료·세금·슬리피지를 동일하게 반영</li>
+</ol>
+<h3>수익률만 보면 절반만 본 것</h3>
+<p>이 강의의 축은 "얼마나 버는가만큼 얼마나 덜 잃는가"입니다. 비교표에서 반드시 함께 봐야 할 세 숫자입니다.</p>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>의미</th>
+<th>질문</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>연평균 수익률(CAGR)</td>
+<td>1년에 평균 몇 % 벌었나</td>
+<td>얼마나 버는가</td>
+</tr>
+<tr>
+<td>최대 낙폭(MDD)</td>
+<td>고점 대비 최대 몇 % 잃었나</td>
+<td>얼마나 덜 잃는가</td>
+</tr>
+<tr>
+<td>수익 대비 손실 비율</td>
+<td>수익률 ÷ MDD</td>
+<td>감수한 위험 대비 벌었는가</td>
+</tr>
+</tbody>
+</table>
+<p>MDD가 -50%라면, 원금을 회복하는 데 +100% 수익이 필요합니다. 손실은 회복이 비대칭적이라는 점이 MDD를 수익률만큼 중요하게 보는 이유입니다.</p>
+<h3>전략마다 잘하는 시장이 다르다</h3>
+<p>네 전략은 성격이 다릅니다. 추세추종은 상승장에서 강하고 횡보장에서 잦은 손절이 나옵니다. 페어트레이딩은 방향과 무관해 횡보장에서 상대적으로 안정적입니다. 이 차이가 Part 3 후반의 "시장 상황별 전략 선택"으로 이어집니다.</p>
+<h2>따라 해보기</h2>
+<p>Part 2에서 만든 백테스트 결과를 AI에게 하나의 표로 모아 달라고 요청해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>Part 2에서 백테스트한 네 가지 전략(추세추종, 변동성 돌파, 듀얼 모멘텀 자산배분, 페어트레이딩)을
+같은 기간, 같은 초기 자금, 같은 거래비용 기준으로 다시 계산해서
+연평균 수익률, 최대 낙폭(MDD), 수익 대비 손실 비율이 들어간 비교표 하나로 보여줘.
+표 아래에 각 전략의 누적 수익률 곡선을 겹쳐 그린 차트도 함께 보여줘.
+</code></pre></div>
+<ul>
+<li class="check-item"><input type="checkbox"> 네 전략이 한 표에 나란히 있고, 기간·비용 기준이 표 상단에 명시되어 있다</li>
+<li class="check-item"><input type="checkbox"> 수익률 1위 전략과 MDD가 가장 얕은 전략이 무엇인지 각각 확인했다</li>
+<li class="check-item"><input type="checkbox"> 누적 수익률 곡선에서 전략마다 힘든 구간(꺾이는 구간)이 서로 다른 것을 보았다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사 화면의 숫자와 여러분의 숫자는 다를 수 있습니다. 데이터 기간, AI가 생성한 계산 방식이 조금씩 다르기 때문입니다. 숫자가 같은지가 아니라 <strong>네 전략이 같은 기준으로 비교되고 있는지</strong>를 체크리스트로 확인하세요.</p>
+<ul>
+<li>표에 MDD가 빠져 있다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>비교표에 최대 낙폭(MDD) 열이 빠져 있어. MDD와 수익 대비 손실 비율을 추가해서 표를 다시 보여줘.
+</code></pre></div>
+<ul>
+<li>기간이 전략마다 다르게 잡혔다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>전략마다 검증 기간이 다르게 나온 것 같아. 네 전략 모두 동일한 시작일과 종료일로 맞춰서 다시 계산해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>비교표에서 유난히 성과가 좋은 전략이 보일 겁니다. 다음 클립에서는 "과거 성과가 지나치게 좋아 보일 때" 의심해야 할 과최적화를 배웁니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part02/p2-ch05-c02.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">함께 움직이는 종목을 찾고 전략을 검증하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part03/p3-ch01-c02.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">과거 성과가 지나치게 좋아 보일 때 확인해야 할 것</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

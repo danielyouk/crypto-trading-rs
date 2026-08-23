@@ -3,37 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 트레이딩 강의 노트 — 전체 목차</title>
+<title>AI 알고리즘 트레이딩 강의 핸드북 — 전체 목차</title>
 <link rel="stylesheet" href="{{ css_path }}">
+<style>
+{{ inline_css }}
+</style>
 </head>
 <body>
-<div class="topbar">
-  <span class="home">AI 알고리즘 트레이딩 강의 노트</span>
-  <span class="crumb">{{ total_clips }}클립 · {{ total_minutes }}분</span>
-</div>
-
 <div class="wrap">
-  <header class="index-head">
-    <h1>코딩 몰라도 완성하는<br>나만의 AI 알고리즘 트레이딩 시스템</h1>
-    <p>w. Claude Code · 5개 파트 · {{ total_clips }}개 클립 · 약 {{ "%.1f"|format(total_minutes / 60) }}시간 · 실습 23개</p>
-    <p>좌측에 이 노트를, 우측에 Claude Code를 띄우고 함께 진행하세요.</p>
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">{{ total_clips }}개 클립 · 약 {{ "%.1f"|format(total_minutes / 60) }}시간 분량</span>
+    </div>
   </header>
 
+  <!-- Index Header (GDPval Style) -->
+  <div class="index-header">
+    <h1>코딩 몰라도 완성하는<br>나만의 AI 알고리즘 트레이딩 시스템</h1>
+    <p><strong>w. Claude Code</strong> — 5개 파트 · 17개 챕터 · {{ total_clips }}개 클립 · 실습 23개 · 프로젝트 3개</p>
+    <p style="font-size: 14.5px; color: #64748b; margin-top: 6px;">
+      💡 <strong>학습 가이드</strong>: 모니터 좌측에 이 웹 교재를 띄우고, 우측에 Claude Code를 띄워 실시간으로 함께 실습하세요.
+    </p>
+  </div>
+
+  <!-- Part & Clip List -->
   {% for part in parts %}
-  <section class="part">
-    <h2>Part {{ "%02d"|format(part.number) }}. {{ part.title }}</h2>
-    <div class="part-meta">{{ part.clip_count }}클립 · {{ part.minutes }}분</div>
+  <section class="part-section">
+    <div class="part-section-header">
+      <h2>Part {{ "%02d"|format(part.number) }}. {{ part.title }}</h2>
+      <span class="meta">{{ part.clip_count }}클립 · {{ part.minutes }}분</span>
+    </div>
+    
     {% for chapter in part.chapters %}
-    <div class="chapter">
-      <h3>CH{{ "%02d"|format(chapter.number) }}. {{ chapter.title }}</h3>
-      <ul class="clips">
+    <div class="chapter-group">
+      <div class="chapter-title">CH{{ "%02d"|format(chapter.number) }}. {{ chapter.title }}</div>
+      <ul class="clip-list">
         {% for clip in chapter.clips %}
-        <li>
+        <li class="clip-item">
           <a href="{{ clip.href }}">
-            <span class="clip-no">{{ clip.id|upper }}</span>
+            <span class="clip-id">{{ clip.id|upper }}</span>
             <span class="clip-title">{{ clip.title }}</span>
-            {% if clip.practice %}<span class="mini prac">{{ clip.practice }}</span>{% endif %}
-            <span class="mini time">{{ clip.duration }}분</span>
+            {% if clip.practice %}
+            <span class="mini-tag prac">{{ clip.practice }}</span>
+            {% endif %}
+            <span class="mini-tag time">{{ clip.duration }}분</span>
           </a>
         </li>
         {% endfor %}
@@ -43,8 +61,10 @@
   </section>
   {% endfor %}
 
-  <footer class="site">
-    본 자료는 교육 목적으로 제작된 콘텐츠이며, 특정 종목·금융상품에 대한 투자 권유 또는 추천이 아닙니다.
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>본 교육 콘텐츠의 무단 복제 및 상업적 재배포를 금합니다.</span>
   </footer>
 </div>
 </body>

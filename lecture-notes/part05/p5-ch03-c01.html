@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 사용 비용을 관리하며 시스템을 효율적으로 운영하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,172 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 05 · CH03</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 05. 매일의 결과를 분석하고 안전하게 운영하기</div>
+    <h1>AI 사용 비용을 관리하며 시스템을 효율적으로 운영하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH03. 지속 가능한 트레이딩 시스템 운영 방법</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 15분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 내 시스템이 <strong>한 달에 AI 비용을 얼마나 쓰는지</strong> 파악하고, 그 비용을 줄이는 세 가지 방법을 내 운영 방식에 적용할 수 있습니다.</p>
+<ul>
+<li>내 사용 패턴에 맞는 과금 방식(API 종량제 vs 정액제) 판단 기준</li>
+<li>작업 종류별로 모델을 나눠 쓰는 역할 분담표</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>비용 구조부터 이해하기</h3>
+<p>AI 사용 비용은 크게 두 갈래입니다.</p>
+<table>
+<thead>
+<tr>
+<th>방식</th>
+<th>과금</th>
+<th>어울리는 경우</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API Key (종량제)</td>
+<td>사용한 토큰만큼</td>
+<td>자동화된 일일 보고서·분석처럼 호출량이 예측되는 작업</td>
+</tr>
+<tr>
+<td>정액제 (예: Claude Code Max)</td>
+<td>월 고정 요금</td>
+<td>대화하며 개발·개선하는 작업이 많은 경우</td>
+</tr>
+</tbody>
+</table>
+<p>우리 시스템은 두 가지를 병행합니다 — 매일 자동으로 도는 보고서·분석은 API, 전략을 개선하고 기능을 추가하는 대화형 작업은 정액제 도구가 자연스럽습니다.</p>
+<h3>비용 절감의 세 가지 지렛대</h3>
+<ol>
+<li><strong>캐시 활용</strong> — 매일 반복되는 프롬프트(보고서 양식, 전략 설명 등)는 캐시가 적용되게 구성하면 같은 내용을 매번 새로 과금하지 않습니다.</li>
+<li><strong>저가 모델 혼용</strong> — 모든 작업에 최고 모델이 필요하지 않습니다. 표 정리·요약 같은 단순 작업은 저가 모델로 충분합니다.</li>
+<li><strong>호출 횟수 자체 줄이기</strong> — 장중에 불필요하게 AI를 부르지 않도록, AI 호출이 필요한 시점(장 마감 후 분석 등)을 미리 정해둡니다.</li>
+</ol>
+<h3>모델별 역할 분담</h3>
+<table>
+<thead>
+<tr>
+<th>작업</th>
+<th>필요 수준</th>
+<th>모델</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>일일 보고서 표 정리·요약</td>
+<td>낮음</td>
+<td>저가 모델</td>
+</tr>
+<tr>
+<td>손실 원인 분석·개선안 생성</td>
+<td>높음</td>
+<td>상위 모델</td>
+</tr>
+<tr>
+<td>전략 개발·기능 추가 (대화형)</td>
+<td>높음</td>
+<td>정액제 코딩 도구</td>
+</tr>
+</tbody>
+</table>
+<h2>따라 해보기</h2>
+<p>내 시스템의 비용 구조를 직접 점검해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>내 트레이딩 시스템에서 AI를 호출하는 지점을 전부 찾아서,
+각 지점의 하루 호출 횟수·사용 모델·예상 월 비용을 표로 정리해줘.
+저가 모델로 바꿔도 되는 지점이 있다면 표시하고,
+바꿨을 때 예상 절감액도 보여줘.
+</code></pre></div>
+<ul>
+<li class="check-item"><input type="checkbox"> 내 시스템의 AI 호출 지점과 월 예상 비용을 숫자로 안다</li>
+<li class="check-item"><input type="checkbox"> 저가 모델로 내려도 되는 작업을 한 가지 이상 찾았다</li>
+<li class="check-item"><input type="checkbox"> 종량제와 정액제 중 내 패턴에 맞는 조합을 정했다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>비용 추정치는 강사와 다르게 나올 수 있습니다. 모델 가격은 수시로 바뀌고 사용량도 사람마다 다르므로, 정확한 금액보다 <strong>어디서 많이 쓰는지 순위</strong>를 파악하는 것이 목적입니다.</p>
+<ul>
+<li>비용 표가 실제 청구액과 크게 다를 때:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>예상 비용이 실제 청구 내역과 달라. 최신 모델 가격표를 기준으로
+다시 계산하고, 계산에 사용한 단가를 표에 함께 표시해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>다음 클립에서는 지금까지의 작업 방식이 Claude Code에 종속된 것이 아님을 확인합니다. <strong>같은 프롬프트 템플릿을 Codex에 적용</strong>해 도구 독립성을 검증합니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part05/p5-ch02-c03.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">모의투자에서 실제 투자로 전환하기 전 확인할 사항</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part05/p5-ch03-c02.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">같은 작업 방식을 Codex에도 적용하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

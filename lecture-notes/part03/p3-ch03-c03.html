@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>거래비용을 반영해 전략 변경 여부 판단하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,157 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 03 · CH03</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 03. 시장 변화에 맞춰 전략을 점검하고 개선하기</div>
+    <h1>거래비용을 반영해 전략 변경 여부 판단하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH03. AI 분석을 활용한 전략 개선</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 20분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 거래비용을 반영하기 전과 후의 성과가 나란히 놓인 <strong>비용 민감도 비교표</strong>를 읽을 수 있게 됩니다.</p>
+<ul>
+<li>비용 반영 전에는 이겼던 전략이 반영 후에 지는 역전 장면</li>
+<li>전략 변경 결정에 비용·회전율을 반드시 포함해야 하는 이유</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>백테스트의 수익은 비용을 내기 전 숫자</h3>
+<p>실전에서는 매매할 때마다 수수료, 세금, 그리고 슬리피지(주문 가격과 실제 체결 가격의 차이)가 빠져나갑니다. 한 번의 비용은 작아 보여도, 매매가 잦으면 눈덩이처럼 쌓입니다.</p>
+<h3>회전율: 비용의 크기를 결정하는 숫자</h3>
+<p>회전율은 <strong>일정 기간 동안 자산을 얼마나 자주 사고팔았는가</strong>입니다. 회전율이 높은 전략은 총비용도 비례해서 커집니다.</p>
+<table>
+<thead>
+<tr>
+<th>전략 유형</th>
+<th>매매 빈도</th>
+<th>비용 민감도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자산배분 (월 1회 리밸런싱)</td>
+<td>낮음</td>
+<td>비용에 둔감</td>
+</tr>
+<tr>
+<td>추세추종 (신호 전환 시 매매)</td>
+<td>중간</td>
+<td>보통</td>
+</tr>
+<tr>
+<td>변동성 돌파 (거의 매일 진입·청산)</td>
+<td>높음</td>
+<td>비용에 매우 민감</td>
+</tr>
+</tbody>
+</table>
+<p>비용 반영 전에는 변동성 돌파가 1등이었다가, 반영 후 순위가 뒤집히는 일이 흔합니다. <strong>비용을 빼기 전의 비교표는 미완성 비교표</strong>입니다.</p>
+<h3>개선안 판단의 마지막 관문</h3>
+<p>지난 클립의 재검증을 통과한 개선안도 비용 관문을 하나 더 통과해야 합니다. 개선안이 매매 횟수를 늘리는 방향이라면(예: 손절선을 타이트하게 → 재진입 증가), 늘어난 비용이 개선된 수익을 잠식할 수 있습니다. 최종 판단 공식은 단순합니다.</p>
+<blockquote>
+<p>개선 폭(비용 반영 후) &gt; 0 인가? — 비용을 낸 뒤에도 여전히 나은가?</p>
+</blockquote>
+<h2>따라 해보기</h2>
+<p>지난 클립에서 비교한 두 전략(기존 vs 개선안)에 비용을 반영해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>기존 전략과 개선안 전략의 워크포워드 결과에 현실적인 거래비용(수수료, 세금, 슬리피지)을 반영해서
+비용 반영 전과 후의 성과를 나란히 비교한 표를 보여줘.
+표에는 연평균 수익률, MDD, 연간 매매 횟수, 연간 총비용이 포함되면 좋겠어.
+비용 반영 후에도 개선안이 기존보다 나은지 한 문장으로 요약해줘.
+</code></pre></div>
+<ul>
+<li class="check-item"><input type="checkbox"> 비용 반영 전/후 성과가 한 표에서 나란히 비교된다</li>
+<li class="check-item"><input type="checkbox"> 두 전략의 연간 매매 횟수와 총비용 차이를 확인했다</li>
+<li class="check-item"><input type="checkbox"> 비용 반영 후에도 개선안이 우위인지, 역전됐는지 내 눈으로 판단했다</li>
+<li class="check-item"><input type="checkbox"> 지난 클립의 유지·수정·전환 결정이 비용 반영 후에도 유효한지 다시 점검했다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>AI가 가정한 수수료율과 슬리피지 크기는 강사와 다를 수 있습니다. 어떤 비용 가정을 썼는지 표에 명시되어 있는지 먼저 확인하세요.</p>
+<ul>
+<li>비용 가정이 화면에 안 보인다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이 비교에 적용한 수수료율, 세금, 슬리피지 가정을 표 상단에 명시해줘.
+그리고 비용 가정을 절반/2배로 바꿨을 때 결론이 유지되는지도 함께 보여줘.
+</code></pre></div>
+<ul>
+<li>슬리피지가 빠져 있다면:</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>수수료와 세금만 반영되어 있고 슬리피지가 빠진 것 같아. 슬리피지 가정을 추가해서 다시 계산해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>이제 검증과 개선의 도구가 모두 갖춰졌습니다. 다음 챕터에서는 이 도구들을 묶어 "어떤 시장에서 어떤 전략을 쓸지"를 미리 정하는 운영 기준표를 만듭니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part03/p3-ch03-c02.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">분석 결과를 반영해 전략을 다시 검증하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part03/p3-ch04-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">시장 상황별로 사용할 전략과 조정 범위 정하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

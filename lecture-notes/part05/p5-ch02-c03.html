@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모의투자에서 실제 투자로 전환하기 전 확인할 사항 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,144 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 05 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 05. 매일의 결과를 분석하고 안전하게 운영하기</div>
+    <h1>모의투자에서 실제 투자로 전환하기 전 확인할 사항</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. 시장 상황별 전략 설정과 위험 관리</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 18분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, "나는 실전으로 넘어가도 되는가?"에 답하는 <strong>실전 전환 체크리스트</strong>가 완성됩니다. 만드는 기능은 없지만, 이 강의에서 가장 돈과 직결되는 클립입니다.</p>
+<ul>
+<li>전환 전 확인할 항목들이 정리된 나만의 체크리스트</li>
+<li>모의투자와 실제 투자가 어디서 어떻게 다른지에 대한 명확한 인식</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>충분한 검증 기간 없이 전환하지 않는다</h3>
+<p>모의투자에서 일주일 잘됐다고 실전으로 가면 안 됩니다. 최소 수 주 이상, 가능하면 <strong>상승·횡보·하락 국면을 한 번씩은 겪은 뒤</strong> 전환을 검토합니다. 검증 기간 동안 볼 것은 수익률만이 아닙니다 — 시스템이 멈춘 적은 없는지, 알림은 빠짐없이 왔는지, 안전장치는 작동했는지가 먼저입니다.</p>
+<h3>모의와 실전은 체결부터 다르다</h3>
+<table>
+<thead>
+<tr>
+<th>차이</th>
+<th>모의투자</th>
+<th>실제 투자</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>체결</td>
+<td>대체로 원하는 가격에 체결</td>
+<td>호가·물량에 따라 밀려서 체결(슬리피지)</td>
+</tr>
+<tr>
+<td>비용</td>
+<td>없거나 단순화됨</td>
+<td>수수료·세금이 실제로 빠져나감</td>
+</tr>
+<tr>
+<td>심리</td>
+<td>손실이 아프지 않음</td>
+<td>손실이 판단을 흔든다</td>
+</tr>
+</tbody>
+</table>
+<p>백테스트·모의투자 수익률에서 슬리피지와 비용만큼 깎인 것이 실전 기대치입니다. 모의 성과가 아슬아슬한 플러스라면 실전에서는 마이너스일 수 있습니다.</p>
+<h3>소액으로 시작하고, 규모는 천천히</h3>
+<p>전환하더라도 처음에는 <strong>잃어도 생활에 지장 없는 소액</strong>으로 시작합니다. 소액 운영에서 모의투자와 같은 흐름(시그널→승인→체결→보고서)이 몇 주간 확인된 뒤에야 금액을 단계적으로 올립니다. 긴급 정지와 주문 한도는 실전에서 더 보수적으로 잡습니다.</p>
+<h2>따라 해보기</h2>
+<p>영상을 보며 나만의 전환 체크리스트를 완성해 보세요. 아래는 출발점입니다.</p>
+<ul>
+<li class="check-item"><input type="checkbox"> 모의투자를 충분한 기간(수 주 이상, 여러 국면 포함) 운영했다</li>
+<li class="check-item"><input type="checkbox"> 그 기간 동안 시스템 중단·알림 누락·주문 오류가 없었다</li>
+<li class="check-item"><input type="checkbox"> 주문 한도·포지션 한도·긴급 정지가 작동하는 것을 직접 확인했다</li>
+<li class="check-item"><input type="checkbox"> 슬리피지와 수수료를 반영해도 전략 기대치가 플러스다</li>
+<li class="check-item"><input type="checkbox"> 시작 금액이 잃어도 되는 소액이며, 증액 기준을 미리 정했다</li>
+<li class="check-item"><input type="checkbox"> 최악의 경우(MDD 재현)에 잃을 금액을 숫자로 알고 있다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>이 체크리스트에 "전부 예"라고 답할 수 없다면 아직 전환할 때가 아닙니다. 이는 실패가 아니라 시스템 매매를 하는 사람의 정상적인 상태입니다. AI에게 점검을 도와달라고 요청할 수도 있습니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>지난 4주간의 모의투자 일일 보고서를 모두 읽고, 시스템 중단·
+알림 누락·주문 오류가 있었던 날이 있는지 표로 정리해줘.
+실전 전환 체크리스트 관점에서 아직 부족한 항목도 짚어줘.
+</code></pre></div>
+<p>다만 최종 판단은 AI가 아니라 여러분이 합니다. 확인은 언제나 사람의 몫입니다.</p>
+<h2>다음 클립 예고</h2>
+<p>다음 챕터에서는 시스템을 오래 운영하기 위한 현실적인 주제, <strong>AI 사용 비용을 관리하는 방법</strong>을 다룹니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part05/p5-ch02-c02.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">과도한 주문을 방지하는 주문 한도와 긴급 정지 기능 만들기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part05/p5-ch03-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">AI 사용 비용을 관리하며 시스템을 효율적으로 운영하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

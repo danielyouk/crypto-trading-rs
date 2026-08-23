@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한국투자증권 API와 모의투자 계좌 연결하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,141 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 04 · CH01</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
+    <h1>한국투자증권 API와 모의투자 계좌 연결하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH01. 증권사와 트레이딩 시스템 연결하기</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 25분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 12 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 여러분의 트레이딩 시스템이 <strong>한국투자증권 모의투자 계좌에 연결</strong>되고, 화면에 계좌 잔고가 표로 나타납니다.</p>
+<ul>
+<li>KIS Developers에서 앱키·앱시크릿 발급 완료</li>
+<li>모의투자 계좌 개설 완료</li>
+<li>시스템이 접근토큰을 발급받아 계좌 잔고를 조회하는 화면</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>KIS Developers와 오픈 API</h3>
+<p>한국투자증권은 개인 투자자에게 <strong>KIS Developers</strong>라는 오픈 API를 제공합니다. 홈페이지에서 신청하면 두 가지 열쇠를 받습니다.</p>
+<ul>
+<li><strong>앱키(App Key)</strong>: 나를 식별하는 공개 아이디 성격의 값</li>
+<li><strong>앱시크릿(App Secret)</strong>: 비밀번호 성격의 값 — 절대 외부에 노출하면 안 됩니다</li>
+</ul>
+<p>시스템은 이 두 값으로 <strong>접근토큰</strong>을 발급받고, 토큰을 붙여서 잔고 조회·시세 조회·주문 같은 요청을 보냅니다. 토큰은 유효기간이 있어 만료되면 재발급해야 하는데, 이 재발급도 AI가 만든 코드가 자동으로 처리하게 합니다.</p>
+<h3>모의투자 서버와 실전 서버는 주소가 다르다</h3>
+<p>같은 API라도 모의투자와 실전투자는 <strong>서버 주소와 계좌번호가 다릅니다</strong>. 우리는 Part 4~5 내내 모의투자 서버만 사용합니다. 실전 서버 주소가 코드에 들어가 있지 않은지 확인하는 것도 체크리스트에 포함됩니다.</p>
+<h3>보안 원칙: 키는 .env 파일로만 관리한다</h3>
+<p>이 강의에서 가장 중요한 보안 규칙입니다.</p>
+<ul>
+<li>앱키·앱시크릿·계좌번호는 <strong>채팅창이나 코드에 절대 그대로 붙여넣지 않습니다.</strong></li>
+<li>프로젝트 폴더의 <code>.env</code> 파일에만 저장하고, 코드는 그 파일을 읽어 쓰도록 AI에게 요청합니다.</li>
+<li><code>.env</code> 파일은 git 같은 공유 도구에 올라가지 않도록 제외 처리합니다.</li>
+</ul>
+<p>AI에게 키를 채팅으로 알려주면 대화 기록에 남습니다. "키는 .env에서 읽어라"라고만 말하면 됩니다.</p>
+<h2>실습 12 — 모의투자 계좌 연결하고 잔고 확인하기</h2>
+<p>먼저 KIS Developers에서 앱키·앱시크릿을 발급받고 모의투자 계좌를 개설한 뒤, 두 값을 <code>.env</code> 파일에 직접 입력해 두세요. 그다음 AI에게 요청합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>프로젝트 폴더의 .env 파일에 한국투자증권 모의투자용 앱키, 앱시크릿, 계좌번호를
+저장해 두었어. 이 값을 읽어서 모의투자 계좌에 연결하고 계좌 잔고를 표로 보여줘.
+연결에 성공하면 계좌번호 끝 4자리와 예수금이 화면에 보여야 해.
+앱키나 앱시크릿 값 자체는 화면에 출력하지 마.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 화면에 계좌번호 끝 4자리와 예수금(모의투자 초기 자금)이 표로 보인다</li>
+<li class="check-item"><input type="checkbox"> 앱키·앱시크릿 값이 화면 어디에도 출력되지 않았다</li>
+<li class="check-item"><input type="checkbox"> <code>.env</code> 파일이 프로젝트에 있고, 키를 채팅창에 붙여넣은 적이 없다</li>
+<li class="check-item"><input type="checkbox"> 접근토큰 발급에 성공했다는 메시지(또는 로그)를 확인했다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 AI가 생성한 코드는 다를 수 있습니다. 코드가 같은지가 아니라 <strong>체크리스트의 화면이 나오는지</strong>를 보세요. 이 클립에서 특히 자주 발생하는 문제는 다음과 같습니다.</p>
+<ul>
+<li><strong>앱키·앱시크릿 오타</strong>: 복사할 때 앞뒤 공백이 섞이면 인증에 실패합니다. <code>.env</code> 값을 다시 확인하세요.</li>
+<li><strong>모의투자/실전 서버 혼동</strong>: 실전 서버 주소로 요청하면 모의투자 키로는 인증이 거부됩니다.</li>
+<li><strong>토큰 만료·발급 제한</strong>: 접근토큰은 발급 횟수 제한이 있어, 너무 자주 재발급하면 일시적으로 거부될 수 있습니다.</li>
+</ul>
+<p>결과가 다르면 이렇게 후속 요청을 하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>계좌 연결에서 인증 오류가 났어. 오류 메시지를 그대로 보여주고,
+모의투자 서버 주소를 쓰고 있는지, .env의 키를 제대로 읽었는지 확인해서 고쳐줘.
+</code></pre></div>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>접근토큰을 매번 새로 발급하지 말고, 유효한 토큰이 있으면 재사용하도록 바꿔줘.
+바꾼 뒤에도 잔고 표가 똑같이 보여야 해.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>계좌가 연결되었으니, 다음 클립에서는 감시할 종목들의 실시간 가격을 받아옵니다. 화면에서 숫자가 실제로 움직이는 것을 보게 됩니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part04/p4-ch01-c01.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part04/p4-ch01-c03.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">시장의 실시간 가격 데이터를 받아오기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -97,16 +97,21 @@
 
 ## 3. 강의 노트 작성 규칙
 
-### 파일 구조
+### 파일 구조 (단일 통합 폴더)
 
 ```
 lecture-notes/
-├── MASTER-PLAN.md            # 이 문서
+├── README.md                 # 수강생용 교재 안내 & 빌드 가이드
+├── MASTER-PLAN.md            # 이 문서 (마스터 커리큘럼 맵)
 ├── curriculum.json           # 43클립 메타데이터 (파트·챕터·제목·시간·실습 번호)
-├── notes/part0N/pN-chXX-cYY.md   # 수강생용 노트 (HTML 변환 대상)
-├── scripts/part0N/pN-chXX-cYY.md # 강사용 말하기 스크립트 (HTML 변환 제외)
-├── template/                 # Jinja2 템플릿 + CSS
-└── html/                     # 빌드 결과물
+├── build.py                  # 수강생용 원클릭 빌더 (python build.py)
+├── index.html                # 전체 목차 웹페이지
+├── assets/style.css          # 좌측 반화면 최적화 스타일시트
+├── template/                 # Jinja2 템플릿
+├── part01/ ~ part05/         # 파트별 통합 폴더 (MD와 HTML이 나란히 위치)
+│   ├── pX-chXX-cYY.md        # 수강생용 노트 마크다운
+│   └── pX-chXX-cYY.html      # 빌드된 웹페이지 교재
+└── scripts/                  # 강사용 말하기 스크립트 (HTML 변환 제외)
 ```
 
 ### 클립 메타데이터 — `curriculum.json`
@@ -165,13 +170,14 @@ lecture-notes/
 <!-- IMAGE-SLOT: artifacts/course_demo/01_wfa_replay.gif — S&P 500 워크포워드 리플레이 -->
 ```
 
-## 4. HTML 빌드
+## 4. HTML 빌드 & 나만의 교재 커스터마이징
 
-- 빌더: `runners/build_lecture_notes.py`
-- 실행: `source .venv/bin/activate && python runners/build_lecture_notes.py`
-- 출력: `lecture-notes/html/` (index.html + 클립별 페이지)
+- 빌더: `lecture-notes/build.py` (또는 루트에서 `runners/build_lecture_notes.py`)
+- 실행: `python build.py` (또는 `python runners/build_lecture_notes.py`)
+- 출력: `lecture-notes/partXX/*.html` (마크다운 파일과 같은 폴더에 1:1로 나란히 생성) + `lecture-notes/index.html`
 - 디자인: **화면 좌측 절반 폭(≈760px) 최적화** — 우측에 Claude Code/Cursor를 띄우고 따라하는 시나리오. 프롬프트 블록 복사 버튼, 체크리스트 스타일, 이전/다음 클립 내비게이션.
 - 강사 스크립트(`scripts/`)는 빌드 대상에서 제외.
+- **수강생 커스터마이징**: 수강생이 각 `.md` 파일에 자신만의 관심 종목이나 백테스트 메모를 적고 `python build.py`를 실행하면 즉시 자신만의 웹북이 업데이트됩니다.
 
 ## 5. 운영 방식
 

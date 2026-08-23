@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>변동성 돌파와 모멘텀 전략의 원리 이해하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,142 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 02 · CH03</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 02. 투자 전략을 이해하고 백테스트로 검증하기</div>
+    <h1>변동성 돌파와 모멘텀 전략의 원리 이해하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH03. 가격 움직임을 포착하는 변동성 돌파 전략</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 22분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge">이론 및 아키텍처 브리핑</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 하루 단위로 승부하는 <strong>변동성 돌파 전략</strong>의 진입 규칙을 계산식까지 말할 수 있고, 그 뿌리에 있는 <strong>모멘텀</strong>(오르던 것이 더 오른다)이라는 시장 성질을 이해하게 됩니다.</p>
+<ul>
+<li>목표가 계산: 오늘 시가 + (전일 변동폭 × k)</li>
+<li>이 전략이 강한 장과 약한 장이 언제인지 미리 파악</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>모멘텀 — 움직임에는 관성이 있다</h3>
+<p>모멘텀은 "최근에 오르던 자산이 당분간 더 오르는 경향"을 말합니다. 추세추종이 몇 달~몇 년의 긴 관성을 탄다면, 변동성 돌파는 <strong>하루 안의 짧은 관성</strong>을 탑니다. 시간의 길이만 다를 뿐, 두 전략 모두 "움직임이 확인된 뒤 올라탄다"는 같은 철학입니다.</p>
+<h3>변동성 돌파의 규칙</h3>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>규칙</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>목표가 계산</td>
+<td>오늘 시가 + (전일 고가 − 전일 저가) × k</td>
+</tr>
+<tr>
+<td>진입</td>
+<td>장중 가격이 목표가를 <strong>돌파하면</strong> 매수</td>
+</tr>
+<tr>
+<td>청산</td>
+<td>다음 날 시가(또는 당일 종가)에 매도</td>
+</tr>
+</tbody>
+</table>
+<p>핵심 발상은 이렇습니다. 어제 하루 움직인 폭(변동폭)의 k배(보통 0.5)만큼 오늘 가격이 <strong>위로 튀었다면</strong>, 그것은 우연한 흔들림이 아니라 강한 매수세라는 신호로 본다 — 그 관성에 하루만 올라탑니다.</p>
+<h3>k값의 의미 — 민감도 조절 손잡이</h3>
+<p>k가 작으면 자주 진입하고(신호 남발), k가 크면 확실한 돌파만 잡는 대신 기회가 줄어듭니다. 여기서 유혹이 생깁니다. 과거 데이터에 k를 이리저리 맞추면 성과표가 좋아 보이게 만들 수 있습니다 — 전형적인 <strong>과최적화</strong>입니다. k는 "과거 성과가 가장 좋았던 값"이 아니라 "값을 조금 바꿔도 성과가 무너지지 않는 값"이어야 합니다.</p>
+<h3>약점 — 허위 돌파와 횡보장</h3>
+<p>돌파 직후 가격이 되밀리는 것을 <strong>허위 돌파</strong>라고 합니다. 방향 없이 오르내리는 <strong>횡보장</strong>에서는 허위 돌파가 반복되어 잔손실과 거래비용이 계속 쌓입니다. 매일 사고파는 전략이라 거래비용의 영향이 추세추종보다 훨씬 큽니다. 다음 클립 백테스트에서 이 약점 구간을 직접 찾아냅니다.</p>
+<h2>따라 해보기</h2>
+<p>계산기를 들고 관심 종목 하나로 오늘의 목표가를 직접 계산해 보세요.</p>
+<ul>
+<li class="check-item"><input type="checkbox"> 전일 고가 − 전일 저가로 변동폭을 구했다</li>
+<li class="check-item"><input type="checkbox"> 오늘 시가 + 변동폭 × 0.5로 목표가를 계산했다</li>
+<li class="check-item"><input type="checkbox"> 오늘 실제 고가와 비교해 "오늘 진입 신호가 났을지"를 판정했다</li>
+<li class="check-item"><input type="checkbox"> 신호가 났다면 종가 기준으로 이익이었을지 손실이었을지 확인했다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<blockquote>
+<p>이 클립은 이론 중심입니다. 흔한 오해 하나만 짚습니다 — "k값을 최적화하면 되는 것 아닌가요?" 과거에 가장 좋았던 k가 미래에도 좋으리라는 보장은 없습니다. 백테스트 성과가 특정 k에서만 좋다면 그 전략은 버려야 합니다.</p>
+</blockquote>
+<p>개념 확인이 필요하면 이렇게 요청해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>변동성 돌파 전략의 진입 원리를 그림으로 이해하고 싶어.
+비트코인 최근 한 달 일봉에서 매일의 목표가(시가 + 전일 변동폭 × 0.5)를 점선으로 표시하고,
+실제로 돌파가 일어난 날을 화살표로 표시한 차트를 보여줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>다음 클립(실습 05)에서는 변동성 돌파 전략을 백테스트하고, 성과가 무너진 <strong>약점 구간</strong>을 차트에서 직접 찾아냅니다. 잘 버는 구간보다 잃는 구간을 보는 것이 이번 실습의 목적입니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part02/p2-ch02-c02.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">추세추종 전략을 과거 데이터로 검증하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part02/p2-ch03-c02.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">변동성 돌파 전략을 검증하고 약점 구간 찾기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

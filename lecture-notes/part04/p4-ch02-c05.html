@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>장 마감 후 다음 거래일의 매매 조건 미리 확인하기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,155 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 04 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
+    <h1>장 마감 후 다음 거래일의 매매 조건 미리 확인하기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 20분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 18 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 장이 끝난 저녁에 <strong>다음 거래일의 예상 시나리오 알림</strong>이 텔레그램으로 도착합니다.</p>
+<ul>
+<li>내일 감시할 종목 목록 + 각 종목의 진입 조건(기준가) + 조건 충족 시 예정 행동</li>
+<li>"내일 시스템이 무엇을 할지"를 전날 밤에 미리 아는 상태</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>서프라이즈 없는 시스템이 좋은 시스템</h3>
+<p>장중에 갑자기 알림이 오면, 그 자리에서 처음부터 판단해야 합니다. 반면 전날 밤에 "내일 삼성전자가 71,500원을 넘으면 매수 신호가 뜰 예정"을 미리 알면, 장중 알림은 <strong>예습한 문제의 확인</strong>이 됩니다. 판단 속도와 질이 모두 올라가고, 충동적인 결정이 줄어듭니다.</p>
+<h3>예상 시나리오의 세 가지 구성 요소</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>감시 종목</td>
+<td>내일 시스템이 지켜볼 종목</td>
+<td>삼성전자, SK하이닉스</td>
+</tr>
+<tr>
+<td>진입 조건</td>
+<td>신호가 발생할 구체적 기준</td>
+<td>돌파 기준가 71,500원 상향 돌파</td>
+</tr>
+<tr>
+<td>예정 행동</td>
+<td>조건 충족 시 시스템이 할 일</td>
+<td>매수 알림 발송 (승인 대기)</td>
+</tr>
+</tbody>
+</table>
+<p>여기에 보유 종목이 있다면 <strong>손절 기준가</strong>도 함께 담습니다. "내일 68,200원 아래로 내려가면 손절 알림이 올 것"을 미리 알아두는 것입니다.</p>
+<h3>기준가는 장 마감 데이터로 확정된다</h3>
+<p>변동성 돌파 같은 전략의 진입 기준가는 전일 가격 범위로 계산되므로, <strong>장이 끝나야 다음 날 기준가가 확정</strong>됩니다. 그래서 이 알림은 장 마감 후에 만드는 것이 자연스럽고, 이 시점이 하루 운영 루틴(Part 5)의 시작점이 됩니다.</p>
+<h2>실습 18 — 다음 거래일 시나리오 알림 만들기</h2>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>장 마감 후에 실행하면, 다음 거래일의 예상 시나리오를 정리해서
+텔레그램으로 보내주는 기능을 만들어줘. 알림에는
+① 내일 감시할 종목 목록 ② 종목별 진입 조건과 기준가
+③ 조건 충족 시 예정 행동 ④ 보유 종목의 손절 기준가가 담겨야 해.
+지금 바로 실행해서 알림이 실제로 도착한 모습을 보여줘.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 텔레그램에 다음 거래일 시나리오 알림이 도착했다</li>
+<li class="check-item"><input type="checkbox"> 감시 종목·진입 기준가·예정 행동이 모두 담겨 있다</li>
+<li class="check-item"><input type="checkbox"> 보유 종목이 있다면 손절 기준가도 표시된다</li>
+<li class="check-item"><input type="checkbox"> 기준가 하나를 골라 직접 계산(또는 증권사 앱 데이터와 대조)해 값이 맞는지 확인했다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 알림 형식은 다를 수 있습니다. 네 가지 구성 요소가 들어 있고 기준가 숫자가 맞으면 정상입니다.</p>
+<ul>
+<li><strong>기준가가 이상함</strong>: 장 마감 전에 실행하면 아직 확정되지 않은 당일 데이터로 계산되어 값이 어긋납니다.</li>
+<li><strong>휴장일 처리</strong>: 다음 날이 휴일이면 "다음 거래일"이 언제인지 시스템이 알아야 합니다.</li>
+<li><strong>알림이 너무 김</strong>: 감시 종목이 많으면 메시지가 길어져 읽기 어렵습니다.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>시나리오 알림의 돌파 기준가가 내가 계산한 값과 달라.
+기준가 계산에 쓴 전일 시가·고가·저가·종가를 표로 보여줘.
+어떤 날짜의 데이터를 쓴 건지 눈으로 비교하고 싶어.
+</code></pre></div>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>알림이 너무 길어서 한눈에 안 들어와. 종목별로 한 줄씩,
+&quot;종목명 | 기준가 | 예정 행동&quot; 형태로 간결하게 정리해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>이제 시스템의 모든 부품이 완성되었습니다. 마지막 클립에서는 이 시스템을 매일 아침 직접 켜는 대신, 장 운영 시간에 맞춰 자동으로 켜지고 꺼지게 만듭니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part04/p4-ch02-c04.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part04/p4-ch03-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

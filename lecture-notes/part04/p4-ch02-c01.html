@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>텔레그램으로 매매 알림과 승인·거절 버튼 만들기 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,136 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 04 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
+    <h1>텔레그램으로 매매 알림과 승인·거절 버튼 만들기</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 22분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 15 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 매수 신호가 발생했을 때 <strong>여러분의 텔레그램으로 승인·거절 버튼이 달린 알림</strong>이 도착합니다.</p>
+<ul>
+<li>휴대폰 텔레그램에 "매수 신호: 종목명·가격·근거" 메시지 + [승인] [거절] 버튼</li>
+<li>버튼을 누르면 시스템이 어떤 버튼이 눌렸는지 기록하는 화면 (주문 실행은 다음다음 클립)</li>
+</ul>
+<h2>이론 핵심</h2>
+<h3>왜 텔레그램인가</h3>
+<p>알림 채널의 조건은 세 가지입니다. 즉시 도착할 것, 어디서든 받을 것, 그리고 <strong>버튼으로 응답할 수 있을 것</strong>. 텔레그램 봇은 이 셋을 무료로 충족하고, 특히 메시지에 <strong>인라인 버튼</strong>을 붙일 수 있어 "알림을 보고 → 그 자리에서 승인"이 한 화면에서 끝납니다.</p>
+<h3>BotFather로 봇 만들기</h3>
+<p>텔레그램 봇은 텔레그램 안의 공식 계정 <strong>BotFather</strong>와 대화하면 만들어집니다.</p>
+<ol>
+<li>텔레그램에서 BotFather를 검색해 <code>/newbot</code> 명령으로 봇 생성</li>
+<li>봇 이름을 정하면 <strong>봇 토큰</strong>을 받습니다 — 이 토큰이 봇의 열쇠입니다</li>
+<li>봇 토큰도 앱키와 마찬가지로 <strong><code>.env</code> 파일에만 저장</strong>합니다 (채팅·코드에 노출 금지)</li>
+</ol>
+<p>시스템은 이 토큰으로 여러분에게 메시지를 보내고, 버튼 응답을 받아옵니다.</p>
+<h3>승인 버튼은 안전장치다</h3>
+<p>버튼은 편의 기능이 아니라 <strong>매수의 유일한 관문</strong>입니다. 이후 클립에서 주문 실행을 붙일 때도, 승인 버튼이 눌린 기록이 있을 때만 주문이 나가도록 만듭니다. "알림이 왔는데 무시하면?" — 매수는 아무 일도 일어나지 않습니다. 그것이 정상 동작입니다.</p>
+<h2>실습 15 — 승인·거절 버튼 알림 받기</h2>
+<p>먼저 BotFather로 봇을 만들고 봇 토큰을 <code>.env</code>에 저장한 뒤 요청하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>.env 파일에 텔레그램 봇 토큰을 저장해 뒀어. 시그널 엔진에서 매수 신호가 발생하면
+내 텔레그램으로 종목명, 현재가, 발동 조건이 담긴 알림 메시지를 보내줘.
+메시지 아래에는 [승인] [거절] 인라인 버튼이 있어야 하고,
+버튼을 누르면 어떤 버튼을 눌렀는지 시스템 화면과 로그에 기록되는 게 보여야 해.
+테스트 신호를 하나 발생시켜서 실제로 알림이 오는 것까지 보여줘.
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 휴대폰 텔레그램에 매수 신호 알림이 도착했다</li>
+<li class="check-item"><input type="checkbox"> 알림에 종목명·현재가·발동 조건과 [승인] [거절] 버튼이 보인다</li>
+<li class="check-item"><input type="checkbox"> 승인을 눌렀을 때 시스템 화면·로그에 "승인됨"이 기록된다</li>
+<li class="check-item"><input type="checkbox"> 거절을 눌렀을 때 "거절됨"이 기록되고 아무 일도 일어나지 않는다</li>
+<li class="check-item"><input type="checkbox"> 봇 토큰이 채팅창이나 화면에 노출되지 않았다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<p>강사와 여러분의 알림 메시지 모양은 다를 수 있습니다. 버튼이 동작하고 응답이 기록되면 정상입니다.</p>
+<ul>
+<li><strong>알림이 안 옴</strong>: 봇을 만들고 나서 <strong>내가 먼저 봇에게 말을 걸어야</strong>(대화 시작) 봇이 나에게 메시지를 보낼 수 있습니다. 채팅 ID를 못 찾는 오류가 가장 흔합니다.</li>
+<li><strong>봇 토큰 오타</strong>: <code>.env</code> 값의 앞뒤 공백을 확인하세요.</li>
+<li><strong>버튼을 눌러도 반응 없음</strong>: 버튼 응답을 받는 부분이 실행 중이 아닐 수 있습니다.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>텔레그램 알림이 안 와. 봇 토큰과 채팅 ID를 제대로 읽었는지 확인하고,
+봇이 나에게 테스트 메시지 &quot;연결 확인&quot;을 보내는 것부터 성공시켜줘.
+</code></pre></div>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>버튼을 눌렀는데 시스템에 아무 기록이 안 남아. 버튼 응답을 받는 부분이
+실행되고 있는지 확인하고, 승인을 누르면 3초 안에 로그에 찍히게 해줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>텔레그램이 주 채널이지만, 사람마다 자주 보는 앱이 다릅니다. 다음 클립에서는 같은 알림을 카카오톡과 이메일로도 받아봅니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part04/p4-ch01-c04.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">설정한 조건에 따라 매매 신호 만들기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part04/p4-ch02-c02.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">카카오톡과 이메일로 매매 알림 받아보기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

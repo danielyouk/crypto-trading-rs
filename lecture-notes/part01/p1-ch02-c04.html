@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오류가 발생했을 때 AI와 함께 해결하는 방법 — DATATRAIN AI 트레이딩</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* Fallback inline critical CSS */
 /* ==========================================================================
    DATATRAIN AI Trading Handbook — GDPval Professional Editorial Theme
    Clean, crisp typography, corporate handbook aesthetics, half-screen optimized
@@ -775,3 +784,126 @@ li.check-item input[type="checkbox"] {
   color: var(--ink-light);
   border: 1px solid var(--line-color);
 }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="DATATRAIN" onerror="this.style.display='none'">
+      <span>DATATRAIN</span>
+    </a>
+    <div class="nav-links">
+      <span class="crumb">Part 01 · CH02</span>
+      <a href="../index.html">목차로 이동 ↗</a>
+    </div>
+  </header>
+
+  <!-- Note Header & GDPval-style Metadata Bar -->
+  <div class="note-header">
+    <div class="kicker">Part 01. AI와 함께 시작하는 트레이딩 시스템 만들기</div>
+    <h1>오류가 발생했을 때 AI와 함께 해결하는 방법</h1>
+    
+    <div class="metadata-bar">
+      <div class="metadata-item">
+        <span class="label">Chapter:</span>
+        <span>CH02. AI 코딩 도구로 첫 결과물 만들기</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">예상 소요 시간:</span>
+        <span class="badge time">약 18분</span>
+      </div>
+      <div class="metadata-item">
+        <span class="label">강의 유형:</span>
+        
+        <span class="badge practice">실습 03 (실습 중심)</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h2>이번 클립에서 만들 것</h2>
+<p>이 클립이 끝나면, 어떤 에러를 만나도 사용할 수 있는 <strong>3단계 표준 대응 절차</strong>가 손에 들어옵니다. 에러는 실패가 아니라 이 강의에서 가장 자주 반복될 일상입니다.</p>
+<h2>이론 핵심</h2>
+<h3>에러 대응 3단계</h3>
+<ol>
+<li><strong>에러 메시지를 그대로 복사</strong> — 요약하거나 해석하지 않습니다. 전체를 그대로.</li>
+<li><strong>상황과 함께 전달</strong> — "무엇을 하다가" 났는지 한 문장을 붙입니다.</li>
+<li><strong>결과 목표를 다시 선언</strong> — 고치는 것이 목적이 아니라, 원래 만들려던 결과가 목적입니다.</li>
+</ol>
+<h3>화면이 곧 정보다</h3>
+<p>에러 메시지가 없는 문제(차트가 이상하게 그려짐, 숫자가 이상함)는 <strong>화면을 캡처해서 이미지로 전달</strong>합니다. AI 코딩 도구는 이미지를 읽을 수 있습니다. "뭐가 잘못됐는지 말로 설명"하려고 애쓰지 마세요. 보여주는 것이 빠르고 정확합니다.</p>
+<h3>강사와 여러분의 에러는 다르다</h3>
+<p>같은 실습이라도 컴퓨터 환경에 따라 저는 만나지 않은 에러를 여러분이 만날 수 있습니다. 그래서 이 강의는 "에러별 해결법 암기"가 아니라 <strong>어떤 에러든 통하는 절차</strong>를 가르칩니다.</p>
+<h2>실습 — 실습 03</h2>
+<p>일부러 에러를 만들어 절차를 연습합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>방금 만든 차트 코드에서 종목 코드를 존재하지 않는 코드(999999)로
+바꿔서 실행해줘. 에러가 나는 것을 보고 싶어.
+</code></pre></div>
+<p>에러가 나면, 3단계 절차대로 해결을 요청합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>일봉 차트를 만들다가 아래 에러가 났어.
+원인을 한 문장으로 설명하고, 문제를 해결해서
+원래 목표였던 삼성전자(005930) 3년 일봉 차트를 완성해줘.
+[에러 메시지 전체 붙여넣기]
+</code></pre></div>
+<h3>내 눈으로 확인할 체크리스트</h3>
+<ul>
+<li class="check-item"><input type="checkbox"> 에러의 원인을 AI가 한 문장으로 설명해 주었다</li>
+<li class="check-item"><input type="checkbox"> 해결 후 원래 목표였던 차트가 정상적으로 완성되었다</li>
+<li class="check-item"><input type="checkbox"> 화면 캡처를 첨부해서 질문하는 방법을 한 번 시도해 보았다</li>
+</ul>
+<h2>자주 발생하는 문제</h2>
+<ul>
+<li><strong>에러를 요약해서 전달했더니 해결이 안 된다</strong> → 가장 흔한 실수입니다. 메시지 전체를 그대로 붙여넣으세요. AI에게는 마지막 줄보다 중간에 있는 정보가 더 중요할 때가 많습니다.</li>
+<li><strong>해결됐다는데 결과물이 안 보인다</strong> → "고쳤다"는 말로 끝내지 않도록, 항상 결과 목표를 다시 선언하세요.</li>
+</ul>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>고쳐졌다고 했는데 차트 파일이 안 보여. 차트를 다시 저장하고
+파일 경로를 알려줘.
+</code></pre></div>
+<h2>다음 클립 예고</h2>
+<p>Part 1이 끝났습니다. Part 2에서는 드디어 투자 전략의 세계로 들어갑니다. 첫 주제는 "어떤 아이디어가 자동화될 수 있는가"입니다.</p>
+  </main>
+
+  <!-- Pager Navigation -->
+  <nav class="pager-nav">
+    
+    <a class="pager-btn prev" href="../part01/p1-ch02-c03.html">
+      <span class="direction">← 이전 클립</span>
+      <span class="title">첫 실습: 주식 데이터를 불러와 차트로 확인하기</span>
+    </a>
+    
+    
+    <a class="pager-btn next" href="../part02/p2-ch01-c01.html">
+      <span class="direction">다음 클립 →</span>
+      <span class="title">투자 아이디어를 자동화 가능한 매매 규칙으로 바꾸기</span>
+    </a>
+    
+  </nav>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>© DATATRAIN. All rights reserved.</span>
+    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+  </footer>
+</div>
+
+<script>
+// Prompt Card copy button handler
+document.querySelectorAll(".prompt-card").forEach(function (card) {
+  var btn = card.querySelector(".copy-btn");
+  if (!btn) return;
+  var code = card.querySelector("pre code") || card.querySelector("pre");
+  btn.addEventListener("click", function () {
+    navigator.clipboard.writeText(code ? code.innerText.trim() : "").then(function () {
+      btn.textContent = "복사 완료!";
+      setTimeout(function () { btn.textContent = "프롬프트 복사"; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>
