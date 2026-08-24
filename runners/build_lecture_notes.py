@@ -93,9 +93,39 @@ def flatten_toc(tokens: list[dict] | None) -> list[dict]:
 
 
 def render_markdown(body: str) -> tuple[str, list[dict]]:
+    math_blocks: list[str] = []
+    math_inlines: list[str] = []
+
+    def save_block_math(match: re.Match) -> str:
+        idx = len(math_blocks)
+        math_blocks.append(match.group(1).strip())
+        return f"\n\n@@@MATH_BLOCK_{idx}@@@\n\n"
+
+    def save_inline_math(match: re.Match) -> str:
+        idx = len(math_inlines)
+        math_inlines.append(match.group(1).strip())
+        return f"@@@MATH_INLINE_{idx}@@@"
+
+    # 0. LaTeX 수식 보호: markdown 파서가 _ 또는 * 기호를 기울임(<em>)으로 오인하는 현상 방지
+    body = re.sub(r"\$\$([\s\S]*?)\$\$", save_block_math, body)
+    body = re.sub(r"(?<!\$)\$(?!\$)(.*?)(?<!\$)\$(?!\$)", save_inline_math, body)
+
     converter = markdown.Markdown(extensions=MD_EXTENSIONS)
     html = converter.convert(body)
     page_toc = flatten_toc(getattr(converter, "toc_tokens", None))
+
+    # 수식 복원
+    html = re.sub(r"<p>\s*@@@MATH_BLOCK_(\d+)@@@\s*</p>", r"@@@MATH_BLOCK_\1@@@", html)
+    for idx, content in enumerate(math_blocks):
+        html = html.replace(
+            f"@@@MATH_BLOCK_{idx}@@@",
+            f'<div class="math-block">$$\n{content}\n$$</div>',
+        )
+    for idx, content in enumerate(math_inlines):
+        html = html.replace(
+            f"@@@MATH_INLINE_{idx}@@@",
+            f'<span class="math-inline">${content}$</span>',
+        )
 
     # 1. ```prompt 블록 → 전용 카드 UI (복사 버튼 + 뱃지)
     prompt_pattern = re.compile(

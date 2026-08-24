@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1747,7 +1780,7 @@ li.check-item input[type="checkbox"] {
 <tbody>
 <tr>
 <td><strong>API 키 방식 (Console)</strong></td>
-<td>쓴 만큼 후불 결제 ($5~$10 충전)</td>
+<td>쓴 만큼 후불 결제 (<span class="math-inline">$5~$</span>10 충전)</td>
 <td>가끔 집중적으로 작업하는 사용자</td>
 <td><strong>프롬프트 캐싱</strong>이 자동 적용되어 반복 호출 시 비용이 최대 90% 절감됨</td>
 </tr>
@@ -1760,7 +1793,7 @@ li.check-item input[type="checkbox"] {
 </tbody>
 </table>
 <ul>
-<li><strong>이 강의 전체 실습 비용</strong>: 5개 파트의 모든 실습을 완료하는 데 소요되는 비용은 <strong>커피 한두 잔 가격($3~$7 내외)</strong>에 불과합니다.</li>
+<li><strong>이 강의 전체 실습 비용</strong>: 5개 파트의 모든 실습을 완료하는 데 소요되는 비용은 <strong>커피 한두 잔 가격(<span class="math-inline">$3~$</span>7 내외)</strong>에 불과합니다.</li>
 <li>토큰 낭비를 줄이는 실전 팁은 <strong>Part 5 (Clip 41)</strong>에서 체계적으로 배웁니다.</li>
 </ul>
 <hr />

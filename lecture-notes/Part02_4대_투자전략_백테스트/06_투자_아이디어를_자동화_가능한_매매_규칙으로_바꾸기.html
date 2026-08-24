@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1753,7 +1786,7 @@ li.check-item input[type="checkbox"] {
 <tr>
 <td><strong>2. 변동성 돌파 (Volatility Breakout)</strong></td>
 <td>"당일의 강력한 모멘텀에 편승"</td>
-<td>당일 시가 + (전일 변동폭 × $k$) 돌파</td>
+<td>당일 시가 + (전일 변동폭 × <span class="math-inline">$k$</span>) 돌파</td>
 <td>단기 추세 폭발장</td>
 </tr>
 <tr>

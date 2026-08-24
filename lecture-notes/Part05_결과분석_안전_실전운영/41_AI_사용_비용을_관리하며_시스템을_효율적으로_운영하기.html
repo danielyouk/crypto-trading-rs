@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1679,10 +1712,10 @@ li.check-item input[type="checkbox"] {
 <h3 id="1-토큰-비용-체계와-프롬프트-캐싱의-마법">1. 토큰 비용 체계와 프롬프트 캐싱의 마법</h3>
 <p>Anthropic Claude 모델(Sonnet 3.7 등)은 대화의 앞부분(시스템 프롬프트, 기본 코드 구조)이 동일할 경우 <strong>프롬프트 캐싱(Prompt Caching)</strong>을 적용하여 비용을 1/10 수준으로 깎아줍니다.</p>
 <pre><code class="language-text">[일반적인 매회 전체 호출]
-• 매번 20,000 토큰 전송 ➔ 1회당 $0.06 ➔ 매일 10회 호출 시 월 $18 (약 25,000원)
+• 매번 20,000 토큰 전송 ➔ 1회당 <span class="math-inline">$0.06 ➔ 매일 10회 호출 시 월$</span>18 (약 25,000원)
 
 [프롬프트 캐싱 &amp; 컨텍스트 압축 적용]
-• 캐시 히트(Cache Hit) 시 90% 할인 ➔ 1회당 $0.006 ➔ 매일 10회 호출 시 월 $1.8 (약 2,500원!)
+• 캐시 히트(Cache Hit) 시 90% 할인 ➔ 1회당 <span class="math-inline">$0.006 ➔ 매일 10회 호출 시 월$</span>1.8 (약 2,500원!)
 </code></pre>
 <hr />
 <h3 id="2-토큰-다이어트-3대-황금률">2. 토큰 다이어트 3대 황금률</h3>

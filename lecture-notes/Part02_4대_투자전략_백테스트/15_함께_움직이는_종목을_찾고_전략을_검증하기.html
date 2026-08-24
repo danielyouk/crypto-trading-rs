@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1671,7 +1704,7 @@ li.check-item input[type="checkbox"] {
 </blockquote>
 <ul>
 <li><strong>실습 07</strong>: 동일 섹터(금융, 자동차, IT) 내 종목 간 공적분(p-value &lt; 0.05) 검정 스캐너 실행</li>
-<li>Z-Score 진입 임계값($Z \le -1.5$ 또는 $\le -2.0$)과 청산 임계값($Z \ge 0.0$) 백테스트</li>
+<li>Z-Score 진입 임계값(<span class="math-inline">$Z \le -1.5$</span> 또는 <span class="math-inline">$\le -2.0$</span>)과 청산 임계값(<span class="math-inline">$Z \ge 0.0$</span>) 백테스트</li>
 <li><strong>롱-숏(Long-Short) 차익거래 백테스트 vs 롱 온리(Long-Only) 상대가치 스위칭 백테스트</strong></li>
 <li>페어트레이딩의 최대 위험: <strong>기업 펀더멘털의 구조적 결별(Structural Break)</strong>과 손절 안전망</li>
 <li><strong>Part 2 종합 결산</strong>: 4대 퀀트 투자 전략의 성과 매트릭스 총정리</li>
@@ -1718,9 +1751,9 @@ li.check-item input[type="checkbox"] {
 1. FinanceDataReader를 사용해 KB금융(105560)과 신한지주(055550)의 최근 5년(2019~2024) 일봉 데이터를 수집해줘.
 2. 두 종목의 가격 비율(KB금융/신한지주)을 구하고 60일 롤링 윈도우 Z-Score를 산출해줘.
 3. 롱 온리(Long-Only) 상대가치 페어 스위칭 전략 백테스트:
-   - $Z \le -1.5$: KB금융이 극단적 저평가 상태 ➔ KB금융 100% 매수 보유
-   - $Z \ge +1.5$: 신한지주가 극단적 저평가 상태 ➔ 신한지주 100% 매수 보유
-   - $-0.5 &lt; Z &lt; +0.5$: 균형 상태 ➔ 기존 포지션 유지 또는 50:50 분할
+   - <span class="math-inline">$Z \le -1.5$</span>: KB금융이 극단적 저평가 상태 ➔ KB금융 100% 매수 보유
+   - <span class="math-inline">$Z \ge +1.5$</span>: 신한지주가 극단적 저평가 상태 ➔ 신한지주 100% 매수 보유
+   - <span class="math-inline">$-0.5 < Z < +0.5$</span>: 균형 상태 ➔ 기존 포지션 유지 또는 50:50 분할
    - 포지션 교체 시 편도 0.15% 거래비용 차감.
 4. 개별 종목 단순 보유(KB금융 B&amp;H, 신한지주 B&amp;H)와 페어 스위칭 전략의 CAGR, MDD, 샤프 지수, 총 거래 횟수를 비교하는 표를 터미널에 출력해줘.
 5. 상단에는 누적 수익률 비교 곡선, 하단에는 Z-Score 및 매매 체결 구간을 표시한 차트를 'pair_trading_backtest_result.png'로 저장해줘.
@@ -1756,7 +1789,7 @@ li.check-item input[type="checkbox"] {
 </tr>
 <tr>
 <td><strong>변동성 돌파</strong></td>
-<td>Range $\times k$</td>
+<td>Range <span class="math-inline">$\times k$</span></td>
 <td>당일 일중 (Day)</td>
 <td>강한 단기 추세 폭발장</td>
 <td>윗꼬리 장대음봉 / 거래세 누적</td>

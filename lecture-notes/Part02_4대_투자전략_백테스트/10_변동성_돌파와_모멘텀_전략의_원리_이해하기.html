@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1668,24 +1701,32 @@ li.check-item input[type="checkbox"] {
 <p>💡 <strong>래리 윌리엄스의 철학</strong>: <em>"시장의 변동성은 수축과 확장을 반복한다. 하루 동안 가격이 전일 변동폭의 일정 비율 이상 튀어 오른다면, 그 방향으로 장 마감까지 강력한 관성(모멘텀)이 유지된다."</em></p>
 </blockquote>
 <ul>
-<li>변동성 돌파 전략의 핵심 파라미터인 <strong>전일 변동폭(Range = High - Low)과 $k$-계수</strong>의 원리</li>
+<li>변동성 돌파 전략의 핵심 파라미터인 <strong>전일 변동폭(Range = High - Low)과 <span class="math-inline">$k$</span>-계수</strong>의 원리</li>
 <li>당일 진입 후 당일 장 마감(또는 익일 시가) 전량 청산하는 <strong>오버나이트 리스크 통제 기법</strong></li>
 <li>한국 시장(KOSPI/KOSDAQ 및 레버리지 ETF)에서 변동성 돌파 전략이 유효한 이유</li>
 <li>모멘텀(Momentum)과 가격 관성의 물리학적 유추</li>
-<li><strong>실습</strong>: 실시간 일중 가격이 돌파 기준가($\text{Target Price}$)를 뚫는 메커니즘 시각화</li>
+<li><strong>실습</strong>: 실시간 일중 가격이 돌파 기준가(<span class="math-inline">$\text{Target Price}$</span>)를 뚫는 메커니즘 시각화</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
 <p>변동성 돌파 전략은 장 시작(09:00) 직후 <strong>'목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수하여 당일 장 마감 또는 익일 시가에 전량 매도하는 단순하고 강력한 전략입니다.</p>
-<p>$$\text{Range}<em t-1="t-1">{t-1} = \text{High}</em>)$$} - \text{Low}_{t-1} \quad (\text{전일 고가 - 전일 저가</p>
-<p>$$\text{Target Price}<em t-1="t-1">t = \text{Open}_t + (\text{Range}</em> \times k)$$</p>
-<p>$$\text{Buy Condition}: \text{Current Price}_t \ge \text{Target Price}_t$$</p>
-<p>$$\text{Sell Condition}: \text{익일 시가(09:00) 또는 당일 종가(15:30) 전량 시장가 매도}$$</p>
+<div class="math-block">$$
+\text{Range}_{t-1} = \text{High}_{t-1} - \text{Low}_{t-1} \quad (\text{전일 고가 - 전일 저가})
+$$</div>
+<div class="math-block">$$
+\text{Target Price}_t = \text{Open}_t + (\text{Range}_{t-1} \times k)
+$$</div>
+<div class="math-block">$$
+\text{Buy Condition}: \text{Current Price}_t \ge \text{Target Price}_t
+$$</div>
+<div class="math-block">$$
+\text{Sell Condition}: \text{익일 시가(09:00) 또는 당일 종가(15:30) 전량 시장가 매도}
+$$</div>
 <div class="arch-grid">
   <div class="arch-card">
-    <div class="card-title">① 변동폭 계수 ($k$-factor)</div>
-    <div class="card-desc">통상 0.4 ~ 0.6 사이의 값을 사용합니다. (가장 대중적인 표준값 $k = 0.5$). $k$가 클수록 진입 횟수가 줄어들고 안전해집니다.</div>
+    <div class="card-title">① 변동폭 계수 (<span class="math-inline">$k$</span>-factor)</div>
+    <div class="card-desc">통상 0.4 ~ 0.6 사이의 값을 사용합니다. (가장 대중적인 표준값 <span class="math-inline">$k = 0.5$</span>). <span class="math-inline">$k$</span>가 클수록 진입 횟수가 줄어들고 안전해집니다.</div>
   </div>
   <div class="arch-card">
     <div class="card-title">② 오버나이트 리스크 제로화</div>
@@ -1700,7 +1741,7 @@ li.check-item input[type="checkbox"] {
     <div class="tag">일반적인 잔파동 (Noise)</div>
     <div class="steps">
       • 시가 근처에서 소폭 등락을 거듭하며 특별한 추세가 없는 상태.<br>
-      • 목표가($\text{Open} + \text{Range} \times 0.5$)에 도달하지 못함.<br>
+      • 목표가(<span class="math-inline">$\text{Open} + \text{Range} \times 0.5$</span>)에 도달하지 못함.<br>
       • <strong>시스템 행동</strong>: 관망 및 매수 미실행 (현금 100% 유지).
     </div>
   </div>
@@ -1721,8 +1762,8 @@ li.check-item input[type="checkbox"] {
 
 다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
 1. FinanceDataReader를 사용해 KODEX 레버리지(122630) 또는 삼성전자의 최근 6개월 일봉 데이터를 가져와줘.
-2. 매일의 변동폭($\text{Range} = \text{High} - \text{Low}$)을 구하고, $k=0.5$ 기준의 목표 매수가($\text{Target} = \text{Open} + \text{Range} \times 0.5$)를 계산해줘.
-3. 당일의 최고가($\text{High}$)가 목표 매수가 이상인 날을 '매수 체결일'로 판정하고, 매수 체결된 날의 진입가(Target)와 익일 시가(청산가) 간의 일간 수익률을 계산해줘.
+2. 매일의 변동폭(<span class="math-inline">$\text{Range} = \text{High} - \text{Low}$</span>)을 구하고, <span class="math-inline">$k=0.5$</span> 기준의 목표 매수가(<span class="math-inline">$\text{Target} = \text{Open} + \text{Range} \times 0.5$</span>)를 계산해줘.
+3. 당일의 최고가(<span class="math-inline">$\text{High}$</span>)가 목표 매수가 이상인 날을 '매수 체결일'로 판정하고, 매수 체결된 날의 진입가(Target)와 익일 시가(청산가) 간의 일간 수익률을 계산해줘.
 4. 캔들스틱 차트 위에 매일의 목표 매수가 선(주황색 점선)을 긋고, 매수가 체결된 날에는 캔들 아래에 화살표를 표시한 차트를 'volatility_breakout_mechanism.png'로 저장해줘.
 
 실행 완료 후 최근 10거래일의 시가, 고가, 목표 매수가, 돌파 여부(True/False), 일간 수익률을 표로 출력해줘. (Verification)
@@ -1730,7 +1771,7 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 매일 아침 시가($\text{Open}$)에 전일 변동폭의 50%를 더한 목표 매수가가 정확하게 계산되었다.</li>
+<li class="check-item"><input type="checkbox"> 매일 아침 시가(<span class="math-inline">$\text{Open}$</span>)에 전일 변동폭의 50%를 더한 목표 매수가가 정확하게 계산되었다.</li>
 <li class="check-item"><input type="checkbox"> 주가가 크게 급등한 날에는 목표가를 뚫고 화살표(매수) 신호가 표시되었음을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> 주가가 지지부진했던 횡보일에는 매수가 발생하지 않고 현금을 지킨 것을 확인했다.</li>
 </ul>

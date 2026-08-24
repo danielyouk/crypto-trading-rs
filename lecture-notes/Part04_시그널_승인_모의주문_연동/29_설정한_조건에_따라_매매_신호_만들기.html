@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1674,8 +1707,12 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-실시간-시그널-판정-및-주문-수량-계산-공식">1. 실시간 시그널 판정 및 주문 수량 계산 공식</h3>
-<p>$$\text{Target Capital} = \text{Total Equity} \times \text{Allocation Weight} \quad (\text{예: 1억 원 } \times 20\% = 2,000\text{만 원})$$</p>
-<p>$$\text{Order Quantity (주수)} = \left\lfloor \frac{\text{Target Capital}}{\text{Current Price}} \right\rfloor \quad (\text{현재가로 나눈 뒤 소수점 버림})$$</p>
+<div class="math-block">$$
+\text{Target Capital} = \text{Total Equity} \times \text{Allocation Weight} \quad (\text{예: 1억 원 } \times 20\% = 2,000\text{만 원})
+$$</div>
+<div class="math-block">$$
+\text{Order Quantity (주수)} = \left\lfloor \frac{\text{Target Capital}}{\text{Current Price}} \right\rfloor \quad (\text{현재가로 나눈 뒤 소수점 버림})
+$$</div>
 <pre><code class="language-text">[실시간 시그널 판정 흐름]
 1. 계좌 잔고 조회: 총 예수금 50,000,000원 확인
 2. KODEX 레버리지 실시간 시세 조회: 현재가 18,500원
@@ -1693,7 +1730,7 @@ li.check-item input[type="checkbox"] {
 2. 4대 전략 대상 종목들의 실시간 현재가를 market_data.py로 조회해줘.
 3. 다음 조건에 따라 종목별 신호를 판정해줘:
    - 추세추종 (KODEX 200): 현재가가 200일선 상단이면 BUY, 하단이면 SELL/HOLD
-   - 변동성 돌파 (KODEX 레버리지): 현재가가 당일 목표가($\text{Open} + \text{Range} \times 0.5$) 이상이면 BUY
+   - 변동성 돌파 (KODEX 레버리지): 현재가가 당일 목표가(<span class="math-inline">$\text{Open} + \text{Range} \times 0.5$</span>) 이상이면 BUY
 4. BUY 신호가 뜬 종목에 대해 할당 비중(예: 예수금의 25%)에 맞춰 '정확한 매수 주문 수량(주수)'과 '하드 손절가(-3%)'를 계산해줘.
 5. 산출된 결과를 'signals.json' 파일로 저장하고, 터미널에 깔끔한 시그널 대시보드 표를 출력해줘.
 

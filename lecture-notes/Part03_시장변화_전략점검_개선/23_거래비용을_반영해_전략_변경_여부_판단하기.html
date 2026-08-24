@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1740,7 +1773,7 @@ li.check-item input[type="checkbox"] {
 다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
 1. 2018~2024년 데이터를 바탕으로, 왕복 거래비용을 5개 구간(0.1%, 0.2%, 0.3%, 0.5%, 0.8%)으로 증가시키며 다음 4대 전략의 최종 CAGR을 재계산해줘:
    - 전략 1: 추세추종 (200일선)
-   - 전략 2: 변동성 돌파 ($k=0.5$)
+   - 전략 2: 변동성 돌파 (<span class="math-inline">$k=0.5$</span>)
    - 전략 3: 듀얼 모멘텀 자산배분
    - 전략 4: 페어트레이딩
 2. 비용 구간별 각 전략의 CAGR 변화를 정리한 매트릭스 표를 터미널에 출력해줘.

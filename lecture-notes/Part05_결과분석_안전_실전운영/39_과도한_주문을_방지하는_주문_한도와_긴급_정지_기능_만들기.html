@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1668,7 +1701,7 @@ li.check-item input[type="checkbox"] {
 <ul>
 <li><strong>1회 주문 최대 금액 상한(Max Order Value)</strong>: 계좌 총 예수금의 30% 또는 3,000만 원 초과 시 발주 원천 거부</li>
 <li><strong>1일 최대 주문 건수 제한(Max Daily Orders)</strong>: 당일 누적 주문이 15회를 초과하면 당일 주문 엔진 강제 동결</li>
-<li><strong>비정상 가격 주문 차단</strong>: 현재가 대비 $\pm 5\%$ 이상 벗어난 비정상 호가 주문 차단</li>
+<li><strong>비정상 가격 주문 차단</strong>: 현재가 대비 <span class="math-inline">$\pm 5\%$</span> 이상 벗어난 비정상 호가 주문 차단</li>
 <li><strong>실습 27</strong>: 주문 유효성 검증기(<code>order_validator.py</code>) 작성 및 비정상 주문 차단 시뮬레이션</li>
 </ul>
 <hr />

@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1678,7 +1711,9 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-일일-손익pnl의-정확한-분해-공식">1. 일일 손익(PnL)의 정확한 분해 공식</h3>
-<p>$$\text{Daily Total PnL} = \text{Realized PnL (실현 손익)} + \Delta \text{Unrealized PnL (평가손익 변동)} - \text{Total Friction Costs (비용)}$$</p>
+<div class="math-block">$$
+\text{Daily Total PnL} = \text{Realized PnL (실현 손익)} + \Delta \text{Unrealized PnL (평가손익 변동)} - \text{Total Friction Costs (비용)}
+$$</div>
 <pre><code class="language-text">[장 마감 분석 리포트 구조]
 • 시작 자산: 50,000,000원
 • 마감 자산: 50,420,000원

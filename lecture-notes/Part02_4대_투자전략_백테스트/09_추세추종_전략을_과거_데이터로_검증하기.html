@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1680,9 +1713,15 @@ li.check-item input[type="checkbox"] {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-백테스트-시뮬레이션의-계산-논리">1. 백테스트 시뮬레이션의 계산 논리</h3>
 <p>과거 시계열 데이터에서 매일의 수익률을 계산할 때 가장 중요한 것은 <strong>신호 발생 시점(t)과 실제 체결 시점(t+1)의 시차(Lag)</strong>를 엄격하게 적용하는 것입니다.</p>
-<p>$$\text{Signal}<em 200="200">t = \begin{cases} 1 &amp; \text{if } \text{Close}_t &gt; \text{SMA}</em>$$}(t) \ 0 &amp; \text{otherwise} \end{cases</p>
-<p>$$\text{Position}_{t+1} = \text{Signal}_t \quad (\text{오늘 장 마감 신호 보고 내일 시가 매수})$$</p>
-<p>$$\text{Strategy Return}<em t_1="t+1">{t+1} = \text{Position}</em>} \times \frac{\text{Close<em t_1="t+1">{t+1} - \text{Close}_t}{\text{Close}_t} - \text{Cost}</em>$$</p>
+<div class="math-block">$$
+\text{Signal}_t = \begin{cases} 1 & \text{if } \text{Close}_t > \text{SMA}_{200}(t) \\ 0 & \text{otherwise} \end{cases}
+$$</div>
+<div class="math-block">$$
+\text{Position}_{t+1} = \text{Signal}_t \quad (\text{오늘 장 마감 신호 보고 내일 시가 매수})
+$$</div>
+<div class="math-block">$$
+\text{Strategy Return}_{t+1} = \text{Position}_{t+1} \times \frac{\text{Close}_{t+1} - \text{Close}_t}{\text{Close}_t} - \text{Cost}_{t+1}
+$$</div>
 <blockquote>
 <p>⚠️ <strong>미래 데이터 참조 편향(Lookahead Bias) 방지</strong>: 오늘(t) 종가로 계산된 신호는 내일(t+1)부터 적용되어야 합니다. 오늘 신호로 오늘 수익을 얻는 것으로 계산하면 백테스트가 비현실적으로 과대 포장됩니다.</p>
 </blockquote>

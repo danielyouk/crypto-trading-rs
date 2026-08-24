@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1670,7 +1703,7 @@ li.check-item input[type="checkbox"] {
 <p>💡 <strong>수강생 안심 안내</strong>: 모든 전략에는 '유리한 환경'과 '불리한 환경'이 공존합니다. 완벽한 무적의 전략은 존재하지 않습니다. 진정한 퀀트의 실력은 <strong>전략의 약점 구간을 정확히 알고, 필터를 씌워 방어하는 능력</strong>에서 나옵니다.</p>
 </blockquote>
 <ul>
-<li><strong>실습 05</strong>: KODEX 레버리지(122630) 대상 $k=0.5$ 변동성 돌파 백테스트 엔진 가동</li>
+<li><strong>실습 05</strong>: KODEX 레버리지(122630) 대상 <span class="math-inline">$k=0.5$</span> 변동성 돌파 백테스트 엔진 가동</li>
 <li>거래비용(세금 + 수수료 + 슬리피지 편도 0.15%)이 연간 누적될 때 발생하는 충격 검증</li>
 <li>변동성 돌파의 2대 치명적 약점: <strong>가짜 돌파(False Breakout)</strong>와 <strong>지루한 박스권 횡보장</strong></li>
 <li>약점 보완책 1: <strong>이동평균선 추세 필터(Moving Average Filter)</strong> 결합</li>
@@ -1680,7 +1713,9 @@ li.check-item input[type="checkbox"] {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-변동성-돌파-백테스트의-실제-성과-구조">1. 변동성 돌파 백테스트의 실제 성과 구조</h3>
 <p>변동성 돌파 전략은 연간 거래 횟수가 80~130회에 달하는 준-데이트레이딩 전략입니다. 따라서 거래비용을 0으로 둔 '이상적 백테스트'와 실제 '비용 차감 백테스트'의 차이가 극단적으로 벌어집니다.</p>
-<p>$$\text{Trade Return} = \frac{\text{Close}_t - \text{Target}_t}{\text{Target}_t} - \text{Slippage \&amp; Fees}$$</p>
+<div class="math-block">$$
+\text{Trade Return} = \frac{\text{Close}_t - \text{Target}_t}{\text{Target}_t} - \text{Slippage \& Fees}
+$$</div>
 <pre><code class="language-text">[거래비용 미반영 백테스트] ──&gt; 누적 수익률 +450%, CAGR +35% (환상 속의 숫자)
          ↓ (실제 마찰비용 왕복 0.25% 반영 시)
 [실제 순수익 백테스트]     ──&gt; 누적 수익률 +120%, CAGR +14%, MDD -18%
@@ -1709,7 +1744,9 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h3 id="3-프로-퀀트의-약점-보완-필터-200일선-결합-vbo-trend-filter">3. 프로 퀀트의 약점 보완 필터: 200일선 결합 (VBO + Trend Filter)</h3>
 <p>이 약점을 해결하는 가장 우아한 방법은 <strong>"대세 하락장이나 200일선 아래에서는 변동성 돌파 신호가 나와도 매수하지 않는다"</strong>는 필터를 추가하는 것입니다.</p>
-<p>$$\text{Execution Rule}: \text{Current Price} \ge \text{Target Price} \quad \mathbf{AND} \quad \text{Open}<em 200="200">t &gt; \text{SMA}</em>(t)$$</p>
+<div class="math-block">$$
+\text{Execution Rule}: \text{Current Price} \ge \text{Target Price} \quad \mathbf{AND} \quad \text{Open}_t > \text{SMA}_{200}(t)
+$$</div>
 <hr />
 <h2 id="실습-실습-05-백테스트-및-필터-개선-효과-검증">실습 — 실습 05: 백테스트 및 필터 개선 효과 검증</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하여 기본 변동성 돌파와 200일 이평 필터 결합형 전략의 성과를 비교해 보세요.</p>
@@ -1718,7 +1755,7 @@ li.check-item input[type="checkbox"] {
 다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
 1. FinanceDataReader를 사용해 KODEX 레버리지의 최근 8년간(2016~2024) 일봉 데이터를 불러와줘.
 2. 다음 3가지 전략의 성과를 시뮬레이션해줘 (모두 왕복 거래비용 0.25% 차감):
-   - 전략 1: 기본 변동성 돌파 ($k=0.5$, 당일 목표가 돌파 시 매수, 당일 종가 매도)
+   - 전략 1: 기본 변동성 돌파 (<span class="math-inline">$k=0.5$</span>, 당일 목표가 돌파 시 매수, 당일 종가 매도)
    - 전략 2: 필터 결합형 변동성 돌파 (목표가 돌파 + 당일 시가가 200일선 이상일 때만 매수)
    - 벤치마크: 단순 보유(Buy &amp; Hold)
 3. 세 전략의 CAGR, MDD, 샤프 지수, 총 거래 횟수, 승률을 비교하는 Markdown 표를 터미널에 출력해줘.

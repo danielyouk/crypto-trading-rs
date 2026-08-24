@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1678,7 +1711,9 @@ li.check-item input[type="checkbox"] {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-월간-리밸런싱-백테스트의-시간-구조">1. 월간 리밸런싱 백테스트의 시간 구조</h3>
 <p>자산배분 전략은 매일 매매하지 않고 <strong>매월 마지막 거래일 장 마감 시점(t)</strong>에 신호를 계산하여, <strong>익월 첫 거래일 시가(t+1)</strong>에 포트폴리오 비중을 재조정(Rebalancing)합니다.</p>
-<p>$$\text{Weight}_{i, m+1} = \begin{cases} 1.0 &amp; \text{if Asset } i \text{ is Winner \&amp; Absolute Momentum Passed} \ 0.0 &amp; \text{otherwise} \end{cases}$$</p>
+<div class="math-block">$$
+\text{Weight}_{i, m+1} = \begin{cases} 1.0 & \text{if Asset } i \text{ is Winner \& Absolute Momentum Passed} \\ 0.0 & \text{otherwise} \end{cases}
+$$</div>
 <div class="compare-box">
   <div class="compare-card info">
     <div class="tag">단타/일봉 전략 (VBO, 데이트레이딩)</div>

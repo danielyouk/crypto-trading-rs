@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1689,7 +1722,7 @@ li.check-item input[type="checkbox"] {
 </code></pre>
 <hr />
 <h3 id="2-파라미터-안정성stability의-발견">2. 파라미터 안정성(Stability)의 발견</h3>
-<p>WFA를 실행해 보면, 좋은 전략은 In-Sample 기간이 바뀌어도 최적 파라미터가 크게 튀지 않고 일정한 범위($N=150 \sim 200$) 안에서 머무는 것을 확인할 수 있습니다. 반면 불안정한 전략은 $N=20 \to N=180 \to N=45$처럼 극단적으로 요동칩니다.</p>
+<p>WFA를 실행해 보면, 좋은 전략은 In-Sample 기간이 바뀌어도 최적 파라미터가 크게 튀지 않고 일정한 범위(<span class="math-inline">$N=150 \sim 200$</span>) 안에서 머무는 것을 확인할 수 있습니다. 반면 불안정한 전략은 <span class="math-inline">$N=20 \to N=180 \to N=45$</span>처럼 극단적으로 요동칩니다.</p>
 <hr />
 <h2 id="실습-실습-08-추세추종-5-fold-워크포워드-검증-실행">실습 — 실습 08: 추세추종 5-Fold 워크포워드 검증 실행</h2>
 <p>Claude Code 대화창에 아래의 표준 WFA 백테스트 프롬프트를 입력하세요.</p>

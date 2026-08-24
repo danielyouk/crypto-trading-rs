@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1670,7 +1703,7 @@ li.check-item input[type="checkbox"] {
 <p>💡 <strong>게리 안토나치의 통찰</strong>: <em>"상대 모멘텀(Relative Momentum)은 가장 빠르게 달리는 말을 고르는 기술이고, 절대 모멘텀(Absolute Momentum)은 달리는 말이 낭떠러지로 떨어질 때 브레이크를 밟고 마차에서 뛰어내리는 안전장치다."</em></p>
 </blockquote>
 <ul>
-<li><strong>상대 모멘텀(Relative Momentum)</strong>: 여러 후보 자산군 중 최근 $N$개월간 가장 높은 상승률을 기록한 1등 자산 선별</li>
+<li><strong>상대 모멘텀(Relative Momentum)</strong>: 여러 후보 자산군 중 최근 <span class="math-inline">$N$</span>개월간 가장 높은 상승률을 기록한 1등 자산 선별</li>
 <li><strong>절대 모멘텀(Absolute Momentum)</strong>: 1등 자산의 수익률이 무위험 자산(국채 또는 현금)보다 낮으면 전량 안전자산으로 피신</li>
 <li>주식 시장(KODEX 200, 미국 S&amp;P 500)과 안전자산(국고채, 미국 단기채, 달러)의 <strong>음(-)의 상관관계 원리</strong></li>
 <li>월간 리밸런싱(Monthly Rebalancing)의 메커니즘과 낮은 회전율로 인한 거래비용 절감 효과</li>
@@ -1698,9 +1731,11 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h3 id="2-동적-자산배분의-마법-음-의-상관관계">2. 동적 자산배분의 마법 — 음(-)의 상관관계</h3>
 <p>단일 주식은 -50% 폭락할 수 있지만, <strong>주식이 폭락할 때 가격이 폭등하는 자산(미국 국채, 달러 현금)</strong>을 포트폴리오에 편입하면 전체 계좌의 낙폭이 극적으로 상쇄됩니다.</p>
-<p>$$\text{Portfolio Variance}: \sigma_p^2 = w_A^2 \sigma_A^2 + w_B^2 \sigma_B^2 + 2 w_A w_B \cdot \text{Cov}(A, B)$$</p>
+<div class="math-block">$$
+\text{Portfolio Variance}: \sigma_p^2 = w_A^2 \sigma_A^2 + w_B^2 \sigma_B^2 + 2 w_A w_B \cdot \text{Cov}(A, B)
+$$</div>
 <ul>
-<li>주식과 안전자산의 공분산($\text{Cov}(A, B)$)이 음수($&lt; 0$)일 때, 포트폴리오 전체의 변동성($\sigma_p$)은 각 자산의 개별 변동성보다 훨씬 작아집니다.</li>
+<li>주식과 안전자산의 공분산(<span class="math-inline">$\text{Cov}(A, B)$</span>)이 음수(<span class="math-inline">$< 0$</span>)일 때, 포트폴리오 전체의 변동성(<span class="math-inline">$\sigma_p$</span>)은 각 자산의 개별 변동성보다 훨씬 작아집니다.</li>
 </ul>
 <hr />
 <h3 id="3-글로벌-자산배분-유니버스-예시-한국-상장-etf-기준">3. 글로벌 자산배분 유니버스 예시 (한국 상장 ETF 기준)</h3>

@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1674,9 +1707,13 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-돌파-버퍼breakout-buffer-필터의-메커니즘">1. 돌파 버퍼(Breakout Buffer) 필터의 메커니즘</h3>
-<p>단순 200일선 돌파는 주가가 200일선 근처에서 $\pm 0.1\%$로 오르내릴 때마다 불필요한 매수와 매도를 반복하여 계좌를 갉아먹습니다(Whipsaw).</p>
-<p>$$\text{Original Entry}: \text{Close}<em 200="200">t &gt; \text{SMA}</em>(t)$$</p>
-<p>$$\text{Buffered Entry}: \text{Close}<em 200="200">t &gt; \text{SMA}</em> 1.0\%)$$}(t) \times (1 + \text{Buffer}) \quad (\text{단, Buffer} = 0.01 \text{ 즉 </p>
+<p>단순 200일선 돌파는 주가가 200일선 근처에서 <span class="math-inline">$\pm 0.1\%$</span>로 오르내릴 때마다 불필요한 매수와 매도를 반복하여 계좌를 갉아먹습니다(Whipsaw).</p>
+<div class="math-block">$$
+\text{Original Entry}: \text{Close}_t > \text{SMA}_{200}(t)
+$$</div>
+<div class="math-block">$$
+\text{Buffered Entry}: \text{Close}_t > \text{SMA}_{200}(t) \times (1 + \text{Buffer}) \quad (\text{단, Buffer} = 0.01 \text{ 즉 } 1.0\%)
+$$</div>
 <div class="compare-box">
   <div class="compare-card bad">
     <div class="tag">기본 추세추종 (No Buffer)</div>
@@ -1704,7 +1741,7 @@ li.check-item input[type="checkbox"] {
 다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
 1. KODEX 200(069500)의 2018~2024년 일봉 데이터를 사용해 다음 두 전략을 시뮬레이션해줘 (왕복 0.25% 거래비용 동일 적용):
    - 전략 A (기본): 종가가 200일선 상향 돌파 시 익일 시가 매수, 하향 이탈 시 익일 시가 매도
-   - 전략 B (개선): 종가가 200일선 $\times 1.01$(1% 버퍼) 상향 돌파 시 익일 시가 매수, 200일선 하향 이탈 시 익일 시가 매도
+   - 전략 B (개선): 종가가 200일선 <span class="math-inline">$\times 1.01$</span>(1% 버퍼) 상향 돌파 시 익일 시가 매수, 200일선 하향 이탈 시 익일 시가 매도
 2. 두 전략의 누적 수익률, CAGR, MDD, 샤프 지수, 총 거래 횟수, 총 거래비용 누적액을 나란히 비교하는 표를 터미널에 출력해줘.
 3. 상단에는 두 전략의 누적 수익률 곡선, 하단에는 언더워터 플롯(MDD)을 겹쳐 비교한 차트를 'strategy_ab_improvement_result.png'로 저장해줘.
 

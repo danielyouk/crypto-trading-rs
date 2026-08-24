@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1673,7 +1706,7 @@ li.check-item input[type="checkbox"] {
 <li><strong>In-Sample(과거 학습 창)</strong>과 <strong>Out-of-Sample(미래 전진 검증 창)</strong>의 시계열 분리 원리</li>
 <li>롤링 윈도우(Rolling Window)와 확장 윈도우(Anchored/Expanding Window)의 차이점</li>
 <li>워크포워드 효율성 지표인 <strong>WFE(Walk-Forward Efficiency = Out-Sample CAGR / In-Sample CAGR)</strong>의 해석 기준</li>
-<li>WFE $\ge 60\%$인 전략만이 실전 배포 승인을 받는 이유</li>
+<li>WFE <span class="math-inline">$\ge 60\%$</span>인 전략만이 실전 배포 승인을 받는 이유</li>
 <li><strong>실습</strong>: 워크포워드 롤링 타임라인 구조 다이어그램 및 시뮬레이션 메커니즘 설계</li>
 </ul>
 <hr />
@@ -1713,7 +1746,9 @@ Step 5: [In-Sample 학습: 2021~2023 (3년)] ──&gt; 최적 파라미터 도�
 
 <hr />
 <h3 id="3-wfewalk-forward-efficiency-판정-기준">3. WFE(Walk-Forward Efficiency) 판정 기준</h3>
-<p>$$\text{WFE} = \frac{\text{Out-of-Sample 연평균 수익률 (실전)}}{\text{In-Sample 연평균 수익률 (학습)}} \times 100\%$$</p>
+<div class="math-block">$$
+\text{WFE} = \frac{\text{Out-of-Sample 연평균 수익률 (실전)}}{\text{In-Sample 연평균 수익률 (학습)}} \times 100\%
+$$</div>
 <table>
 <thead>
 <tr>

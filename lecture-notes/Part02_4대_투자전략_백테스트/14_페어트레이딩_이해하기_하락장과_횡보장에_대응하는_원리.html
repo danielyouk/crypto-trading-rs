@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1672,8 +1705,8 @@ li.check-item input[type="checkbox"] {
 <ul>
 <li>시장의 방향성(상승/하락)에 베팅하지 않는 <strong>시장 중립(Market Neutral / 베타 = 0)</strong>의 본질</li>
 <li>단순 가격 상관계수(Correlation)와 <strong>통계적 공적분(Cointegration)</strong>의 결정적 차이점</li>
-<li>스프레드(Spread)의 정규화 지표인 <strong>Z-Score($Z$)</strong> 산출 공식과 평균회귀(Mean Reversion) 메커니즘</li>
-<li>페어트레이딩의 매매 시그널: $Z \ge +2.0$ (고평가 종목 매도 + 저평가 종목 매수), $Z \le 0.0$ (균형 복귀 시 전량 청산)</li>
+<li>스프레드(Spread)의 정규화 지표인 <strong>Z-Score(<span class="math-inline">$Z$</span>)</strong> 산출 공식과 평균회귀(Mean Reversion) 메커니즘</li>
+<li>페어트레이딩의 매매 시그널: <span class="math-inline">$Z \ge +2.0$</span> (고평가 종목 매도 + 저평가 종목 매수), <span class="math-inline">$Z \le 0.0$</span> (균형 복귀 시 전량 청산)</li>
 <li><strong>실습</strong>: 현대차와 기아(또는 신한지주와 KB금융)의 스프레드 및 Z-Score 시계열 시각화</li>
 </ul>
 <hr />
@@ -1681,7 +1714,9 @@ li.check-item input[type="checkbox"] {
 <h3 id="1-시장-중립market-neutral이란-무엇인가">1. 시장 중립(Market Neutral)이란 무엇인가?</h3>
 <p>일반적인 주식 투자는 코스피 지수가 폭락하면 아무리 좋은 종목도 함께 떨어지는 '시장 위험(Beta Risk)'에 노출됩니다.<br />
 하지만 페어트레이딩은 <strong>고평가된 종목을 숏(매도)하고, 저평가된 종목을 롱(매수)</strong>하여 시장 전체의 등락을 서로 상쇄시킵니다.</p>
-<p>$$\text{Portfolio Value} = \text{Long Asset A} - \text{Hedge Ratio}(\beta) \times \text{Short Asset B}$$</p>
+<div class="math-block">$$
+\text{Portfolio Value} = \text{Long Asset A} - \text{Hedge Ratio}(\beta) \times \text{Short Asset B}
+$$</div>
 <pre><code class="language-text">[시장이 30% 대폭락하는 경우]
 • 매수한 종목 A: -25% 하락 (상대적 선방)
 • 매도한 종목 B: -35% 하락 (공매도 포지션에서 +35% 이익)
@@ -1703,7 +1738,7 @@ li.check-item input[type="checkbox"] {
   <div class="compare-card good">
     <div class="tag">통계적 공적분 (Cointegration) — 견고함</div>
     <div class="steps">
-      • 두 시계열의 선형 결합($\text{Price}_A - \beta \cdot \text{Price}_B$)이 <strong>안정적 시계열(Stationary)</strong>을 이룸.<br>
+      • 두 시계열의 선형 결합(<span class="math-inline">$\text{Price}_A - \beta \cdot \text{Price}_B$</span>)이 <strong>안정적 시계열(Stationary)</strong>을 이룸.<br>
       • 스프레드가 평균을 중심으로 일정한 분산 안에서 진동하는 것이 수학적으로 증명됨.<br>
       • <strong>결과</strong>: 고무줄처럼 일정한 주기마다 반드시 평균으로 되돌아옴.
     </div>
@@ -1712,20 +1747,24 @@ li.check-item input[type="checkbox"] {
 
 <hr />
 <h3 id="3-스프레드와-z-score의-계산">3. 스프레드와 Z-Score의 계산</h3>
-<p>두 종목 $A$와 $B$의 가격 차이(스프레드)를 계산하고, 이를 평균과 표준편차로 정규화한 것이 <strong>Z-Score</strong>입니다.</p>
-<p>$$\text{Spread}<em A_="A," t="t">t = \text{Price}</em>$$} - \beta \cdot \text{Price}_{B, t</p>
-<p>$$Z_t = \frac{\text{Spread}<em _text_Spread="\text{Spread">t - \mu</em>$$}}}{\sigma_{\text{Spread}}</p>
+<p>두 종목 <span class="math-inline">$A$</span>와 <span class="math-inline">$B$</span>의 가격 차이(스프레드)를 계산하고, 이를 평균과 표준편차로 정규화한 것이 <strong>Z-Score</strong>입니다.</p>
+<div class="math-block">$$
+\text{Spread}_t = \text{Price}_{A, t} - \beta \cdot \text{Price}_{B, t}
+$$</div>
+<div class="math-block">$$
+Z_t = \frac{\text{Spread}_t - \mu_{\text{Spread}}}{\sigma_{\text{Spread}}}
+$$</div>
 <div class="arch-grid">
   <div class="arch-card">
-    <div class="card-title">① 상단 이탈 ($Z \ge +2.0$)</div>
+    <div class="card-title">① 상단 이탈 (<span class="math-inline">$Z \ge +2.0$</span>)</div>
     <div class="card-desc">종목 A가 종목 B에 비해 통계적으로 2 표준편차 이상 고평가됨 ➔ <strong>A 매도 + B 매수</strong> 진입.</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">② 평균 회귀 청산 ($Z \approx 0.0$)</div>
+    <div class="card-title">② 평균 회귀 청산 (<span class="math-inline">$Z \approx 0.0$</span>)</div>
     <div class="card-desc">벌어졌던 가격 격차가 다시 정상 균형으로 복귀함 ➔ <strong>양쪽 포지션 전량 이익 실현 청산</strong>.</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">③ 하단 이탈 ($Z \le -2.0$)</div>
+    <div class="card-title">③ 하단 이탈 (<span class="math-inline">$Z \le -2.0$</span>)</div>
     <div class="card-desc">종목 A가 종목 B에 비해 지나치게 저평가됨 ➔ <strong>A 매수 + B 매도</strong> 진입.</div>
   </div>
 </div>
@@ -1738,8 +1777,8 @@ li.check-item input[type="checkbox"] {
 다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
 1. FinanceDataReader를 사용해 현대차(005380)와 기아(000270)의 최근 3개년 일봉 데이터를 불러와줘.
 2. 두 종목의 가격 비율(Price Ratio = 현대차 종가 / 기아 종가) 시계열을 생성해줘.
-3. 60일 롤링 윈도우를 기준으로 가격 비율의 평균($\mu$)과 표준편차($\sigma$)를 구하여 Z-Score 시계열($Z = (\text{Ratio} - \mu) / \sigma$)을 계산해줘.
-4. 상단 차트에는 두 종목의 정규화 주가 추이(기준일=100), 하단 차트에는 Z-Score 시계열과 함께 매매 기준선($+2.0, 0.0, -2.0$)을 붉은색/초록색 점선으로 표시해줘.
+3. 60일 롤링 윈도우를 기준으로 가격 비율의 평균(<span class="math-inline">$\mu$</span>)과 표준편차(<span class="math-inline">$\sigma$</span>)를 구하여 Z-Score 시계열(<span class="math-inline">$Z = (\text{Ratio} - \mu) / \sigma$</span>)을 계산해줘.
+4. 상단 차트에는 두 종목의 정규화 주가 추이(기준일=100), 하단 차트에는 Z-Score 시계열과 함께 매매 기준선(<span class="math-inline">$+2.0, 0.0, -2.0$</span>)을 붉은색/초록색 점선으로 표시해줘.
 5. 차트 이미지는 'pairs_trading_spread_zscore.png'로 저장해줘.
 
 실행 완료 후 터미널에 최근 5일간의 Z-Score 수치와 현재 통계적 괴리 상태를 요약해줘. (Verification)
@@ -1748,8 +1787,8 @@ li.check-item input[type="checkbox"] {
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 현대차와 기아의 정규화 주가가 장기적으로 매우 유사한 궤적으로 함께 움직이는 것을 확인했다.</li>
-<li class="check-item"><input type="checkbox"> 하단 차트에서 Z-Score가 $+2.0$을 뚫고 올라갔다가 결국 $0.0$으로 되돌아오는 평균회귀(Mean Reversion) 파동을 목격했다.</li>
-<li class="check-item"><input type="checkbox"> Z-Score가 극단값($\pm 2.0$)에 도달했을 때가 통계적 차익거래의 진입 기회임을 직관적으로 파악했다.</li>
+<li class="check-item"><input type="checkbox"> 하단 차트에서 Z-Score가 <span class="math-inline">$+2.0$</span>을 뚫고 올라갔다가 결국 <span class="math-inline">$0.0$</span>으로 되돌아오는 평균회귀(Mean Reversion) 파동을 목격했다.</li>
+<li class="check-item"><input type="checkbox"> Z-Score가 극단값(<span class="math-inline">$\pm 2.0$</span>)에 도달했을 때가 통계적 차익거래의 진입 기회임을 직관적으로 파악했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>

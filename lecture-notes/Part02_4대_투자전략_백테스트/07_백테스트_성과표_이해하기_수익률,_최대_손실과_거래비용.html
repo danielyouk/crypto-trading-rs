@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1693,19 +1726,19 @@ li.check-item input[type="checkbox"] {
 <tr>
 <td><strong>연평균 복리 수익률</strong></td>
 <td><strong>CAGR</strong></td>
-<td>$\left( \frac{\text{최종자산}}{\text{초기자산}} \right)^{\frac{1}{\text{년수}}} - 1$</td>
+<td><span class="math-inline">$\left( \frac{\text{최종자산}}{\text{초기자산}} \right)^{\frac{1}{\text{년수}}} - 1$</span></td>
 <td>15% 이상 우수</td>
 </tr>
 <tr>
 <td><strong>최대 낙폭 (최대 손실)</strong></td>
 <td><strong>MDD</strong></td>
-<td>$\max_{t} \left( \frac{\text{고점}_t - \text{현재가}_t}{\text{고점}_t} \right)$</td>
+<td><span class="math-inline">$\max_{t} \left( \frac{\text{고점}_t - \text{현재가}_t}{\text{고점}_t} \right)$</span></td>
 <td><strong>-15% 이내 유지 필수</strong> (-30% 넘으면 실전 포기)</td>
 </tr>
 <tr>
 <td><strong>샤프 지수</strong></td>
 <td><strong>Sharpe</strong></td>
-<td>$\frac{E[R_p - R_f]}{\sigma_p}$ (위험 1단위당 초과수익)</td>
+<td><span class="math-inline">$\frac{E[R_p - R_f]}{\sigma_p}$</span> (위험 1단위당 초과수익)</td>
 <td>1.0 이상 양호, 1.5 이상 매우 우수</td>
 </tr>
 <tr>

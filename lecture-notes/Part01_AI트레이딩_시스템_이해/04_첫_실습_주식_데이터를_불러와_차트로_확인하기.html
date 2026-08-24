@@ -708,6 +708,26 @@ tr:hover td { background: #f8fafc; }
   color: var(--navy-primary);
 }
 
+/* Math Formula Blocks (MathJax / LaTeX Presentation) */
+.math-block {
+  margin: 20px 0 24px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  overflow-x: auto;
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--navy-dark);
+}
+
+.math-inline {
+  font-size: 1em;
+  padding: 0 2px;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1086,6 +1106,19 @@ li.check-item input[type="checkbox"] {
 }
 
 </style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="docs-shell">
@@ -1712,7 +1745,9 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h3 id="2-이동평균선ma이-왜-가장-먼저-등장하는가">2. 이동평균선(MA)이 왜 가장 먼저 등장하는가?</h3>
 <p>주가는 매일의 노이즈(Noise)와 수급에 의해 위아래로 심하게 요동칩니다. <strong>이동평균선(Moving Average)</strong>은 특정 기간 동안의 종가를 평균 내어 잔떨림을 제거하고 거대한 <strong>추세(Trend)</strong>의 방향을 보여줍니다.</p>
-<p>$$\text{SMA}<em i="0">N(t) = \frac{1}{N} \sum</em>(t-i)$$}^{N-1} \text{Close</p>
+<div class="math-block">$$
+\text{SMA}_N(t) = \frac{1}{N} \sum_{i=0}^{N-1} \text{Close}(t-i)
+$$</div>
 <ul>
 <li><strong>20일 이동평균선 (단기 추세 / 1개월)</strong>: 단기 자금의 평균 매수 단가, 단기 지지/저항선.</li>
 <li><strong>60일 이동평균선 (중기 추세 / 1분기)</strong>: 기관 및 기업 실적 사이클과 연동되는 수급선.</li>
