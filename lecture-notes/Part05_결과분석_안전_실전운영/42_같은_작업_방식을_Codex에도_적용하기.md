@@ -40,16 +40,29 @@
 
 ### 2. 다른 AI 도구로 작업 방식을 확장하는 3단계 원칙
 
-```text
-[1단계: Context 동일 전달] 
-"우리는 2-Tier 하이브리드 주식 트레이딩 시스템을 구축하고 있어. weekly_policy.json과 signals.json을 기반으로 동작해."
-
-[2단계: Deliverable 동일 선언] 
-"이 파일의 하드 손절 조건을 개별 종목 -3%에서 -2.5%로 수정하고, execute_orders.py의 테스트 결과를 표로 보여줘."
-
-[3단계: Verification 동일 검증] 
-"완성되면 스크립트를 실행해서 터미널에 검증 로그를 출력하고 파일 저장 경로를 알려줘."
-```
+<div class="step-flow">
+  <div class="step-card">
+    <span class="step-num">Step 1</span>
+    <div class="step-body">
+      <div class="step-title">Context 동일 전달</div>
+      <div class="step-desc">"우리는 2-Tier 하이브리드 주식 트레이딩 시스템을 구축하고 있어. weekly_policy.json과 signals.json을 기반으로 동작해."</div>
+    </div>
+  </div>
+  <div class="step-card ai">
+    <span class="step-num">Step 2</span>
+    <div class="step-body">
+      <div class="step-title">Deliverable 동일 선언</div>
+      <div class="step-desc">"이 파일의 하드 손절 조건을 개별 종목 -3%에서 -2.5%로 수정하고, execute_orders.py의 테스트 결과를 표로 보여줘."</div>
+    </div>
+  </div>
+  <div class="step-card verify">
+    <span class="step-num">Step 3</span>
+    <div class="step-body">
+      <div class="step-title">Verification 동일 검증</div>
+      <div class="step-desc">"완성되면 스크립트를 실행해서 터미널에 검증 로그를 출력하고 파일 저장 경로를 알려줘."</div>
+    </div>
+  </div>
+</div>
 
 ---
 

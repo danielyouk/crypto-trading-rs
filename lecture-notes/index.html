@@ -436,6 +436,72 @@ tr:hover td {
   color: var(--ink-main);
 }
 
+/* Step Flow Cards (Clean Visual Roadmap) */
+.step-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0 26px;
+}
+
+.step-card {
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.step-card.ai {
+  border-left-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.step-card.verify {
+  border-left-color: var(--navy-light);
+  background: var(--blue-soft);
+}
+
+.step-card .step-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 8px;
+  background: var(--navy-primary);
+  color: #ffffff;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-card.ai .step-num {
+  background: var(--teal);
+}
+
+.step-card.verify .step-num {
+  background: var(--navy-light);
+}
+
+.step-card .step-body {
+  flex: 1;
+}
+
+.step-card .step-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--navy-dark);
+  margin-bottom: 4px;
+}
+
+.step-card .step-desc {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
 /* Visual Figure & GIF Player */
 .visual-figure {
   margin: 24px 0 28px;

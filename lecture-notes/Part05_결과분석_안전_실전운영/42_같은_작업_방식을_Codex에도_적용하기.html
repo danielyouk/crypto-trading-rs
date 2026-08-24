@@ -437,6 +437,72 @@ tr:hover td {
   color: var(--ink-main);
 }
 
+/* Step Flow Cards (Clean Visual Roadmap) */
+.step-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0 26px;
+}
+
+.step-card {
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.step-card.ai {
+  border-left-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.step-card.verify {
+  border-left-color: var(--navy-light);
+  background: var(--blue-soft);
+}
+
+.step-card .step-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 8px;
+  background: var(--navy-primary);
+  color: #ffffff;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-card.ai .step-num {
+  background: var(--teal);
+}
+
+.step-card.verify .step-num {
+  background: var(--navy-light);
+}
+
+.step-card .step-body {
+  flex: 1;
+}
+
+.step-card .step-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--navy-dark);
+  margin-bottom: 4px;
+}
+
+.step-card .step-desc {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
 /* Visual Figure & GIF Player */
 .visual-figure {
   margin: 24px 0 28px;
@@ -890,15 +956,30 @@ li.check-item input[type="checkbox"] {
 
 <hr />
 <h3>2. 다른 AI 도구로 작업 방식을 확장하는 3단계 원칙</h3>
-<pre><code class="language-text">[1단계: Context 동일 전달] 
-&quot;우리는 2-Tier 하이브리드 주식 트레이딩 시스템을 구축하고 있어. weekly_policy.json과 signals.json을 기반으로 동작해.&quot;
+<div class="step-flow">
+  <div class="step-card">
+    <span class="step-num">Step 1</span>
+    <div class="step-body">
+      <div class="step-title">Context 동일 전달</div>
+      <div class="step-desc">"우리는 2-Tier 하이브리드 주식 트레이딩 시스템을 구축하고 있어. weekly_policy.json과 signals.json을 기반으로 동작해."</div>
+    </div>
+  </div>
+  <div class="step-card ai">
+    <span class="step-num">Step 2</span>
+    <div class="step-body">
+      <div class="step-title">Deliverable 동일 선언</div>
+      <div class="step-desc">"이 파일의 하드 손절 조건을 개별 종목 -3%에서 -2.5%로 수정하고, execute_orders.py의 테스트 결과를 표로 보여줘."</div>
+    </div>
+  </div>
+  <div class="step-card verify">
+    <span class="step-num">Step 3</span>
+    <div class="step-body">
+      <div class="step-title">Verification 동일 검증</div>
+      <div class="step-desc">"완성되면 스크립트를 실행해서 터미널에 검증 로그를 출력하고 파일 저장 경로를 알려줘."</div>
+    </div>
+  </div>
+</div>
 
-[2단계: Deliverable 동일 선언] 
-&quot;이 파일의 하드 손절 조건을 개별 종목 -3%에서 -2.5%로 수정하고, execute_orders.py의 테스트 결과를 표로 보여줘.&quot;
-
-[3단계: Verification 동일 검증] 
-&quot;완성되면 스크립트를 실행해서 터미널에 검증 로그를 출력하고 파일 저장 경로를 알려줘.&quot;
-</code></pre>
 <hr />
 <h2>실습 — 실습 30: 동일 프롬프트로 다중 환경 무결성 확인</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하여, 우리의 시스템이 특정 도구에 종속되지 않는 범용적 표준 파이썬/JSON 아키텍처임을 최종 확인해 보세요.</p>

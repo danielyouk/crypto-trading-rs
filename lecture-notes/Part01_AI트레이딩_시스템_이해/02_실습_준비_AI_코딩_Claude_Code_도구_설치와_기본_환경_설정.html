@@ -437,6 +437,72 @@ tr:hover td {
   color: var(--ink-main);
 }
 
+/* Step Flow Cards (Clean Visual Roadmap) */
+.step-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0 26px;
+}
+
+.step-card {
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.step-card.ai {
+  border-left-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+.step-card.verify {
+  border-left-color: var(--navy-light);
+  background: var(--blue-soft);
+}
+
+.step-card .step-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 8px;
+  background: var(--navy-primary);
+  color: #ffffff;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-card.ai .step-num {
+  background: var(--teal);
+}
+
+.step-card.verify .step-num {
+  background: var(--navy-light);
+}
+
+.step-card .step-body {
+  flex: 1;
+}
+
+.step-card .step-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--navy-dark);
+  margin-bottom: 4px;
+}
+
+.step-card .step-desc {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
 /* Visual Figure & GIF Player */
 .visual-figure {
   margin: 24px 0 28px;
@@ -945,19 +1011,49 @@ li.check-item input[type="checkbox"] {
 <hr />
 <h3>4. 3단계 환경 준비 로드맵</h3>
 <p>우리가 직접 수행할 설치 작업은 딱 1단계뿐이며, 2단계와 3단계는 AI가 스스로 수행합니다.</p>
-<pre><code class="language-text">[1단계: 사람이 직접 수행] 
-Node.js 설치 ──&gt; 터미널에서 Claude Code 설치 (`npm install -g @anthropic-ai/claude-code`) ──&gt; 로그인
+<div class="step-flow">
+  <div class="step-card">
+    <span class="step-num">Step 1</span>
+    <div class="step-body">
+      <div class="step-title">사람이 직접 수행: AI 도구 실행 및 작업 폴더 연결</div>
+      <div class="step-desc">데스크톱 앱(Cursor / Claude Desktop)을 실행하거나 터미널에서 Claude Code를 켭니다.</div>
+    </div>
+  </div>
+  <div class="step-card ai">
+    <span class="step-num">Step 2</span>
+    <div class="step-body">
+      <div class="step-title">AI에게 전권 위임: Python 가상환경 및 라이브러리 자동 구축</div>
+      <div class="step-desc">표준 프롬프트 1줄을 입력하면 AI가 <code>.venv</code> 생성 및 <code>pandas</code>, <code>FinanceDataReader</code> 설치를 스스로 완료합니다.</div>
+    </div>
+  </div>
+  <div class="step-card verify">
+    <span class="step-num">Step 3</span>
+    <div class="step-body">
+      <div class="step-title">사람이 눈으로 확인: 삼성전자 주가 데이터 출력 대조</div>
+      <div class="step-desc">화면에 삼성전자의 최근 5일치 일봉 표가 정상적으로 떠 있는지 눈으로 최종 확인합니다.</div>
+    </div>
+  </div>
+</div>
 
-[2단계: AI에게 위임] 
-작업 폴더에서 `claude` 실행 ──&gt; 프롬프트로 Python 가상환경 및 라이브러리 설치 요청
-
-[3단계: 사람이 눈으로 확인] 
-삼성전자 어제 종가 및 데이터프레임이 정상 출력되는지 화면 대조
-</code></pre>
 <hr />
-<h2>실습 — 실습 01: Claude Code 설치 및 환경 구축</h2>
-<h3>Step 1. 작업 폴더 생성 및 Claude Code 시작</h3>
-<p>컴퓨터의 원하는 위치(예: 바탕화면 또는 작업 드라이브)에 <code>ai-trading</code> 폴더를 만들고, 터미널(Windows의 경우 PowerShell 또는 WSL/Git Bash, Mac의 경우 Terminal)에서 해당 폴더로 이동한 뒤 Claude Code를 실행합니다.</p>
+<h2>실습 — 실습 01: AI 도구 환경 구축</h2>
+<blockquote>
+<p>💡 <strong>진입 방식 선택 가이드</strong>:<br />
+• <strong>초보자 추천 (데스크톱 앱 방식)</strong>: Cursor나 Claude Desktop 등의 앱을 켜고 <code>ai-trading</code> 폴더를 연 뒤 바로 대화창에 프롬프트를 입력하세요.<br />
+• <strong>터미널 중심 (Claude Code CLI 방식)</strong>: 아래 CLI 명령어로 터미널에서 직접 실행하세요. 어떤 방식을 쓰든 이후의 파이썬 코드 생성과 트레이딩 전략 검증 프롬프트는 <strong>100% 동일</strong>합니다.</p>
+</blockquote>
+<h3>Step 1. 작업 폴더 생성 및 실행</h3>
+<p>컴퓨터의 원하는 위치(예: 바탕화면 또는 작업 드라이브)에 <code>ai-trading</code> 폴더를 만들고 AI 도구를 시작합니다.</p>
+<h4>[방식 A] 데스크톱 앱에서 바로 실행 (가장 간편)</h4>
+<ol>
+<li>데스크톱 앱(Cursor 또는 Claude Desktop)을 실행합니다.</li>
+<li><code>File</code> → <code>Open Folder</code>를 눌러 새로 만든 <code>ai-trading</code> 폴더를 엽니다.</li>
+<li>AI 대화창을 열고 Step 2의 프롬프트를 입력합니다.</li>
+</ol>
+<h4>[방식 B] 터미널 CLI(Claude Code)에서 실행</h4>
+<ol>
+<li>터미널(PowerShell, Terminal, WSL 등)을 열고 폴더로 이동합니다.</li>
+</ol>
 <pre><code class="language-bash"># 1. 작업 폴더 생성 및 이동
 mkdir ai-trading
 cd ai-trading
