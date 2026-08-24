@@ -221,10 +221,14 @@ def build() -> None:
         encoding="utf-8",
     )
 
-    # 혹시 남아있을 수 있는 구버전 index.html 정리
-    old_index = LECTURE_DIR / "index.html"
-    if old_index.exists() and old_index != out_index_path:
-        old_index.unlink()
+    # 브라우저/웹서버가 / 로 열 수 있도록 index.html도 생성
+    (LECTURE_DIR / "index.html").write_text(
+        out_index_path.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+
+    # GitHub Pages가 _core/ 폴더를 무시하지 않도록 .nojekyll 파일 생성
+    (LECTURE_DIR / ".nojekyll").touch(exist_ok=True)
 
     print(f"빌드 완료: 노트 {len(notes)}개 → {LECTURE_DIR}/PartXX_*/*.html")
     print(f"전체 목차: {out_index_path}")
