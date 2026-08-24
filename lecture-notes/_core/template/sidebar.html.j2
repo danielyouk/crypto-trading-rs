@@ -1,0 +1,47 @@
+<aside class="docs-sidebar" id="docs-sidebar">
+  <div class="sidebar-brand">
+    <a class="brand" href="{{ index_href }}">
+      {% if logo_data_uri %}
+      <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
+      {% endif %}
+      <span>DATATRAIN</span>
+    </a>
+    <div class="sidebar-meta">
+      <strong>AI 트레이딩 핸드북</strong>
+      <span>{{ total_clips }}클립 · 5파트 · Claude Code</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav" aria-label="강의 목차">
+    {% for part in parts %}
+    <details class="nav-part"{% if current_part == part.number or (is_index and part.number == 1) %} open{% endif %}>
+      <summary>
+        <span class="nav-num">{{ part.number }}.</span>
+        <span class="nav-label">{{ part.title }}</span>
+      </summary>
+      {% for chapter in part.chapters %}
+      <div class="nav-chapter">
+        <div class="nav-chapter-title">
+          {{ part.number }}.{{ chapter.number }} {{ chapter.title }}
+        </div>
+        {% for clip in chapter.clips %}
+        <div class="nav-clip-group">
+          <a class="nav-clip{% if current_id == clip.id %} is-active{% endif %}" href="{{ nav_prefix }}{{ clip.rel_href }}">
+            <span class="nav-num">{{ "%02d"|format(clip.clip_num) }}</span>
+            <span class="nav-label">{{ clip.title }}</span>
+          </a>
+          {% if current_id == clip.id and page_toc %}
+          <div class="nav-page-toc">
+            {% for heading in page_toc %}
+            <a class="nav-heading level-{{ heading.level }}" href="#{{ heading.id }}">{{ heading.name }}</a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </details>
+    {% endfor %}
+  </nav>
+</aside>

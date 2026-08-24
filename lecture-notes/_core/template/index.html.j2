@@ -10,62 +10,70 @@
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Top Navigation Header with Embedded Base64 Logo -->
-  <header class="top-nav">
-    <a class="brand" href="{{ index_filename|default('00_AI트레이딩_전체교재_목차.html') }}">
-      <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
-      <span>DATATRAIN</span>
-    </a>
-    <div class="nav-links">
-      <span class="crumb">{{ total_clips }}개 클립 · 약 {{ "%.1f"|format(total_minutes / 60) }}시간 분량</span>
-    </div>
-  </header>
+<div class="docs-shell">
+  {% include "sidebar.html.j2" %}
 
-  <!-- Index Header (GDPval Style) -->
-  <div class="index-header">
-    <h1>코딩 몰라도 완성하는<br>나만의 AI 알고리즘 트레이딩 시스템</h1>
-    <p><strong>w. Claude Code</strong> — 5개 파트 · 17개 챕터 · {{ total_clips }}개 클립 · 실습 23개 · 프로젝트 3개</p>
-    <p style="font-size: 14.5px; color: #64748b; margin-top: 6px;">
-      💡 <strong>학습 가이드</strong>: 모니터 좌측에 이 웹 교재를 띄우고, 우측에 Claude Code를 띄워 실시간으로 함께 실습하세요.
-    </p>
-  </div>
+  <div class="docs-main">
+    <header class="docs-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="목차 열기">☰</button>
+      <div class="crumb">{{ total_clips }}개 클립 · 약 {{ "%.1f"|format(total_minutes / 60) }}시간 분량</div>
+    </header>
 
-  <!-- Part & Clip List -->
-  {% for part in parts %}
-  <section class="part-section">
-    <div class="part-section-header">
-      <h2>Part {{ "%02d"|format(part.number) }}. {{ part.title }}</h2>
-      <span class="meta">{{ part.clip_count }}클립 · {{ part.minutes }}분</span>
-    </div>
-    
-    {% for chapter in part.chapters %}
-    <div class="chapter-group">
-      <div class="chapter-title">CH{{ "%02d"|format(chapter.number) }}. {{ chapter.title }}</div>
-      <ul class="clip-list">
-        {% for clip in chapter.clips %}
-        <li class="clip-item">
-          <a href="{{ clip.href }}">
-            <span class="clip-id">Clip {{ "%02d"|format(clip.clip_num) }}</span>
-            <span class="clip-title">{{ clip.title }}</span>
-            {% if clip.practice %}
-            <span class="mini-tag prac">{{ clip.practice }}</span>
-            {% endif %}
-            <span class="mini-tag time">{{ clip.duration }}분</span>
-          </a>
-        </li>
+    <div class="docs-content">
+      <div class="index-header">
+        <h1>코딩 몰라도 완성하는<br>나만의 AI 알고리즘 트레이딩 시스템</h1>
+        <p><strong>w. Claude Code</strong> — 5개 파트 · 17개 챕터 · {{ total_clips }}개 클립 · 실습 23개 · 프로젝트 3개</p>
+        <p style="font-size: 14.5px; color: #64748b; margin-top: 8px;">
+          💡 <strong>학습 가이드</strong>: 좌측 사이드바에서 원하는 파트와 클립을 클릭하여 바로 학습을 시작하세요.
+        </p>
+      </div>
+
+      <!-- Part & Clip List -->
+      {% for part in parts %}
+      <section class="part-section">
+        <div class="part-section-header">
+          <h2>Part {{ "%02d"|format(part.number) }}. {{ part.title }}</h2>
+          <span class="meta">{{ part.clip_count }}클립 · {{ part.minutes }}분</span>
+        </div>
+        
+        {% for chapter in part.chapters %}
+        <div class="chapter-group">
+          <div class="chapter-title">CH{{ "%02d"|format(chapter.number) }}. {{ chapter.title }}</div>
+          <ul class="clip-list">
+            {% for clip in chapter.clips %}
+            <li class="clip-item">
+              <a href="{{ nav_prefix }}{{ clip.rel_href }}">
+                <span class="clip-id">Clip {{ "%02d"|format(clip.clip_num) }}</span>
+                <span class="clip-title">{{ clip.title }}</span>
+                {% if clip.practice %}
+                <span class="mini-tag prac">{{ clip.practice }}</span>
+                {% endif %}
+                <span class="mini-tag time">{{ clip.duration }}분</span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
         {% endfor %}
-      </ul>
-    </div>
-    {% endfor %}
-  </section>
-  {% endfor %}
+      </section>
+      {% endfor %}
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <span>© DATATRAIN. All rights reserved.</span>
-    <span>본 교육 콘텐츠의 무단 복제 및 상업적 재배포를 금합니다.</span>
-  </footer>
+      <footer class="site-footer">
+        <span>© DATATRAIN. All rights reserved.</span>
+        <span>본 교육 콘텐츠의 무단 복제 및 상업적 재배포를 금합니다.</span>
+      </footer>
+    </div>
+  </div>
 </div>
+
+<script>
+var toggle = document.querySelector(".sidebar-toggle");
+var sidebar = document.getElementById("docs-sidebar");
+if (toggle && sidebar) {
+  toggle.addEventListener("click", function () {
+    sidebar.classList.toggle("is-open");
+  });
+}
+</script>
 </body>
 </html>

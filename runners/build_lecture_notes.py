@@ -2,7 +2,7 @@
 
 MD와 HTML이 각 한국어 Part 폴더 안에 나란히 생성되도록 빌드합니다.
 내부 설정/템플릿/에셋은 lecture-notes/_core/ 폴더에서 중앙 관리합니다.
-GDPval 스타일의 전문적인 에디토리얼 테마(DATATRAIN Base64 로고, 인라인 CSS, GIF 뷰어, 프롬프트 카드)를 적용합니다.
+GDPval 스타일의 전문적인 에디토리얼 테마(DATATRAIN Base64 로고, 인라인 CSS, GIF 뷰어, 프롬프트 카드, 좌측 사이드바)를 적용합니다.
 
 실행:
     source .venv/bin/activate && python runners/build_lecture_notes.py
@@ -20,6 +20,7 @@ from pathlib import Path
 
 import markdown
 from jinja2 import Environment, FileSystemLoader
+from markdown.extensions.toc import TocExtension, slugify_unicode
 
 ROOT = Path(__file__).resolve().parent.parent
 LECTURE_DIR = ROOT / "lecture-notes"
@@ -29,7 +30,12 @@ TEMPLATE_DIR = CORE_DIR / "template"
 ASSETS_DIR = CORE_DIR / "assets"
 INDEX_FILENAME = "00_AI트레이딩_전체교재_목차.html"
 
-MD_EXTENSIONS = ["extra", "sane_lists", "tables"]
+MD_EXTENSIONS = [
+    "extra",
+    "sane_lists",
+    "tables",
+    TocExtension(permalink=False, toc_depth="2-3", slugify=slugify_unicode),
+]
 
 
 @dataclass
@@ -71,8 +77,25 @@ def parse_note(path: Path, curriculum: dict[str, dict]) -> Note:
     return Note(source=path, body=body, **meta)
 
 
-def render_markdown(body: str) -> str:
-    html = markdown.markdown(body, extensions=MD_EXTENSIONS)
+def flatten_toc(tokens: list[dict] | None) -> list[dict]:
+    items: list[dict] = []
+    for token in tokens or []:
+        raw_name = token.get("name", "")
+        items.append(
+            {
+                "level": token.get("level", 2),
+                "id": token.get("id", ""),
+                "name": re.sub(r"<[^>]+>", "", raw_name).strip(),
+            }
+        )
+        items.extend(flatten_toc(token.get("children") or []))
+    return items
+
+
+def render_markdown(body: str) -> tuple[str, list[dict]]:
+    converter = markdown.Markdown(extensions=MD_EXTENSIONS)
+    html = converter.convert(body)
+    page_toc = flatten_toc(getattr(converter, "toc_tokens", None))
 
     # 1. ```prompt 블록 → 전용 카드 UI (복사 버튼 + 뱃지)
     prompt_pattern = re.compile(
@@ -119,7 +142,40 @@ def render_markdown(body: str) -> str:
         html,
     )
 
-    return html
+    return html, page_toc
+
+
+def group_parts(notes: list[Note]) -> list[dict]:
+    parts: list[dict] = []
+    for note in notes:
+        if not parts or parts[-1]["number"] != note.part:
+            parts.append(
+                {
+                    "number": note.part,
+                    "title": note.part_title,
+                    "chapters": [],
+                    "clip_count": 0,
+                    "minutes": 0,
+                }
+            )
+        part = parts[-1]
+        if not part["chapters"] or part["chapters"][-1]["number"] != note.chapter:
+            part["chapters"].append(
+                {"number": note.chapter, "title": note.chapter_title, "clips": []}
+            )
+        part["chapters"][-1]["clips"].append(
+            {
+                "id": note.note_id,
+                "clip_num": note.clip_num,
+                "title": note.title,
+                "rel_href": note.href,
+                "duration": note.duration,
+                "practice": note.practice,
+            }
+        )
+        part["clip_count"] += 1
+        part["minutes"] += note.duration
+    return parts
 
 
 def get_logo_data_uri() -> str:
@@ -163,60 +219,53 @@ def build() -> None:
     css_content = (TEMPLATE_DIR / "style.css").read_text(encoding="utf-8")
     (ASSETS_DIR / "style.css").write_text(css_content, encoding="utf-8")
     logo_data_uri = get_logo_data_uri()
+    parts = group_parts(notes)
+    total_clips = len(notes)
+    total_minutes = sum(n.duration for n in notes)
 
     # 개별 클립 페이지 렌더링
     for i, note in enumerate(notes):
         prev_note = notes[i - 1] if i > 0 else None
         next_note = notes[i + 1] if i < len(notes) - 1 else None
+        content, page_toc = render_markdown(note.body)
         out_path = LECTURE_DIR / note.href
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(
             page_tpl.render(
                 note=note,
-                content=render_markdown(note.body),
+                content=content,
+                page_toc=page_toc,
+                parts=parts,
+                current_id=note.note_id,
+                current_part=note.part,
+                is_index=False,
+                nav_prefix="../",
+                index_href=f"../{INDEX_FILENAME}",
                 css_path="../_core/assets/style.css",
                 inline_css=css_content,
                 logo_data_uri=logo_data_uri,
-                index_path=f"../{INDEX_FILENAME}",
+                total_clips=total_clips,
                 prev={"href": f"../{prev_note.href}", "title": prev_note.title} if prev_note else None,
                 next={"href": f"../{next_note.href}", "title": next_note.title} if next_note else None,
             ),
             encoding="utf-8",
         )
 
-    # 목차 페이지 구성
-    parts: list[dict] = []
-    for note in notes:
-        if not parts or parts[-1]["number"] != note.part:
-            parts.append(
-                {"number": note.part, "title": note.part_title, "chapters": [], "clip_count": 0, "minutes": 0}
-            )
-        part = parts[-1]
-        if not part["chapters"] or part["chapters"][-1]["number"] != note.chapter:
-            part["chapters"].append({"number": note.chapter, "title": note.chapter_title, "clips": []})
-        part["chapters"][-1]["clips"].append(
-            {
-                "id": note.note_id,
-                "clip_num": note.clip_num,
-                "title": note.title,
-                "href": note.href,
-                "duration": note.duration,
-                "practice": note.practice,
-            }
-        )
-        part["clip_count"] += 1
-        part["minutes"] += note.duration
-
     out_index_path = LECTURE_DIR / INDEX_FILENAME
     out_index_path.write_text(
         index_tpl.render(
             parts=parts,
+            page_toc=[],
+            current_id="",
+            current_part=0,
+            is_index=True,
+            nav_prefix="",
+            index_href=INDEX_FILENAME,
             css_path="_core/assets/style.css",
             inline_css=css_content,
             logo_data_uri=logo_data_uri,
-            total_clips=len(notes),
-            total_minutes=sum(n.duration for n in notes),
-            index_filename=INDEX_FILENAME,
+            total_clips=total_clips,
+            total_minutes=total_minutes,
         ),
         encoding="utf-8",
     )

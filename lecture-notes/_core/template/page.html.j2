@@ -6,77 +6,74 @@
 <title>{{ note.title }} — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="{{ css_path }}">
 <style>
-/* Inlined critical CSS */
 {{ inline_css }}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Top Navigation Header with Embedded Base64 Logo -->
-  <header class="top-nav">
-    <a class="brand" href="{{ index_path }}">
-      <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
-      <span>DATATRAIN</span>
-    </a>
-    <div class="nav-links">
-      <span class="crumb">Part {{ "%02d"|format(note.part) }} · CH{{ "%02d"|format(note.chapter) }}</span>
-      <a href="{{ index_path }}">목차로 이동 ↗</a>
-    </div>
-  </header>
+<div class="docs-shell">
+  {% include "sidebar.html.j2" %}
 
-  <!-- Note Header & GDPval-style Metadata Bar -->
-  <div class="note-header">
-    <div class="kicker">Part {{ "%02d"|format(note.part) }}. {{ note.part_title }}</div>
-    <h1>{{ note.title }}</h1>
-    
-    <div class="metadata-bar">
-      <div class="metadata-item">
-        <span class="label">Chapter:</span>
-        <span>CH{{ "%02d"|format(note.chapter) }}. {{ note.chapter_title }}</span>
+  <div class="docs-main">
+    <header class="docs-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="목차 열기">☰</button>
+      <div class="crumb">
+        Part {{ "%02d"|format(note.part) }} · CH{{ "%02d"|format(note.chapter) }} · Clip {{ "%02d"|format(note.clip_num) }}
       </div>
-      <div class="metadata-item">
-        <span class="label">예상 소요 시간:</span>
-        <span class="badge time">약 {{ note.duration }}분</span>
+      <a class="topbar-link" href="{{ index_href }}">전체 목차 ↗</a>
+    </header>
+
+    <div class="docs-content">
+      <div class="note-header">
+        <div class="kicker">Part {{ "%02d"|format(note.part) }}. {{ note.part_title }}</div>
+        <h1>{{ note.title }}</h1>
+
+        <div class="metadata-bar">
+          <div class="metadata-item">
+            <span class="label">Chapter:</span>
+            <span>CH{{ "%02d"|format(note.chapter) }}. {{ note.chapter_title }}</span>
+          </div>
+          <div class="metadata-item">
+            <span class="label">예상 소요 시간:</span>
+            <span class="badge time">약 {{ note.duration }}분</span>
+          </div>
+          <div class="metadata-item">
+            <span class="label">강의 유형:</span>
+            {% if note.practice %}
+            <span class="badge practice">{{ note.practice }} (실습 중심)</span>
+            {% else %}
+            <span class="badge">이론 및 아키텍처 브리핑</span>
+            {% endif %}
+          </div>
+        </div>
       </div>
-      <div class="metadata-item">
-        <span class="label">강의 유형:</span>
-        {% if note.practice %}
-        <span class="badge practice">{{ note.practice }} (실습 중심)</span>
+
+      <main>
+        {{ content }}
+      </main>
+
+      <nav class="pager-nav">
+        {% if prev %}
+        <a class="pager-btn prev" href="{{ prev.href }}">
+          <span class="direction">← 이전 클립</span>
+          <span class="title">{{ prev.title }}</span>
+        </a>
         {% else %}
-        <span class="badge">이론 및 아키텍처 브리핑</span>
+        <div></div>
         {% endif %}
-      </div>
+        {% if next %}
+        <a class="pager-btn next" href="{{ next.href }}">
+          <span class="direction">다음 클립 →</span>
+          <span class="title">{{ next.title }}</span>
+        </a>
+        {% endif %}
+      </nav>
+
+      <footer class="site-footer">
+        <span>© DATATRAIN. All rights reserved.</span>
+        <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+      </footer>
     </div>
   </div>
-
-  <!-- Main Content -->
-  <main>
-    {{ content }}
-  </main>
-
-  <!-- Pager Navigation -->
-  <nav class="pager-nav">
-    {% if prev %}
-    <a class="pager-btn prev" href="{{ prev.href }}">
-      <span class="direction">← 이전 클립</span>
-      <span class="title">{{ prev.title }}</span>
-    </a>
-    {% else %}
-    <div></div>
-    {% endif %}
-    {% if next %}
-    <a class="pager-btn next" href="{{ next.href }}">
-      <span class="direction">다음 클립 →</span>
-      <span class="title">{{ next.title }}</span>
-    </a>
-    {% endif %}
-  </nav>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <span>© DATATRAIN. All rights reserved.</span>
-    <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
-  </footer>
 </div>
 
 <script>
@@ -92,6 +89,15 @@ document.querySelectorAll(".prompt-card").forEach(function (card) {
     });
   });
 });
+
+// Mobile Sidebar Toggle
+var toggle = document.querySelector(".sidebar-toggle");
+var sidebar = document.getElementById("docs-sidebar");
+if (toggle && sidebar) {
+  toggle.addEventListener("click", function () {
+    sidebar.classList.toggle("is-open");
+  });
+}
 </script>
 </body>
 </html>
