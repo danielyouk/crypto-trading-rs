@@ -59,7 +59,7 @@
     <span class="step-num">Step 3</span>
     <div class="step-body">
       <div class="step-title">Verification 동일 검증</div>
-      <div class="step-desc">"완성되면 스크립트를 실행해서 터미널에 검증 로그를 출력하고 파일 저장 경로를 알려줘."</div>
+      <div class="step-desc">"완성되면 스크립트를 실행해서 화면에 검증 로그를 출력하고 파일 저장 경로를 알려줘."</div>
     </div>
   </div>
 </div>
@@ -72,14 +72,14 @@ Claude Code 대화창에 아래 프롬프트를 입력하여, 우리의 시스�
 
 ```prompt
 우리가 만든 AI 트레이딩 시스템의 모든 모듈(kis_auth, market_data, realtime_signals, execute_orders, risk_guard)이 
-어떤 외부 도구(Codex, Cursor, 표준 CLI 환경)에서도 100% 동일하게 호환 및 실행 가능한지 아키텍처 독립성을 점검해줘. (Context)
+어떤 외부 도구(Codex, Cursor, 다양한 AI 코딩 환경)에서도 100% 동일하게 호환 및 실행 가능한지 아키텍처 독립성을 점검해줘. (Context)
 
 다음 작업을 수행해줘: (Deliverable)
 1. 시스템의 모든 의존성(requirements.txt)이 순수 표준 오픈소스 라이브러리로만 구성되어 있는지 감사해줘.
 2. weekly_policy.json과 signals.json이 표준 JSON 스키마 규격을 충족하는지 검증해줘.
 3. 다른 AI 도구(Codex 등)를 처음 사용하는 사람이 이 프로젝트를 인계받았을 때 1분 만에 실행할 수 있도록 작성된 'docs/universal_tool_guide.md' 매뉴얼을 생성해줘.
 
-실행 완료 후 터미널에 아키텍처 독립성 감사 통과 여부를 출력해줘. (Verification)
+실행 완료 후 화면에 아키텍처 독립성 감사 통과 여부를 출력해줘. (Verification)
 ```
 
 ---

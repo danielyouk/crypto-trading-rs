@@ -1775,17 +1775,17 @@ df = fdr.DataReader('005930', '2021-01-01', '2024-12-31')
 4. 차트 제목에 한글이 깨지지 않도록 OS에 맞는 시스템 한글 폰트를 설정해줘.
 5. 완성된 차트를 'samsung_trend_chart.png' 파일로 고해상도(DPI=300) 저장해줘.
 
-스크립트 실행 후 파일 생성 경로와 함께, 최근 5거래일의 종가 및 이동평균선 요약 데이터를 터미널에 출력해줘. (Verification)
+스크립트 실행 후 파일 생성 경로와 함께, 최근 5거래일의 종가 및 이동평균선 요약 데이터를 화면에 출력해줘. (Verification)
 </code></pre></div>
 <hr />
 <h3 id="step-2-결과-관찰-및-시각적-검증">Step 2. 결과 관찰 및 시각적 검증</h3>
-<p>Claude Code가 스크립트를 작성하고 터미널에서 실행하여 <code>samsung_trend_chart.png</code>를 생성합니다. 생성된 이미지 파일을 열고 아래 체크리스트를 확인하세요.</p>
+<p>AI가 스크립트를 작성 및 실행하여 <code>samsung_trend_chart.png</code>를 생성합니다. 생성된 이미지 파일을 열고 아래 체크리스트를 확인하세요.</p>
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> <strong>2-패널 구성 확인</strong>: 상단에는 주가 및 3개 이평선, 하단에는 거래량 막대가 분리되어 배치되었다.</li>
 <li class="check-item"><input type="checkbox"> <strong>이동평균선 3종 범례</strong>: 20일, 60일, 120일 선이 색상별로 구분되고 범례(Legend)가 정상 표기되었다.</li>
 <li class="check-item"><input type="checkbox"> <strong>한글 폰트 정상 렌더링</strong>: 제목('삼성전자 주가 및 이동평균선 추세')과 축 라벨의 한글이 네모(<code>□□□</code>)로 깨지지 않았다.</li>
-<li class="check-item"><input type="checkbox"> <strong>최근 주가 일치도</strong>: 터미널에 출력된 최근 5일치 종가가 실제 포털 증권 화면의 시세와 일치한다.</li>
+<li class="check-item"><input type="checkbox"> <strong>최근 주가 일치도</strong>: 화면에 출력된 최근 5일치 종가가 실제 포털 증권 화면의 시세와 일치한다.</li>
 </ul>
 <hr />
 <h2 id="자주-발생하는-문제-및-트러블슈팅">자주 발생하는 문제 및 트러블슈팅</h2>

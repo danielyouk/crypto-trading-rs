@@ -1702,7 +1702,7 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 <strong>한국투자증권(KIS) Developers 포털에서 모의투자 API 키를 발급</strong>받고, 보안 환경설정 파일(<code>.env</code>)을 통해 인증 정보를 안전하게 격리한 뒤, <strong>파이썬 스크립트로 OAuth2 접근 토큰을 발급받아 모의투자 계좌의 예수금 및 보유 주식 잔고를 터미널에 깔끔한 표로 출력</strong>하는 데 성공하게 됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 <strong>한국투자증권(KIS) Developers 포털에서 모의투자 API 키를 발급</strong>받고, 보안 환경설정 파일(<code>.env</code>)을 통해 인증 정보를 안전하게 격리한 뒤, <strong>파이썬 스크립트로 OAuth2 접근 토큰을 발급받아 모의투자 계좌의 예수금 및 보유 주식 잔고를 화면에 깔끔한 표로 출력</strong>하는 데 성공하게 됩니다.</p>
 <blockquote>
 <p>💡 <strong>수강생 안심 안내</strong>: 실계좌(진짜 돈)가 아니라 <strong>가상 머니 5억 원이 지급되는 '모의투자 계좌'</strong>로 진행하므로 금전적 위험이 전혀 없습니다. 또한 API Key와 Secret은 절대로 외부에 공개되지 않도록 <code>.env</code> 환경변수로 철저히 보호합니다.</p>
 </blockquote>
@@ -1753,17 +1753,17 @@ KIS_IS_PAPER=True
 1. python-dotenv와 requests 패키지를 확인 및 설치해줘.
 2. .env 파일 템플릿을 생성하고, 사용자가 입력한 KIS_APP_KEY, KIS_APP_SECRET, KIS_CANO, KIS_ACNT_PRDT_CD 환경변수를 안전하게 로드하도록 구현해줘.
 3. KIS 모의투자 서버(https://openapivts.koreainvestment.com:29443)의 OAuth2 토큰 발급 엔드포인트(/oauth2/tokenP)를 호출해 access_token을 발급받아줘.
-4. 발급된 토큰으로 '주식 잔고조회(TTTC8434R)' API를 호출하여 내 계좌의 총 예수금, 총 평가금액, 총 손익률을 터미널에 요약 표로 출력해줘.
+4. 발급된 토큰으로 '주식 잔고조회(TTTC8434R)' API를 호출하여 내 계좌의 총 예수금, 총 평가금액, 총 손익률을 대화창에 요약 표로 출력해줘.
 5. 전체 코드는 'kis_auth.py'로 저장해줘.
 
-실행 완료 후 터미널에 내 모의투자 계좌의 예수금 요약표를 출력해서 정상 연결을 증명해줘. (Verification)
+실행 완료 후 화면에 내 모의투자 계좌의 예수금 요약표를 출력해서 정상 연결을 증명해줘. (Verification)
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> <code>.env</code> 파일에 발급받은 모의투자 키와 계좌번호가 정상 저장되었다.</li>
 <li class="check-item"><input type="checkbox"> <code>kis_auth.py</code> 실행 시 OAuth2 접근 토큰(Bearer 토큰)이 에러 없이 발급되었다.</li>
-<li class="check-item"><input type="checkbox"> 터미널에 내 모의투자 계좌의 총 예수금(예: 500,000,000원)과 평가 잔고 표가 성공적으로 출력되었다.</li>
+<li class="check-item"><input type="checkbox"> 화면에 내 모의투자 계좌의 총 예수금(예: 500,000,000원)과 평가 잔고 표가 성공적으로 출력되었다.</li>
 </ul>
 <hr />
 <h2 id="자주-발생하는-문제">자주 발생하는 문제</h2>

@@ -1723,7 +1723,7 @@ window.MathJax = {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-초보자가-에러-앞에서-얼어붙는-3가지-착각-vs-진실">1. 초보자가 에러 앞에서 얼어붙는 3가지 착각 vs 진실</h3>
-<p>AI 코딩을 처음 접하는 입문자가 가장 많이 겪는 심리적 장벽은 에러 터미널의 붉은 글씨를 볼 때 느끼는 막막함입니다. 하지만 진실은 정반대입니다.</p>
+<p>AI 코딩을 처음 접하는 입문자가 가장 많이 겪는 심리적 장벽은 실행 중 에러 메시지를 마주할 때 느끼는 막막함입니다. 하지만 진실은 정반대입니다.</p>
 <div class="compare-box">
   <div class="compare-card bad">
     <div class="tag">입문자의 위험한 착각</div>
@@ -1776,7 +1776,7 @@ window.MathJax = {
 <hr />
 <h3 id="3-ai와-함께하는-4단계-디버깅-표준-프로토콜">3. AI와 함께하는 4단계 디버깅 표준 프로토콜</h3>
 <p>에러를 만났을 때 AI에게 던지는 프롬프트의 품질이 해결 속도를 결정합니다. 아래의 <strong>4단계 프로토콜</strong>을 복사기처럼 그대로 사용하세요.</p>
-<pre><code class="language-text">[Step 1: Raw Traceback] 터미널에 출력된 에러 메시지 전체 복사 (절대 요약하지 않음)
+<pre><code class="language-text">[Step 1: Raw Traceback] 화면에 나타난 에러 메시지/로그 전체 복사 (절대 요약하지 않음)
    ↓
 [Step 2: Context Tagging] &quot;무엇을 하다가(어떤 파일을 실행하다가)&quot; 났는지 1문장 추가
    ↓
@@ -1784,13 +1784,13 @@ window.MathJax = {
    ↓
 [Step 4: Verification Request] 수정 후 정상 동작 여부를 확인하는 검증 출력 요청
 </code></pre>
-<h4 id="터미널-스택트레이스traceback의-비밀">터미널 스택트레이스(Traceback)의 비밀</h4>
-<p>초보자는 흔히 터미널의 가장 마지막 한 줄(예: <code>ZeroDivisionError: division by zero</code>)만 AI에게 보냅니다. 하지만 AI에게는 <strong>중간 줄에 적힌 "몇 번째 파일, 몇 번째 라인에서 어떤 함수를 호출했는가"</strong>라는 스택트레이스가 10배 더 중요합니다. 반드시 <strong>위아래 전체를 통째로 복사</strong>하세요.</p>
+<h4 id="오류-추적-로그traceback의-비밀">오류 추적 로그(Traceback)의 비밀</h4>
+<p>초보자는 흔히 오류 메시지의 가장 마지막 한 줄(예: <code>ZeroDivisionError: division by zero</code>)만 AI에게 보냅니다. 하지만 AI에게는 <strong>중간 줄에 적힌 "몇 번째 파일, 몇 번째 라인에서 어떤 함수를 호출했는가"</strong>라는 전체 실행 추적(Traceback) 로그가 10배 더 중요합니다. 반드시 <strong>위아래 전체를 통째로 복사</strong>하세요.</p>
 <hr />
 <h3 id="4-로그가-없을-때의-무기-시각적-스크린샷-캡처와-데이터-형상-출력">4. 로그가 없을 때의 무기 — 시각적 스크린샷 캡처와 데이터 형상 출력</h3>
-<p>만약 터미널에 아무런 붉은 에러 글씨가 뜨지 않는데도 결과가 이상하다면 어떻게 해야 할까요?</p>
+<p>만약 화면에 아무런 오류 메시지가 뜨지 않는데도 결과가 이상하다면 어떻게 해야 할까요?</p>
 <ol>
-<li><strong>화면 캡처 전달 (Multimodal Prompting)</strong>: 차트가 찌그러졌거나 한글이 깨졌다면 말로 구구절절 설명하지 말고 <strong>화면을 캡처해서 Cursor/Claude Code 채팅창에 붙여넣기(Ctrl+V)</strong>하세요. 최신 AI는 이미지를 보고 즉시 폰트 설정 코드(<code>plt.rc('font', family='Malgun Gothic')</code>)나 레이아웃 조절 코드(<code>plt.tight_layout()</code>)를 생성합니다.</li>
+<li><strong>화면 캡처 전달 (Multimodal Prompting)</strong>: 차트가 찌그러졌거나 한글이 깨졌다면 말로 구구절절 설명하지 말고 <strong>화면을 캡처해서 AI 대화창에 붙여넣기(Ctrl+V)</strong>하세요. 최신 AI는 이미지를 보고 즉시 폰트 설정 코드(<code>plt.rc('font', family='Malgun Gothic')</code>)나 레이아웃 조절 코드(<code>plt.tight_layout()</code>)를 생성합니다.</li>
 <li><strong>데이터 형상(Shape)과 결측치 출력 요청</strong>: 숫자가 이상할 때는 AI에게 데이터의 중간 상태를 확인해 달라고 요청합니다.<blockquote>
 <p><em>"데이터프레임의 상위 5줄(<code>head()</code>), 결측치 개수(<code>isna().sum()</code>), 데이터 타입(<code>dtypes</code>)을 출력해서 이상이 없는지 먼저 진단해줘."</em></p>
 </blockquote>
@@ -1826,14 +1826,14 @@ window.MathJax = {
 종목 코드를 존재하지 않는 '999999'로 바꿔서 실행해줘.
 어떤 에러가 발생하는지 확인하고 싶어.
 </code></pre></div>
-<p>터미널에 에러가 출력되면, 4단계 프로토콜 프롬프트를 보냅니다.</p>
+<p>실행 중 오류 메시지가 나타나면, 4단계 프로토콜 프롬프트를 보냅니다.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>종목 데이터를 불러오다가 아래 에러가 발생했어.
 에러 원인을 비전공자도 이해하기 쉽게 한 문장으로 설명해주고,
 존재하지 않거나 상장폐지된 종목코드일 경우 프로그램을 중단시키지 않고
 &quot;유효하지 않은 종목코드입니다&quot;라는 경고를 띄운 뒤 정상 종료하도록 코드를 방어적으로 수정해줘.
 원래 목표였던 삼성전자(005930) 1년치 일봉 데이터 수집도 정상 완료해줘.
 
-[터미널 에러 로그 전체 붙여넣기]
+[에러 로그 전체 붙여넣기]
 </code></pre></div>
 <hr />
 <h3 id="실습-03-b-시각화-에러-복구-한글-폰트-깨짐-및-레이아웃-자동-보정">실습 03-B: [시각화 에러 복구] 한글 폰트 깨짐 및 레이아웃 자동 보정</h3>
@@ -1858,15 +1858,15 @@ NaN(결측치) 데이터를 확인하고, 결측치가 백테스트나 차트 �
 <li class="check-item"><input type="checkbox"> 잘못된 종목코드를 넣었을 때 프로그램이 뻗지 않고 방어 메시지가 출력되는 것을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> 에러 로그 전체를 복사해서 질문했을 때 AI가 원인을 명쾌하게 짚어내고 코드를 자동 수정했다.</li>
 <li class="check-item"><input type="checkbox"> 한글 폰트가 깨지지 않고 차트 제목과 축 이름이 선명한 한글로 저장되었다.</li>
-<li class="check-item"><input type="checkbox"> 데이터프레임의 결측치(NaN) 개수와 전후 데이터 행 수가 터미널에 숫자로 확인되었다.</li>
+<li class="check-item"><input type="checkbox"> 데이터프레임의 결측치(NaN) 개수와 전후 데이터 행 수가 화면/대화창에 숫자로 확인되었다.</li>
 </ul>
 <hr />
 <h2 id="자주-발생하는-문제-및-qa">자주 발생하는 문제 및 Q&amp;A</h2>
 <p><strong>Q1. AI가 코드를 고쳤다고 하는데 여전히 똑같은 에러가 반복됩니다. 어떻게 해야 하나요?</strong><br />
-AI가 이전 대화 맥락에 갇혀 같은 실수를 반복하는 현상입니다. 이럴 때는 대화창에 <code>/clear</code>를 입력해 대화 메모리를 초기화한 뒤, <strong>"프로젝트의 원래 목표 + 작업 중인 파이썬 파일 경로 + 방금 발생한 에러 로그 전체"</strong>를 하나의 프롬프트에 담아 새롭게 질문하면 즉시 해결됩니다.</p>
-<p><strong>Q2. 에러 로그가 수백 줄이 넘어서 터미널 위로 훌쩍 지나가 버립니다. 어디서부터 복사해야 하나요?</strong><br />
-터미널 창을 위로 스크롤하여 파이썬 실행 명령어(예: <code>python test.py</code>) 바로 다음 줄부터 맨 아래 프롬프트 입력창 직전까지 마우스 드래그로 긁어서 복사하면 됩니다. 터미널 출력이 너무 길다면 <code>"방금 실행한 파이썬 에러 로그를 error.log 파일로 저장해줘"</code>라고 지시해도 좋습니다.</p>
-<p><strong>Q3. 터미널에 붉은색 글씨로 긴 문장이 떴는데, 프로그램은 끝까지 실행되어 차트 파일이 나왔습니다. 이것도 에러인가요?</strong><br />
+AI가 이전 대화 맥락에 갇혀 같은 실수를 반복하는 현상입니다. 이럴 때는 대화창에 <code>/clear</code>를 입력해 대화 메모리를 초기화하거나 새 세션을 연 뒤, <strong>"프로젝트의 원래 목표 + 작업 중인 파이썬 파일 경로 + 방금 발생한 에러 로그 전체"</strong>를 하나의 프롬프트에 담아 새롭게 질문하면 즉시 해결됩니다.</p>
+<p><strong>Q2. 에러 로그가 너무 길어서 화면 위로 훌쩍 지나가 버립니다. 어디서부터 복사해야 하나요?</strong><br />
+실행 출력 창이나 대화창을 위로 스크롤하여 오류가 시작된 지점(<code>Traceback ...</code>)부터 맨 끝 에러 이름까지 마우스 드래그로 복사하면 됩니다. 오류 출력이 너무 길다면 AI에게 <code>"방금 발생한 에러 로그를 분석해서 원인을 진단하고 수정해줘"</code>라고 대화창에 요청해도 좋습니다.</p>
+<p><strong>Q3. 실행 결과창에 붉은색 글씨나 긴 영문 문장이 떴는데, 프로그램은 끝까지 실행되어 차트 파일이 나왔습니다. 이것도 에러인가요?</strong><br />
 그것은 <code>Error</code>가 아니라 <strong><code>Warning(경고)</code></strong>일 가능성이 높습니다 (예: <code>FutureWarning: Series.__getitem__ treating keys as positions is deprecated</code>). 경고는 실행을 멈추지는 않지만 향후 라이브러리 업데이트 시 에러가 될 수 있으므로, 해당 경고 문구를 AI에게 복사해 주며 <em>"이 경고가 발생하지 않도록 최신 문법으로 코드를 다듬어줘"</em>라고 요청하면 코드가 더욱 견고해집니다.</p>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
