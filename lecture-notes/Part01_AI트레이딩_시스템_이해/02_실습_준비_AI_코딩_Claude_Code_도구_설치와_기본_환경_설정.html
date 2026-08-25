@@ -1176,27 +1176,37 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-왜-ai-코딩인가-제로코드-패러다임의-완성">1. 왜 AI 코딩인가? — 제로코드 패러다임의 완성</a>
+            <a class="nav-heading level-3" href="#1-왜-ai-코딩인가-문법을-몰라도-시스템을-만든다">1. 왜 AI 코딩인가? — 문법을 몰라도 시스템을 만든다</a>
             
-            <a class="nav-heading level-3" href="#2-범용-도구-철학-어떤-ai-도구를-써도-본질은-동일하다">2. 범용 도구 철학 — 어떤 AI 도구를 써도 본질은 동일하다</a>
+            <a class="nav-heading level-3" href="#2-왜-데스크탑-앱이-아니라-편집기-확장인가">2. 왜 데스크탑 앱이 아니라 편집기 확장인가</a>
             
-            <a class="nav-heading level-3" href="#3-계정-및-비용-구조의-투명한-이해">3. 계정 및 비용 구조의 투명한 이해</a>
+            <a class="nav-heading level-3" href="#3-비용은-얼마나-드나">3. 비용은 얼마나 드나</a>
             
-            <a class="nav-heading level-3" href="#4-3단계-환경-준비-로드맵">4. 3단계 환경 준비 로드맵</a>
+            <a class="nav-heading level-3" href="#4-오늘의-진행-흐름">4. 오늘의 진행 흐름</a>
             
             <a class="nav-heading level-2" href="#실습-실습-01-ai-도구-환경-구축">실습 — 실습 01: AI 도구 환경 구축</a>
             
-            <a class="nav-heading level-3" href="#step-1-작업-폴더-생성-및-ai-앱-실행">Step 1. 작업 폴더 생성 및 AI 앱 실행</a>
+            <a class="nav-heading level-3" href="#step-0-확장-설치와-자율권-모드-설정">Step 0. 확장 설치와 자율권 모드 설정</a>
             
-            <a class="nav-heading level-3" href="#step-2-환경-구축-프롬프트-입력">Step 2. 환경 구축 프롬프트 입력</a>
+            <a class="nav-heading level-3" href="#step-1-작업-폴더-생성-및-열기">Step 1. 작업 폴더 생성 및 열기</a>
             
-            <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
+            <a class="nav-heading level-3" href="#step-2-진단-프롬프트-아무것도-설치하지-않고-상태만-확인">Step 2. 진단 프롬프트 — 아무것도 설치하지 않고 상태만 확인</a>
+            
+            <a class="nav-heading level-3" href="#step-3-구축-프롬프트-네-칸으로-나눠-요청하기">Step 3. 구축 프롬프트 — 네 칸으로 나눠 요청하기</a>
+            
+            <a class="nav-heading level-3" href="#step-4-내-눈으로-확인할-체크리스트">Step 4. 내 눈으로 확인할 체크리스트</a>
             
             <a class="nav-heading level-2" href="#자주-발생하는-문제-및-트러블슈팅">자주 발생하는 문제 및 트러블슈팅</a>
             
-            <a class="nav-heading level-3" href="#1-패키지-다운로드-중-타임아웃이-발생할-때">1. 패키지 다운로드 중 타임아웃이 발생할 때</a>
+            <a class="nav-heading level-3" href="#1-진단-결과-python-없음이라고-나올-때">1. 진단 결과 "Python 없음"이라고 나올 때</a>
             
-            <a class="nav-heading level-3" href="#2-가상환경-권한-관련-알림이-뜰-때">2. 가상환경 권한 관련 알림이 뜰 때</a>
+            <a class="nav-heading level-3" href="#2-설치가-되는-것-같더니-원인-모를-에러로-멈출-때-windows">2. 설치가 되는 것 같더니 원인 모를 에러로 멈출 때 (Windows)</a>
+            
+            <a class="nav-heading level-3" href="#3-패키지-다운로드-중-타임아웃이-발생할-때">3. 패키지 다운로드 중 타임아웃이 발생할 때</a>
+            
+            <a class="nav-heading level-3" href="#4-한글이-깨져서-표가-이상하게-보일-때-windows">4. 한글이 깨져서 표가 이상하게 보일 때 (Windows)</a>
+            
+            <a class="nav-heading level-3" href="#5-승인-버튼이-계속-뜰-때">5. 승인 버튼이 계속 뜰 때</a>
             
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
             
@@ -1710,264 +1720,290 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분의 컴퓨터에 앞으로 5개 파트 동안 나만의 트레이딩 시스템을 함께 만들 <strong>강력한 AI 코딩 파트너</strong>와 <strong>한국 주식 데이터 분석 환경</strong>이 완벽하게 갖춰집니다.</p>
+<p>이 클립이 끝나면, 여러분의 컴퓨터에 앞으로 5개 파트 동안 나만의 트레이딩 시스템을 함께 만들 <strong>AI 코딩 파트너</strong>와 <strong>한국 주식 데이터 분석 환경</strong>이 갖춰집니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 파이썬 버전 관리나 라이브러리 설치 때문에 고민하실 필요가 전혀 없습니다. 우리는 복잡한 개발 명령어를 일일이 입력하지 않습니다. <strong>개발 환경 구축 자체를 AI에게 위임</strong>하고, 우리는 화면으로 정상 작동 여부만 눈으로 확인합니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 파이썬 버전 관리나 라이브러리 설치 때문에 고민하실 필요가 없습니다. <strong>개발 환경 구축 자체를 AI에게 위임</strong>하고, 우리는 화면으로 정상 작동 여부만 눈으로 확인합니다.</p>
 </blockquote>
 <ul>
-<li>AI와 함께하는 시스템 구축의 <strong>핵심 작동 메커니즘</strong> 이해</li>
-<li><strong>"어떤 AI 도구를 써도 본질은 같다"</strong> — 범용 도구 철학과 단일 작업 파이프라인</li>
-<li>투명한 AI 비용 관리(API vs 정액제) 이해</li>
-<li>AI 대화창을 통해 <strong>Python 가상환경(<code>.venv</code>)과 FinanceDataReader 설치</strong>를 완전 자동화</li>
-<li><strong>실습 01</strong>: 삼성전자(005930) 최근 종가 및 데이터프레임 무결성 출력 검증</li>
+<li>편집기 확장(Extension)으로 AI 코딩 환경을 <strong>클릭 몇 번으로</strong> 준비하기</li>
+<li>AI에게 <strong>어디까지 자율권을 줄지 정하는 모드 설정</strong> 이해</li>
+<li><strong>진단 먼저, 실행 나중</strong> — 두 단계로 나눠 요청하는 이유</li>
+<li><strong>실습 01</strong>: 삼성전자(005930) 최근 5거래일 일봉을 출력하고, 그 숫자가 <strong>진짜인지 직접 대조</strong>하기</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-왜-ai-코딩인가-제로코드-패러다임의-완성">1. 왜 AI 코딩인가? — 제로코드 패러다임의 완성</h3>
-<p>AI 코딩 환경은 복잡한 프로그래밍 문법 암기 없이, 사람이 총괄 기획자이자 감독관이 되어 시스템을 완성할 수 있게 만듭니다.</p>
+<h3 id="1-왜-ai-코딩인가-문법을-몰라도-시스템을-만든다">1. 왜 AI 코딩인가? — 문법을 몰라도 시스템을 만든다</h3>
 <div class="compare-box">
   <div class="compare-card info">
     <div class="tag">전통적인 수동 코딩 방식</div>
     <div class="steps">
-      • 프로그래밍 언어 문법과 라이브러리 명령어를 일일이 학습하고 타이핑.<br>
-      • 환경 설정 에러나 패키지 충돌이 발생하면 사람이 직접 원인을 검색해 수동 해결.<br>
-      • 시스템 규모가 커질수록 사람이 모든 파일 구조와 코드 세부를 직접 관리.
+      • 프로그래밍 문법과 라이브러리 명령어를 일일이 학습하고 타이핑.<br>
+      • 환경 설정 에러나 패키지 충돌이 나면 사람이 직접 검색해 해결.<br>
+      • 시스템이 커질수록 사람이 모든 파일과 코드 세부를 직접 관리.
     </div>
   </div>
   <div class="compare-card good">
     <div class="tag">AI와 함께하는 시스템 구축 방식</div>
     <div class="steps">
-      • <strong>사람은 전략의 목표와 규칙을 정의하고, AI가 코드 작성과 실행을 전담</strong>.<br>
-      • 환경 설정부터 라이브러리 설치까지 표준 프롬프트 한 줄로 자동 완결.<br>
-      • 에러가 발생해도 AI가 스스로 로그를 읽고 즉시 자체 수정(Self-healing).
+      • <strong>사람은 목표와 규칙을 정의하고, AI가 코드 작성과 실행을 전담</strong>.<br>
+      • 환경 설정부터 라이브러리 설치까지 요청 한 번으로 완결.<br>
+      • 에러가 나도 AI가 로그를 읽고 스스로 수정(Self-healing).
     </div>
   </div>
 </div>
 
+<p>이 강의의 실습은 <strong>Cursor 또는 VS Code에 Claude Code 확장을 설치하는 방식</strong>으로 진행합니다. 다만 기억하실 원칙은 하나입니다 — <strong>도구는 바뀌어도 작업 원리는 그대로입니다.</strong> 우리가 배울 것은 특정 버튼의 위치가 아니라 ① 목표를 산출물 형태로 선언하고 ② 격리된 폴더에서 실행하고 ③ 사람이 눈으로 검증하는 루프입니다. 이 세 가지는 어떤 AI 도구에서도 100% 동일하게 적용됩니다.</p>
 <hr />
-<h3 id="2-범용-도구-철학-어떤-ai-도구를-써도-본질은-동일하다">2. 범용 도구 철학 — 어떤 AI 도구를 써도 본질은 동일하다</h3>
-<p>이 강의는 가장 직관적이고 강력한 AI 인터페이스를 기준으로 진행합니다. 하지만 기억해야 할 가장 중요한 원칙은 <strong>"도구는 바뀔 수 있어도, 아키텍트의 작업 원리는 영원하다"</strong>는 점입니다.</p>
+<h3 id="2-왜-데스크탑-앱이-아니라-편집기-확장인가">2. 왜 데스크탑 앱이 아니라 편집기 확장인가</h3>
+<p>Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴을 갖고 있습니다. <strong>셋 다 같은 엔진, 같은 요금제</strong>를 씁니다. 그럼에도 이 강의가 확장을 고른 이유는 세 가지입니다.</p>
 <div class="arch-grid">
   <div class="arch-card">
-    <div class="card-title">① 목표 정의 (Goal Specification)</div>
-    <div class="card-desc">코드 문법이 아니라 "산출물의 형태(차트, 표, JSON)"를 명확히 선언하는 능력은 모든 도구에서 100% 동일합니다.</div>
+    <div class="card-title">① 설치가 클릭 한 번</div>
+    <div class="card-desc">확장이 실행에 필요한 것을 통째로 품고 있어, 별도 설치나 경로 설정이 필요 없습니다. Extensions에서 검색 → Install이 전부입니다.</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">② 환경 격리 (Workspace Isolation)</div>
-    <div class="card-desc">독립된 폴더와 가상환경 위에서 안전하게 코드가 실행되도록 통제하는 원칙은 도구와 무관하게 동일합니다.</div>
+    <div class="card-title">② AI가 바꾼 코드를 나란히 보여준다</div>
+    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. <strong>이 강의가 계속 강조할 '사람이 검증한다'는 원칙을 화면이 대신 지켜주는 셈</strong>이라, 가장 중요한 이유입니다.</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">③ 인간 감독관 검증 (Human-in-the-Loop)</div>
-    <div class="card-desc">AI의 결과물을 맹신하지 않고 사람 눈으로 차트와 수치를 교차 검증하는 루프는 어떤 도구에서도 똑같이 적용됩니다.</div>
+    <div class="card-title">③ 되돌리기가 쉽다</div>
+    <div class="card-desc">체크포인트가 남아 있어, AI가 파일을 잔뜩 만들어 놨을 때 한 번에 이전 상태로 돌릴 수 있습니다.</div>
   </div>
 </div>
 
 <blockquote>
-<p>📌 <strong>핵심 원칙</strong>: 본 강의의 모든 프롬프트와 검증 프로토콜은 표준 파이썬 및 파일 기반으로 설계되어 있으므로, 향후 어떤 새로운 AI 도구가 등장하더라도 동일한 논리로 100% 적용할 수 있습니다.</p>
+<p>⚠️ <strong>오해 정정 두 가지</strong>
+- <strong>"터미널 설치는 Node.js를 따로 깔아야 한다"</strong> — 예전 이야기입니다. 지금은 설치 파일 하나로 끝나며 Node.js가 필요 없습니다.
+- <strong>"확장이 앱보다 토큰을 적게 쓴다"</strong> — 사실이 아닙니다. 세 방식 모두 같은 엔진에 같은 사용량을 씁니다. 확장을 고르는 이유는 <strong>비용이 아니라 검증 편의성</strong>입니다.</p>
 </blockquote>
 <hr />
-<h3 id="3-계정-및-비용-구조의-투명한-이해">3. 계정 및 비용 구조의 투명한 이해</h3>
-<p>AI 도구를 사용할 때 알아두어야 할 비용 체계는 매우 단순하고 투명합니다. Claude는 3가지 플랜을 제공합니다.</p>
-
-<h4>📋 Claude 요금제 비교</h4>
-<table>
-<thead>
-<tr>
-<th>플랜</th>
-<th>가격</th>
-<th>대상 사용자</th>
-<th>주요 기능</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Free</strong></td>
-<td>€0 (무료)</td>
-<td>가끔 시험적으로 사용해보는 사용자</td>
-<td>• 웹, iOS, Android, 데스크톱 채팅<br>• 코드 생성 및 데이터 시각화<br>• Slack 및 Google Workspace 연결<br>• 기본 웹 검색</td>
-</tr>
-<tr>
-<td><strong>Pro</strong></td>
-<td>€15/월<br>(€180/년 - 17% 할인)</td>
-<td>일상적으로 대화와 코딩을 함께 쓰는 사용자</td>
-<td>• Free의 모든 기능 포함<br>• <strong>Claude Code</strong> - 코드베이스에서 직접 작업<br>• Cowork으로 작업 효율성 강화<br>• Claude Design으로 빌드 및 프로토타입<br>• 더 높은 사용량 한도<br>• 더 많은 Claude 모델 접근<br>• 대화 간 메모리 유지</td>
-</tr>
-<tr>
-<td><strong>Max</strong></td>
-<td>€90/월 이상</td>
-<td>헤비 사용자 및 대규모 프로젝트 팀</td>
-<td>• Pro의 모든 기능 포함<br>• <strong>Pro 대비 20배까지 많은 사용량</strong><br>• Claude Code & Cowork 권장 플랜<br>• 최신 고급 Claude 기능에 얼리 액세스<br>• 모든 작업의 더 높은 출력 한도<br>• 트래픽이 높을 때 우선 접근</td>
-</tr>
-</tbody>
-</table>
-
+<h3 id="3-비용은-얼마나-드나">3. 비용은 얼마나 드나</h3>
+<p><strong>Pro 플랜(월 약 2만 원대)이면 이 강의 5개 파트를 모두 마치기에 충분합니다.</strong> 무료 플랜으로는 Claude Code를 쓸 수 없어 유료 플랜이 필요하고, 할당량이 모자란다고 느껴지면 그때 API 키를 따로 쓰는 방법이 있습니다. <strong>비용 최적화는 Part 5(Clip 41)에서 본격적으로 다루므로, 지금은 "Pro 하나면 된다"만 기억하시면 됩니다.</strong></p>
 <blockquote>
-<p>💡 <strong>본 강의 추천 플랜</strong>: <strong>Pro 플랜부터 시작하세요!</strong></p>
-</blockquote>
-
-<p>이 강의는 <strong>Pro 플랜(€15/월)</strong>으로 충분합니다. 이유는 다음과 같습니다:</p>
-<ul>
-<li>Claude Code를 직접 코드베이스에서 사용할 수 있어 가장 편리합니다</li>
-<li>5개 파트 전체를 완료하는 데 필요한 비용은 <strong>커피 한두 잔 정도(약 3~7달러)</strong>입니다</li>
-<li>대부분의 수강생에게 할당량이 충분합니다</li>
-</ul>
-
-<p><strong>나중에 "할당량이 부족하다"고 느끼신다면?</strong></p>
-<ul>
-<li>그때는 Claude Code 앱에서 <strong>API 키</strong>를 생성해서 별도로 사용할 수 있습니다</li>
-<li>방법은 간단합니다:
-  <ol>
-    <li>Claude Code에서 <code>설정</code> → <code>API 키 생성</code></li>
-    <li>생성된 키를 환경 변수(<code>CLAUDE_API_KEY</code>)에 저장</li>
-    <li>그 다음부터는 프로그램이 자동으로 API 키를 사용합니다</li>
-  </ol>
-</li>
-<li><strong>이 방법은 Part 5 (Clip 41)</strong>에서 자세히 배웁니다</li>
-</ul>
-
-<blockquote>
-<p>📌 <strong>중요 안내</strong>: 위의 요금제 정보는 학습 시점에 따라 변경될 수 있습니다. 최신 가격과 기능은 Claude 공식 웹사이트에서 확인하시고, <strong>개요적으로 이해</strong>하면서 진행하시기 바랍니다.</p>
+<p>📌 요금제와 가격은 수시로 바뀝니다. 정확한 금액은 공식 웹사이트에서 확인하세요.</p>
 </blockquote>
 <hr />
-<h3 id="4-3단계-환경-준비-로드맵">4. 3단계 환경 준비 로드맵</h3>
-<p>우리가 직접 수행할 작업은 딱 1단계뿐이며, 2단계와 3단계는 AI가 스스로 수행합니다.</p>
+<h3 id="4-오늘의-진행-흐름">4. 오늘의 진행 흐름</h3>
 <div class="step-flow">
+  <div class="step-card">
+    <span class="step-num">Step 0</span>
+    <div class="step-body">
+      <div class="step-title">사람이 직접: 확장 설치와 자율권 모드 설정</div>
+      <div class="step-desc">AI가 어디까지 스스로 할지 미리 정해 둡니다.</div>
+    </div>
+  </div>
   <div class="step-card">
     <span class="step-num">Step 1</span>
     <div class="step-body">
-      <div class="step-title">사람이 직접 수행: 폴더 열기 및 AI 대화창 실행</div>
-      <div class="step-desc">작업용 <code>ai-trading</code> 폴더를 만들고 AI 코딩 앱에서 엽니다.</div>
+      <div class="step-title">사람이 직접: 작업 폴더 만들고 열기</div>
+      <div class="step-desc"><code>ai-trading</code> 폴더를 만들고 편집기에서 엽니다.</div>
     </div>
   </div>
   <div class="step-card ai">
     <span class="step-num">Step 2</span>
     <div class="step-body">
-      <div class="step-title">AI에게 전권 위임: Python 가상환경 및 라이브러리 자동 구축</div>
-      <div class="step-desc">표준 프롬프트 1줄을 입력하면 AI가 <code>.venv</code> 생성 및 <code>pandas</code>, <code>FinanceDataReader</code> 설치를 스스로 완료합니다.</div>
+      <div class="step-title">AI에게 진단 요청: 이 컴퓨터에 무엇이 있는가</div>
+      <div class="step-desc">아무것도 설치하지 않고 현재 상태만 확인합니다. <strong>30초면 끝납니다.</strong></div>
+    </div>
+  </div>
+  <div class="step-card ai">
+    <span class="step-num">Step 3</span>
+    <div class="step-body">
+      <div class="step-title">AI에게 구축 위임: 가상환경 + 라이브러리 + 첫 데이터</div>
+      <div class="step-desc">진단 결과를 알고 요청하므로 AI가 헤매지 않습니다.</div>
     </div>
   </div>
   <div class="step-card verify">
-    <span class="step-num">Step 3</span>
+    <span class="step-num">Step 4</span>
     <div class="step-body">
-      <div class="step-title">사람이 눈으로 확인: 삼성전자 주가 데이터 출력 대조</div>
-      <div class="step-desc">화면에 삼성전자의 최근 5일치 일봉 표가 정상적으로 떠 있는지 눈으로 최종 확인합니다.</div>
+      <div class="step-title">사람이 눈으로: 포털 시세와 숫자 대조</div>
+      <div class="step-desc">AI가 출력한 종가가 <strong>진짜인지</strong> 직접 확인합니다.</div>
     </div>
   </div>
 </div>
 
 <hr />
 <h2 id="실습-실습-01-ai-도구-환경-구축">실습 — 실습 01: AI 도구 환경 구축</h2>
-
-<h3>📱 AI 도구 선택 가이드</h3>
-<p>이 강의는 <strong>3가지 방식</strong> 중 자신의 선호도에 맞춰 진행할 수 있습니다. 모두 동일한 결과를 만들어냅니다.</p>
-
-<h4>방식 1: Claude Code 데스크탑 앱 (권장 — 가장 간편함)</h4>
-<ul>
-<li><strong>설치</strong>: Claude 공식 웹사이트에서 데스크톱 앱 다운로드</li>
-<li><strong>장점</strong>: 앱 하나만으로 모든 기능 사용 가능, 설정이 간편</li>
-<li><strong>이 강의와의 연계</strong>: 가장 매끄러운 경험 제공</li>
-</ul>
-
-<h4>방식 2: Cursor IDE의 Claude Code 확장</h4>
-<ul>
-<li><strong>설치</strong>: Cursor 에디터 설치 → Claude 통합 자동 활성화</li>
-<li><strong>장점</strong>: 전문 개발자용 IDE, 추가 기능 풍부</li>
-<li><strong>특징</strong>: 코드 작성과 AI 대화를 한 화면에서 관리</li>
-</ul>
-
-<h4>방식 3: VS Code 확장 프로그램</h4>
-<ul>
-<li><strong>설치</strong>: VS Code → Extensions → "Claude Code" 검색 → 설치</li>
-<li><strong>장점</strong>: 가장 널리 사용되는 에디터, 기존 VS Code 사용자에게 최적</li>
-<li><strong>특징</strong>: 기존 VS Code 설정과 확장 프로그램 호환성 우수</li>
-</ul>
-
+<h3 id="step-0-확장-설치와-자율권-모드-설정">Step 0. 확장 설치와 자율권 모드 설정</h3>
+<h4 id="0-1-확장-설치">0-1. 확장 설치</h4>
+<ol>
+<li><strong>Cursor</strong> 또는 <strong>VS Code</strong>를 실행합니다. (둘 중 편한 것을 쓰시면 됩니다. 화면 구성이 거의 같습니다.)</li>
+<li>왼쪽 사이드바의 <strong>Extensions</strong>(네모 블록 아이콘)를 클릭합니다.</li>
+<li>검색창에 <strong><code>Claude Code</code></strong>를 입력하고, Anthropic이 만든 확장을 <strong>Install</strong> 합니다.</li>
+<li>설치 후 나타난 Claude 아이콘을 클릭해 대화창을 열고, <strong>로그인</strong>합니다.</li>
+</ol>
+<h4 id="0-2-자율권-모드-설정-ai에게-어디까지-맡길-것인가">0-2. 자율권 모드 설정 — AI에게 어디까지 맡길 것인가</h4>
+<p>대화창에서 <strong><code>Shift + Tab</code></strong>을 누르면 모드 목록이 뜹니다. 이건 <strong>"AI가 뭘 할 때마다 나에게 물어볼 것인가"</strong>를 정하는 스위치입니다.</p>
+<table>
+<thead>
+<tr>
+<th>모드</th>
+<th>뜻</th>
+<th>언제 쓰나</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Manual</strong></td>
+<td>편집할 때마다 승인 버튼을 눌러야 함</td>
+<td>처음 감을 잡을 때</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>코드를 고치지 않고 계획만 세워서 보고</td>
+<td>큰 작업 전에 방향만 볼 때</td>
+</tr>
+<tr>
+<td><strong>Edit automatically</strong></td>
+<td>편집을 승인 없이 진행</td>
+<td><strong>오늘 실습에 사용</strong></td>
+</tr>
+<tr>
+<td><strong>Auto</strong></td>
+<td>안전 검사를 통과한 작업은 자동 진행, 위험한 것만 멈춤</td>
+<td>목록에 있다면 이걸 쓰셔도 좋습니다</td>
+</tr>
+</tbody>
+</table>
+<p><strong>오늘은 <code>Edit automatically</code>(또는 <code>Auto</code>)를 선택하세요.</strong> 이 설정을 안 하면 실습 내내 승인 버튼을 수십 번 눌러야 합니다.</p>
+<blockquote>
+<p>⚠️ <strong>여러분 화면에는 모드가 3개일 수도, 4개일 수도 있습니다.</strong> 편집기 종류, 운영체제, 확장 버전에 따라 목록이 다르게 보입니다. 실제로 같은 확장 버전인데도 어떤 컴퓨터에는 <code>Auto</code>가 보이고 어떤 컴퓨터에는 안 보입니다.</p>
+<p><strong>그래서 이 강의는 절대 "몇 번째 항목을 고르세요"라고 말하지 않습니다.</strong> 목록을 보고 <strong>이름으로</strong> 고르세요. <code>Auto</code>가 없으면 <code>Edit automatically</code>를 고르시면 결과는 같습니다.</p>
+<p>이건 오늘 하루의 예외가 아니라 앞으로 계속 만날 상황입니다. <strong>AI 도구는 화면이 자주 바뀝니다. 화면을 외우지 말고 원리를 기억하세요.</strong> 지금 우리가 하려는 건 "승인 버튼을 매번 안 누르게 만드는 것"이고, 그걸 해주는 항목이 어떤 이름이든 그걸 고르면 됩니다.</p>
+</blockquote>
 <hr />
-
-<h3>🖥️ 기존 터미널 방식 사용자를 위한 안내</h3>
-<p><strong>이미 터미널 환경에서 Python, pandas, FinanceDataReader를 설치하신 분들:</strong></p>
-
-<p>축하합니다! 👏 복잡한 설치 과정은 <strong>이미 완료</strong>하셨습니다. 여러분의 로컬 환경은 이 강의를 따라오기에 충분합니다.</p>
-
-<ul>
-<li>기존대로 <strong>터미널(Command Prompt, PowerShell, 또는 WSL)을 열고 명령어로 실행</strong>해도 전혀 문제없습니다.</li>
-<li>다만 이 강의의 프롬프트들은 <strong>Claude Code 대화창을 기준</strong>으로 작성되어 있으니, 동일한 명령어와 프로세스를 터미널에서 직접 입력하시면 됩니다.</li>
-<li>AI와의 상호작용이 필요할 때는 <strong>claude.ai 웹사이트에서 대화창을 별도로 열고</strong> 진행하시면 됩니다.</li>
-</ul>
-
+<h3 id="step-1-작업-폴더-생성-및-열기">Step 1. 작업 폴더 생성 및 열기</h3>
+<ol>
+<li>원하는 위치(예: 바탕화면)에 <strong><code>ai-trading</code></strong> 폴더를 새로 만듭니다.</li>
+<li>편집기에서 <code>File</code> → <code>Open Folder</code>로 이 폴더를 엽니다.</li>
+<li>Claude 대화창이 이 폴더를 작업 공간으로 인식했는지 확인합니다.</li>
+</ol>
+<blockquote>
+<p>📌 <strong>왜 폴더를 따로 만드나요?</strong> AI가 만드는 파일이 다른 자료와 섞이지 않게 하기 위해서입니다. 뭔가 잘못돼도 이 폴더만 지우면 원상복구됩니다.</p>
+</blockquote>
 <hr />
+<h3 id="step-2-진단-프롬프트-아무것도-설치하지-않고-상태만-확인">Step 2. 진단 프롬프트 — 아무것도 설치하지 않고 상태만 확인</h3>
+<p>대화창에 아래를 입력합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>아직 아무것도 설치하지 마. 진단만 해줘.
 
-<h3 id="step-1-작업-폴더-생성-및-ai-앱-실행">Step 1. 작업 폴더 생성 및 AI 앱 실행</h3>
+이 컴퓨터에서 실제로 실행되는 Python이 있는지, 그리고 uv가 설치돼 있는지
+확인해서 표 하나로 알려줘.
 
-<h4>1-1. 작업 폴더 생성</h4>
-<ol>
-<li>컴퓨터의 원하는 위치(예: 바탕화면 또는 작업 드라이브)에 <code>ai-trading</code> 폴더를 새로 만듭니다.</li>
-</ol>
-
-<h4>1-2. AI 앱 실행 (선택한 방식에 따라)</h4>
-
-<p><strong>📱 Claude Code 데스크톱 앱 사용 시:</strong></p>
-<ol>
-<li>Claude 데스크톱 앱을 실행합니다.</li>
-<li><code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
-<li>화면 하단의 대화창을 클릭합니다.</li>
-</ol>
-
-<p><strong>🔧 Cursor IDE 사용 시:</strong></p>
-<ol>
-<li>Cursor를 실행합니다.</li>
-<li><code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
-<li>오른쪽 사이드바의 <strong>Claude</strong> 아이콘을 클릭하여 대화창을 엽니다.</li>
-</ol>
-
-<p><strong>💻 VS Code 확장 사용 시:</strong></p>
-<ol>
-<li>VS Code를 실행합니다.</li>
-<li><code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
-<li>왼쪽 사이드바에서 <strong>Claude</strong> 확장 아이콘을 클릭하여 대화창을 엽니다.</li>
-</ol>
-
-<p><strong>⌨️ 터미널 방식 사용 시:</strong></p>
-<ol>
-<li>터미널(또는 명령 프롬프트)을 열고 <code>ai-trading</code> 폴더로 이동합니다: <code>cd ai-trading</code></li>
-<li>claude.ai 웹사이트의 대화창을 별도로 엽니다.</li>
-</ol>
-
-<hr />
-<h3 id="step-2-환경-구축-프롬프트-입력">Step 2. 환경 구축 프롬프트 입력</h3>
-<p>AI 대화창에 아래의 표준 프롬프트를 복사하여 그대로 입력하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>지금부터 한국 주식 데이터를 분석하고 퀀트 트레이딩 시스템을 구축하는 프로젝트를 시작할 거야.
-
-다음 환경을 준비해줘:
-1. 이 폴더 안에 Python 가상환경(.venv)을 생성하고 활성화할 수 있도록 구성해줘.
-2. 주식 데이터를 수집하고 분석할 수 있도록 pandas, matplotlib, FinanceDataReader 라이브러리를 설치해줘.
-3. 설치가 완료되면 삼성전자(종목코드: 005930)의 최근 5일치 일봉 데이터(시가/고가/저가/종가/거래량)를 화면에 깔끔한 표로 출력해서 정상 동작을 증명해줘.
+Windows라면, 경로에 WindowsApps가 들어간 python은 진짜 Python이 아니라
+Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 </code></pre></div>
+<p><strong>왜 이 단계가 따로 있을까요?</strong> 한 번에 다 시키면, AI는 중간에 막혔을 때 멈추지 않고 <strong>혼자 우회로를 찾습니다.</strong> 그 우회가 잘못된 방향이면 우리는 한참 뒤에야 알아차립니다. 30초짜리 진단을 먼저 하면 갈림길이 눈에 보이고, 그 다음 요청이 훨씬 정확해집니다.</p>
+<p>마지막 줄이 이상하게 구체적이죠? Windows에는 <strong>Python이 설치된 척하는 껍데기 프로그램</strong>이 기본으로 들어 있습니다. 사람도 AI도 여기에 잘 속아서, "Python이 있다"고 판단하고 진행했다가 원인 모를 실패를 겪습니다. 실제로 이 강의를 준비하면서 여기서 10분을 날렸습니다.</p>
+<h4 id="진단-결과에-따라-갈리는-길">진단 결과에 따라 갈리는 길</h4>
+<table>
+<thead>
+<tr>
+<th>진단 결과</th>
+<th>다음 Step 3에서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python <strong>있음</strong></td>
+<td>아래 프롬프트를 그대로 사용</td>
+</tr>
+<tr>
+<td>Python <strong>없음</strong></td>
+<td>아래 프롬프트의 <code>[만들 것]</code> 첫 줄에 <strong><code>uv를 사용해서 Python 3.12부터 설치해줘.</code></strong> 를 추가</td>
+</tr>
+</tbody>
+</table>
+<p><code>uv</code>는 Python 자체가 없어도 알아서 설치해 주는 도구라, 이 한 줄이면 해결됩니다.</p>
 <hr />
-<h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
-<p>AI가 스스로 환경을 구성하고 주가를 가져오는 과정을 지켜본 뒤, 화면에 출력된 결과를 확인합니다.</p>
+<h3 id="step-3-구축-프롬프트-네-칸으로-나눠-요청하기">Step 3. 구축 프롬프트 — 네 칸으로 나눠 요청하기</h3>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 데이터를 분석하는 프로젝트를 시작할 거야.
+
+[만들 것]
+- 이 폴더에 Python 가상환경(.venv)을 만들고
+  pandas, matplotlib, FinanceDataReader 3개를 설치해줘.
+- check.py 파일 하나를 만들어서, 삼성전자(005930)의 최근 5거래일 일봉
+  (날짜/시가/고가/저가/종가/거래량)을 표로 출력하게 해줘.
+
+[하지 말 것]
+- check.py 외에 다른 파일이나 폴더는 만들지 마.
+  requirements.txt, README.md, setup 스크립트 전부 필요 없어.
+- 주가 숫자를 코드에 직접 적어넣지 마. 반드시 조회한 결과만 출력해.
+- 중간에 실패하면 혼자 우회하지 말고, 에러 메시지를 그대로 보여주고 멈춰.
+
+[확인] 다 끝나면 설치된 3개 라이브러리 버전과 5행짜리 표만 보여줘.
+</code></pre></div>
+<h4 id="이-네-칸은-무엇이고-왜-필요한가">이 네 칸은 무엇이고, 왜 필요한가</h4>
+<p><strong>복사해서 붙여넣기 전에 이 표를 먼저 보세요.</strong> 앞으로 이 강의의 모든 프롬프트가 이 구조를 따릅니다.</p>
+<table>
+<thead>
+<tr>
+<th>칸</th>
+<th>하는 일</th>
+<th>이 칸이 없으면</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[맥락]</strong></td>
+<td>AI에게 지금 무슨 일을 하는 중인지 알려줌</td>
+<td>AI가 용도를 추측해서 엉뚱한 방향으로 감</td>
+</tr>
+<tr>
+<td><strong>[만들 것]</strong></td>
+<td>완성됐을 때의 <strong>결과물 모습</strong>을 선언</td>
+<td>"알아서 잘" 만든 결과가 내가 원한 것과 다름</td>
+</tr>
+<tr>
+<td><strong>[하지 말 것]</strong></td>
+<td>AI의 <strong>작업 범위와 행동에 울타리</strong>를 침</td>
+<td>AI가 요청하지 않은 파일을 잔뜩 만들고, 막히면 몰래 우회함</td>
+</tr>
+<tr>
+<td><strong>[확인]</strong></td>
+<td>내가 눈으로 검증할 <strong>증거</strong>를 요구</td>
+<td>"완료했습니다"라는 말만 남고 확인할 방법이 없음</td>
+</tr>
+</tbody>
+</table>
+<p>특히 <strong>[하지 말 것]</strong>이 낯설게 느껴지실 겁니다. 이 칸은 제가 처음부터 넣은 게 아니라, <strong>사고를 겪고 나서 추가한 칸</strong>입니다. 라이브러리 3개만 요청했는데 AI가 22개를 적어 넣어 설치가 5분 넘게 걸린 적이 있고, 더 심각하게는 <strong>AI가 주가를 못 가져오자 인터넷에서 대충 찾은 숫자를 코드에 적어 넣고 "완료했습니다"라고 보고한 적</strong>이 있습니다.</p>
+<p><strong>이 네 칸의 정식 이름과 작동 원리는 바로 다음 클립에서 제대로 배웁니다.</strong> 지금은 "각 칸이 왜 있는지"만 이해하고 넘어가셔도 충분합니다.</p>
+<hr />
+<h3 id="step-4-내-눈으로-확인할-체크리스트">Step 4. 내 눈으로 확인할 체크리스트</h3>
+<p>AI가 "완료했습니다"라고 해도 <strong>아직 끝난 게 아닙니다.</strong> 아래 네 가지를 직접 확인하세요.</p>
 <ul>
-<li class="check-item"><input type="checkbox"> <strong>가상환경 및 패키지 설치 완료</strong>: 에러 메시지 없이 pandas, FinanceDataReader 설치가 끝났다.</li>
-<li class="check-item"><input type="checkbox"> <strong>표 형태의 데이터 출력</strong>: 화면에 <code>Date, Open, High, Low, Close, Volume</code> 컬럼을 가진 5행의 데이터 표가 보인다.</li>
-<li class="check-item"><input type="checkbox"> <strong>종가 숫자 정상성</strong>: 출력된 삼성전자의 최근 종가(예: 70,000~80,000원대)가 실제 시세와 유사한 수준이다.</li>
+<li class="check-item"><input type="checkbox"> <strong>설치 완료</strong>: 에러 없이 pandas, matplotlib, FinanceDataReader 세 개의 버전이 출력되었다.</li>
+<li class="check-item"><input type="checkbox"> <strong>표 출력</strong>: 날짜/시가/고가/저가/종가/거래량 컬럼을 가진 <strong>5행짜리</strong> 표가 화면에 보인다.</li>
+<li class="check-item"><input type="checkbox"> <strong>파일이 하나뿐</strong>: 폴더에 <code>check.py</code>와 <code>.venv</code> 말고 <strong>내가 요청하지 않은 파일이 없다.</strong></li>
+<li class="check-item"><input type="checkbox"> <strong>숫자가 진짜다</strong>: 포털에서 "삼성전자 주가"를 검색해, <strong>표의 마지막 줄 종가와 실제 종가가 일치</strong>한다.</li>
 </ul>
+<blockquote>
+<p>🔍 <strong>마지막 항목이 오늘의 진짜 시험입니다.</strong> 앞의 세 개는 화면만 보면 알 수 있지만, 마지막 하나는 <strong>다른 창을 열어야만</strong> 알 수 있습니다. 이 강의 전체를 관통하는 습관이니 지금 몸에 익히세요.</p>
+</blockquote>
 <hr />
 <h2 id="자주-발생하는-문제-및-트러블슈팅">자주 발생하는 문제 및 트러블슈팅</h2>
-<h3 id="1-패키지-다운로드-중-타임아웃이-발생할-때">1. 패키지 다운로드 중 타임아웃이 발생할 때</h3>
-<ul>
-<li><strong>해결</strong>: 아래 프롬프트를 대화창에 그대로 입력하면 AI가 타임아웃 한도를 늘려 재설치합니다.</li>
-</ul>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>패키지 다운로드 중 타임아웃 에러가 발생했어.
-pip install 타임아웃 시간을 늘리고 다시 FinanceDataReader를 설치한 뒤 삼성전자 종가를 출력해줘.
+<h3 id="1-진단-결과-python-없음이라고-나올-때">1. 진단 결과 "Python 없음"이라고 나올 때</h3>
+<p>정상입니다. 요즘 컴퓨터에는 Python이 기본으로 없습니다. Step 3의 <code>[만들 것]</code> 첫 줄에 아래를 추가하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>uv를 사용해서 Python 3.12부터 설치해줘.
+시스템에 이미 있는 python 명령어는 신뢰하지 말고 uv가 설치한 것만 사용해줘.
 </code></pre></div>
-<h3 id="2-가상환경-권한-관련-알림이-뜰-때">2. 가상환경 권한 관련 알림이 뜰 때</h3>
-<ul>
-<li><strong>해결</strong>: AI 앱 화면에 "권한 승인(Allow / Run)" 버튼이 뜨면 클릭해 주시거나, 대화창에 "권한을 허용해서 계속 진행해줘"라고 입력하시면 됩니다.</li>
-</ul>
+<h3 id="2-설치가-되는-것-같더니-원인-모를-에러로-멈출-때-windows">2. 설치가 되는 것 같더니 원인 모를 에러로 멈출 때 (Windows)</h3>
+<p>Microsoft Store 껍데기 Python에 걸린 경우입니다. 아래를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>python 명령어가 WindowsApps 경로의 Microsoft Store 껍데기를 가리키고 있는지 확인해줘.
+그렇다면 그건 무시하고, uv로 Python 3.12를 새로 설치한 뒤 가상환경을 다시 만들어줘.
+</code></pre></div>
+<h3 id="3-패키지-다운로드-중-타임아웃이-발생할-때">3. 패키지 다운로드 중 타임아웃이 발생할 때</h3>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>패키지 다운로드 중 타임아웃이 발생했어.
+설치 타임아웃 시간을 늘려서 다시 시도해줘.
+</code></pre></div>
+<h3 id="4-한글이-깨져서-표가-이상하게-보일-때-windows">4. 한글이 깨져서 표가 이상하게 보일 때 (Windows)</h3>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>출력에서 한글이 깨지고 있어. UTF-8 인코딩을 적용해서 다시 출력해줘.
+</code></pre></div>
+<h3 id="5-승인-버튼이-계속-뜰-때">5. 승인 버튼이 계속 뜰 때</h3>
+<p>Step 0-2의 모드 설정이 안 된 상태입니다. <code>Shift + Tab</code>을 눌러 <code>Edit automatically</code> 또는 <code>Auto</code>를 선택하세요. <strong>이미 진행 중인 대화에서는 반영이 안 될 수 있으니, 모드를 바꾼 뒤 새 대화를 시작하시면 확실합니다.</strong></p>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>축하합니다! 이제 여러분의 컴퓨터에는 퀀트 트레이딩 개발을 위한 최고의 AI 조수가 준비되었습니다.<br />
-다음 클립에서는 AI에게 <strong>내가 원하는 결과를 모호함 없이 단번에 이끌어내는 '결과 중심 프롬프트 작성법'</strong>을 마스터하겠습니다.</p>
+<p>이제 AI 파트너가 준비됐습니다. 그런데 오늘 쓴 프롬프트, 네 칸으로 나눠져 있었죠?</p>
+<p>다음 클립에서는 <strong>그 네 칸이 정확히 무엇이고, 왜 그렇게 나눠야 하는지</strong>를 배웁니다. 그리고 오늘 잠깐 언급한 <strong>"AI가 가짜 주가를 코드에 적어 넣고 완료했다고 보고한 사건"</strong>의 전말을 함께 들여다보겠습니다. 실제로 얼마나 틀렸는지, 그리고 그게 왜 트레이딩에서 치명적인지 숫자로 확인하실 겁니다.</p>
       </main>
 
       <nav class="pager-nav">
