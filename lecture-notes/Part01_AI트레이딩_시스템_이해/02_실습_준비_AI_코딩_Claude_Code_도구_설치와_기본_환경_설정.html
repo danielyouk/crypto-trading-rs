@@ -1767,33 +1767,50 @@ window.MathJax = {
 </blockquote>
 <hr />
 <h3 id="3-계정-및-비용-구조의-투명한-이해">3. 계정 및 비용 구조의 투명한 이해</h3>
-<p>AI 도구를 사용할 때 알아두어야 할 비용 체계는 매우 단순하고 투명합니다.</p>
+<p>AI 도구를 사용할 때 알아두어야 할 비용 체계는 매우 단순하고 투명합니다. Claude는 3가지 플랜을 제공합니다.</p>
+
+<h4>📋 Claude 요금제 비교</h4>
 <table>
 <thead>
 <tr>
-<th>방식</th>
-<th>과금 구조</th>
-<th>추천 대상</th>
-<th>특징 및 장점</th>
+<th>플랜</th>
+<th>가격</th>
+<th>대상 사용자</th>
+<th>주요 기능</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>API 키 방식 (Console)</strong></td>
-<td>쓴 만큼 후불 결제 (<span class="math-inline">$5~$</span>10 충전)</td>
-<td>가끔 집중적으로 작업하는 사용자</td>
-<td><strong>프롬프트 캐싱</strong>이 자동 적용되어 반복 호출 시 비용이 최대 90% 절감됨</td>
+<td><strong>Free</strong></td>
+<td>€0 (무료)</td>
+<td>가끔 시험적으로 사용해보는 사용자</td>
+<td>• 웹, iOS, Android, 데스크톱 채팅<br>• 코드 생성 및 데이터 시각화<br>• Slack 및 Google Workspace 연결<br>• 기본 웹 검색</td>
 </tr>
 <tr>
-<td><strong>정액제 구독형 (Pro / Team)</strong></td>
-<td>월 $20 내외 구독형</td>
-<td>일상적으로 대화 및 코딩을 함께 쓰는 사용자</td>
-<td>한도 내에서 추가 비용 걱정 없이 자유롭게 사용 가능</td>
+<td><strong>Pro</strong></td>
+<td>€15/월<br>(€180/년 - 17% 할인)</td>
+<td>일상적으로 대화와 코딩을 함께 쓰는 사용자</td>
+<td>• Free의 모든 기능 포함<br>• <strong>Claude Code</strong> - 코드베이스에서 직접 작업<br>• Cowork으로 작업 효율성 강화<br>• Claude Design으로 빌드 및 프로토타입<br>• 더 높은 사용량 한도<br>• 더 많은 Claude 모델 접근<br>• 대화 간 메모리 유지</td>
+</tr>
+<tr>
+<td><strong>Max</strong></td>
+<td>€90/월 이상</td>
+<td>헤비 사용자 및 대규모 프로젝트 팀</td>
+<td>• Pro의 모든 기능 포함<br>• <strong>Pro 대비 20배까지 많은 사용량</strong><br>• Claude Code & Cowork 권장 플랜<br>• 최신 고급 Claude 기능에 얼리 액세스<br>• 모든 작업의 더 높은 출력 한도<br>• 트래픽이 높을 때 우선 접근</td>
 </tr>
 </tbody>
 </table>
+
+<blockquote>
+<p>💡 <strong>본 강의 추천 플랜</strong>: 이 실습을 위해서는 <strong>Pro 플랜</strong>이 가장 경제적입니다. Claude Code를 직접 코드베이스에서 사용할 수 있어 환경 구축부터 실습까지 매끄럽게 진행됩니다.</p>
+</blockquote>
+
+<blockquote>
+<p>📌 <strong>중요 안내</strong>: 위의 요금제 정보는 학습 시점에 따라 변경될 수 있습니다. 최신 가격과 기능은 Claude 공식 웹사이트에서 확인하시고, <strong>개요적으로 이해</strong>하면서 진행하시기 바랍니다.</p>
+</blockquote>
+
 <ul>
-<li><strong>이 강의 전체 실습 비용</strong>: 5개 파트의 모든 실습을 완료하는 데 소요되는 비용은 <strong>커피 한두 잔 가격(<span class="math-inline">$3~$</span>7 내외)</strong>에 불과합니다.</li>
+<li><strong>이 강의 전체 실습 비용</strong>: 5개 파트의 모든 실습을 완료하는 데 소요되는 비용은 <strong>커피 한두 잔 가격($3~$7 내외)</strong>에 불과합니다.</li>
 <li>토큰 낭비를 줄이는 실전 팁은 <strong>Part 5 (Clip 41)</strong>에서 체계적으로 배웁니다.</li>
 </ul>
 <hr />
@@ -1825,12 +1842,82 @@ window.MathJax = {
 
 <hr />
 <h2 id="실습-실습-01-ai-도구-환경-구축">실습 — 실습 01: AI 도구 환경 구축</h2>
+
+<h3>📱 AI 도구 선택 가이드</h3>
+<p>이 강의는 <strong>3가지 방식</strong> 중 자신의 선호도에 맞춰 진행할 수 있습니다. 모두 동일한 결과를 만들어냅니다.</p>
+
+<h4>방식 1: Claude Code 데스크탑 앱 (권장 — 가장 간편함)</h4>
+<ul>
+<li><strong>설치</strong>: Claude 공식 웹사이트에서 데스크톱 앱 다운로드</li>
+<li><strong>장점</strong>: 앱 하나만으로 모든 기능 사용 가능, 설정이 간편</li>
+<li><strong>이 강의와의 연계</strong>: 가장 매끄러운 경험 제공</li>
+</ul>
+
+<h4>방식 2: Cursor IDE의 Claude Code 확장</h4>
+<ul>
+<li><strong>설치</strong>: Cursor 에디터 설치 → Claude 통합 자동 활성화</li>
+<li><strong>장점</strong>: 전문 개발자용 IDE, 추가 기능 풍부</li>
+<li><strong>특징</strong>: 코드 작성과 AI 대화를 한 화면에서 관리</li>
+</ul>
+
+<h4>방식 3: VS Code 확장 프로그램</h4>
+<ul>
+<li><strong>설치</strong>: VS Code → Extensions → "Claude Code" 검색 → 설치</li>
+<li><strong>장점</strong>: 가장 널리 사용되는 에디터, 기존 VS Code 사용자에게 최적</li>
+<li><strong>특징</strong>: 기존 VS Code 설정과 확장 프로그램 호환성 우수</li>
+</ul>
+
+<hr />
+
+<h3>🖥️ 기존 터미널 방식 사용자를 위한 안내</h3>
+<p><strong>이미 터미널 환경에서 Python, pandas, FinanceDataReader를 설치하신 분들:</strong></p>
+
+<p>축하합니다! 👏 복잡한 설치 과정은 <strong>이미 완료</strong>하셨습니다. 여러분의 로컬 환경은 이 강의를 따라오기에 충분합니다.</p>
+
+<ul>
+<li>기존대로 <strong>터미널(Command Prompt, PowerShell, 또는 WSL)을 열고 명령어로 실행</strong>해도 전혀 문제없습니다.</li>
+<li>다만 이 강의의 프롬프트들은 <strong>Claude Code 대화창을 기준</strong>으로 작성되어 있으니, 동일한 명령어와 프로세스를 터미널에서 직접 입력하시면 됩니다.</li>
+<li>AI와의 상호작용이 필요할 때는 <strong>claude.ai 웹사이트에서 대화창을 별도로 열고</strong> 진행하시면 됩니다.</li>
+</ul>
+
+<hr />
+
 <h3 id="step-1-작업-폴더-생성-및-ai-앱-실행">Step 1. 작업 폴더 생성 및 AI 앱 실행</h3>
+
+<h4>1-1. 작업 폴더 생성</h4>
 <ol>
 <li>컴퓨터의 원하는 위치(예: 바탕화면 또는 작업 드라이브)에 <code>ai-trading</code> 폴더를 새로 만듭니다.</li>
-<li>사용하시는 AI 앱(Cursor 또는 Claude)을 실행한 뒤, <code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
-<li>AI 대화창을 엽니다.</li>
 </ol>
+
+<h4>1-2. AI 앱 실행 (선택한 방식에 따라)</h4>
+
+<p><strong>📱 Claude Code 데스크톱 앱 사용 시:</strong></p>
+<ol>
+<li>Claude 데스크톱 앱을 실행합니다.</li>
+<li><code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
+<li>화면 하단의 대화창을 클릭합니다.</li>
+</ol>
+
+<p><strong>🔧 Cursor IDE 사용 시:</strong></p>
+<ol>
+<li>Cursor를 실행합니다.</li>
+<li><code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
+<li>오른쪽 사이드바의 <strong>Claude</strong> 아이콘을 클릭하여 대화창을 엽니다.</li>
+</ol>
+
+<p><strong>💻 VS Code 확장 사용 시:</strong></p>
+<ol>
+<li>VS Code를 실행합니다.</li>
+<li><code>File</code> → <code>Open Folder</code>를 눌러 <code>ai-trading</code> 폴더를 엽니다.</li>
+<li>왼쪽 사이드바에서 <strong>Claude</strong> 확장 아이콘을 클릭하여 대화창을 엽니다.</li>
+</ol>
+
+<p><strong>⌨️ 터미널 방식 사용 시:</strong></p>
+<ol>
+<li>터미널(또는 명령 프롬프트)을 열고 <code>ai-trading</code> 폴더로 이동합니다: <code>cd ai-trading</code></li>
+<li>claude.ai 웹사이트의 대화창을 별도로 엽니다.</li>
+</ol>
+
 <hr />
 <h3 id="step-2-환경-구축-프롬프트-입력">Step 2. 환경 구축 프롬프트 입력</h3>
 <p>AI 대화창에 아래의 표준 프롬프트를 복사하여 그대로 입력하세요.</p>
