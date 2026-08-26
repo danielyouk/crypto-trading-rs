@@ -1893,24 +1893,37 @@ window.MathJax = {
 확인한 방법과 결과를 표 하나로 보여주고, 애매하면 애매하다고 말해줘.
 </code></pre></div>
 <h4 id="진단-결과에-따른-대응">진단 결과에 따른 대응</h4>
+<p>AI의 진단 결과 표를 확인하고, 내 컴퓨터 상태에 맞춰 Step 3 프롬프트를 진행합니다.</p>
 <table>
 <thead>
 <tr>
-<th>진단 결과</th>
-<th>진행 방법</th>
+<th>진단 결과 유형</th>
+<th>실제 의미</th>
+<th>Step 3 진행 방법</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Python 정상 실행</strong></td>
-<td>다음 Step 3 프롬프트를 그대로 입력합니다.</td>
+<td><strong>Python 정상 실행 (pip 포함)</strong></td>
+<td>완벽하게 개발 환경이 갖춰진 상태</td>
+<td>Step 3 프롬프트를 <strong>그대로 입력</strong>합니다.</td>
 </tr>
 <tr>
-<td><strong>Python 미설치 / 스텁</strong></td>
-<td>Step 3 프롬프트의 <code>[만들 것]</code> 첫 줄에 <strong>"uv를 사용해서 파이썬 3.12부터 설치해줘."</strong>를 추가합니다.</td>
+<td><strong>Python 미설치 또는 껍데기</strong></td>
+<td>Windows 스토어 가짜 스텁이거나 미설치 상태</td>
+<td>Step 3 프롬프트 <code>[만들 것]</code> 첫 줄에 <strong>"uv를 사용해서 파이썬 3.12 가상환경을 만들어줘."</strong> 추가</td>
+</tr>
+<tr>
+<td><strong>Python은 있으나 pip/venv 없음</strong></td>
+<td>파이썬 실행은 되나 패키지 설치 도구가 빠진 상태</td>
+<td>Step 3 프롬프트 <code>[만들 것]</code> 첫 줄에 <strong>"uv를 사용해서 파이썬 3.12 가상환경을 만들어줘."</strong> 추가</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>💡 <strong>왜 uv가 만능 해결책인가요?</strong><br />
+<code>uv</code>는 내 컴퓨터의 복잡한 파이썬 설치 상태나 윈도우/맥/리눅스 환경 차이와 무관하게, <strong>프로젝트 폴더 안에 완벽하고 독립된 파이썬 환경을 1초 만에 깔끔하게 구축</strong>해 주는 현대적인 표준 도구입니다. 진단에서 무언가 부족하다고 나오면 <code>uv</code>를 지정해 주면 모든 문제가 한 번에 해결됩니다.</p>
+</blockquote>
 <hr />
 <h3 id="step-3-4칸-프롬프트로-첫-주가-데이터-수집-구축">Step 3. 4칸 프롬프트로 첫 주가 데이터 수집 구축</h3>
 <p>아래의 표준 4칸 프롬프트(맥락-만들것-하지말것-확인)를 복사하여 입력합니다.</p>
