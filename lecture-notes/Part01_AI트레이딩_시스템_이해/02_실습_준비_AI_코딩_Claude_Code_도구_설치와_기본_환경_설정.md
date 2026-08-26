@@ -53,42 +53,42 @@
 
 <div class="step-flow">
   <div class="step-card">
-    <span class="step-num">Step 0</span>
+    <span class="step-num">Step 1</span>
     <div class="step-body">
       <div class="step-title">사람이 직접: 확장 설치와 자율권 모드 설정</div>
       <div class="step-desc">AI가 어디까지 스스로 할지 미리 정해 둡니다.</div>
     </div>
   </div>
   <div class="step-card">
-    <span class="step-num">Step 1</span>
+    <span class="step-num">Step 2</span>
     <div class="step-body">
       <div class="step-title">사람이 직접: 작업 폴더 만들고 열기</div>
       <div class="step-desc"><code>ai-trading</code> 폴더를 만들고 편집기에서 엽니다.</div>
     </div>
   </div>
   <div class="step-card ai">
-    <span class="step-num">Step 2</span>
+    <span class="step-num">Step 3</span>
     <div class="step-body">
       <div class="step-title">AI에게 진단 요청: 이 컴퓨터에 무엇이 있는가</div>
       <div class="step-desc">아무것도 설치하지 않고 현재 상태만 확인합니다. <strong>30초면 끝납니다.</strong></div>
     </div>
   </div>
   <div class="step-card ai">
-    <span class="step-num">Step 3</span>
+    <span class="step-num">Step 4</span>
     <div class="step-body">
       <div class="step-title">AI에게 구축 위임: 가상환경 + 라이브러리 + 첫 데이터</div>
       <div class="step-desc">진단 결과를 알고 요청하므로 AI가 헤매지 않습니다.</div>
     </div>
   </div>
   <div class="step-card verify">
-    <span class="step-num">Step 4</span>
+    <span class="step-num">Step 5</span>
     <div class="step-body">
       <div class="step-title">사람이 눈으로: 포털 시세와 숫자 대조</div>
       <div class="step-desc">AI가 출력한 종가가 <strong>진짜인지</strong> 직접 확인합니다.</div>
     </div>
   </div>
   <div class="step-card verify">
-    <span class="step-num">Step 5</span>
+    <span class="step-num">Step 6</span>
     <div class="step-body">
       <div class="step-title">사람이 손으로: AI 코드를 승인 전에 고치기</div>
       <div class="step-desc">자율권을 다시 거둬들여 <strong>좌우 비교 화면</strong>을 직접 만나봅니다.</div>
@@ -100,7 +100,7 @@
 
 ## 실습 — 실습 01: AI 도구 환경 구축
 
-### 시작하기 전에 — 오늘 만드는 것이 전체에서 어디인가
+**오늘 만드는 것은 전체에서 어디인가**
 
 앞으로 만들 트레이딩 시스템은 아무리 복잡해져도 결국 이 세 가지 위에 올라갑니다.
 
@@ -114,9 +114,9 @@
 
 ---
 
-### Step 0. 확장 설치와 자율권 모드 설정
+### Step 1. 확장 설치와 자율권 모드 설정
 
-#### 0-1. 편집기 준비 — 이 강의는 VS Code 기준입니다
+#### 1-1. 편집기 준비 — 이 강의는 VS Code 기준입니다
 
 > ✅ **아직 아무것도 안 깔려 있다면 [VS Code](https://code.visualstudio.com/)를 설치하세요.** 무료이고, 이 강의의 모든 화면이 VS Code 기준입니다.
 >
@@ -142,7 +142,7 @@ Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴�
   </div>
   <div class="arch-card">
     <div class="card-title">② AI가 바꾼 코드를 나란히 보여준다</div>
-    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. 왼쪽이 원본, 오른쪽이 AI 제안이고 <strong>오른쪽은 승인하기 전에 내가 직접 고칠 수 있습니다</strong>. '사람이 검증한다'는 이 강의의 원칙을 화면이 대신 지켜주는 셈이라, 가장 중요한 이유입니다. <strong>오늘 Step 5에서 직접 만나봅니다.</strong></div>
+    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. 왼쪽이 원본, 오른쪽이 AI 제안이고 <strong>오른쪽은 승인하기 전에 내가 직접 고칠 수 있습니다</strong>. '사람이 검증한다'는 이 강의의 원칙을 화면이 대신 지켜주는 셈이라, 가장 중요한 이유입니다. <strong>오늘 Step 6에서 직접 만나봅니다.</strong></div>
   </div>
   <div class="arch-card">
     <div class="card-title">③ 되돌리기가 쉽다</div>
@@ -161,7 +161,7 @@ Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴�
 3. 검색창에 **`Claude Code`**를 입력하고, Anthropic이 만든 확장을 **Install** 합니다.
 4. 설치 후 나타난 Claude 아이콘을 클릭해 대화창을 열고, **로그인**합니다.
 
-#### 0-2. 자율권 모드 설정 — AI에게 어디까지 맡길 것인가
+#### 1-2. 자율권 모드 설정 — AI에게 어디까지 맡길 것인가
 
 프롬프트 입력창 **맨 아래에 현재 모드가 표시**되어 있습니다. 그걸 **클릭**하면 모드 목록이 뜹니다. (단축키 `Shift + Tab`으로도 열립니다.) 이건 **"AI가 뭘 할 때마다 나에게 물어볼 것인가"**를 정하는 스위치입니다.
 
@@ -182,7 +182,7 @@ Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴�
 
 ---
 
-### Step 1. 작업 폴더 생성 및 열기
+### Step 2. 작업 폴더 생성 및 열기
 
 1. 원하는 위치(예: 바탕화면)에 **`ai-trading`** 폴더를 새로 만듭니다.
 2. 편집기에서 `File` → `Open Folder`로 이 폴더를 엽니다.
@@ -192,7 +192,7 @@ Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴�
 
 ---
 
-### Step 2. 진단 프롬프트 — 아무것도 설치하지 않고 상태만 확인
+### Step 3. 진단 프롬프트 — 아무것도 설치하지 않고 상태만 확인
 
 #### 그전에 — 왜 갑자기 파이썬 이야기가 나오나
 
@@ -226,7 +226,7 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 
 #### 진단 결과에 따라 갈리는 길
 
-| 진단 결과 | 다음 Step 3에서 |
+| 진단 결과 | 다음 Step 4에서 |
 |---|---|
 | Python **있음** | 아래 프롬프트를 그대로 사용 |
 | Python **없음** | 아래 프롬프트의 `[만들 것]` 첫 줄에 **`uv를 사용해서 Python 3.12부터 설치해줘.`** 를 추가 |
@@ -235,7 +235,7 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 
 ---
 
-### Step 3. 구축 프롬프트 — 네 칸으로 나눠 요청하기
+### Step 4. 구축 프롬프트 — 네 칸으로 나눠 요청하기
 
 ```prompt
 [맥락] 한국 주식 데이터를 분석하는 프로젝트를 시작할 거야.
@@ -299,7 +299,7 @@ AI가 작업을 마치면 폴더에 **`.venv`** 라는 처음 보는 폴더가 �
 
 ---
 
-### Step 4. 내 눈으로 확인할 체크리스트
+### Step 5. 내 눈으로 확인할 체크리스트
 
 AI가 "완료했습니다"라고 해도 **아직 끝난 게 아닙니다.** 아래 네 가지를 직접 확인하세요.
 
@@ -312,7 +312,7 @@ AI가 "완료했습니다"라고 해도 **아직 끝난 게 아닙니다.** 아�
 
 ---
 
-### Step 5. 승인 화면 직접 만나보기 — AI 코드를 내 손으로 고치기
+### Step 6. 승인 화면 직접 만나보기 — AI 코드를 내 손으로 고치기
 
 지금까지는 **속도를 위해 AI에게 자율권을 줬습니다.** 이제 반대쪽을 한 번 경험해 봅시다. 이 강의에서 가장 중요한 습관이 여기서 만들어집니다.
 
@@ -369,7 +369,7 @@ hello_market.py에 최근 5일 종가의 평균을 계산해서
 
 ### 1. 진단 결과 "Python 없음"이라고 나올 때
 
-정상입니다. 요즘 컴퓨터에는 Python이 기본으로 없습니다. Step 3의 `[만들 것]` 첫 줄에 아래를 추가하세요.
+정상입니다. 요즘 컴퓨터에는 Python이 기본으로 없습니다. Step 4의 `[만들 것]` 첫 줄에 아래를 추가하세요.
 
 ```prompt
 uv를 사용해서 Python 3.12부터 설치해줘.
@@ -402,9 +402,9 @@ python 명령어가 WindowsApps 경로의 Microsoft Store 껍데기를 가리키
 
 모드가 **`Auto`가 아닌 상태**입니다. `Edit automatically`로는 해결되지 않습니다 — 그 모드는 파일 편집만 자동 승인하고, 설치·실행 명령은 계속 물어보기 때문입니다.
 
-프롬프트 입력창 아래 모드 표시를 클릭해 **`Auto`** 를 고르세요. 목록에 `Auto`가 없으면 Step 0-2의 **"`Auto`가 목록에 없다면"** 4단계를 따라가세요. **이미 진행 중인 대화에서는 반영이 안 될 수 있으니, 모드를 바꾼 뒤 새 대화를 시작하시면 확실합니다.**
+프롬프트 입력창 아래 모드 표시를 클릭해 **`Auto`** 를 고르세요. 목록에 `Auto`가 없다면 `Edit automatically`를 고른 뒤 승인 창에서 **`Yes, and don't ask again`** 을 누르시면 됩니다. **이미 진행 중인 대화에서는 반영이 안 될 수 있으니, 모드를 바꾼 뒤 새 대화를 시작하시면 확실합니다.**
 
-### 6. Step 5에서 좌우 비교 화면이 안 뜰 때
+### 6. Step 6에서 좌우 비교 화면이 안 뜰 때
 
 모드가 아직 `Auto` 또는 `Edit automatically`입니다. 이 두 모드는 **묻지 않고 바로 고치기 때문에** 비교 화면이 나타나지 않습니다. 모드를 **`Manual`** 로 바꾼 뒤 다시 요청하세요.
 
