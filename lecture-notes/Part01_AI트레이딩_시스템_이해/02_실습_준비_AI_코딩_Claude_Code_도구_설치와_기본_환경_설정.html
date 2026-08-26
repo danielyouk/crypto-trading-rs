@@ -1186,6 +1186,8 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#실습-실습-01-ai-도구-환경-구축">실습 — 실습 01: AI 도구 환경 구축</a>
             
+            <a class="nav-heading level-3" href="#시작하기-전에-오늘-만드는-것이-전체에서-어디인가">시작하기 전에 — 오늘 만드는 것이 전체에서 어디인가</a>
+            
             <a class="nav-heading level-3" href="#step-0-확장-설치와-자율권-모드-설정">Step 0. 확장 설치와 자율권 모드 설정</a>
             
             <a class="nav-heading level-3" href="#step-1-작업-폴더-생성-및-열기">Step 1. 작업 폴더 생성 및 열기</a>
@@ -1195,6 +1197,8 @@ window.MathJax = {
             <a class="nav-heading level-3" href="#step-3-구축-프롬프트-네-칸으로-나눠-요청하기">Step 3. 구축 프롬프트 — 네 칸으로 나눠 요청하기</a>
             
             <a class="nav-heading level-3" href="#step-4-내-눈으로-확인할-체크리스트">Step 4. 내 눈으로 확인할 체크리스트</a>
+            
+            <a class="nav-heading level-3" href="#step-5-승인-화면-직접-만나보기-ai-코드를-내-손으로-고치기">Step 5. 승인 화면 직접 만나보기 — AI 코드를 내 손으로 고치기</a>
             
             <a class="nav-heading level-2" href="#자주-발생하는-문제-및-트러블슈팅">자주 발생하는 문제 및 트러블슈팅</a>
             
@@ -1207,6 +1211,8 @@ window.MathJax = {
             <a class="nav-heading level-3" href="#4-한글이-깨져서-표가-이상하게-보일-때-windows">4. 한글이 깨져서 표가 이상하게 보일 때 (Windows)</a>
             
             <a class="nav-heading level-3" href="#5-승인-버튼이-계속-뜰-때">5. 승인 버튼이 계속 뜰 때</a>
+            
+            <a class="nav-heading level-3" href="#6-step-5에서-좌우-비교-화면이-안-뜰-때">6. Step 5에서 좌우 비교 화면이 안 뜰 때</a>
             
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
             
@@ -1729,6 +1735,7 @@ window.MathJax = {
 <li>AI에게 <strong>어디까지 자율권을 줄지 정하는 모드 설정</strong> 이해</li>
 <li><strong>진단 먼저, 실행 나중</strong> — 두 단계로 나눠 요청하는 이유</li>
 <li><strong>실습 01</strong>: 삼성전자(005930) 최근 5거래일 일봉을 출력하고, 그 숫자가 <strong>진짜인지 직접 대조</strong>하기</li>
+<li>AI가 제안한 코드를 <strong>승인 전에 내 손으로 고치는</strong> 화면(diff) 직접 경험하기</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
@@ -1752,7 +1759,7 @@ window.MathJax = {
   </div>
 </div>
 
-<p>이 강의의 실습은 <strong>Cursor 또는 VS Code에 Claude Code 확장을 설치하는 방식</strong>으로 진행합니다. 다만 기억하실 원칙은 하나입니다 — <strong>도구는 바뀌어도 작업 원리는 그대로입니다.</strong> 우리가 배울 것은 특정 버튼의 위치가 아니라 ① 목표를 산출물 형태로 선언하고 ② 격리된 폴더에서 실행하고 ③ 사람이 눈으로 검증하는 루프입니다. 이 세 가지는 어떤 AI 도구에서도 100% 동일하게 적용됩니다.</p>
+<p>이 강의의 실습은 <strong>VS Code에 Claude Code 확장을 설치하는 방식</strong>으로 진행합니다. (Cursor를 이미 쓰고 계시면 그대로 쓰셔도 됩니다 — 확장은 양쪽에서 똑같이 동작합니다.) 다만 기억하실 원칙은 하나입니다 — <strong>도구는 바뀌어도 작업 원리는 그대로입니다.</strong> 우리가 배울 것은 특정 버튼의 위치가 아니라 ① 목표를 산출물 형태로 선언하고 ② 격리된 폴더에서 실행하고 ③ 사람이 눈으로 검증하는 루프입니다. 이 세 가지는 어떤 AI 도구에서도 100% 동일하게 적용됩니다.</p>
 <hr />
 <h3 id="2-왜-데스크탑-앱이-아니라-편집기-확장인가">2. 왜 데스크탑 앱이 아니라 편집기 확장인가</h3>
 <p>Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴을 갖고 있습니다. <strong>셋 다 같은 엔진, 같은 요금제</strong>를 씁니다. 그럼에도 이 강의가 확장을 고른 이유는 세 가지입니다.</p>
@@ -1763,7 +1770,7 @@ window.MathJax = {
   </div>
   <div class="arch-card">
     <div class="card-title">② AI가 바꾼 코드를 나란히 보여준다</div>
-    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. <strong>이 강의가 계속 강조할 '사람이 검증한다'는 원칙을 화면이 대신 지켜주는 셈</strong>이라, 가장 중요한 이유입니다.</div>
+    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. 왼쪽이 원본, 오른쪽이 AI 제안이고 <strong>오른쪽은 승인하기 전에 내가 직접 고칠 수 있습니다</strong>. '사람이 검증한다'는 이 강의의 원칙을 화면이 대신 지켜주는 셈이라, 가장 중요한 이유입니다. <strong>오늘 Step 5에서 직접 만나봅니다.</strong></div>
   </div>
   <div class="arch-card">
     <div class="card-title">③ 되돌리기가 쉽다</div>
@@ -1820,56 +1827,207 @@ window.MathJax = {
       <div class="step-desc">AI가 출력한 종가가 <strong>진짜인지</strong> 직접 확인합니다.</div>
     </div>
   </div>
+  <div class="step-card verify">
+    <span class="step-num">Step 5</span>
+    <div class="step-body">
+      <div class="step-title">사람이 손으로: AI 코드를 승인 전에 고치기</div>
+      <div class="step-desc">자율권을 다시 거둬들여 <strong>좌우 비교 화면</strong>을 직접 만나봅니다.</div>
+    </div>
+  </div>
 </div>
 
 <hr />
 <h2 id="실습-실습-01-ai-도구-환경-구축">실습 — 실습 01: AI 도구 환경 구축</h2>
+<h3 id="시작하기-전에-오늘-만드는-것이-전체에서-어디인가">시작하기 전에 — 오늘 만드는 것이 전체에서 어디인가</h3>
+<p>앞으로 만들 트레이딩 시스템은 아무리 복잡해져도 결국 이 세 가지 위에 올라갑니다.</p>
+<pre><code>① 시세가 들어온다  →  ② 규칙이 판단한다  →  ③ 주문이 나간다
+</code></pre>
+<p><strong>①이 없으면 나머지는 존재할 수 없습니다.</strong> 그래서 오늘은 ① 하나만, 가장 작게 확인합니다. 프로그래밍 입문의 첫 줄이 화면에 <code>Hello, World</code>를 찍는 것이라면, <strong>우리의 첫 줄은 "시장아, 안녕?"</strong> 입니다. 코드를 배우는 게 목적이 아니라 <strong>진짜 시장 데이터가 내 화면까지 들어오는지 확인</strong>하는 게 목적입니다.</p>
+<p>오늘 만들 파일 이름이 <code>hello_market.py</code>인 이유가 그것입니다. 이건 시스템의 <strong>심장박동을 확인하는 일</strong>입니다.</p>
+<hr />
 <h3 id="step-0-확장-설치와-자율권-모드-설정">Step 0. 확장 설치와 자율권 모드 설정</h3>
-<h4 id="0-1-확장-설치">0-1. 확장 설치</h4>
+<h4 id="0-1-편집기-준비-이-강의는-vs-code-기준입니다">0-1. 편집기 준비 — 이 강의는 VS Code 기준입니다</h4>
+<blockquote>
+<p>✅ <strong>아직 아무것도 안 깔려 있다면 <a href="https://code.visualstudio.com/">VS Code</a>를 설치하세요.</strong> 무료이고, 이 강의의 모든 화면이 VS Code 기준입니다.</p>
+<p><strong>이미 Cursor를 쓰고 계시다면</strong> 그대로 쓰셔도 됩니다. Claude Code 확장은 두 편집기에서 <strong>완전히 똑같이</strong> 동작합니다. 다만 화면 구성이 달라서, 아래 상자를 먼저 읽어주세요.</p>
+</blockquote>
+<h5 id="다운로드-화면에서-뭘-골라야-하나">💾 다운로드 화면에서 뭘 골라야 하나</h5>
+<p><a href="https://code.visualstudio.com/Download">VS Code 다운로드 페이지</a>에 들어가면 선택지가 여러 개 나와서 당황스럽습니다. <strong>쓰시는 컴퓨터에 따라 아래만 보시면 됩니다.</strong></p>
+<p><strong>🪟 Windows — 두 가지를 정해야 합니다</strong></p>
+<p><strong>① <code>User Installer</code>를 고르세요 (<code>System Installer</code> 아닙니다)</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>User Installer</strong> ✅</th>
+<th>System Installer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>관리자 권한</td>
+<td><strong>필요 없음</strong></td>
+<td>필요함</td>
+</tr>
+<tr>
+<td>설치 위치</td>
+<td>내 계정 폴더 안</td>
+<td><code>C:\Program Files</code></td>
+</tr>
+<tr>
+<td>적용 대상</td>
+<td>나 혼자</td>
+<td>이 PC의 모든 사용자</td>
+</tr>
+<tr>
+<td>업데이트</td>
+<td>조용히 자동</td>
+<td>매번 승인 창이 뜸</td>
+</tr>
+</tbody>
+</table>
+<p>VS Code 공식 문서도 <strong>대부분의 사람에게 User Installer를 권장</strong>합니다. 특히 <strong>회사나 학교 PC에서 관리자 권한이 없어도 설치된다</strong>는 점이 중요합니다. 한 컴퓨터를 여러 사람이 계정 나눠 쓰는 경우가 아니면 User Installer가 정답입니다.</p>
+<p><strong>② <code>x64</code> vs <code>Arm64</code> — 거의 모든 분이 <code>x64</code>입니다</strong></p>
+<p>확인하는 법: <strong><code>설정</code> → <code>시스템</code> → <code>정보</code> → <code>장치 사양</code> → <code>시스템 종류</code></strong> (단축키 <code>Win</code> + <code>Pause</code>)</p>
+<table>
+<thead>
+<tr>
+<th>거기 이렇게 쓰여 있으면</th>
+<th>이걸 받으세요</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>64비트 운영 체제, **x64** 기반 프로세서</code></td>
+<td><strong><code>x64</code></strong></td>
+</tr>
+<tr>
+<td><code>64비트 운영 체제, **ARM** 기반 프로세서</code></td>
+<td><strong><code>Arm64</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>Intel이든 AMD든 <strong>전부 <code>x64</code></strong> 입니다. <code>Arm64</code>가 필요한 건 <strong>Snapdragon X 계열 Copilot+ PC</strong>, <strong>Surface Pro X</strong>, 또는 <strong>애플 실리콘 Mac에서 Parallels로 돌리는 Windows</strong> 정도뿐입니다.</p>
+<blockquote>
+<p>💡 <strong>헷갈리면 <code>x64</code>를 고르세요.</strong> 한쪽으로만 안전합니다 — <code>x64</code>는 ARM 기기에서도 (조금 느리지만) 돌아가는 반면, <strong><code>Arm64</code>는 일반 PC에서 아예 설치가 안 됩니다.</strong></p>
+</blockquote>
+<p><code>.zip</code>과 <code>CLI</code>는 이 강의에서 쓰지 않습니다. 무시하세요.</p>
+<p><strong>🍎 Mac — 고민할 게 없습니다</strong></p>
+<p><strong>그냥 큰 파란 다운로드 버튼(<code>Mac Universal</code>)을 누르세요.</strong> <code>Universal</code>은 <strong>Intel Mac과 애플 실리콘(M1·M2·M3·M4) Mac 둘 다에서</strong> 동작합니다. Windows와 달리 내 칩이 뭔지 확인할 필요조차 없습니다.</p>
+<blockquote>
+<p>궁금하시면 확인은 이렇게 합니다: 왼쪽 위 <strong>애플 메뉴 → <code>이 Mac에 관하여</code></strong> → <strong><code>칩(Chip)</code></strong> 항목. <code>Apple M2</code>처럼 쓰여 있으면 애플 실리콘, <code>Intel Core...</code>면 인텔입니다. 어느 쪽이든 <code>Universal</code>로 받으시면 됩니다.</p>
+</blockquote>
+<p><strong>설치할 때 이 단계를 빼먹지 마세요.</strong> 다운로드한 <code>.dmg</code> 파일을 열면 VS Code 아이콘이 나오는데, 이걸 <strong>반드시 <code>응용 프로그램(Applications)</code> 폴더로 드래그</strong>해야 합니다. 다운로드 폴더에서 그냥 실행하면 나중에 업데이트가 제대로 안 됩니다.</p>
+<p>Mac에는 <code>User Installer</code> / <code>System Installer</code> 구분이 없습니다.</p>
+<h5 id="cursor를-쓰시는-분만-에이전트-화면을-편집기-화면으로-되돌리기">📦 Cursor를 쓰시는 분만 — 에이전트 화면을 편집기 화면으로 되돌리기</h5>
+<p>최근 Cursor는 <strong>에이전트(Agent) 화면이 기본</strong>입니다. 왼쪽에 작업 목록이 뜨고, <strong>파일 탐색기와 편집기가 안 보입니다.</strong> 이 강의 화면과 달라서 따라오기 어렵습니다.</p>
+<p><strong>편집기(Editor) 화면으로 바꾸세요.</strong> 아래 중 되는 것으로 하시면 됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>순서</th>
+<th>방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td>단축키 <strong><code>Ctrl</code> + <code>E</code></strong> (Mac은 <code>Cmd</code> + <code>E</code>) — Editor ↔ Agent 전환</td>
+</tr>
+<tr>
+<td>②</td>
+<td>우측 상단의 <strong>화살표 모양 레이아웃 전환 버튼</strong> 클릭</td>
+</tr>
+<tr>
+<td>③</td>
+<td><code>Cursor Settings</code> 안의 <strong>레이아웃 / 기본 화면</strong> 항목에서 Editor로 변경</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Cursor는 버전마다 이 버튼의 위치와 동작이 바뀝니다.</strong> 공식 문서에 설명이 없고, 커뮤니티에도 "버튼이 사라졌다", "눌러도 안 바뀐다"는 보고가 버전별로 계속 올라옵니다.</p>
+<p><strong>그래서 목표를 기억하세요 — "왼쪽에 파일 탐색기가 보이고 가운데에 코드가 열리는 화면"입니다.</strong> 그 화면만 만들면 방법은 아무거나 상관없습니다. 셋 다 안 되면 <strong>VS Code를 설치하는 게 가장 빠릅니다.</strong> 강의 진행에 아무 손해가 없습니다.</p>
+</blockquote>
+<p><strong>확장 설치 (VS Code · Cursor 공통)</strong></p>
 <ol>
-<li><strong>Cursor</strong> 또는 <strong>VS Code</strong>를 실행합니다. (둘 중 편한 것을 쓰시면 됩니다. 화면 구성이 거의 같습니다.)</li>
+<li>편집기를 실행합니다.</li>
 <li>왼쪽 사이드바의 <strong>Extensions</strong>(네모 블록 아이콘)를 클릭합니다.</li>
 <li>검색창에 <strong><code>Claude Code</code></strong>를 입력하고, Anthropic이 만든 확장을 <strong>Install</strong> 합니다.</li>
 <li>설치 후 나타난 Claude 아이콘을 클릭해 대화창을 열고, <strong>로그인</strong>합니다.</li>
 </ol>
 <h4 id="0-2-자율권-모드-설정-ai에게-어디까지-맡길-것인가">0-2. 자율권 모드 설정 — AI에게 어디까지 맡길 것인가</h4>
-<p>대화창에서 <strong><code>Shift + Tab</code></strong>을 누르면 모드 목록이 뜹니다. 이건 <strong>"AI가 뭘 할 때마다 나에게 물어볼 것인가"</strong>를 정하는 스위치입니다.</p>
+<p>프롬프트 입력창 <strong>맨 아래에 현재 모드가 표시</strong>되어 있습니다. 그걸 <strong>클릭</strong>하면 모드 목록이 뜹니다. (단축키 <code>Shift + Tab</code>으로도 열립니다.) 이건 <strong>"AI가 뭘 할 때마다 나에게 물어볼 것인가"</strong>를 정하는 스위치입니다.</p>
 <table>
 <thead>
 <tr>
 <th>모드</th>
-<th>뜻</th>
-<th>언제 쓰나</th>
+<th>승인 없이 되는 것</th>
+<th>승인을 계속 물어보는 것</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Manual</strong></td>
-<td>편집할 때마다 승인 버튼을 눌러야 함</td>
-<td>처음 감을 잡을 때</td>
+<td>없음 (파일 읽기만)</td>
+<td>편집, 명령 실행 전부</td>
 </tr>
 <tr>
 <td><strong>Plan</strong></td>
-<td>코드를 고치지 않고 계획만 세워서 보고</td>
-<td>큰 작업 전에 방향만 볼 때</td>
+<td>없음 — 고치지 않고 계획만 세워서 보고</td>
+<td>—</td>
 </tr>
 <tr>
 <td><strong>Edit automatically</strong></td>
-<td>편집을 승인 없이 진행</td>
-<td><strong>오늘 실습에 사용</strong></td>
+<td><strong>작업 폴더 안의 파일 편집</strong>과 <code>mkdir</code>·<code>cp</code> 같은 파일 정리 명령</td>
+<td><strong>설치·실행 명령은 계속 물어봅니다</strong></td>
 </tr>
 <tr>
 <td><strong>Auto</strong></td>
-<td>안전 검사를 통과한 작업은 자동 진행, 위험한 것만 멈춤</td>
-<td>목록에 있다면 이걸 쓰셔도 좋습니다</td>
+<td><strong>거의 전부.</strong> 안전 검사(분류기)를 통과한 작업은 자동 진행</td>
+<td>위험하다고 판단된 것만</td>
 </tr>
 </tbody>
 </table>
-<p><strong>오늘은 <code>Edit automatically</code>(또는 <code>Auto</code>)를 선택하세요.</strong> 이 설정을 안 하면 실습 내내 승인 버튼을 수십 번 눌러야 합니다.</p>
+<p><strong>오늘은 <code>Auto</code>를 선택하세요.</strong></p>
 <blockquote>
-<p>⚠️ <strong>여러분 화면에는 모드가 3개일 수도, 4개일 수도 있습니다.</strong> 편집기 종류, 운영체제, 확장 버전에 따라 목록이 다르게 보입니다. 실제로 같은 확장 버전인데도 어떤 컴퓨터에는 <code>Auto</code>가 보이고 어떤 컴퓨터에는 안 보입니다.</p>
-<p><strong>그래서 이 강의는 절대 "몇 번째 항목을 고르세요"라고 말하지 않습니다.</strong> 목록을 보고 <strong>이름으로</strong> 고르세요. <code>Auto</code>가 없으면 <code>Edit automatically</code>를 고르시면 결과는 같습니다.</p>
-<p>이건 오늘 하루의 예외가 아니라 앞으로 계속 만날 상황입니다. <strong>AI 도구는 화면이 자주 바뀝니다. 화면을 외우지 말고 원리를 기억하세요.</strong> 지금 우리가 하려는 건 "승인 버튼을 매번 안 누르게 만드는 것"이고, 그걸 해주는 항목이 어떤 이름이든 그걸 고르면 됩니다.</p>
+<p>⚠️ <strong><code>Edit automatically</code>로는 부족합니다.</strong> 이름 때문에 오해하기 쉬운데, 이 모드가 자동 승인하는 건 <strong>파일 편집</strong>입니다. 오늘 할 일 중 Python 설치, 가상환경 생성, 라이브러리 설치, 코드 실행은 전부 <strong>명령 실행</strong>이라 승인 버튼이 그대로 뜹니다. <strong><code>Auto</code>만이 그걸 없애줍니다.</strong></p>
+</blockquote>
+<h5 id="auto가-목록에-없다면-순서대로-확인하세요"><code>Auto</code>가 목록에 없다면 — 순서대로 확인하세요</h5>
+<p>대부분 ①에서 해결됩니다. 그리고 <strong>기다린다고 생기지 않으니</strong> 아래를 확인하고 넘어가세요.</p>
+<p><strong>① 모델 확인 (가장 흔한 원인)</strong>
+대화창에 <code>/model</code>을 입력하세요. <code>Haiku</code>나 구형 모델로 되어 있으면 <code>Auto</code>가 아예 나타나지 않습니다. <strong><code>Sonnet</code> 또는 <code>Opus</code> 최신 계열</strong>로 바꾸고 대화창을 다시 여세요. <code>Auto</code>는 두 번째 AI가 명령을 검사해주는 구조라, 그걸 지원하는 모델에서만 켜집니다.</p>
+<p><strong>② 확장 업데이트</strong>
+Extensions 사이드바 → <code>Claude Code</code> → <strong>Update</strong> 버튼이 보이면 누르세요. 그다음 <code>Ctrl</code> + <code>Shift</code> + <code>P</code> → <code>Developer: Reload Window</code>를 실행합니다.</p>
+<p><strong>③ 편집기 설정이 모드를 고정하고 있는지</strong></p>
+<p>설정 창을 여는 경로가 <strong>편집기마다 다릅니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>편집기</th>
+<th>경로</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VS Code</strong></td>
+<td><code>File</code> → <code>Preferences</code> → <code>Settings</code></td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td><code>File</code> → <code>Preferences</code> → <strong><code>VS Code Settings</code></strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Cursor를 쓰신다면 <code>Cursor Settings</code>가 아니라 <code>VS Code Settings</code>입니다.</strong> 두 메뉴가 나란히 붙어 있어 헷갈리기 쉽습니다. <code>Cursor Settings</code>는 Cursor 자체 AI 기능용이라 Claude Code 설정이 거기엔 없습니다.</p>
+</blockquote>
+<p>설정 창이 열리면 검색창에 <strong><code>initialPermissionMode</code></strong> 를 입력하세요. 값이 채워져 있으면 <strong>비우세요.</strong> 이 설정은 <code>Auto</code>를 값으로 받지 못합니다. 비워둔 채로 모드 목록에서 <code>Auto</code>를 한 번 고르면, 그 뒤로는 새 대화도 <code>Auto</code>로 열립니다.</p>
+<p><strong>④ 회사·학교 PC라면</strong>
+관리자가 조직 정책으로 <code>Auto</code>를 꺼놨을 수 있습니다. 이건 개인이 바꿀 수 없습니다. 아래 대안으로 가세요.</p>
+<p><strong>대안 — <code>Auto</code> 없이 실습하기</strong>
+<code>Edit automatically</code>를 고른 뒤, 명령 승인 창이 뜰 때마다 <strong><code>Yes, and don't ask again</code>(예, 다시 묻지 않기)</strong> 을 누르세요. 그 명령은 이 폴더에서 다시 묻지 않습니다. 처음 몇 번만 누르면 그 뒤로는 조용해집니다.</p>
+<blockquote>
+<p>📌 <strong>화면을 외우지 말고 목적을 기억하세요.</strong> 편집기 종류, 운영체제, 확장 버전, 심지어 고른 모델에 따라 목록이 다르게 보입니다. <strong>그래서 이 강의는 "몇 번째 항목을 고르세요"라고 말하지 않습니다.</strong> 지금 우리가 하려는 건 "승인 버튼을 매번 안 누르게 만드는 것"이고, 그걸 해주는 항목을 <strong>이름으로</strong> 고르시면 됩니다. AI 도구는 화면이 자주 바뀝니다.</p>
 </blockquote>
 <hr />
 <h3 id="step-1-작업-폴더-생성-및-열기">Step 1. 작업 폴더 생성 및 열기</h3>
@@ -1919,13 +2077,14 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 데이터를 분석하는 프로젝트를 시작할 거야.
 
 [만들 것]
-- 이 폴더에 Python 가상환경(.venv)을 만들고
-  pandas, matplotlib, FinanceDataReader 3개를 설치해줘.
-- check.py 파일 하나를 만들어서, 삼성전자(005930)의 최근 5거래일 일봉
+- 이 폴더 안에서만 쓰는 독립된 파이썬 환경을 만들어줘.
+  내 컴퓨터 전체에는 아무것도 설치하지 마.
+- 그 환경에 pandas, matplotlib, FinanceDataReader 3개를 설치해줘.
+- hello_market.py 파일 하나를 만들어서, 삼성전자(005930)의 최근 5거래일 일봉
   (날짜/시가/고가/저가/종가/거래량)을 표로 출력하게 해줘.
 
 [하지 말 것]
-- check.py 외에 다른 파일이나 폴더는 만들지 마.
+- hello_market.py 외에 다른 파일이나 폴더는 만들지 마.
   requirements.txt, README.md, setup 스크립트 전부 필요 없어.
 - 주가 숫자를 코드에 직접 적어넣지 마. 반드시 조회한 결과만 출력해.
 - 중간에 실패하면 혼자 우회하지 말고, 에러 메시지를 그대로 보여주고 멈춰.
@@ -1967,17 +2126,87 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 </table>
 <p>특히 <strong>[하지 말 것]</strong>이 낯설게 느껴지실 겁니다. 이 칸은 제가 처음부터 넣은 게 아니라, <strong>사고를 겪고 나서 추가한 칸</strong>입니다. 라이브러리 3개만 요청했는데 AI가 22개를 적어 넣어 설치가 5분 넘게 걸린 적이 있고, 더 심각하게는 <strong>AI가 주가를 못 가져오자 인터넷에서 대충 찾은 숫자를 코드에 적어 넣고 "완료했습니다"라고 보고한 적</strong>이 있습니다.</p>
 <p><strong>이 네 칸의 정식 이름과 작동 원리는 바로 다음 클립에서 제대로 배웁니다.</strong> 지금은 "각 칸이 왜 있는지"만 이해하고 넘어가셔도 충분합니다.</p>
+<h4 id="왜-하필-이-종목-이-기간-이-라이브러리인가">왜 하필 이 종목, 이 기간, 이 라이브러리인가</h4>
+<p>프롬프트에 들어간 선택 하나하나에 이유가 있습니다. <strong>이유를 알면 다음엔 여러분이 직접 바꿔 쓸 수 있습니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>선택</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>삼성전자</strong></td>
+<td>누구나 포털에서 <strong>1초 만에 실제 주가를 확인할 수 있는</strong> 종목이라서. 오늘의 목적은 분석이 아니라 <strong>대조</strong>입니다.</td>
+</tr>
+<tr>
+<td><strong>5거래일</strong></td>
+<td>화면에 한눈에 들어오면서, 눈으로 대조하기엔 충분한 최소량. 100줄이면 아무도 안 봅니다.</td>
+</tr>
+<tr>
+<td><strong>라이브러리 3개</strong></td>
+<td>데이터 가져오기(FinanceDataReader) + 표로 다루기(pandas) + 나중에 그리기(matplotlib). <strong>딱 필요한 최소 3개</strong>라서, <code>[하지 말 것]</code>에 "더 설치하지 마"를 쓸 수 있습니다.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="방금-생긴-venv-폴더는-무엇인가">방금 생긴 <code>.venv</code> 폴더는 무엇인가</h4>
+<p>AI가 작업을 마치면 폴더에 <strong><code>.venv</code></strong> 라는 처음 보는 폴더가 하나 생겨 있을 겁니다. 프롬프트에 쓴 <strong>"이 폴더 안에서만 쓰는 독립된 파이썬 환경"</strong> 이 바로 저것입니다.</p>
+<p><strong>왜 이게 필요한가 — 없으면 생기는 일</strong>
+라이브러리를 컴퓨터 전체에 깔면 이런 일이 생깁니다. A 프로젝트가 pandas 1.5를 쓰는데 B 프로젝트가 2.2를 요구합니다. B를 위해 버전을 올리면 <strong>A가 조용히 망가집니다.</strong> 그리고 A가 언제 망가졌는지는 몇 주 뒤에야 압니다.</p>
+<p><strong>그래서 <code>.venv</code>가 하는 일</strong>
+<code>.venv</code>는 <strong>이 폴더에서만 쓰는 전용 도구 상자</strong>입니다. 여기 설치한 건 이 폴더 밖으로 나가지 않고, 밖에 있는 것도 여기 안 들어옵니다.</p>
+<blockquote>
+<p>✅ <strong>그래서 오늘 뭘 잘못 설치하셔도 괜찮습니다.</strong> <code>.venv</code> 폴더 하나만 지우면 오늘 설치한 게 전부 사라지고 컴퓨터는 원래대로 돌아옵니다. <strong>여러분 컴퓨터는 절대 더러워지지 않습니다.</strong></p>
+</blockquote>
+<p>한 번 열어보세요. <code>.venv</code> 안쪽 <strong><code>site-packages</code></strong> 폴더에 방금 설치한 <code>pandas</code>가 실제로 들어 있습니다. (Windows는 <code>.venv</code> → <code>Lib</code> → <code>site-packages</code>, Mac은 <code>.venv</code> → <code>lib</code> → <code>python3.12</code> → <code>site-packages</code>) <strong>"설치한 게 어디로 갔나"</strong> 가 눈으로 해결됩니다.</p>
+<blockquote>
+<p>📌 이름 앞에 점(<code>.</code>)이 붙은 폴더는 <strong>"건드리지 마세요"</strong> 라는 표시입니다. 직접 열어볼 일은 오늘 이 한 번뿐입니다.</p>
+</blockquote>
 <hr />
 <h3 id="step-4-내-눈으로-확인할-체크리스트">Step 4. 내 눈으로 확인할 체크리스트</h3>
 <p>AI가 "완료했습니다"라고 해도 <strong>아직 끝난 게 아닙니다.</strong> 아래 네 가지를 직접 확인하세요.</p>
 <ul>
 <li class="check-item"><input type="checkbox"> <strong>설치 완료</strong>: 에러 없이 pandas, matplotlib, FinanceDataReader 세 개의 버전이 출력되었다.</li>
 <li class="check-item"><input type="checkbox"> <strong>표 출력</strong>: 날짜/시가/고가/저가/종가/거래량 컬럼을 가진 <strong>5행짜리</strong> 표가 화면에 보인다.</li>
-<li class="check-item"><input type="checkbox"> <strong>파일이 하나뿐</strong>: 폴더에 <code>check.py</code>와 <code>.venv</code> 말고 <strong>내가 요청하지 않은 파일이 없다.</strong></li>
+<li class="check-item"><input type="checkbox"> <strong>파일이 하나뿐</strong>: 폴더에 <code>hello_market.py</code>와 <code>.venv</code> 말고 <strong>내가 요청하지 않은 파일이 없다.</strong></li>
 <li class="check-item"><input type="checkbox"> <strong>숫자가 진짜다</strong>: 포털에서 "삼성전자 주가"를 검색해, <strong>표의 마지막 줄 종가와 실제 종가가 일치</strong>한다.</li>
 </ul>
 <blockquote>
 <p>🔍 <strong>마지막 항목이 오늘의 진짜 시험입니다.</strong> 앞의 세 개는 화면만 보면 알 수 있지만, 마지막 하나는 <strong>다른 창을 열어야만</strong> 알 수 있습니다. 이 강의 전체를 관통하는 습관이니 지금 몸에 익히세요.</p>
+</blockquote>
+<hr />
+<h3 id="step-5-승인-화면-직접-만나보기-ai-코드를-내-손으로-고치기">Step 5. 승인 화면 직접 만나보기 — AI 코드를 내 손으로 고치기</h3>
+<p>지금까지는 <strong>속도를 위해 AI에게 자율권을 줬습니다.</strong> 이제 반대쪽을 한 번 경험해 봅시다. 이 강의에서 가장 중요한 습관이 여기서 만들어집니다.</p>
+<p><strong>1)</strong> 프롬프트 입력창 맨 아래의 모드 표시를 클릭해 <strong><code>Manual</code></strong> 로 바꿉니다.</p>
+<p><strong>2)</strong> 대화창에 입력합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>hello_market.py에 최근 5일 종가의 평균을 계산해서
+표 아래에 한 줄로 출력하는 코드를 추가해줘.
+</code></pre></div>
+<p><strong>3)</strong> 이번엔 코드가 바로 바뀌지 않고 <strong>좌우 비교 화면(diff)</strong> 이 뜹니다.</p>
+<p>이 화면이 <strong>어디에</strong> 열리는지가 헷갈리기 쉽습니다. Claude 대화창이 아니라, <strong>가운데 편집기 영역에 새 탭으로</strong> 열리고 그 탭 안이 다시 좌우로 쪼개집니다.</p>
+<pre><code>┌──────────┬────────────────────────────────────┬─────────────┐
+│ 파일탐색기 │        편집기 영역 (가운데)          │ Claude 대화창 │
+│          │ ┌──────────────┬─────────────────┐ │             │
+│          │ │  원본         │  AI 제안        │ │  ← 항상     │
+│          │ │  (왼쪽)       │  (오른쪽)       │ │    맨 오른쪽 │
+│          │ │  읽기 전용     │  편집 가능      │ │             │
+│          │ └──────────────┴─────────────────┘ │             │
+└──────────┴────────────────────────────────────┴─────────────┘
+                   ↑ diff는 여기 새 탭으로 열립니다
+</code></pre>
+<p>왼쪽이 지금 내 파일, 오른쪽이 AI가 제안한 것입니다. <strong>초록색이 새로 추가될 줄</strong>입니다.</p>
+<p><strong>4) 여기가 오늘의 핵심입니다.</strong> 승인 버튼을 누르기 전에, <strong>오른쪽 칸에 커서를 놓고 직접 타이핑해서 고쳐보세요.</strong></p>
+<p>예를 들어 출력 문구를 이렇게 바꿔봅니다.</p>
+<pre><code>평균 종가:        →   5일 평균 종가(원):
+</code></pre>
+<p><strong>AI가 쓴 코드는 읽기 전용이 아닙니다.</strong> 승인 전에 내가 먼저 손댈 수 있습니다.</p>
+<p><strong>5)</strong> 이제 승인합니다. Claude는 <strong>여러분이 손을 댔다는 사실을 인지합니다.</strong> 자기가 제안한 그대로라고 착각하지 않고, 여러분이 고친 버전을 기준으로 다음 작업을 이어갑니다.</p>
+<blockquote>
+<p>🎯 <strong>방금 무슨 일이 있었나요?</strong></p>
+<p>AI가 초안을 쓰고, <strong>사람이 최종 결정을 했습니다.</strong> 이게 이 강의가 5개 파트 내내 지킬 자세입니다.</p>
+<p>그리고 이제 아실 겁니다 — <strong><code>Auto</code>는 속도를 얻는 대신 이 화면을 포기하는 선택입니다. 공짜가 아닙니다.</strong></p>
+<p>앞으로 <strong>중요한 판단이 들어간 코드는 <code>Manual</code>로 내려서</strong> 이 화면을 보세요. 설치나 반복 작업은 <code>Auto</code>로 올리고요. <strong>모드를 왔다 갔다 하는 게 정상입니다.</strong> 한 번 정하고 끝나는 설정이 아닙니다.</p>
 </blockquote>
 <hr />
 <h2 id="자주-발생하는-문제-및-트러블슈팅">자주 발생하는 문제 및 트러블슈팅</h2>
@@ -1999,10 +2228,13 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>출력에서 한글이 깨지고 있어. UTF-8 인코딩을 적용해서 다시 출력해줘.
 </code></pre></div>
 <h3 id="5-승인-버튼이-계속-뜰-때">5. 승인 버튼이 계속 뜰 때</h3>
-<p>Step 0-2의 모드 설정이 안 된 상태입니다. <code>Shift + Tab</code>을 눌러 <code>Edit automatically</code> 또는 <code>Auto</code>를 선택하세요. <strong>이미 진행 중인 대화에서는 반영이 안 될 수 있으니, 모드를 바꾼 뒤 새 대화를 시작하시면 확실합니다.</strong></p>
+<p>모드가 <strong><code>Auto</code>가 아닌 상태</strong>입니다. <code>Edit automatically</code>로는 해결되지 않습니다 — 그 모드는 파일 편집만 자동 승인하고, 설치·실행 명령은 계속 물어보기 때문입니다.</p>
+<p>프롬프트 입력창 아래 모드 표시를 클릭해 <strong><code>Auto</code></strong> 를 고르세요. 목록에 <code>Auto</code>가 없으면 Step 0-2의 <strong>"<code>Auto</code>가 목록에 없다면"</strong> 4단계를 따라가세요. <strong>이미 진행 중인 대화에서는 반영이 안 될 수 있으니, 모드를 바꾼 뒤 새 대화를 시작하시면 확실합니다.</strong></p>
+<h3 id="6-step-5에서-좌우-비교-화면이-안-뜰-때">6. Step 5에서 좌우 비교 화면이 안 뜰 때</h3>
+<p>모드가 아직 <code>Auto</code> 또는 <code>Edit automatically</code>입니다. 이 두 모드는 <strong>묻지 않고 바로 고치기 때문에</strong> 비교 화면이 나타나지 않습니다. 모드를 <strong><code>Manual</code></strong> 로 바꾼 뒤 다시 요청하세요.</p>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>이제 AI 파트너가 준비됐습니다. 그런데 오늘 쓴 프롬프트, 네 칸으로 나눠져 있었죠?</p>
+<p>이제 AI 파트너가 준비됐고, <strong>자율권을 주는 법과 거둬들이는 법</strong>을 둘 다 익히셨습니다. 그런데 오늘 쓴 프롬프트, 네 칸으로 나눠져 있었죠?</p>
 <p>다음 클립에서는 <strong>그 네 칸이 정확히 무엇이고, 왜 그렇게 나눠야 하는지</strong>를 배웁니다. 그리고 오늘 잠깐 언급한 <strong>"AI가 가짜 주가를 코드에 적어 넣고 완료했다고 보고한 사건"</strong>의 전말을 함께 들여다보겠습니다. 실제로 얼마나 틀렸는지, 그리고 그게 왜 트레이딩에서 치명적인지 숫자로 확인하실 겁니다.</p>
       </main>
 
