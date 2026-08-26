@@ -1105,6 +1105,33 @@ li.check-item input[type="checkbox"] {
   }
 }
 
+/* ==========================================================================
+   11. ANCHOR SCROLL OFFSET
+   ========================================================================== */
+/* 사이드바 목차를 클릭하면 브라우저는 제목을 뷰포트 맨 위에 붙인다.
+   그런데 .docs-topbar 가 position: sticky 라 그 자리를 덮고 있어서,
+   정작 제목이 상단바 뒤로 숨고 본문 첫 줄부터 보이게 된다.
+   도착 지점을 상단바 높이 + 여백만큼 아래로 내려 제목이 먼저 보이게 한다. */
+:root {
+  --anchor-offset: 78px;
+}
+
+@media (max-width: 960px) {
+  /* 모바일에서는 상단바에 ☰ 버튼이 나타나 높이가 더 커진다 */
+  :root {
+    --anchor-offset: 92px;
+  }
+}
+
+.docs-content h1[id],
+.docs-content h2[id],
+.docs-content h3[id],
+.docs-content h4[id],
+.docs-content h5[id],
+.docs-content h6[id] {
+  scroll-margin-top: var(--anchor-offset);
+}
+
 </style>
 <script>
 window.MathJax = {
