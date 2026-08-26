@@ -1760,6 +1760,35 @@ window.MathJax = {
 <li><strong>실습 01</strong>: 삼성전자(005930) 최근 5거래일 일봉을 출력하고, 그 숫자가 <strong>진짜인지 직접 대조</strong>하기</li>
 <li>AI가 제안한 코드를 <strong>승인 전에 내 손으로 고치는</strong> 화면(diff) 직접 경험하기</li>
 </ul>
+<blockquote>
+<p>📖 <strong>오늘 나오는 낯선 말 네 개</strong> — 지금 외우실 필요 없습니다. 나올 때마다 다시 설명합니다.</p>
+<table>
+<thead>
+<tr>
+<th>말</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>프롬프트</strong></td>
+<td>AI에게 보내는 <strong>요청문</strong>. "이렇게 해줘"라고 적은 글 한 덩어리</td>
+</tr>
+<tr>
+<td><strong>라이브러리</strong></td>
+<td>남이 미리 만들어 둔 <strong>기능 묶음</strong>. 직접 안 만들고 가져다 씁니다</td>
+</tr>
+<tr>
+<td><strong>확장(Extension)</strong></td>
+<td>편집기에 <strong>끼워 넣는 추가 기능</strong>. 스마트폰 앱을 깔듯 편집기에 깝니다</td>
+</tr>
+<tr>
+<td><strong>일봉</strong></td>
+<td>하루치 주가를 <strong>시가·고가·저가·종가·거래량 다섯 숫자</strong>로 요약한 것</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-왜-ai-코딩인가-문법을-몰라도-시스템을-만든다">1. 왜 AI 코딩인가? — 문법을 몰라도 시스템을 만든다</h3>
@@ -1957,22 +1986,26 @@ window.MathJax = {
 <p>우리가 만들 시스템은 <strong>파이썬(Python)</strong> 이라는 언어로 돌아갑니다. 주식 데이터를 가져오고 계산하는 도구가 이 언어에 가장 많이 만들어져 있기 때문입니다.</p>
 <p><strong>여러분이 파이썬을 배우실 필요는 없습니다. 코드는 AI가 씁니다.</strong> 다만 <strong>그 코드가 실행되려면 컴퓨터에 파이썬이 깔려 있어야</strong> 합니다. 요리로 치면 <strong>레시피는 AI가 쓰고, 파이썬은 그 요리를 할 주방</strong>입니다. 주방이 없으면 레시피가 아무리 좋아도 아무 일도 안 일어납니다.</p>
 <p>그래서 오늘의 첫 질문은 이겁니다 — <strong>"내 컴퓨터에 주방이 있나?"</strong></p>
-<p>아래 프롬프트에 <strong><code>uv</code></strong> 라는 낯선 단어가 나오는데, <strong>파이썬 설치와 라이브러리 관리를 대신해 주는 도구</strong>입니다. 파이썬이 아예 없어도 uv가 알아서 깔아줍니다. 지금은 <strong>"그런 도구가 있다"</strong> 정도만 아시면 충분합니다.</p>
 <h4 id="진단-프롬프트">진단 프롬프트</h4>
 <p>대화창에 아래를 입력합니다.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>아직 아무것도 설치하지 마. 진단만 해줘.
 
-이 컴퓨터에서 실제로 실행되는 Python이 있는지, 그리고 uv가 설치돼 있는지
-확인해서 표 하나로 알려줘.
+이 컴퓨터에서 파이썬이 실제로 실행되는지 확인해줘.
+&quot;설치돼 있다고 표시되는 것&quot;이 아니라 &quot;실제로 실행되는지&quot;가 기준이야.
 
-Windows라면, 경로에 WindowsApps가 들어간 python은 진짜 Python이 아니라
-Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
+확인한 방법과 결과를 표 하나로 보여주고, 애매하면 애매하다고 말해줘.
 </code></pre></div>
-<blockquote>
-<p>📌 <strong>마지막 두 줄이 이상하게 구체적이죠? 지금 이해하지 못하셔도 괜찮습니다.</strong> 그대로 복사해 넣으시고, 왜 저 줄이 필요한지는 바로 아래에서 설명합니다.</p>
-</blockquote>
 <p><strong>왜 이 단계가 따로 있을까요?</strong> 한 번에 다 시키면, AI는 중간에 막혔을 때 멈추지 않고 <strong>혼자 우회로를 찾습니다.</strong> 그 우회가 잘못된 방향이면 우리는 한참 뒤에야 알아차립니다. 30초짜리 진단을 먼저 하면 갈림길이 눈에 보이고, 그 다음 요청이 훨씬 정확해집니다.</p>
-<p>마지막 줄이 이상하게 구체적이죠? Windows에는 <strong>Python이 설치된 척하는 껍데기 프로그램</strong>이 기본으로 들어 있습니다. 사람도 AI도 여기에 잘 속아서, "Python이 있다"고 판단하고 진행했다가 원인 모를 실패를 겪습니다. 실제로 이 강의를 준비하면서 여기서 10분을 날렸습니다.</p>
+<h4 id="가운데-한-줄이-오늘의-진짜-교훈입니다">가운데 한 줄이 오늘의 진짜 교훈입니다</h4>
+<pre><code>&quot;설치돼 있다고 표시되는 것&quot;이 아니라 &quot;실제로 실행되는지&quot;가 기준이야.
+</code></pre>
+<p><strong>이 한 줄을 왜 넣었을까요?</strong> Windows에는 <strong>파이썬이 설치된 척하는 껍데기 프로그램</strong>이 기본으로 들어 있습니다. 사람도 AI도 여기에 잘 속아서, "파이썬이 있다"고 판단하고 진행했다가 원인 모를 실패를 겪습니다. 실제로 이 강의를 준비하면서 여기서 10분을 날렸습니다.</p>
+<p>그런데 <strong>여러분이 가져가실 것은 그 껍데기 프로그램의 이름이 아닙니다.</strong> 그건 Windows에만 있는 특수한 사정이고, 다음에 만날 함정은 또 다를 겁니다. 가져가실 것은 이 원칙입니다.</p>
+<blockquote>
+<p>🎯 <strong>"있다"가 아니라 "된다"를 물어보세요.</strong></p>
+<p>AI에게 정답을 미리 알려주는 게 아니라, <strong>무엇을 기준으로 판단할지</strong>를 알려주는 겁니다. 그러면 여러분이 모르는 함정도 AI가 대신 걸러냅니다.</p>
+</blockquote>
+<p>이 원칙은 오늘 하루로 끝나지 않습니다. Step 5에서는 AI가 <strong>"완료했습니다"</strong> 라고 말한 것을 그대로 믿지 않고 포털 시세와 대조할 거고, Step 6에서는 AI가 쓴 코드를 <strong>승인하기 전에</strong> 직접 볼 겁니다. <strong>전부 같은 원칙입니다.</strong></p>
 <h4 id="진단-결과에-따라-갈리는-길">진단 결과에 따라 갈리는 길</h4>
 <table>
 <thead>
@@ -1988,11 +2021,13 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
 </tr>
 <tr>
 <td>Python <strong>없음</strong></td>
-<td>아래 프롬프트의 <code>[만들 것]</code> 첫 줄에 <strong><code>uv를 사용해서 Python 3.12부터 설치해줘.</code></strong> 를 추가</td>
+<td>아래 프롬프트의 <code>[만들 것]</code> 첫 줄에 <strong><code>uv를 사용해서 파이썬 3.12부터 설치해줘.</code></strong> 를 추가</td>
 </tr>
 </tbody>
 </table>
-<p><code>uv</code>는 Python 자체가 없어도 알아서 설치해 주는 도구라, 이 한 줄이면 해결됩니다.</p>
+<blockquote>
+<p><strong><code>uv</code></strong> 는 <strong>파이썬 설치와 라이브러리 관리를 대신해 주는 도구</strong>입니다. 파이썬이 아예 없어도 uv가 알아서 깔아줍니다. 지금은 "그런 도구가 있다" 정도만 아시면 충분합니다.</p>
+</blockquote>
 <hr />
 <h3 id="step-4-구축-프롬프트-네-칸으로-나눠-요청하기">Step 4. 구축 프롬프트 — 네 칸으로 나눠 요청하기</h3>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 데이터를 분석하는 프로젝트를 시작할 거야.
@@ -2005,8 +2040,7 @@ Microsoft Store 안내용 껍데기야. 그건 '없음'으로 처리해줘.
   (날짜/시가/고가/저가/종가/거래량)을 표로 출력하게 해줘.
 
 [하지 말 것]
-- hello_market.py 외에 다른 파일이나 폴더는 만들지 마.
-  requirements.txt, README.md, setup 스크립트 전부 필요 없어.
+- 위에서 요청한 것 외에는 파일도 폴더도 만들지 마.
 - 주가 숫자를 코드에 직접 적어넣지 마. 반드시 조회한 결과만 출력해.
 - 중간에 실패하면 혼자 우회하지 말고, 에러 메시지를 그대로 보여주고 멈춰.
 
