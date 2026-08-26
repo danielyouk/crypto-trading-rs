@@ -1851,77 +1851,31 @@ window.MathJax = {
 <p>✅ <strong>아직 아무것도 안 깔려 있다면 <a href="https://code.visualstudio.com/">VS Code</a>를 설치하세요.</strong> 무료이고, 이 강의의 모든 화면이 VS Code 기준입니다.</p>
 <p>이미 Cursor 같은 다른 편집기를 쓰고 계시다면 그대로 쓰셔도 됩니다. Claude Code 확장은 똑같이 동작합니다. 다만 화면 구성이 달라 안내와 다르게 보일 수 있습니다.</p>
 </blockquote>
-<h5 id="다운로드-화면에서-뭘-골라야-하나">💾 다운로드 화면에서 뭘 골라야 하나</h5>
-<p><a href="https://code.visualstudio.com/Download">VS Code 다운로드 페이지</a>에 들어가면 선택지가 여러 개 나와서 당황스럽습니다. <strong>쓰시는 컴퓨터에 따라 아래만 보시면 됩니다.</strong></p>
-<p><strong>🪟 Windows — 두 가지를 정해야 합니다</strong></p>
-<p><strong>① <code>User Installer</code>를 고르세요 (<code>System Installer</code> 아닙니다)</strong></p>
+<p>다운로드 페이지에 선택지가 여러 개 나오는데, <strong>이것만 고르시면 됩니다.</strong></p>
 <table>
 <thead>
 <tr>
 <th></th>
-<th><strong>User Installer</strong> ✅</th>
-<th>System Installer</th>
+<th>고를 것</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>관리자 권한</td>
-<td><strong>필요 없음</strong></td>
-<td>필요함</td>
+<td><strong>Windows</strong></td>
+<td><strong><code>User Installer</code></strong> 의 <strong><code>x64</code></strong></td>
 </tr>
 <tr>
-<td>설치 위치</td>
-<td>내 계정 폴더 안</td>
-<td><code>C:\Program Files</code></td>
-</tr>
-<tr>
-<td>적용 대상</td>
-<td>나 혼자</td>
-<td>이 PC의 모든 사용자</td>
-</tr>
-<tr>
-<td>업데이트</td>
-<td>조용히 자동</td>
-<td>매번 승인 창이 뜸</td>
+<td><strong>Mac</strong></td>
+<td>큰 파란 버튼(<strong><code>Universal</code></strong>) → 받은 파일을 <strong><code>응용 프로그램</code> 폴더로 드래그</strong></td>
 </tr>
 </tbody>
 </table>
-<p>VS Code 공식 문서도 <strong>대부분의 사람에게 User Installer를 권장</strong>합니다. 특히 <strong>회사나 학교 PC에서 관리자 권한이 없어도 설치된다</strong>는 점이 중요합니다. 한 컴퓨터를 여러 사람이 계정 나눠 쓰는 경우가 아니면 User Installer가 정답입니다.</p>
-<p><strong>② <code>x64</code> vs <code>Arm64</code> — 거의 모든 분이 <code>x64</code>입니다</strong></p>
-<p>확인하는 법: <strong><code>설정</code> → <code>시스템</code> → <code>정보</code> → <code>장치 사양</code> → <code>시스템 종류</code></strong> (단축키 <code>Win</code> + <code>Pause</code>)</p>
-<table>
-<thead>
-<tr>
-<th>거기 이렇게 쓰여 있으면</th>
-<th>이걸 받으세요</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>64비트 운영 체제, **x64** 기반 프로세서</code></td>
-<td><strong><code>x64</code></strong></td>
-</tr>
-<tr>
-<td><code>64비트 운영 체제, **ARM** 기반 프로세서</code></td>
-<td><strong><code>Arm64</code></strong></td>
-</tr>
-</tbody>
-</table>
-<p>Intel이든 AMD든 <strong>전부 <code>x64</code></strong> 입니다. <code>Arm64</code>가 필요한 건 <strong>Snapdragon X 계열 Copilot+ PC</strong>, <strong>Surface Pro X</strong>, 또는 <strong>애플 실리콘 Mac에서 Parallels로 돌리는 Windows</strong> 정도뿐입니다.</p>
 <blockquote>
-<p>💡 <strong>헷갈리면 <code>x64</code>를 고르세요.</strong> 한쪽으로만 안전합니다 — <code>x64</code>는 ARM 기기에서도 (조금 느리지만) 돌아가는 반면, <strong><code>Arm64</code>는 일반 PC에서 아예 설치가 안 됩니다.</strong></p>
+<p>💡 <code>System Installer</code>는 관리자 권한이 필요합니다. <code>Arm64</code>는 Copilot+ PC 같은 특수한 기기용이니, <strong>헷갈리면 <code>x64</code></strong> 를 고르세요 — 반대로 고르면 아예 설치가 안 됩니다.</p>
 </blockquote>
-<p><code>.zip</code>과 <code>CLI</code>는 이 강의에서 쓰지 않습니다. 무시하세요.</p>
-<p><strong>🍎 Mac — 고민할 게 없습니다</strong></p>
-<p><strong>그냥 큰 파란 다운로드 버튼(<code>Mac Universal</code>)을 누르세요.</strong> <code>Universal</code>은 <strong>Intel Mac과 애플 실리콘(M1·M2·M3·M4) Mac 둘 다에서</strong> 동작합니다. Windows와 달리 내 칩이 뭔지 확인할 필요조차 없습니다.</p>
-<blockquote>
-<p>궁금하시면 확인은 이렇게 합니다: 왼쪽 위 <strong>애플 메뉴 → <code>이 Mac에 관하여</code></strong> → <strong><code>칩(Chip)</code></strong> 항목. <code>Apple M2</code>처럼 쓰여 있으면 애플 실리콘, <code>Intel Core...</code>면 인텔입니다. 어느 쪽이든 <code>Universal</code>로 받으시면 됩니다.</p>
-</blockquote>
-<p><strong>설치할 때 이 단계를 빼먹지 마세요.</strong> 다운로드한 <code>.dmg</code> 파일을 열면 VS Code 아이콘이 나오는데, 이걸 <strong>반드시 <code>응용 프로그램(Applications)</code> 폴더로 드래그</strong>해야 합니다. 다운로드 폴더에서 그냥 실행하면 나중에 업데이트가 제대로 안 됩니다.</p>
-<p>Mac에는 <code>User Installer</code> / <code>System Installer</code> 구분이 없습니다.</p>
-<p><strong>확장 설치</strong></p>
+<p><strong>확장 설치 — 여기서부터가 오늘의 본론입니다</strong></p>
 <ol>
-<li>편집기를 실행합니다.</li>
+<li>VS Code를 실행합니다.</li>
 <li>왼쪽 사이드바의 <strong>Extensions</strong>(네모 블록 아이콘)를 클릭합니다.</li>
 <li>검색창에 <strong><code>Claude Code</code></strong>를 입력하고, Anthropic이 만든 확장을 <strong>Install</strong> 합니다.</li>
 <li>설치 후 나타난 Claude 아이콘을 클릭해 대화창을 열고, <strong>로그인</strong>합니다.</li>
