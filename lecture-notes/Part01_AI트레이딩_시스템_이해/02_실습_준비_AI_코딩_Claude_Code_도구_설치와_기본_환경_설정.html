@@ -1205,11 +1205,9 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-왜-ai-코딩인가-문법을-몰라도-시스템을-만든다">1. 왜 AI 코딩인가? — 문법을 몰라도 시스템을 만든다</a>
             
-            <a class="nav-heading level-3" href="#2-왜-데스크탑-앱이-아니라-편집기-확장인가">2. 왜 데스크탑 앱이 아니라 편집기 확장인가</a>
+            <a class="nav-heading level-3" href="#2-비용은-얼마나-드나">2. 비용은 얼마나 드나</a>
             
-            <a class="nav-heading level-3" href="#3-비용은-얼마나-드나">3. 비용은 얼마나 드나</a>
-            
-            <a class="nav-heading level-3" href="#4-오늘의-진행-흐름">4. 오늘의 진행 흐름</a>
+            <a class="nav-heading level-3" href="#3-오늘의-진행-흐름">3. 오늘의 진행 흐름</a>
             
             <a class="nav-heading level-2" href="#실습-실습-01-ai-도구-환경-구축">실습 — 실습 01: AI 도구 환경 구축</a>
             
@@ -1788,36 +1786,13 @@ window.MathJax = {
 
 <p>이 강의의 실습은 <strong>VS Code에 Claude Code 확장을 설치하는 방식</strong>으로 진행합니다. 다만 기억하실 원칙은 하나입니다 — <strong>도구는 바뀌어도 작업 원리는 그대로입니다.</strong> 우리가 배울 것은 특정 버튼의 위치가 아니라 ① 목표를 산출물 형태로 선언하고 ② 격리된 폴더에서 실행하고 ③ 사람이 눈으로 검증하는 루프입니다. 이 세 가지는 어떤 AI 도구에서도 100% 동일하게 적용됩니다.</p>
 <hr />
-<h3 id="2-왜-데스크탑-앱이-아니라-편집기-확장인가">2. 왜 데스크탑 앱이 아니라 편집기 확장인가</h3>
-<p>Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴을 갖고 있습니다. <strong>셋 다 같은 엔진, 같은 요금제</strong>를 씁니다. 그럼에도 이 강의가 확장을 고른 이유는 세 가지입니다.</p>
-<div class="arch-grid">
-  <div class="arch-card">
-    <div class="card-title">① 설치가 클릭 한 번</div>
-    <div class="card-desc">확장이 실행에 필요한 것을 통째로 품고 있어, 별도 설치나 경로 설정이 필요 없습니다. Extensions에서 검색 → Install이 전부입니다.</div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">② AI가 바꾼 코드를 나란히 보여준다</div>
-    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. 왼쪽이 원본, 오른쪽이 AI 제안이고 <strong>오른쪽은 승인하기 전에 내가 직접 고칠 수 있습니다</strong>. '사람이 검증한다'는 이 강의의 원칙을 화면이 대신 지켜주는 셈이라, 가장 중요한 이유입니다. <strong>오늘 Step 5에서 직접 만나봅니다.</strong></div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">③ 되돌리기가 쉽다</div>
-    <div class="card-desc">체크포인트가 남아 있어, AI가 파일을 잔뜩 만들어 놨을 때 한 번에 이전 상태로 돌릴 수 있습니다.</div>
-  </div>
-</div>
-
-<blockquote>
-<p>⚠️ <strong>오해 정정 두 가지</strong>
-- <strong>"터미널 설치는 Node.js를 따로 깔아야 한다"</strong> — 예전 이야기입니다. 지금은 설치 파일 하나로 끝나며 Node.js가 필요 없습니다.
-- <strong>"확장이 앱보다 토큰을 적게 쓴다"</strong> — 사실이 아닙니다. 세 방식 모두 같은 엔진에 같은 사용량을 씁니다. 확장을 고르는 이유는 <strong>비용이 아니라 검증 편의성</strong>입니다.</p>
-</blockquote>
-<hr />
-<h3 id="3-비용은-얼마나-드나">3. 비용은 얼마나 드나</h3>
+<h3 id="2-비용은-얼마나-드나">2. 비용은 얼마나 드나</h3>
 <p><strong>Pro 플랜(월 약 2만 원대)이면 이 강의 5개 파트를 모두 마치기에 충분합니다.</strong> 무료 플랜으로는 Claude Code를 쓸 수 없어 유료 플랜이 필요하고, 할당량이 모자란다고 느껴지면 그때 API 키를 따로 쓰는 방법이 있습니다. <strong>비용 최적화는 Part 5(Clip 41)에서 본격적으로 다루므로, 지금은 "Pro 하나면 된다"만 기억하시면 됩니다.</strong></p>
 <blockquote>
 <p>📌 요금제와 가격은 수시로 바뀝니다. 정확한 금액은 공식 웹사이트에서 확인하세요.</p>
 </blockquote>
 <hr />
-<h3 id="4-오늘의-진행-흐름">4. 오늘의 진행 흐름</h3>
+<h3 id="3-오늘의-진행-흐름">3. 오늘의 진행 흐름</h3>
 <div class="step-flow">
   <div class="step-card">
     <span class="step-num">Step 0</span>
@@ -1899,6 +1874,28 @@ window.MathJax = {
 </table>
 <blockquote>
 <p>💡 <code>System Installer</code>는 관리자 권한이 필요합니다. <code>Arm64</code>는 Copilot+ PC 같은 특수한 기기용이니, <strong>헷갈리면 <code>x64</code></strong> 를 고르세요 — 반대로 고르면 아예 설치가 안 됩니다.</p>
+</blockquote>
+<p><strong>잠깐 — 왜 앱이 아니라 확장을 쓰나</strong></p>
+<p>Claude Code는 터미널, 데스크탑 앱, 편집기 확장 세 가지 얼굴을 갖고 있습니다. <strong>셋 다 같은 엔진, 같은 요금제</strong>를 씁니다. 그럼에도 이 강의가 확장을 고른 이유는 세 가지입니다.</p>
+<div class="arch-grid">
+  <div class="arch-card">
+    <div class="card-title">① 설치가 클릭 한 번</div>
+    <div class="card-desc">확장이 실행에 필요한 것을 통째로 품고 있어, 별도 설치나 경로 설정이 필요 없습니다. Extensions에서 검색 → Install이 전부입니다.</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">② AI가 바꾼 코드를 나란히 보여준다</div>
+    <div class="card-desc">수정 전후를 좌우로 비교(diff)해 줍니다. 왼쪽이 원본, 오른쪽이 AI 제안이고 <strong>오른쪽은 승인하기 전에 내가 직접 고칠 수 있습니다</strong>. '사람이 검증한다'는 이 강의의 원칙을 화면이 대신 지켜주는 셈이라, 가장 중요한 이유입니다. <strong>오늘 Step 5에서 직접 만나봅니다.</strong></div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 되돌리기가 쉽다</div>
+    <div class="card-desc">체크포인트가 남아 있어, AI가 파일을 잔뜩 만들어 놨을 때 한 번에 이전 상태로 돌릴 수 있습니다.</div>
+  </div>
+</div>
+
+<blockquote>
+<p>⚠️ <strong>오해 정정 두 가지</strong>
+- <strong>"터미널 설치는 Node.js를 따로 깔아야 한다"</strong> — 예전 이야기입니다. 지금은 설치 파일 하나로 끝나며 Node.js가 필요 없습니다.
+- <strong>"확장이 앱보다 토큰을 적게 쓴다"</strong> — 사실이 아닙니다. 세 방식 모두 같은 엔진에 같은 사용량을 씁니다. 확장을 고르는 이유는 <strong>비용이 아니라 검증 편의성</strong>입니다.</p>
 </blockquote>
 <p><strong>확장 설치 — 여기서부터가 오늘의 본론입니다</strong></p>
 <ol>
