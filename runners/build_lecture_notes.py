@@ -218,6 +218,18 @@ def get_logo_data_uri() -> str:
     return ""
 
 
+def get_fastcampus_logo_data_uri() -> str:
+    """푸터에 넣을 Fastcampus 로고. 밝은 배경용(검정 워드마크) 가로형."""
+    logo_file = ASSETS_DIR / "fastcampus-logo.png"
+    src = TEMPLATE_DIR / "fastcampus-logo.png"
+    if not logo_file.exists() and src.exists():
+        shutil.copy2(src, logo_file)
+    if logo_file.exists():
+        b64 = base64.b64encode(logo_file.read_bytes()).decode("ascii")
+        return f"data:image/png;base64,{b64}"
+    return ""
+
+
 def build() -> None:
     if not CURRICULUM_PATH.exists():
         raise SystemExit(f"curriculum.json을 찾을 수 없습니다: {CURRICULUM_PATH}")
@@ -249,6 +261,7 @@ def build() -> None:
     css_content = (TEMPLATE_DIR / "style.css").read_text(encoding="utf-8")
     (ASSETS_DIR / "style.css").write_text(css_content, encoding="utf-8")
     logo_data_uri = get_logo_data_uri()
+    fastcampus_logo_data_uri = get_fastcampus_logo_data_uri()
     parts = group_parts(notes)
     total_clips = len(notes)
     total_minutes = sum(n.duration for n in notes)
@@ -274,6 +287,7 @@ def build() -> None:
                 css_path="../_core/assets/style.css",
                 inline_css=css_content,
                 logo_data_uri=logo_data_uri,
+                fastcampus_logo_data_uri=fastcampus_logo_data_uri,
                 total_clips=total_clips,
                 prev={"href": f"../{prev_note.href}", "title": prev_note.title} if prev_note else None,
                 next={"href": f"../{next_note.href}", "title": next_note.title} if next_note else None,
@@ -294,6 +308,7 @@ def build() -> None:
             css_path="_core/assets/style.css",
             inline_css=css_content,
             logo_data_uri=logo_data_uri,
+            fastcampus_logo_data_uri=fastcampus_logo_data_uri,
             total_clips=total_clips,
             total_minutes=total_minutes,
         ),

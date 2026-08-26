@@ -84,6 +84,9 @@ window.MathJax = {
       <footer class="site-footer">
         <span>© DATATRAIN. All rights reserved.</span>
         <span>코딩 몰라도 완성하는 나만의 AI 트레이딩 시스템 w. Claude Code</span>
+        {% if fastcampus_logo_data_uri %}
+        <img class="footer-logo" src="{{ fastcampus_logo_data_uri }}" alt="Fastcampus">
+        {% endif %}
       </footer>
     </div>
   </div>

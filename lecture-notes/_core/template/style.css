@@ -1123,3 +1123,21 @@ li.check-item input[type="checkbox"] {
 .docs-content h6[id] {
   scroll-margin-top: var(--anchor-offset);
 }
+
+/* ==========================================================================
+   12. FOOTER BRAND MARK
+   ========================================================================== */
+/* 푸터의 Fastcampus 로고. 밝은 배경용(검정 워드마크) 가로형 이미지라
+   높이만 고정하고 폭은 비율에 맡긴다. */
+.site-footer .footer-logo {
+  height: 18px;
+  width: auto;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+@media (max-width: 960px) {
+  .site-footer .footer-logo {
+    height: 16px;
+  }
+}

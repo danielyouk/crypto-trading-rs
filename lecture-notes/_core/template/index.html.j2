@@ -74,6 +74,9 @@ window.MathJax = {
       <footer class="site-footer">
         <span>© DATATRAIN. All rights reserved.</span>
         <span>본 교육 콘텐츠의 무단 복제 및 상업적 재배포를 금합니다.</span>
+        {% if fastcampus_logo_data_uri %}
+        <img class="footer-logo" src="{{ fastcampus_logo_data_uri }}" alt="Fastcampus">
+        {% endif %}
       </footer>
     </div>
   </div>
