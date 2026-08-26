@@ -219,13 +219,13 @@ def get_logo_data_uri() -> str:
 
 
 def get_fastcampus_logo_data_uri() -> str:
-    """푸터에 넣을 Fastcampus 로고. 밝은 배경용(검정 워드마크) 가로형."""
-    logo_file = ASSETS_DIR / "fastcampus-logo.png"
-    src = TEMPLATE_DIR / "fastcampus-logo.png"
-    if not logo_file.exists() and src.exists():
-        shutil.copy2(src, logo_file)
-    if logo_file.exists():
-        b64 = base64.b64encode(logo_file.read_bytes()).decode("ascii")
+    """사이드바에 넣을 Fastcampus 로고. 사이드바가 진한 남색이므로 흰색 워드마크 가로형."""
+    name = "fastcampus-logo-white.png"
+    src, dst = TEMPLATE_DIR / name, ASSETS_DIR / name
+    if src.exists():
+        shutil.copy2(src, dst)  # 원본이 바뀌면 따라가도록 항상 복사
+    if dst.exists():
+        b64 = base64.b64encode(dst.read_bytes()).decode("ascii")
         return f"data:image/png;base64,{b64}"
     return ""
 

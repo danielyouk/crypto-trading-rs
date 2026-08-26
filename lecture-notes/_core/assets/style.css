@@ -1125,19 +1125,32 @@ li.check-item input[type="checkbox"] {
 }
 
 /* ==========================================================================
-   12. FOOTER BRAND MARK
+   12. SIDEBAR PARTNER MARK
    ========================================================================== */
-/* 푸터의 Fastcampus 로고. 밝은 배경용(검정 워드마크) 가로형 이미지라
-   높이만 고정하고 폭은 비율에 맡긴다. */
-.site-footer .footer-logo {
-  height: 18px;
+/* 사이드바 상단, DATATRAIN 마크 옆에 놓이는 Fastcampus 로고.
+   가로형(6.6:1)이라 높이만 고정하고 폭은 비율에 맡긴다. */
+.sidebar-brand .brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-brand .brand-row .brand {
+  flex-shrink: 0;
+}
+
+.sidebar-brand .brand-partner {
+  height: 14px;
   width: auto;
   flex-shrink: 0;
-  opacity: 0.85;
+  margin-left: auto;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  opacity: 0.9;
 }
 
 @media (max-width: 960px) {
-  .site-footer .footer-logo {
-    height: 16px;
+  .sidebar-brand .brand-partner {
+    height: 13px;
   }
 }

@@ -1,11 +1,16 @@
 <aside class="docs-sidebar" id="docs-sidebar">
   <div class="sidebar-brand">
-    <a class="brand" href="{{ index_href }}">
-      {% if logo_data_uri %}
-      <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
+    <div class="brand-row">
+      <a class="brand" href="{{ index_href }}">
+        {% if logo_data_uri %}
+        <img src="{{ logo_data_uri }}" alt="DATATRAIN Logo">
+        {% endif %}
+        <span>DATATRAIN</span>
+      </a>
+      {% if fastcampus_logo_data_uri %}
+      <img class="brand-partner" src="{{ fastcampus_logo_data_uri }}" alt="Fastcampus">
       {% endif %}
-      <span>DATATRAIN</span>
-    </a>
+    </div>
     <div class="sidebar-meta">
       <strong>AI 트레이딩 핸드북</strong>
       <span>{{ total_clips }}클립 · 5파트 · Claude Code</span>
