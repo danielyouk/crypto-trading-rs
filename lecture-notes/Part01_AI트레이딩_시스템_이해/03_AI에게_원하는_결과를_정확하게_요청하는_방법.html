@@ -1462,15 +1462,19 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#4-지난-클립-프롬프트-해부-그-문장이-거기-있던-이유">4. 지난 클립 프롬프트 해부 — 그 문장이 거기 있던 이유</a>
             
-            <a class="nav-heading level-3" href="#5-ai의-셀프-검증-편향과-가짜-시세-하드코딩-사건">5. AI의 '셀프 검증 편향'과 가짜 시세 하드코딩 사건</a>
+            <a class="nav-heading level-3" href="#5-이미-파일이-있거나-결과가-다를-때-후속-수정refine-4단계-골격과-캡슐화">5. 이미 파일이 있거나 결과가 다를 때 — '후속 수정(Refine) 4단계 골격'과 """ 캡슐화</a>
+            
+            <a class="nav-heading level-3" href="#6-ai의-셀프-검증-편향과-가짜-시세-하드코딩-사건">6. AI의 '셀프 검증 편향'과 가짜 시세 하드코딩 사건</a>
             
             <a class="nav-heading level-2" href="#따라-해보기-실습">따라 해보기 — 실습</a>
             
             <a class="nav-heading level-3" href="#테스트-1-모호한-프롬프트-입력해-보기">[테스트 1] 모호한 프롬프트 입력해 보기</a>
             
-            <a class="nav-heading level-3" href="#테스트-2-네-칸-골격을-갖춘-결과-정의형-프롬프트-입력">[테스트 2] 네 칸 골격을 갖춘 결과 정의형 프롬프트 입력</a>
+            <a class="nav-heading level-3" href="#테스트-2-신규-생성-4칸-골격을-갖춘-결과-정의형-프롬프트">[테스트 2] 신규 생성 4칸 골격을 갖춘 결과 정의형 프롬프트</a>
             
-            <a class="nav-heading level-3" href="#테스트-3-울타리가-실제로-작동하는지-확인하기">[테스트 3] 울타리가 실제로 작동하는지 확인하기</a>
+            <a class="nav-heading level-3" href="#테스트-3-이미-파일이-있을-때-던지는-후속-수정-4칸-프롬프트">[테스트 3] 이미 파일이 있을 때 던지는 '후속 수정 4칸 프롬프트'</a>
+            
+            <a class="nav-heading level-3" href="#테스트-4-울타리가-실제로-작동하는지-확인하기">[테스트 4] 울타리가 실제로 작동하는지 확인하기</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -1984,10 +1988,11 @@ window.MathJax = {
 </blockquote>
 <ul>
 <li><strong>약한 프롬프트(How)</strong> vs <strong>결과 정의형 프롬프트(What)</strong>의 결정적 5가지 차이점 비교</li>
-<li>실전 퀀트 개발을 위한 <strong>4대 프롬프트 골격 (맥락 → 산출물 → 울타리 → 검증)</strong></li>
-<li>지난 클립 프롬프트 <strong>한 줄씩 해부하기</strong> — 그 문장이 거기 있는 이유</li>
+<li>실전 퀀트 개발을 위한 <strong>신규 생성 4대 골격 (맥락 → 산출물 → 울타리 → 검증)</strong></li>
+<li>기존 파일이 있을 때 기능을 안전하게 확장하는 <strong>후속 수정 4대 골격 (맥락 → 수정할 것 → 하지 말 것 → 확인)</strong></li>
+<li>로그와 화면 데이터를 AI에게 오염 없이 전달하는 <strong><code>"""</code> (따옴표 3개) 캡슐화 테크닉</strong></li>
 <li>AI의 <strong>'셀프 검증 편향'</strong>과 <strong>가짜 시세 하드코딩 사건</strong> — 에러보다 무서운 건 에러가 안 나는 것</li>
-<li><strong>실습</strong>: 약한 프롬프트와 결과 정의형 프롬프트의 실제 산출물 차이 직접 비교하기</li>
+<li><strong>실습</strong>: 신규 생성 → 후속 수정(Refine) → 오류 발생 시 울타리 방어의 전체 사이클 실습</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
@@ -2162,7 +2167,61 @@ window.MathJax = {
 <p>📌 <strong>핵심</strong>: 좋은 프롬프트는 처음부터 완벽하게 태어나지 않습니다. <strong>한 번 사고가 날 때마다 한 줄씩 자라납니다.</strong> 여러분도 앞으로 실패를 겪을 때마다 자기만의 울타리 문장을 모아 두세요. 그게 여러분의 소중한 자산이 됩니다.</p>
 </blockquote>
 <hr />
-<h3 id="5-ai의-셀프-검증-편향과-가짜-시세-하드코딩-사건">5. AI의 '셀프 검증 편향'과 가짜 시세 하드코딩 사건</h3>
+<h3 id="5-이미-파일이-있거나-결과가-다를-때-후속-수정refine-4단계-골격과-캡슐화">5. 이미 파일이 있거나 결과가 다를 때 — '후속 수정(Refine) 4단계 골격'과 <code>"""</code> 캡슐화</h3>
+<p>실전에서는 첫 프롬프트 한 번에 모든 것이 완벽하게 끝나는 경우보다, <strong>이미 파일이 생성된 상태에서 기능을 추가하거나, 오류를 수정하거나, 차트 설정을 미세 조정하는 후속 대화(Refinement)</strong>가 작업의 70%를 차지합니다.</p>
+<h4 id="초보자가-흔히-저지르는-후속-요청의-함정">초보자가 흔히 저지르는 후속 요청의 함정</h4>
+<p>초보자는 결과가 마음에 안 들거나 에러가 났을 때 흔히 이렇게 말합니다:
+- ❌ <em>"아까 그 차트에 120일선도 추가해줘."</em> → AI가 <code>naver_chart_v2.png</code> 같은 새 파일을 만들거나, 기존 20일/60일선 코드를 날려버림.
+- ❌ <em>"에러 나는데 고쳐줘."</em> → AI가 무엇이 문제인지 몰라 기존 로직 전체를 엉뚱하게 뜯어고치거나 엉뚱한 우회 코드를 작성함.</p>
+<p>이미 파일이 존재할 때는 <strong>"기존 자산을 철저히 보존하면서 특정 부분만 정밀하게 타격하는 4칸 규칙"</strong>을 동일하게 적용해야 합니다.</p>
+<div class="framework-box">
+  <div class="framework-col c1">
+    <div class="col-tag">Follow-up 01</div>
+    <div class="col-name">1. 맥락 Context</div>
+    <div class="col-desc">"기존 `naver_chart.py`를 실행한 상태야."<br><br><strong>수정할 대상 파일과 현재 상태/로그</strong>를 지목합니다.</div>
+  </div>
+  <div class="framework-col c2">
+    <div class="col-tag">Follow-up 02</div>
+    <div class="col-name">2. 수정할 것 Action</div>
+    <div class="col-desc">"새 파일을 만들지 말고 기존 파일에 ~기능을 추가해줘."<br><br><strong>기존 파일 대상의 구체적 변경 내용</strong>을 선언합니다.</div>
+  </div>
+  <div class="framework-col c3">
+    <div class="col-tag">Follow-up 03</div>
+    <div class="col-name">3. 하지 말 것 Guardrail</div>
+    <div class="col-desc">"기존의 정상 작동 기능(~코드 등)을 삭제하거나 깨뜨리지 마."<br><br><strong>기존 정상 코드 보존</strong>을 못 박습니다.</div>
+  </div>
+  <div class="framework-col c4">
+    <div class="col-tag">Follow-up 04</div>
+    <div class="col-name">4. 확인 Verification</div>
+    <div class="col-desc">"수정 후 다시 실행해서 기존 결과와 새 결과가 함께 나오는지 보여줘."<br><br><strong>전체 통합 정상 동작</strong>을 확인합니다.</div>
+  </div>
+</div>
+
+<h4 id="전문가의-팁-따옴표-세-개-triple-quotes-캡슐화-기법">전문가의 팁: <code>"""</code> (따옴표 세 개 / Triple Quotes) 캡슐화 기법</h4>
+<p>화면에 뜬 에러 메시지(Traceback)나 데이터 출력 결과를 복사해서 프롬프트에 넣을 때는, <strong>반드시 따옴표 세 개(<code>"""</code>) 안에 감싸서 전달</strong>하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락]
+기존 `hello_market.py`를 실행했더니 화면에 다음과 같은 에러가 발생했어:
+&quot;&quot;&quot;
+Traceback (most recent call last):
+  File &quot;hello_market.py&quot;, line 12, in &lt;module&gt;
+KeyError: 'Close'
+&quot;&quot;&quot;
+
+[수정할 것]
+- 새 파일을 만들지 말고 기존 `hello_market.py` 파일에서 에러 원인을 찾아 수정해줘.
+
+[하지 말 것]
+- 기존의 6개 열(날짜/시가/고가/저가/종가/거래량) 표 출력 구조를 삭제하거나 훼손하지 마.
+
+[확인]
+- 수정 후 스크립트를 재실행하여 5행짜리 정상 주가 표가 화면에 출력되는지 확인시켜줘.
+</code></pre></div>
+<blockquote>
+<p>💡 <strong>왜 <code>"""</code>를 써야 할까요?</strong><br />
+AI에게 "여기서부터 여기까지는 내가 내리는 명령어가 아니라, <strong>컴퓨터 화면에 그대로 출력된 원본 데이터/에러 로그</strong>"임을 100% 명확하게 분리해 주기 위함입니다. 이렇게 캡슐화하지 않으면 AI가 에러 로그 속의 영단어를 사람이 내린 명령어로 착각하여 엉뚱한 방향으로 코드를 고치게 됩니다.</p>
+</blockquote>
+<hr />
+<h3 id="6-ai의-셀프-검증-편향과-가짜-시세-하드코딩-사건">6. AI의 '셀프 검증 편향'과 가짜 시세 하드코딩 사건</h3>
 <p>AI는 자신이 작성한 코드를 스스로 평가할 때 매우 관대하게 "잘 작동합니다!"라고 보고하는 약점(Self-Validation Bias)이 있습니다. 추상적으로 들리실 테니, <strong>실제로 이 강의를 준비하다 겪은 사건</strong>을 소개해 드리겠습니다.</p>
 <h4 id="무슨-일이-있었나">무슨 일이 있었나</h4>
 <p>환경 구축을 요청했더니 AI가 이렇게 보고했습니다.</p>
@@ -2238,7 +2297,7 @@ window.MathJax = {
 </ul>
 <hr />
 <h2 id="따라-해보기-실습">따라 해보기 — 실습</h2>
-<p>Claude Code 대화창에서 다음 두 가지 프롬프트를 차례대로 입력하여 AI의 응답 품질 차이를 직접 체험해 보세요.</p>
+<p>Claude Code 대화창에서 다음 네 가지 프롬프트를 차례대로 입력하여 AI의 응답 품질과 후속 개선 사이클을 직접 체험해 보세요.</p>
 <h3 id="테스트-1-모호한-프롬프트-입력해-보기">[테스트 1] 모호한 프롬프트 입력해 보기</h3>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>네이버 주가 차트 하나 그려줘.
 </code></pre></div>
@@ -2246,7 +2305,7 @@ window.MathJax = {
 <p><strong>결과 관찰</strong>: AI가 기간을 1년으로 할지 10년으로 할지 되묻거나, 이동평균선도 없는 밋밋한 선 하나만 대충 그리고 끝납니다.</p>
 </blockquote>
 <hr />
-<h3 id="테스트-2-네-칸-골격을-갖춘-결과-정의형-프롬프트-입력">[테스트 2] 네 칸 골격을 갖춘 결과 정의형 프롬프트 입력</h3>
+<h3 id="테스트-2-신규-생성-4칸-골격을-갖춘-결과-정의형-프롬프트">[테스트 2] 신규 생성 4칸 골격을 갖춘 결과 정의형 프롬프트</h3>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 모멘텀 전략을 분석하기 위해 차트가 필요해.
 
 [만들 것]
@@ -2261,10 +2320,37 @@ NAVER(종목코드: 035420)의 최근 2년간 일봉 데이터를 불러와서,
 [확인] 최근 5일간의 종가·거래량 요약표와 데이터 조회 시각을 함께 출력해줘.
 </code></pre></div>
 <blockquote>
-<p><strong>결과 관찰</strong>: 한 번의 요청으로 정돈된 2-패널 차트 파일이 생성되고, 검증에 쓸 요약 데이터가 함께 출력됩니다.</p>
+<p><strong>결과 관찰</strong>: 한 번의 요청으로 정돈된 2-패널 차트 파일(<code>naver_chart.png</code>)이 생성되고, 검증에 쓸 요약 데이터가 함께 출력됩니다.</p>
 </blockquote>
 <hr />
-<h3 id="테스트-3-울타리가-실제로-작동하는지-확인하기">[테스트 3] 울타리가 실제로 작동하는지 확인하기</h3>
+<h3 id="테스트-3-이미-파일이-있을-때-던지는-후속-수정-4칸-프롬프트">[테스트 3] 이미 파일이 있을 때 던지는 '후속 수정 4칸 프롬프트'</h3>
+<p>방금 만들어진 차트 스크립트에 <strong>기존 코드를 손상시키지 않고 새로운 기능을 안전하게 추가</strong>해 봅니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락]
+방금 만든 네이버 차트 스크립트를 확장하려고 해.
+화면에 출력된 요약 정보는 정상적으로 확인했어:
+&quot;&quot;&quot;
+종목: NAVER (035420)
+최근 종가: 2026-08-28 기준 정상 조회 완료
+&quot;&quot;&quot;
+
+[수정할 것]
+- 새 파일을 만들지 말고 기존 차트 스크립트를 수정해줘.
+- 상단 차트에 120일 이동평균선(보라색 선)을 추가해줘.
+- 하단 거래량 패널에 20일 거래량 이동평균선(주황색 선)을 겹쳐서 그려줘.
+- 수정된 차트를 다시 'naver_chart.png'로 덮어써줘.
+
+[하지 말 것]
+- 기존의 20일/60일선과 거래량 막대 색상(상승 빨강/하락 파랑) 로직을 지우거나 바꾸지 마.
+- 새로운 별도 파이썬 스크립트나 이미지 파일을 중복 생성하지 마.
+
+[확인]
+- 스크립트를 다시 실행하여 파일 저장 완료 메시지와 함께, 120일선 수치가 포함된 최신 요약표를 보여줘.
+</code></pre></div>
+<blockquote>
+<p><strong>결과 관찰</strong>: AI가 새 파일을 만들지 않고 기존 스크립트를 깔끔하게 수정하며, 기존 20일/60일선 구조를 100% 유지한 채 120일선과 거래량 이평선만 정확히 추가됩니다.</p>
+</blockquote>
+<hr />
+<h3 id="테스트-4-울타리가-실제로-작동하는지-확인하기">[테스트 4] 울타리가 실제로 작동하는지 확인하기</h3>
 <p>이번엔 <strong>일부러 실패하는 상황</strong>을 만들어 AI가 정직하게 멈추는지 봅니다.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 방금 만든 차트 스크립트를 다른 종목으로도 확인하고 싶어.
 
@@ -2280,9 +2366,11 @@ NAVER(종목코드: 035420)의 최근 2년간 일봉 데이터를 불러와서,
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 모호한 요청 시 AI의 추측으로 인해 비효율이 발생하는 현상을 목격했다.</li>
-<li class="check-item"><input type="checkbox"> 네 칸 요청(맥락 → 산출물 → 울타리 → 검증)으로 한 번에 차트 파일(<code>naver_chart.png</code>)과 요약표를 얻었다.</li>
-<li class="check-item"><input type="checkbox"> 이미지 뷰어로 차트를 열어 20일선과 60일선이 정상 표시되었는지 확인했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>[테스트 3]에서 AI가 값을 지어내지 않고 정직하게 실패를 보고하고 멈췄다.</strong></li>
+<li class="check-item"><input type="checkbox"> 신규 생성 4칸 요청으로 한 번에 차트 파일(<code>naver_chart.png</code>)과 요약표를 얻었다.</li>
+<li class="check-item"><input type="checkbox"> <strong>후속 수정 4칸 프롬프트</strong>를 사용해 기존 코드를 망치지 않고 120일선과 거래량 이평선을 추가했다.</li>
+<li class="check-item"><input type="checkbox"> 복사한 화면 데이터나 로그를 <code>"""</code> (따옴표 세 개)로 묶어 AI에게 오염 없이 전달하는 법을 익혔다.</li>
+<li class="check-item"><input type="checkbox"> 이미지 뷰어로 차트를 열어 추가된 선들이 정상 표시되었는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>[테스트 4]에서 AI가 값을 지어내지 않고 정직하게 실패를 보고하고 멈췄다.</strong></li>
 <li class="check-item"><input type="checkbox"> 출력된 종가를 <strong>포털 시세와 직접 대조</strong>해 일치하는 것을 확인했다.</li>
 </ul>
 <hr />
