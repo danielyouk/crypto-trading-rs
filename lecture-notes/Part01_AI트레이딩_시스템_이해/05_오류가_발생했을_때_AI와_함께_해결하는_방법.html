@@ -728,6 +728,213 @@ tr:hover td { background: #f8fafc; }
   padding: 0 2px;
 }
 
+/* ==========================================================================
+   4-BLOCK PROMPT ANATOMY CARDS
+   ========================================================================== */
+.anatomy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+
+.anatomy-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.anatomy-card.context {
+  border-left-color: var(--navy-light);
+}
+.anatomy-card.deliverable {
+  border-left-color: #2563eb;
+}
+.anatomy-card.guardrail {
+  border-left-color: #dc2626;
+  background: #fffafa;
+}
+.anatomy-card.verification {
+  border-left-color: #16a34a;
+  background: #fcfdfc;
+}
+
+.anatomy-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.anatomy-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.anatomy-badge.context { background: var(--navy-light); }
+.anatomy-badge.deliverable { background: #2563eb; }
+.anatomy-badge.guardrail { background: #dc2626; }
+.anatomy-badge.verification { background: #16a34a; }
+
+.anatomy-aim {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.anatomy-prompt {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-main);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+}
+
+.anatomy-why {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  padding-left: 4px;
+}
+
+.anatomy-why strong {
+  color: var(--navy-primary);
+}
+
+/* ==========================================================================
+   4-BLOCK FRAMEWORK CARDS & THREAT-DEFENSE GRID
+   ========================================================================== */
+.framework-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+@media (max-width: 900px) {
+  .framework-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 540px) {
+  .framework-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.framework-col {
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-top: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.framework-col.c1 { border-top-color: var(--navy-light); }
+.framework-col.c2 { border-top-color: #2563eb; }
+.framework-col.c3 { border-top-color: #dc2626; background: #fffdfd; }
+.framework-col.c4 { border-top-color: #16a34a; background: #fdfdfd; }
+
+.framework-col .col-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+
+.framework-col .col-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 8px;
+}
+
+.framework-col .col-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  flex: 1;
+}
+
+.guard-defense-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+@media (max-width: 800px) {
+  .guard-defense-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guard-defense-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.guard-defense-card .threat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.guard-defense-card .threat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 6px;
+}
+
+.guard-defense-card .threat-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.guard-defense-card .defense-box {
+  background: #f8fafc;
+  border-left: 3px solid #dc2626;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-main);
+  border-radius: 0 4px 4px 0;
+}
+
+.guard-defense-card .defense-box strong {
+  color: #b91c1c;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1267,7 +1474,7 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#2-퀀트-트레이딩-개발에서-마주치는-4대-에러-유형">2. 퀀트 트레이딩 개발에서 마주치는 4대 에러 유형</a>
             
-            <a class="nav-heading level-3" href="#3-ai와-함께하는-4단계-디버깅-표준-프로토콜">3. AI와 함께하는 4단계 디버깅 표준 프로토콜</a>
+            <a class="nav-heading level-3" href="#3-에러와-수정에도-같은-네-칸을-쓴다">3. 에러와 수정에도 같은 네 칸을 쓴다</a>
             
             <a class="nav-heading level-3" href="#4-로그가-없을-때의-무기-시각적-스크린샷-캡처와-데이터-형상-출력">4. 로그가 없을 때의 무기 — 시각적 스크린샷 캡처와 데이터 형상 출력</a>
             
@@ -1275,11 +1482,11 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#실습-실습-03">실습 — 실습 03</a>
             
-            <a class="nav-heading level-3" href="#실습-03-a-데이터-에러-유발-및-복구-잘못된-종목코드-호출">실습 03-A: [데이터 에러 유발 및 복구] 잘못된 종목코드 호출</a>
+            <a class="nav-heading level-3" href="#실습-03-a-결과는-나왔는데-원하는-것과-다를-때">실습 03-A: 결과는 나왔는데 원하는 것과 다를 때</a>
             
-            <a class="nav-heading level-3" href="#실습-03-b-시각화-에러-복구-한글-폰트-깨짐-및-레이아웃-자동-보정">실습 03-B: [시각화 에러 복구] 한글 폰트 깨짐 및 레이아웃 자동 보정</a>
+            <a class="nav-heading level-3" href="#실습-03-b-붉은-에러가-났을-때">실습 03-B: 붉은 에러가 났을 때</a>
             
-            <a class="nav-heading level-3" href="#실습-03-c-침묵의-논리-에러-복구-이동평균선-결측치nan-안전-처리">실습 03-C: [침묵의 논리 에러 복구] 이동평균선 결측치(NaN) 안전 처리</a>
+            <a class="nav-heading level-3" href="#실습-03-c-에러-없이-차트만-이상할-때">실습 03-C: 에러 없이 차트만 이상할 때</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -1760,7 +1967,7 @@ window.MathJax = {
           </div>
           <div class="metadata-item">
             <span class="label">예상 소요 시간:</span>
-            <span class="badge time">약 18분</span>
+            <span class="badge time">약 20분</span>
           </div>
           <div class="metadata-item">
             <span class="label">강의 유형:</span>
@@ -1773,15 +1980,16 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 앞으로 알고리즘 트레이딩 시스템을 구축하며 마주칠 어떤 복잡한 에러와 돌발 상황 앞에서도 당황하지 않고 해결하는 <strong>'4단계 AI 디버깅 표준 프로토콜'</strong>과 <strong>'시각적·데이터 검증 기법'</strong>을 완벽하게 체득하게 됩니다.</p>
+<p>이 클립이 끝나면, Clip 03에서 <strong>읽어 둔</strong> 후속 수정 4칸을 <strong>이미 있는 차트 파일에 직접 던져</strong> 결과를 고치고, 붉은 에러와 침묵의 오류를 같은 골격으로 막게 됩니다.</p>
 <blockquote>
 <p>💡 <strong>수강생 안심 선언</strong>: 프로그래밍과 AI 코딩에서 에러는 '내가 무언가를 잘못해서 실패한 사건'이 아닙니다. 에러 메시지는 AI가 코드를 완성하기 위해 인간에게 건네는 <strong>가장 완벽하고 가치 있는 피드백 신호(Feedback Signal)</strong>입니다. 시니어 퀀트 개발자도 하루에 수십 번씩 에러를 만나며 작업합니다.</p>
 </blockquote>
 <ul>
 <li><strong>퀀트 트레이딩 4대 에러 유형</strong>(환경/데이터/침묵의 논리/시각화)의 원인과 해결 패턴 이해</li>
-<li>AI에게 에러를 전달할 때 절대로 놓쳐서는 안 되는 <strong>4단계 디버깅 프로토콜</strong> 마스터</li>
-<li>로그가 남지 않는 '침묵의 에러(차트 깨짐, NaN 결측치 전파)'를 잡는 <strong>스크린샷 캡처 및 데이터 형상 진단법</strong></li>
-<li>초보자가 흔히 저지르는 <strong>3대 디버깅 안티패턴(Anti-patterns)</strong> 탈출</li>
+<li>Clip 03에서 배운 <strong>후속 수정 4칸</strong>을, 이미 있는 파일에 직접 던지는 손 훈련</li>
+<li>화면 로그를 <strong><code>"""</code>로 감싸</strong> AI에게 오염 없이 전달하는 습관</li>
+<li>로그가 없는 '침묵의 에러'를 잡는 <strong>화면 캡처와 데이터 중간 상태 확인</strong></li>
+<li>초보자가 흔히 저지르는 <strong>3대 디버깅 안티패턴</strong> 탈출</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
@@ -1837,27 +2045,63 @@ window.MathJax = {
 </div>
 
 <hr />
-<h3 id="3-ai와-함께하는-4단계-디버깅-표준-프로토콜">3. AI와 함께하는 4단계 디버깅 표준 프로토콜</h3>
-<p>에러를 만났을 때 AI에게 던지는 프롬프트의 품질이 해결 속도를 결정합니다. 아래의 <strong>4단계 프로토콜</strong>을 복사기처럼 그대로 사용하세요.</p>
-<pre><code class="language-text">[Step 1: Raw Traceback] 화면에 나타난 에러 메시지/로그 전체 복사 (절대 요약하지 않음)
-   ↓
-[Step 2: Context Tagging] &quot;무엇을 하다가(어떤 파일을 실행하다가)&quot; 났는지 1문장 추가
-   ↓
-[Step 3: Target Re-statement] 원래 얻으려 했던 &quot;최종 결과물의 형태&quot;를 다시 선언
-   ↓
-[Step 4: Verification Request] 수정 후 정상 동작 여부를 확인하는 검증 출력 요청
-</code></pre>
+<h3 id="3-에러와-수정에도-같은-네-칸을-쓴다">3. 에러와 수정에도 같은 네 칸을 쓴다</h3>
+<p>Clip 03에서 후속 수정 4칸을 <strong>읽어 두었습니다.</strong> 오늘은 그 칸을 <strong>이미 있는 차트 스크립트에 던집니다.</strong></p>
+<p>새 공식이 아닙니다. 2번째 칸 이름만 <code>만들 것</code>에서 <code>수정할 것</code>으로 바뀝니다.</p>
+<div class="framework-box">
+  <div class="framework-col c1">
+    <div class="col-tag">Follow-up 01</div>
+    <div class="col-name">1. 맥락 Context</div>
+    <div class="col-desc">대상 파일 + 지금 화면에 보이는 현상.<br>로그·표는 <strong><code>"""</code> 안에</strong> 넣습니다.</div>
+  </div>
+  <div class="framework-col c2">
+    <div class="col-tag">Follow-up 02</div>
+    <div class="col-name">2. 수정할 것 Action</div>
+    <div class="col-desc">기존 파일에서 바꿀 것.<br>새 파일을 만들지 말라고 함께 적습니다.</div>
+  </div>
+  <div class="framework-col c3">
+    <div class="col-tag">Follow-up 03</div>
+    <div class="col-name">3. 하지 말 것 Guardrail</div>
+    <div class="col-desc">잘 되던 부분을 지우지 말 것.<br>값을 지어내거나 혼자 우회하지 말 것.</div>
+  </div>
+  <div class="framework-col c4">
+    <div class="col-tag">Follow-up 04</div>
+    <div class="col-name">4. 확인 Verification</div>
+    <div class="col-desc">고친 파일을 다시 실행한 증거.<br>예전 기능과 새 결과가 함께 보이는지.</div>
+  </div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>오늘 만나는 상황</th>
+<th>후속 4칸에서 하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>에러는 없는데 결과가 다름</td>
+<td>화면 표를 <code>"""</code>에 넣고, <strong>바꿀 점만</strong> 선언</td>
+</tr>
+<tr>
+<td>붉은 에러가 남</td>
+<td><strong>로그 전체</strong>를 <code>"""</code>에 넣고, 날조·우회를 금지</td>
+</tr>
+<tr>
+<td>에러 없이 차트만 이상함</td>
+<td>말로 설명하지 말고 <strong>화면을 붙여넣기</strong></td>
+</tr>
+</tbody>
+</table>
 <h4 id="오류-추적-로그traceback의-비밀">오류 추적 로그(Traceback)의 비밀</h4>
-<p>초보자는 흔히 오류 메시지의 가장 마지막 한 줄(예: <code>ZeroDivisionError: division by zero</code>)만 AI에게 보냅니다. 하지만 AI에게는 <strong>중간 줄에 적힌 "몇 번째 파일, 몇 번째 라인에서 어떤 함수를 호출했는가"</strong>라는 전체 실행 추적(Traceback) 로그가 10배 더 중요합니다. 반드시 <strong>위아래 전체를 통째로 복사</strong>하세요.</p>
+<p><strong>Traceback</strong>: 프로그램이 멈추기 직전까지 <strong>어느 파일의 몇 번째 줄</strong>을 거쳐 왔는지 적어 준 기록입니다.</p>
+<p>초보자는 마지막 한 줄만 복사합니다. AI에게는 <strong>중간 줄의 파일 이름과 줄 번호</strong>가 더 중요합니다. 위아래를 통째로 복사한 뒤 <code>"""</code>로 감싸세요.</p>
 <hr />
 <h3 id="4-로그가-없을-때의-무기-시각적-스크린샷-캡처와-데이터-형상-출력">4. 로그가 없을 때의 무기 — 시각적 스크린샷 캡처와 데이터 형상 출력</h3>
 <p>만약 화면에 아무런 오류 메시지가 뜨지 않는데도 결과가 이상하다면 어떻게 해야 할까요?</p>
 <ol>
-<li><strong>화면 캡처 전달 (Multimodal Prompting)</strong>: 차트가 찌그러졌거나 한글이 깨졌다면 말로 구구절절 설명하지 말고 <strong>화면을 캡처해서 AI 대화창에 붙여넣기(Ctrl+V)</strong>하세요. 최신 AI는 이미지를 보고 즉시 폰트 설정 코드(<code>plt.rc('font', family='Malgun Gothic')</code>)나 레이아웃 조절 코드(<code>plt.tight_layout()</code>)를 생성합니다.</li>
-<li><strong>데이터 형상(Shape)과 결측치 출력 요청</strong>: 숫자가 이상할 때는 AI에게 데이터의 중간 상태를 확인해 달라고 요청합니다.<blockquote>
-<p><em>"데이터프레임의 상위 5줄(<code>head()</code>), 결측치 개수(<code>isna().sum()</code>), 데이터 타입(<code>dtypes</code>)을 출력해서 이상이 없는지 먼저 진단해줘."</em></p>
-</blockquote>
-</li>
+<li><strong>화면 캡처 전달</strong>: 차트가 찌그러졌거나 한글이 깨졌다면 말로 설명하지 말고 <strong>화면을 캡처해서 대화창에 붙여넣기(Ctrl+V)</strong> 하세요. AI가 이미지를 보고 그 컴퓨터에 맞는 한글 폰트와 여백을 고릅니다.</li>
+<li><strong>중간 상태 확인</strong>: 숫자는 나왔는데 느낌이 이상하면, 표의 앞부분·빈칸 개수·열 이름을 먼저 보여 달라고 요청합니다. 고치기 전에 <strong>어디가 비었는지</strong>를 눈으로 확인하는 단계입니다.</li>
 </ol>
 <hr />
 <h3 id="5-초보자가-반드시-피해야-할-3대-디버깅-안티패턴">5. 초보자가 반드시 피해야 할 3대 디버깅 안티패턴</h3>
@@ -1873,7 +2117,7 @@ window.MathJax = {
   <div class="compare-card good">
     <div class="tag">✅ 프로페셔널 대응 가이드 (Best Practices)</div>
     <div class="steps">
-      1. <strong>정확한 인풋</strong>: "상황 설명 + 전체 에러 로그 + 원래 목표" 3종 세트 제공.<br>
+      1. <strong>후속 4칸 + <code>"""</code></strong>: 대상 파일, 바꿀 점, 건드리지 말 것, 재실행 증거를 한 번에.<br>
       2. <strong>AI에게 수정 전담</strong>: 파일 수정과 저장, 재실행 지시까지 모두 AI에게 위임.<br>
       3. <strong>신선한 컨텍스트 리셋</strong>: 대화가 꼬이면 과감히 <code>/clear</code>를 하거나 새 세션에서 목표를 다시 명확히 지시.
     </div>
@@ -1882,58 +2126,124 @@ window.MathJax = {
 
 <hr />
 <h2 id="실습-실습-03">실습 — 실습 03</h2>
-<p>일부러 3가지 대표 에러를 발생시키고, 4단계 프로토콜로 우아하게 복구하는 과정을 직접 손으로 훈련합니다.</p>
-<h3 id="실습-03-a-데이터-에러-유발-및-복구-잘못된-종목코드-호출">실습 03-A: [데이터 에러 유발 및 복구] 잘못된 종목코드 호출</h3>
-<p>존재하지 않는 가상의 종목코드(<code>999999</code>)를 넣어 에러를 유발하고, AI가 예외를 안전하게 처리하도록 개선합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이전 클립에서 만든 주식 데이터 수집 코드에서
-종목 코드를 존재하지 않는 '999999'로 바꿔서 실행해줘.
-어떤 에러가 발생하는지 확인하고 싶어.
-</code></pre></div>
-<p>실행 중 오류 메시지가 나타나면, 4단계 프로토콜 프롬프트를 보냅니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>종목 데이터를 불러오다가 아래 에러가 발생했어.
-에러 원인을 비전공자도 이해하기 쉽게 한 문장으로 설명해주고,
-존재하지 않거나 상장폐지된 종목코드일 경우 프로그램을 중단시키지 않고
-&quot;유효하지 않은 종목코드입니다&quot;라는 경고를 띄운 뒤 정상 종료하도록 코드를 방어적으로 수정해줘.
-원래 목표였던 삼성전자(005930) 1년치 일봉 데이터 수집도 정상 완료해줘.
+<p>Clip 04에서 만든 삼성전자 차트 스크립트가 폴더에 있는 상태에서 시작합니다.<br />
+세 상황 모두 <strong>같은 후속 수정 4칸</strong>입니다.</p>
+<h3 id="실습-03-a-결과는-나왔는데-원하는-것과-다를-때">실습 03-A: 결과는 나왔는데 원하는 것과 다를 때</h3>
+<p>에러는 없습니다. 차트가 이미 있습니다. 하단 거래량에 <strong>20일 거래량 이동평균선</strong>만 얹습니다.</p>
+<p>화면에 나온 최근 5일 요약표를 복사해 <code>"""</code> 안에 넣으세요. 날짜와 숫자는 사람마다 다릅니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락]
+Clip 04에서 만든 삼성전자 차트 스크립트가 이미 있어.
+실행 후 화면에 나온 요약은 아래와 같아:
+&quot;&quot;&quot;
+(여기에 본인 화면의 최근 5일 요약표를 그대로 붙여넣기)
+&quot;&quot;&quot;
 
-[에러 로그 전체 붙여넣기]
+[수정할 것]
+- 새 파일을 만들지 말고 기존 차트 스크립트만 수정해줘.
+- 하단 거래량 패널에 20일 거래량 이동평균선을 겹쳐 그려줘.
+- 수정된 차트를 기존 이미지 파일 이름 그대로 다시 저장해줘.
+
+[하지 말 것]
+- 기존 종가·이동평균선·거래량 막대 로직을 지우거나 바꾸지 마.
+- 새 스크립트나 새 이미지 파일을 만들지 마.
+- 숫자를 지어내지 마.
+
+[확인]
+- 스크립트를 다시 실행하고, 저장된 파일 경로와 거래량 이평이 포함된 요약표를 보여줘.
 </code></pre></div>
+<blockquote>
+<p><strong>결과 관찰</strong>: 새 파일이 생기지 않고, 기존 20/60/120일선은 그대로인 채 거래량 패널에만 선이 하나 더 생깁니다.</p>
+</blockquote>
 <hr />
-<h3 id="실습-03-b-시각화-에러-복구-한글-폰트-깨짐-및-레이아웃-자동-보정">실습 03-B: [시각화 에러 복구] 한글 폰트 깨짐 및 레이아웃 자동 보정</h3>
-<p>차트를 그릴 때 한글 제목이 <code>□□□</code>로 깨지는 현상을 해결하는 OS 맞춤형 프롬프트입니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>차트를 생성했는데 한글 제목과 범례 글씨가 네모 모양(□□□)으로 깨져서 보여.
-현재 내 운영체제(Windows/Mac/Linux)를 자동으로 감지해서
-적절한 한글 폰트(맑은 고딕, AppleGothic, 나눔고딕 등)를 설정하고,
-글씨가 잘리지 않도록 tight_layout()을 적용해서 차트 이미지를 다시 깔끔하게 저장해줘.
-저장된 이미지 경로도 함께 알려줘.
+<h3 id="실습-03-b-붉은-에러가-났을-때">실습 03-B: 붉은 에러가 났을 때</h3>
+<p>먼저 일부러 실패하는 요청을 보냅니다. <code>999999</code>는 존재하지 않는 종목코드입니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 방금 만든 차트 스크립트를 다른 종목으로도 확인하고 싶어.
+
+[만들 것] 종목코드 999999의 최근 2년 일봉으로 같은 차트를 만들어줘.
+
+[하지 말 것] 데이터를 못 가져오면 비슷한 종목으로 바꾸거나 값을 지어내지 말고,
+무엇이 실패했는지 그대로 보여주고 멈춰.
 </code></pre></div>
+<p>화면에 로그가 뜨면, <strong>위아래 전체를 복사</strong>해 후속 4칸에 넣습니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락]
+기존 차트 스크립트를 종목코드 999999로 실행했더니 화면에 아래가 나왔어:
+&quot;&quot;&quot;
+(여기에 에러 로그 전체를 그대로 붙여넣기)
+&quot;&quot;&quot;
+
+[수정할 것]
+- 새 파일을 만들지 말고 기존 스크립트에서 원인을 찾아 수정해줘.
+- 조회가 실패하면 값을 만들지 말고, 무엇이 실패했는지 보여준 뒤 멈춰줘.
+- 수정이 끝나면 원래 종목(삼성전자 005930)으로 되돌려 차트가 다시 나오게 해줘.
+
+[하지 말 것]
+- 비슷한 종목으로 슬쩍 바꾸거나 숫자를 지어내지 마.
+- 잘 되던 차트 구성을 처음부터 다시 짜지 마.
+
+[확인]
+- 잘못된 종목코드로 한 번 더 실행해, 정직하게 멈추는지 보여줘.
+- 이어서 삼성전자로 실행해 차트 파일이 다시 저장되는지 보여줘.
+</code></pre></div>
+<blockquote>
+<p><strong>결과 관찰</strong>: 울타리가 있으면 AI는 실패를 숨기지 않습니다. 없었다면 비슷한 종목이나 가짜 숫자로 우회했을 수 있습니다. Clip 03의 가짜 시세 하드코딩을 여기서 막습니다.</p>
+</blockquote>
 <hr />
-<h3 id="실습-03-c-침묵의-논리-에러-복구-이동평균선-결측치nan-안전-처리">실습 03-C: [침묵의 논리 에러 복구] 이동평균선 결측치(NaN) 안전 처리</h3>
-<p>200일 이동평균선 계산 시 초반 199일의 <code>NaN</code>으로 인해 백테스트가 멈추거나 왜곡되는 현상을 선제적으로 방어합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>이동평균선(20일, 60일, 200일)을 계산할 때 초반 계산 기간 부족으로 발생하는
-NaN(결측치) 데이터를 확인하고, 결측치가 백테스트나 차트 표시에 악영향을 주지 않도록
-안전하게 처리하는 코드를 추가해줘.
-처리 전후의 데이터 개수(row 수) 변화를 print()로 출력해서 보여줘.
+<h3 id="실습-03-c-에러-없이-차트만-이상할-때">실습 03-C: 에러 없이 차트만 이상할 때</h3>
+<p>붉은 글씨는 없는데 한글이 네모(<code>□□□</code>)이거나, 이동평균선 앞부분이 비어 보일 수 있습니다.<br />
+<strong>말로 추측하지 말고</strong>, 화면을 붙여넣거나 빈칸이 몇 개인지 먼저 물어보세요.</p>
+<p>차트가 깨져 보이면 이미지를 대화창에 붙인 뒤:</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락]
+기존 차트 파일이 이미 있어. 방금 연 이미지와 화면 출력은 아래와 같아.
+(이미지는 대화창에 붙여넣기)
+&quot;&quot;&quot;
+(화면에 보인 안내 문구가 있으면 그대로 붙여넣기)
+&quot;&quot;&quot;
+
+[수정할 것]
+- 새 파일을 만들지 말고 기존 스크립트만 수정해줘.
+- 제목과 축의 한글이 이 컴퓨터에서 깨지지 않게 해줘.
+- 같은 파일 이름으로 차트를 다시 저장해줘.
+
+[하지 말 것]
+- 종가·이동평균·거래량 계산을 바꾸지 마.
+- 화면을 멈추는 창을 띄우지 마.
+
+[확인]
+- 다시 저장한 파일 경로를 보여줘. 내가 이미지를 열어 한글을 확인할게.
+</code></pre></div>
+<p>숫자가 이상하면, 고치기 전에 중간 상태만 요청합니다.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락]
+기존 차트 스크립트의 이동평균선 앞부분이 비어 보이는 것 같아.
+
+[수정할 것]
+- 코드를 고치기 전에, 이동평균 열에서 빈칸이 며칠분인지와 전체 행 수를 표로 보여줘.
+
+[하지 말 것]
+- 빈칸을 임의의 숫자로 채우지 마.
+- 새 파일을 만들지 마.
+
+[확인]
+- 빈칸 개수와 행 수를 숫자로 보여준 뒤에만, 차트 표시에 해가 되지 않게 처리할 방법을 제안해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 잘못된 종목코드를 넣었을 때 프로그램이 뻗지 않고 방어 메시지가 출력되는 것을 확인했다.</li>
-<li class="check-item"><input type="checkbox"> 에러 로그 전체를 복사해서 질문했을 때 AI가 원인을 명쾌하게 짚어내고 코드를 자동 수정했다.</li>
-<li class="check-item"><input type="checkbox"> 한글 폰트가 깨지지 않고 차트 제목과 축 이름이 선명한 한글로 저장되었다.</li>
-<li class="check-item"><input type="checkbox"> 데이터프레임의 결측치(NaN) 개수와 전후 데이터 행 수가 화면/대화창에 숫자로 확인되었다.</li>
+<li class="check-item"><input type="checkbox"> 후속 4칸으로 <strong>기존 파일을 유지한 채</strong> 거래량 이평선만 추가했다.</li>
+<li class="check-item"><input type="checkbox"> 화면 표나 에러 로그를 <strong><code>"""</code> 안에</strong> 넣었다.</li>
+<li class="check-item"><input type="checkbox"> <code>999999</code>에서 값을 지어내지 않고 멈추는 것을 확인한 뒤, 삼성전자 차트가 다시 저장되었다.</li>
+<li class="check-item"><input type="checkbox"> 한글이 깨졌거나 앞부분이 비었을 때, 추측하지 않고 <strong>화면 또는 빈칸 개수</strong>를 먼저 확인했다.</li>
 </ul>
 <hr />
 <h2 id="자주-발생하는-문제-및-qa">자주 발생하는 문제 및 Q&amp;A</h2>
 <p><strong>Q1. AI가 코드를 고쳤다고 하는데 여전히 똑같은 에러가 반복됩니다. 어떻게 해야 하나요?</strong><br />
 AI가 이전 대화 맥락에 갇혀 같은 실수를 반복하는 현상입니다. 이럴 때는 대화창에 <code>/clear</code>를 입력해 대화 메모리를 초기화하거나 새 세션을 연 뒤, <strong>"프로젝트의 원래 목표 + 작업 중인 파이썬 파일 경로 + 방금 발생한 에러 로그 전체"</strong>를 하나의 프롬프트에 담아 새롭게 질문하면 즉시 해결됩니다.</p>
 <p><strong>Q2. 에러 로그가 너무 길어서 화면 위로 훌쩍 지나가 버립니다. 어디서부터 복사해야 하나요?</strong><br />
-실행 출력 창이나 대화창을 위로 스크롤하여 오류가 시작된 지점(<code>Traceback ...</code>)부터 맨 끝 에러 이름까지 마우스 드래그로 복사하면 됩니다. 오류 출력이 너무 길다면 AI에게 <code>"방금 발생한 에러 로그를 분석해서 원인을 진단하고 수정해줘"</code>라고 대화창에 요청해도 좋습니다.</p>
+오류가 시작된 줄(<code>Traceback</code>이 보이는 줄)부터 맨 끝 에러 이름까지 통째로 복사한 뒤, 후속 4칸의 <code>[맥락]</code> 안에서 <code>"""</code>로 감싸세요. 한 줄만 보내면 AI가 위치를 못 찾습니다.</p>
 <p><strong>Q3. 실행 결과창에 붉은색 글씨나 긴 영문 문장이 떴는데, 프로그램은 끝까지 실행되어 차트 파일이 나왔습니다. 이것도 에러인가요?</strong><br />
 그것은 <code>Error</code>가 아니라 <strong><code>Warning(경고)</code></strong>일 가능성이 높습니다 (예: <code>FutureWarning: Series.__getitem__ treating keys as positions is deprecated</code>). 경고는 실행을 멈추지는 않지만 향후 라이브러리 업데이트 시 에러가 될 수 있으므로, 해당 경고 문구를 AI에게 복사해 주며 <em>"이 경고가 발생하지 않도록 최신 문법으로 코드를 다듬어줘"</em>라고 요청하면 코드가 더욱 견고해집니다.</p>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>축하합니다! 이제 여러분은 <strong>도구 설치(Clip 02) → 결과 중심 프롬프팅(Clip 03) → 시각적 결과 확인(Clip 04) → 돌발 에러 방어(Clip 05)</strong>로 이어지는 <strong>AI 코딩 4대 핵심 기본기</strong>를 완벽하게 마스터하셨습니다.</p>
+<p>축하합니다. 이제 <strong>도구 설치(Clip 02) → 4칸으로 요청하기(Clip 03) → 첫 차트(Clip 04) → 이미 있는 파일을 후속 4칸으로 고치기(Clip 05)</strong> 가 한 줄로 이어집니다.</p>
 <p>Part 2부터는 이 단단한 기본기를 무기로, 실제 퀀트 헤지펀드와 전문 트레이더들이 사용하는 <strong>'4대 투자 전략(추세추종, 변동성 돌파, 듀얼 모멘텀, 페어트레이딩)'</strong>의 내부 매매 규칙을 파헤치고 과거 10년치 데이터로 직접 백테스트를 수행해보겠습니다!</p>
       </main>
 

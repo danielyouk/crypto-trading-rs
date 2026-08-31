@@ -728,6 +728,213 @@ tr:hover td { background: #f8fafc; }
   padding: 0 2px;
 }
 
+/* ==========================================================================
+   4-BLOCK PROMPT ANATOMY CARDS
+   ========================================================================== */
+.anatomy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+
+.anatomy-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.anatomy-card.context {
+  border-left-color: var(--navy-light);
+}
+.anatomy-card.deliverable {
+  border-left-color: #2563eb;
+}
+.anatomy-card.guardrail {
+  border-left-color: #dc2626;
+  background: #fffafa;
+}
+.anatomy-card.verification {
+  border-left-color: #16a34a;
+  background: #fcfdfc;
+}
+
+.anatomy-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.anatomy-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.anatomy-badge.context { background: var(--navy-light); }
+.anatomy-badge.deliverable { background: #2563eb; }
+.anatomy-badge.guardrail { background: #dc2626; }
+.anatomy-badge.verification { background: #16a34a; }
+
+.anatomy-aim {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.anatomy-prompt {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-main);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+}
+
+.anatomy-why {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  padding-left: 4px;
+}
+
+.anatomy-why strong {
+  color: var(--navy-primary);
+}
+
+/* ==========================================================================
+   4-BLOCK FRAMEWORK CARDS & THREAT-DEFENSE GRID
+   ========================================================================== */
+.framework-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+@media (max-width: 900px) {
+  .framework-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 540px) {
+  .framework-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.framework-col {
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-top: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.framework-col.c1 { border-top-color: var(--navy-light); }
+.framework-col.c2 { border-top-color: #2563eb; }
+.framework-col.c3 { border-top-color: #dc2626; background: #fffdfd; }
+.framework-col.c4 { border-top-color: #16a34a; background: #fdfdfd; }
+
+.framework-col .col-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+
+.framework-col .col-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 8px;
+}
+
+.framework-col .col-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  flex: 1;
+}
+
+.guard-defense-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+@media (max-width: 800px) {
+  .guard-defense-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guard-defense-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.guard-defense-card .threat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.guard-defense-card .threat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 6px;
+}
+
+.guard-defense-card .threat-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.guard-defense-card .defense-box {
+  background: #f8fafc;
+  border-left: 3px solid #dc2626;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-main);
+  border-radius: 0 4px 4px 0;
+}
+
+.guard-defense-card .defense-box strong {
+  color: #b91c1c;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1873,9 +2080,8 @@ OS 환경을 자동 감지해서 사용 가능한 한글 폰트를 적용하고 
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>우리는 코딩 한 줄 없이 AI와의 대화만으로 전문적인 금융 데이터 분석 차트를 생성해 냈습니다.<br />
-하지만 앞으로 백테스트와 자동매매 시스템을 구축하다 보면 다양한 에러를 만나게 됩니다.<br />
-다음 클립에서는 <strong>어떤 에러가 발생해도 당황하지 않고 AI와 함께 10초 만에 해결하는 '4단계 디버깅 표준 프로토콜'</strong>을 완벽하게 마스터하겠습니다.</p>
+<p>차트 파일이 생겼습니다. 앞으로는 <strong>이미 있는 파일 위</strong>에서 결과를 고치거나, 붉은 에러를 만나게 됩니다.<br />
+다음 클립에서는 Clip 03에서 배워 둔 <strong>후속 수정 4칸</strong>과 <strong><code>"""</code> 캡슐화</strong>를 이 차트 스크립트에 직접 던집니다.</p>
       </main>
 
       <nav class="pager-nav">
