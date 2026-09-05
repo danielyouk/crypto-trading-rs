@@ -2013,7 +2013,7 @@ window.MathJax = {
 
 <hr />
 <h3 id="2-아이디어-규칙-알고리즘-알고리즘-트레이딩의-관계">2. 아이디어 ➔ 규칙 ➔ 알고리즘 ➔ 알고리즘 트레이딩의 관계</h3>
-<p>트레이딩에서 자주 혼용되는 네 가지 개념을 가장 직관적인 비유(요리 레시피와 자동화 로봇)와 함께 명확히 정리합니다.</p>
+<p>트레이딩에서 자주 혼용되는 네 가지 개념을 실제 전략이 발전하는 단계별 구체적 예시와 함께 명확히 정리합니다.</p>
 <pre><code class="language-text">[1. 투자 아이디어]  : 사람 머릿속의 막연한 생각/가설 (&quot;오를 때 타서 먹자&quot;)
         ↓ (수치화 &amp; 명세화)
 [2. 매매 규칙]      : [지표 + 진입/청산 + 위험관리]를 숫자로 적은 판정 기준
@@ -2027,35 +2027,36 @@ window.MathJax = {
 <tr>
 <th>개념</th>
 <th>명확한 정의</th>
-<th>요리 &amp; 자판기 비유</th>
+<th>실제 트레이딩 적용 예시</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>투자 아이디어 (Idea)</strong></td>
 <td>사람 머릿속에 있는 <strong>막연한 직관이나 가설</strong> (자연어, 컴퓨터 실행 불가)</td>
-<td>"얼큰하고 시원한 찌개를 끓이자"</td>
+<td>"200일선 위에서 거래량이 터질 때 따라붙어서 먹자."</td>
 </tr>
 <tr>
-<td><strong>매매 규칙 (Rule)</strong></td>
-<td>아이디어를 참/거짓으로 판정할 수 있게 만든 <strong>[지표 + 진입청산 + 위험관리]의 결합</strong></td>
-<td><strong>레시피</strong> (물 500ml, 고춧가루 2스푼, 끓으면 3분 뒤 소금)</td>
+<td><strong>매매 규칙 (Trading Rule)</strong></td>
+<td>아이디어를 참/거짓으로 판정할 수 있게 만든 <strong>[지표 + 진입청산 + 위험관리]의 결합 기준</strong></td>
+<td><strong>지표</strong>: SMA(200), Vol(20)<br><strong>진입·청산</strong>: <code>종가 &gt; 200일선</code> AND <code>거래량 &gt; 20일 평균의 150%</code><br><strong>위험관리</strong>: 비중 20%, 진입가 대비 −3% 손절</td>
 </tr>
 <tr>
 <td><strong>알고리즘 (Algorithm)</strong></td>
-<td>매매 규칙을 컴퓨터가 오차 없이 판정할 수 있도록 <strong>논리적 절차로 코드화한 것</strong></td>
-<td><strong>조리 로봇의 프로그래밍 코드</strong> (온도 100도 도달 ➔ 타이머 3분 ➔ 전원 차단)</td>
+<td>매매 규칙을 컴퓨터가 오차 없이 판정·수행할 수 있도록 <strong>논리적 절차(코드/함수)로 구현한 것</strong></td>
+<td><code>if current_price &gt; sma_200 and volume &gt; vol_avg * 1.5:</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>execute_buy(allocation=0.2, stop_loss=0.03)</code></td>
 </tr>
 <tr>
 <td><strong>알고리즘 트레이딩</strong></td>
 <td>인간의 감정을 배제하고, <strong>알고리즘 코드에 의해 기계적으로 매매를 집행하는 방식</strong></td>
-<td><strong>24시간 무인 로봇 식당 운영</strong></td>
+<td>매일 장 마감 시각에 데이터를 자동 수집하고, 알고리즘 판정 결과에 따라 증권사 API로 주문을 무인 집행</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
 <p>💡 <strong>핵심 요약</strong>:<br />
-머릿속 <strong>생각(아이디어)</strong>을 숫자로 구체화하면 <strong>매매 규칙(Trading Rule)</strong>이 되고, 그 규칙을 논리적 절차로 코드화한 것이 <strong>알고리즘(Algorithm)</strong>입니다. 우리가 이번 클립에서 배우는 '변환 4단계'는 바로 <strong>[아이디어 ➔ 매매 규칙(Trading Rule)]으로 번역하는 4칸 설계도</strong>입니다.</p>
+머릿속 <strong>생각(아이디어)</strong>을 숫자로 구체화하면 <strong>매매 규칙(Trading Rule)</strong>이 되고, 그 규칙을 논리적 절차로 코드화한 것이 <strong>알고리즘(Algorithm)</strong>이며, 이를 실제 계좌와 연결해 무인으로 매매를 돌리는 것이 <strong>알고리즘 트레이딩</strong>입니다.<br />
+우리가 이번 클립에서 배우는 '변환 4단계'는 바로 <strong>[아이디어 ➔ 매매 규칙(Trading Rule)]으로 번역하는 4칸 설계도</strong>입니다.</p>
 </blockquote>
 <hr />
 <h3 id="3-자동화-가능한-규칙의-3대-절대-조건">3. 자동화 가능한 규칙의 3대 절대 조건</h3>
