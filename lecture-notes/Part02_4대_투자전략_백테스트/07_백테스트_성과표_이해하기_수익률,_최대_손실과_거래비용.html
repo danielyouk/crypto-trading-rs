@@ -1503,13 +1503,15 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-백테스트-4대-핵심-지표-매트릭스와-실전-활용처">1. 백테스트 4대 핵심 지표 매트릭스와 실전 활용처</a>
             
-            <a class="nav-heading level-3" href="#2-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">2. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</a>
+            <a class="nav-heading level-3" href="#2-cagr연평균-복리-수익률-수계산으로-이해하는-복리의-힘">2. CAGR(연평균 복리 수익률) — 수계산으로 이해하는 복리의 힘</a>
             
-            <a class="nav-heading level-3" href="#3-샤프-지수sharpe-ratio-전략의-순도를-측정하는-잣대">3. 샤프 지수(Sharpe Ratio) — 전략의 '순도'를 측정하는 잣대</a>
+            <a class="nav-heading level-3" href="#3-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">3. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</a>
             
-            <a class="nav-heading level-3" href="#4-승률win-rate의-함정과-손익비payoff-ratio">4. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</a>
+            <a class="nav-heading level-3" href="#4-샤프-지수sharpe-ratio-수계산으로-이해하는-전략의-순도">4. 샤프 지수(Sharpe Ratio) — 수계산으로 이해하는 전략의 '순도'</a>
             
-            <a class="nav-heading level-3" href="#5-거래비용friction-cost의-보이지-않는-공포">5. 거래비용(Friction Cost)의 보이지 않는 공포</a>
+            <a class="nav-heading level-3" href="#5-승률win-rate의-함정과-손익비payoff-ratio">5. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</a>
+            
+            <a class="nav-heading level-3" href="#6-거래비용friction-cost의-보이지-않는-공포">6. 거래비용(Friction Cost)의 보이지 않는 공포</a>
             
             <a class="nav-heading level-2" href="#따라-해보기-실습">따라 해보기 — 실습</a>
             
@@ -1987,12 +1989,11 @@ window.MathJax = {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-백테스트-4대-핵심-지표-매트릭스와-실전-활용처">1. 백테스트 4대 핵심 지표 매트릭스와 실전 활용처</h3>
-<p>백테스트 성과표를 볼 때 전략의 우수성을 다각도로 검증하는 4가지 절대 지표입니다.</p>
+<p>백테스트 성과표를 볼 때 전략의 우수성을 다각도로 검증하는 4가지 절대 지표입니다. 모든 약어의 정식 명칭과 실전 활용 목적을 정확히 숙지해야 합니다.</p>
 <table>
 <thead>
 <tr>
-<th>지표명</th>
-<th>영문 약어</th>
+<th>지표명 (약어 및 풀네임)</th>
 <th>수학적 정의 / 계산식</th>
 <th>프로 퀀트 기준치</th>
 <th>실전 어디에 쓰이는가?</th>
@@ -2000,45 +2001,56 @@ window.MathJax = {
 </thead>
 <tbody>
 <tr>
-<td><strong>연평균 복리 수익률</strong></td>
-<td><strong>CAGR</strong></td>
+<td><strong>CAGR</strong><br>(Compound Annual Growth Rate<br>연평균 복리 수익률)</td>
 <td><span class="math-inline">$\left( \frac{V_{\text{final}}}{V_{\text{initial}}} \right)^{\frac{1}{\text{년수}}} - 1$</span></td>
 <td><strong>15% 이상</strong> 우수</td>
-<td><strong>기간이 다른 전략의 성장성 비교</strong><br>(3년 50% vs 5년 80%를 같은 잣대로 평가)</td>
+<td><strong>기간이 다른 전략의 성장성 비교</strong><br>(예: 2년 50% vs 5년 100%를 동일한 연 단위 잣대로 비교)</td>
 </tr>
 <tr>
-<td><strong>최대 낙폭 (최대 손실)</strong></td>
-<td><strong>MDD</strong></td>
+<td><strong>MDD</strong><br>(Maximum Drawdown<br>최대 낙폭 / 최대 손실)</td>
 <td><span class="math-inline">$\max_{t} \left( \frac{\text{Peak}_t - V_t}{\text{Peak}_t} \right)$</span><br>단, <span class="math-inline">$\text{Peak}_t = \max_{\tau \le t} V_\tau$</span></td>
 <td><strong>-15% 이내</strong> 유지 필수<br>(-30% 초과 시 실전 포기)</td>
-<td><strong>위험 한도(Risk Budget) 및 손절 정책 수립</strong><br>(내가 감당 가능한 레버리지 및 계좌 비중 결정)</td>
+<td><strong>위험 예산(Risk Budget) 및 손절 정책 수립</strong><br>(감당 가능한 레버리지 및 종목당 투자 비중 결정)</td>
 </tr>
 <tr>
-<td><strong>샤프 지수</strong></td>
-<td><strong>Sharpe</strong></td>
+<td><strong>Sharpe Ratio</strong><br>(샤프 지수 / 위험 조정 수익률)</td>
 <td><span class="math-inline">$\frac{E[R_p - R_f]}{\sigma_p} \times \sqrt{252}$</span></td>
 <td><strong>1.0 이상</strong> 양호<br><strong>1.5 이상</strong> 최우수</td>
-<td><strong>서로 다른 전략의 자산 배분 비중 결정</strong><br>(변동성 위험 1단위당 벌어오는 순수 초과 수익 비교)</td>
+<td><strong>전략 간 포트폴리오 자산 배분 비중 결정</strong><br>(변동성 위험 1단위당 벌어오는 순수 초과 수익 비교)</td>
 </tr>
 <tr>
-<td><strong>손익비 / 승률</strong></td>
-<td><strong>Payoff / Win%</strong></td>
-<td><span class="math-inline">$\frac{\text{평균 수익금액}}{\text{평균 손실금액}}$</span> vs <span class="math-inline">$\frac{\text{수익 거래수}}{\text{총 거래수}}$</span></td>
+<td><strong>Win Rate / Payoff</strong><br>(승률 및 손익비)</td>
+<td><span class="math-inline">$\frac{\text{수익 거래수}}{\text{총 거래수}}$</span> vs <span class="math-inline">$\frac{\text{평균 수익금액}}{\text{평균 손실금액}}$</span></td>
 <td>추세추종: 승률 35% &amp; 손익비 3:1<br>평균회귀: 승률 65% &amp; 손익비 1:1</td>
 <td><strong>전략 유형(추세추종 vs 페어트레이딩) 진단</strong><br>(승률이 낮아도 손익비가 높으면 돈을 버는 구조 파악)</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h3 id="2-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">2. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</h3>
-<p>초보 투자자는 "누적 수익률 500%"라는 광고 문구만 보고 뛰어듭니다. 하지만 중간에 <strong>MDD가 -50%</strong>인 전략은 실제 계좌에서 결코 버틸 수 없습니다.</p>
-<h4 id="①-mdd-공식의-핵심-고점math_inline_6이란-무엇인가">① MDD 공식의 핵심: '고점(<span class="math-inline">$\text{Peak}_t$</span>)'이란 무엇인가?</h4>
+<h3 id="2-cagr연평균-복리-수익률-수계산으로-이해하는-복리의-힘">2. CAGR(연평균 복리 수익률) — 수계산으로 이해하는 복리의 힘</h3>
+<p>단순 총수익률을 투자 기간으로 나누는 <strong>산술평균(단리)</strong>은 심각한 착시를 일으킵니다. 퀀트는 항상 복리 효과를 역산한 <strong>기하평균(CAGR, Compound Annual Growth Rate)</strong>을 사용합니다.</p>
+<h4 id="cagr-직접-수계산-예시">🔢 CAGR 직접 수계산 예시</h4>
+<ul>
+<li><strong>상황</strong>: 원금 1,000만 원(<span class="math-inline">$V_{\text{initial}}$</span>)으로 시작하여 3년 뒤 1,728만 원(<span class="math-inline">$V_{\text{final}}$</span>)이 되었습니다. (총 누적 수익률 <span class="math-inline">$+72.8\%$</span>)</li>
+<li><strong>잘못된 단리 계산 (산술평균)</strong>: <span class="math-inline">$72.8\% \div 3 = 24.27\%$</span> (실제 매년 불어난 속도보다 과대평가됨)</li>
+<li><strong>올바른 CAGR 복리 계산 (기하평균)</strong>:</li>
+</ul>
+<div class="math-block">$$
+\text{CAGR} = \left( \frac{1,728}{1,000} \right)^{\frac{1}{3}} - 1 = (1.728)^{\frac{1}{3}} - 1 = 1.20 - 1 = \mathbf{20.0\%}
+$$</div>
+<ul>
+<li><strong>결과 해석</strong>: "이 계좌는 3년 동안 매년 정확히 <span class="math-inline">$+20.0\%$</span>씩 복리로 불어난 것과 100% 동일한 성장 속도를 보였다."</li>
+</ul>
+<hr />
+<h3 id="3-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">3. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</h3>
+<p>초보 투자자는 "누적 수익률 500%"라는 광고 문구만 보고 뛰어듭니다. 하지만 중간에 <strong>MDD(Maximum Drawdown)가 -50%</strong>인 전략은 실제 계좌에서 결코 버틸 수 없습니다.</p>
+<h4 id="①-mdd-공식의-핵심-고점math_inline_11이란-무엇인가">① MDD 공식의 핵심: '고점(<span class="math-inline">$\text{Peak}_t$</span>)'이란 무엇인가?</h4>
 <div class="math-block">$$
 \text{Drawdown}_t = \frac{\text{Peak}_t - V_t}{\text{Peak}_t}, \quad \text{where } \text{Peak}_t = \max_{\tau \le t} V_\tau
 $$</div>
 <ul>
-<li><strong><span class="math-inline">$\text{Peak}_t$</span> (High-Water Mark, 전고점)</strong>: 시점 <span class="math-inline">$t$</span>를 기준으로 <strong>과거부터 현재까지 계좌가 찍었던 역사상 최고 잔고</strong>입니다.</li>
-<li><strong><span class="math-inline">$\text{Drawdown}_t$</span> (낙폭)</strong>: 최고 잔고 대비 현재 계좌가 얼마나 하락해 있는지를 나타내는 비율입니다.</li>
+<li><strong><span class="math-inline">$\text{Peak}_t$</span> (High-Water Mark, HWM, 전고점)</strong>: 시점 <span class="math-inline">$t$</span>를 기준으로 <strong>투자 시작일부터 현재까지 계좌가 찍었던 역사상 최고 잔고</strong>입니다.</li>
+<li><strong><span class="math-inline">$\text{Drawdown}_t$</span> (현재 낙폭)</strong>: 최고 잔고 대비 현재 계좌가 얼마나 하락해 있는지를 나타내는 비율입니다.</li>
 <li><strong><span class="math-inline">$\text{MDD}$</span> (최대 낙폭)</strong>: 백테스트 전체 기간 중 <span class="math-inline">$\text{Drawdown}_t$</span>가 가장 깊게 파였던 최악의 수치입니다.</li>
 </ul>
 <h4 id="②-비대칭-복리의-함정-잃은-돈을-복구하기-어려운-이유">② 비대칭 복리의 함정 — 잃은 돈을 복구하기 어려운 이유</h4>
@@ -2088,23 +2100,44 @@ $$</div>
 • 평가: 1억 원이 최악의 순간에도 8,800만 원 이상 유지됨. 10년 이상 장기 복리로 안심하고 무인 가동 가능.
 </code></pre>
 <hr />
-<h3 id="3-샤프-지수sharpe-ratio-전략의-순도를-측정하는-잣대">3. 샤프 지수(Sharpe Ratio) — 전략의 '순도'를 측정하는 잣대</h3>
-<p>샤프 지수는 <strong>"내가 부담한 위험(변동성 <span class="math-inline">$\sigma_p$</span>) 대비 무위험 자산(예: 국채 금리 <span class="math-inline">$R_f$</span>)보다 얼마나 더 많은 수익을 올렸는가?"</strong>를 측정하는 전 세계 금융계의 표준 지표입니다.</p>
+<h3 id="4-샤프-지수sharpe-ratio-수계산으로-이해하는-전략의-순도">4. 샤프 지수(Sharpe Ratio) — 수계산으로 이해하는 전략의 '순도'</h3>
+<p>샤프 지수는 <strong>"내가 감수한 위험(변동성 <span class="math-inline">$\sigma_p$</span>) 1단위 대비 무위험 자산(예: 국채/예금 금리 <span class="math-inline">$R_f$</span>)보다 얼마나 더 많은 초과 수익을 올렸는가?"</strong>를 측정하는 글로벌 퀀트 표준 지표입니다.</p>
+<h4 id="샤프-지수-직접-수계산-예시-2가지">🔢 샤프 지수 직접 수계산 예시 2가지</h4>
+<h5 id="수계산-1-연간-단위-직관적-수계산">[수계산 1] 연간 단위 직관적 수계산</h5>
+<ul>
+<li><strong>조건</strong>: 내 전략의 연간 기대 수익률 <span class="math-inline">$R_p = 15\%$</span>, 국채 무위험 이자율 <span class="math-inline">$R_f = 3\%$</span>, 연간 수익률 표준편차(변동성) <span class="math-inline">$\sigma_p = 10\%$</span></li>
+<li><strong>계산식</strong>:</li>
+</ul>
 <div class="math-block">$$
-\text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p} \times \sqrt{252}
+\text{Sharpe Ratio} = \frac{R_p - R_f}{\sigma_p} = \frac{15\% - 3\%}{10\%} = \frac{12\%}{10\%} = \mathbf{1.2}
 $$</div>
 <ul>
-<li>단, <span class="math-inline">$\sqrt{252}$</span>는 1년 평균 영업일 수(252일)를 곱해 일간 샤프 지수를 <strong>연율화(Annualization)</strong>한 것입니다.</li>
+<li><strong>해석</strong>: "위험(변동성) <span class="math-inline">$1\%$</span>를 감수할 때마다 은행 정기예금보다 <span class="math-inline">$1.2\%$</span>의 초과 수익을 안정적으로 얻는다."</li>
 </ul>
-<h4 id="샤프-지수의-해석-기준">샤프 지수의 해석 기준</h4>
+<h5 id="수계산-2-일간-백테스트-데이터를-연율화annualization하는-수계산">[수계산 2] 일간 백테스트 데이터를 연율화(Annualization)하는 수계산</h5>
+<p>실제 백테스트 엔진(Python)은 일간 수익률을 계산한 뒤, 1년 영업일 수(<span class="math-inline">$252$</span>일)의 제곱근(<span class="math-inline">$\sqrt{252} \approx 15.8745$</span>)을 곱해 연율화합니다.</p>
 <ul>
-<li><strong>1.0 미만</strong>: 감수한 위험(출렁거림)에 비해 얻은 수익이 부족함. 전략 개선 필요.</li>
-<li><strong>1.0 ~ 1.5</strong>: 실전 펀드나 기관에서 운용 가능한 양호한 퀀트 전략.</li>
+<li><strong>조건</strong>: </li>
+<li>일간 평균 초과수익률 <span class="math-inline">$\mu = 0.08\%$</span> (<span class="math-inline">$0.0008$</span>)</li>
+<li>일간 수익률 표준편차 <span class="math-inline">$\sigma = 1.0\%$</span> (<span class="math-inline">$0.01$</span>)</li>
+<li><strong>계산식</strong>:</li>
+</ul>
+<div class="math-block">$$
+\text{일간 샤프 지수} = \frac{\mu}{\sigma} = \frac{0.0008}{0.01} = 0.08
+$$</div>
+<div class="math-block">$$
+\text{연율화 샤프 지수} = 0.08 \times \sqrt{252} = 0.08 \times 15.8745 \approx \mathbf{1.27}
+$$</div>
+<h4 id="샤프-지수의-해석-기준과-실전-활용처">샤프 지수의 해석 기준과 실전 활용처</h4>
+<ul>
+<li><strong>어디에 쓰이는가?</strong>: 여러 전략을 결합할 때, <strong>어떤 전략에 내 자본을 더 많이 배분할지(포트폴리오 가중치 결정)</strong> 판단하는 절대적 잣대로 쓰입니다.</li>
+<li><strong>1.0 미만</strong>: 감수한 흔들림에 비해 초과수익이 부족함. 전략 보완 필요.</li>
+<li><strong>1.0 ~ 1.5</strong>: 헤지펀드나 기관에서 실전 운용 가능한 양호한 전략.</li>
 <li><strong>1.5 ~ 2.0</strong>: 시장을 압도하는 매우 우수한 전략.</li>
-<li><strong>2.0 초과</strong>: 실전에서는 드물며, 백테스트에 미래 데이터가 섞였거나(Look-ahead Bias), 과최적화(Overfitting)되었을 가능성을 먼저 의심해야 함.</li>
+<li><strong>2.0 초과</strong>: 실전에서는 극히 드물며, 백테스트 코드에 미래 데이터가 섞였거나(Look-ahead Bias), 파라미터가 과최적화(Overfitting)되었을 가능성을 반드시 의심해야 함.</li>
 </ul>
 <hr />
-<h3 id="4-승률win-rate의-함정과-손익비payoff-ratio">4. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</h3>
+<h3 id="5-승률win-rate의-함정과-손익비payoff-ratio">5. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</h3>
 <p>초보자는 "승률 90% 전략"이라는 말에 열광하지만, 프로 퀀트는 반드시 <strong>손익비(평균 수익 / 평균 손실)</strong>를 함께 확인합니다.</p>
 <div class="math-block">$$
 \text{기대값 (Expected Value)} = (\text{승률} \times \text{평균 수익}) - ((1 - \text{승률}) \times \text{평균 손실})
@@ -2131,7 +2164,7 @@ $$</div>
 </div>
 
 <hr />
-<h3 id="5-거래비용friction-cost의-보이지-않는-공포">5. 거래비용(Friction Cost)의 보이지 않는 공포</h3>
+<h3 id="6-거래비용friction-cost의-보이지-않는-공포">6. 거래비용(Friction Cost)의 보이지 않는 공포</h3>
 <p>백테스트에서는 수익이 나던 전략이 실전에서 처참하게 망가지는 가장 큰 원인은 <strong>'거래 마찰 비용'</strong>을 무시했기 때문입니다.</p>
 <div class="arch-grid">
   <div class="arch-card">
