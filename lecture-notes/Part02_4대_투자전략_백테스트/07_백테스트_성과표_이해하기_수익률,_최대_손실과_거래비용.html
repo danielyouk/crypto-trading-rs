@@ -1507,7 +1507,7 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#3-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">3. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</a>
             
-            <a class="nav-heading level-3" href="#4-샤프-지수sharpe-ratio-수계산으로-이해하는-전략의-순도">4. 샤프 지수(Sharpe Ratio) — 수계산으로 이해하는 전략의 '순도'</a>
+            <a class="nav-heading level-3" href="#4-샤프-지수sharpe-ratio-위험-대비-초과수익의-퀀트-표준">4. 샤프 지수(Sharpe Ratio) — 위험 대비 초과수익의 퀀트 표준</a>
             
             <a class="nav-heading level-3" href="#5-승률win-rate의-함정과-손익비payoff-ratio">5. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</a>
             
@@ -2113,95 +2113,75 @@ $$</div>
 • 평가: 1억 원이 최악의 순간에도 7,800만 원 이상 유지되며 지수(-50%) 대비 위험을 절반으로 방어. 10년 이상 장기 복리로 안심 가동 가능.
 </code></pre>
 <hr />
-<h3 id="4-샤프-지수sharpe-ratio-수계산으로-이해하는-전략의-순도">4. 샤프 지수(Sharpe Ratio) — 수계산으로 이해하는 전략의 '순도'</h3>
-<p>샤프 지수는 <strong>"내가 감수한 위험(변동성 <span class="math-inline">$\sigma$</span>) 1단위 대비 무위험 자산(예: 국채/예금 금리 <span class="math-inline">$R_f$</span>)보다 얼마나 더 많은 초과 수익을 올렸는가?"</strong>를 측정하는 글로벌 퀀트 표준 지표입니다.</p>
-<h4 id="①-수학적-공식-연간-정의와-일간-연율화-공식의-일치">① 수학적 공식: 연간 정의와 일간 연율화 공식의 일치</h4>
-<p>샤프 지수는 정의상 <strong>연간 기준</strong>과 <strong>일간 연율화 기준</strong>이 수학적으로 100% 동일합니다.</p>
+<h3 id="4-샤프-지수sharpe-ratio-위험-대비-초과수익의-퀀트-표준">4. 샤프 지수(Sharpe Ratio) — 위험 대비 초과수익의 퀀트 표준</h3>
+<p>샤프 지수는 <strong>"내가 감수한 위험(변동성 <span class="math-inline">$\sigma$</span>) 1단위당 무위험 자산(국채/예금 <span class="math-inline">$R_f$</span>) 대비 얼마나 더 많은 초과 수익을 올렸는가?"</strong>를 측정하는 글로벌 표준 지표입니다.</p>
+<h4 id="①-핵심-공식-약분으로-이해하는-연율화-원리">① 핵심 공식: 약분으로 이해하는 연율화 원리</h4>
 <div class="math-block">$$
-\text{Sharpe Ratio} = \underbrace{\frac{R_{\text{연}} - R_{f,\text{연}}}{\sigma_{\text{연}}}}_{\text{[연간 정의]}} = \underbrace{\frac{E[r_{\text{일}} - r_{f,\text{일}}]}{\sigma_{\text{일}}} \times \sqrt{252}}_{\text{[일간 데이터 연율화]}}
+\text{Sharpe Ratio} = \frac{R_{\text{연}} - R_{f,\text{연}}}{\sigma_{\text{연}}} = \frac{(r_{\text{일}} - r_{f,\text{일}}) \times 252}{\sigma_{\text{일}} \times \sqrt{252}} = \frac{r_{\text{일}} - r_{f,\text{일}}}{\sigma_{\text{일}}} \times \mathbf{\sqrt{252}}
 $$</div>
 <blockquote>
-<p>💡 <strong>왜 두 공식이 완전히 같을까요?</strong><br />
-연간 초과수익은 일간 초과수익에 <span class="math-inline">$\times 252$</span>를 곱하고, 연간 변동성은 일간 변동성에 <span class="math-inline">$\times \sqrt{252}$</span>를 곱합니다.<br />
-따라서 <span class="math-inline">$\frac{\text{일간 초과수익} \times 252}{\text{일간 변동성} \times \sqrt{252}} = \frac{\text{일간 초과수익}}{\text{일간 변동성}} \times \frac{252}{\sqrt{252}} = \frac{\text{일간 초과수익}}{\text{일간 변동성}} \times \mathbf{\sqrt{252}}$</span>가 됩니다.</p>
+<p>💡 <strong>약분의 마법 (<span class="math-inline">$\frac{252}{\sqrt{252}} = \sqrt{252}$</span>)</strong><br />
+• 연간 수익률은 252영업일 동안 더해지므로 <span class="math-inline">$\times 252$</span>입니다.<br />
+• 연간 변동성은 분산이 더해진 뒤 제곱근을 씌우므로 <span class="math-inline">$\times \sqrt{252}$</span>입니다.<br />
+• 따라서 분모·분자를 약분하면 최종 공식은 <strong>(일간 샤프 지수) <span class="math-inline">$\times \mathbf{\sqrt{252}}$</span></strong>가 됩니다.</p>
 </blockquote>
-<h4 id="②-math_inline_27-math_inline_28-math_inline_29의-데이터-출처와-계산-원리">② <span class="math-inline">$R$</span>, <span class="math-inline">$R_f$</span>, <span class="math-inline">$\sigma$</span>의 데이터 출처와 계산 원리</h4>
-<p>수강생분들이 가장 궁금해하는 세 가지 변수의 출처와 수학적 원리입니다:</p>
-<ol>
-<li><strong>포트폴리오 수익률 (<span class="math-inline">$R$</span>) — 왜 여기서는 일간 산술평균을 쓰는가?</strong>
-   - <strong>CAGR과의 역할 분담</strong>: CAGR(기하평균)은 "10년 뒤 내 최종 잔고가 몇 배가 되었는가"를 잴 때 쓰고, 샤프 지수는 "매일매일 감수한 출렁거림 대비 효율이 얼마인가"라는 <strong>통계적 확률 모형(기대값 <span class="math-inline">$E[X]$</span> / 표준편차 <span class="math-inline">$\sigma_X$</span>)</strong>을 잴 때 씁니다.
-   - <strong>일간 데이터의 수학적 특성</strong>: 하루 단위 수익률(예: <span class="math-inline">$+0.05\%$</span>)은 크기가 매우 작아 <strong>일간 산술평균과 기하평균의 차이가 사실상 <span class="math-inline">$0$</span>에 수렴</strong>합니다. 따라서 일간 초과수익률의 산술평균(<span class="math-inline">$\text{mean}$</span>)을 구한 뒤 <span class="math-inline">$\times 252$</span>로 연율화하는 것이 전 세계 금융계 및 퀀트 라이브러리(QuantStats 등)의 공식 표준입니다.</li>
-<li><strong>무위험 수익률 (<span class="math-inline">$R_f$</span>) — 어디서 가져오며, 30년 백테스트는 어떻게 하나?</strong>
-   - <strong>출처</strong>: 주가 데이터가 아니라 <strong>단기 국채 금리 시계열</strong>에서 가져옵니다 (미국: FRED 3개월 T-Bill 금리, 한국: 통안채 91일 또는 CD 91일 금리, 암호화폐: <span class="math-inline">$R_f = 0$</span> 설정).
-   - <strong>30년 초장기 백테스트 시 처리법</strong>:<ul>
-<li><em>1차 분석 &amp; 손계산</em>: 전체 기간에 <strong>연 3.0%</strong>(역사적 평균 무위험 금리)를 상수로 적용하여 전략들을 일관된 기준으로 비교합니다.</li>
-<li><em>실무 백테스트 엔진</em>: 매일매일 그날의 일간 단기 금리(<span class="math-inline">$r_{f,t} \approx \text{연금리} / 252$</span>)를 일간 수익률에서 차감(<span class="math-inline">$r_t - r_{f,t}$</span>)하여 계산합니다.</li>
-<li><em>구간별 샤프 분석</em>: 30년을 통째로 하나의 샤프로만 보면 2010년대 저금리 시대와 1990년대 고금리 시대가 섞이므로, <strong>10년 단위 또는 고금리/저금리 국면별로 나누어 샤프 지수의 일관성을 점검</strong>합니다.</li>
-</ul>
-</li>
-<li><strong>변동성 / 위험 (<span class="math-inline">$\sigma$</span>)과 왜 <span class="math-inline">$\times \sqrt{252}$</span>인가?</strong>
-   - <strong>출처</strong>: 일간 수익률 시계열의 <strong>표준편차(Standard Deviation)</strong>입니다.
-   - <strong><span class="math-inline">$\times 252$</span>와 <span class="math-inline">$\times \sqrt{252}$</span>의 차이</strong>:<ul>
-<li>일간 평균 수익(<span class="math-inline">$\mu$</span>)은 1년(약 252영업일) 동안 날짜 수만큼 선형으로 더해지므로 <span class="math-inline">$\times 252$</span>입니다.</li>
-<li>하지만 <strong>변동성의 바탕이 되는 분산(<span class="math-inline">$\sigma^2$</span>)</strong>이 날짜 수만큼 더해지기 때문에(<span class="math-inline">$252 \times \sigma_{\text{일}}^2$</span>), 표준편차(변동성)는 제곱근을 씌워 <span class="math-inline">$\sigma_{\text{연}} = \sigma_{\text{일}} \times \sqrt{252}$</span> (<span class="math-inline">$\approx 15.8745$</span>)가 됩니다.</li>
-<li><em>직관적 이해</em>: 하루 <span class="math-inline">$\pm 1\%$</span> 출렁인다고 해서 1년 변동성이 <span class="math-inline">$1\% \times 252 = 252\%$</span>가 되지 않는 이유는, 매일의 흔들림이 한 방향으로 쌓이는 것이 아니라 위아래로 상쇄되기 때문입니다.</li>
-</ul>
-</li>
-</ol>
-<h4 id="③-파이썬-코드로-확인하는-표준-계산법">③ 파이썬 코드로 확인하는 표준 계산법</h4>
-<p>실무 백테스트 엔진에서는 다음 두 방식 중 어느 쪽을 써도 동일한 샤프 지수가 계산됩니다.</p>
+<h4 id="②-세-변수math_inline_28-핵심-정리">② 세 변수(<span class="math-inline">$R, R_f, \sigma$</span>) 핵심 정리</h4>
+<table>
+<thead>
+<tr>
+<th>변수</th>
+<th>의미</th>
+<th>일간 <span class="math-inline">$\to$</span> 연간 변환</th>
+<th>실무 기준값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><span class="math-inline">$R$</span> (포트폴리오 수익률)</strong></td>
+<td>내 전략의 평균 수익률</td>
+<td><span class="math-inline">$r_{\text{일}} \times 252$</span></td>
+<td>백테스트 일간 수익률 평균</td>
+</tr>
+<tr>
+<td><strong><span class="math-inline">$R_f$</span> (무위험 수익률)</strong></td>
+<td>은행 예금 / 단기 국채 금리</td>
+<td><span class="math-inline">$r_{f,\text{일}} \times 252$</span></td>
+<td>연 <strong>3.0%</strong> (일간 <span class="math-inline">$\approx 0.03 / 252$</span>)</td>
+</tr>
+<tr>
+<td><strong><span class="math-inline">$\sigma$</span> (변동성 / 위험)</strong></td>
+<td>일간 출렁거림(표준편차)</td>
+<td><span class="math-inline">$\sigma_{\text{일}} \times \sqrt{252}$</span></td>
+<td>일간 수익률 표준편차</td>
+</tr>
+</tbody>
+</table>
+<h4 id="③-파이썬-코드-실무-표준-3줄">③ 파이썬 코드 (실무 표준 3줄)</h4>
 <pre><code class="language-python">import numpy as np
-import pandas as pd
 
-# 1. 일간 수익률 시계열 (포트폴리오 일간 변동률)
-daily_returns = df['portfolio_value'].pct_change().dropna()
-daily_rf = 0.03 / 252  # 연 3% 무위험 금리의 일간 환산
+# 1. 일간 초과수익률 = 일간 수익률 - 일간 무위험 금리(연 3% / 252)
+excess_daily = df['portfolio_value'].pct_change().dropna() - (0.03 / 252)
 
-# [방법 1: 퀀트 표준] 일간 초과수익률의 일간 샤프를 구한 뒤 sqrt(252)로 연율화
-excess_daily = daily_returns - daily_rf
-sharpe_standard = (excess_daily.mean() / excess_daily.std()) * np.sqrt(252)
-
-# [방법 2: 연간 환산] 연간 초과수익률을 연간 변동성으로 직접 나눔
-annual_return = daily_returns.mean() * 252
-annual_rf = 0.03
-annual_volatility = daily_returns.std() * np.sqrt(252)
-sharpe_annual = (annual_return - annual_rf) / annual_volatility
-
-# sharpe_standard 와 sharpe_annual 은 수학적으로 100% 동일합니다.
+# 2. 일간 샤프 계산 후 sqrt(252) 곱하기
+sharpe_ratio = (excess_daily.mean() / excess_daily.std()) * np.sqrt(252)
 </code></pre>
-<h4 id="④-샤프-지수-직접-수계산-예시-2가지">④ 🔢 샤프 지수 직접 수계산 예시 2가지</h4>
-<h5 id="수계산-1-연간-단위-직관적-수계산">[수계산 1] 연간 단위 직관적 수계산</h5>
+<h4 id="④-직관적-수계산-예시">④ 직관적 수계산 예시</h4>
 <ul>
-<li><strong>조건</strong>: 내 전략의 연간 기대 수익률 <span class="math-inline">$R_{\text{연}} = 15\%$</span>, 국채 무위험 이자율 <span class="math-inline">$R_{f,\text{연}} = 3\%$</span>, 연간 수익률 표준편차(변동성) <span class="math-inline">$\sigma_{\text{연}} = 10\%$</span></li>
-<li><strong>계산식</strong>:</li>
+<li><strong>조건</strong>: 내 전략 연간 수익률 <span class="math-inline">$R_{\text{연}} = 15\%$</span>, 무위험 금리 <span class="math-inline">$R_{f,\text{연}} = 3\%$</span>, 연간 변동성 <span class="math-inline">$\sigma_{\text{연}} = 10\%$</span></li>
+<li><strong>계산</strong>:</li>
 </ul>
 <div class="math-block">$$
-\text{Sharpe Ratio} = \frac{R_{\text{연}} - R_{f,\text{연}}}{\sigma_{\text{연}}} = \frac{15\% - 3\%}{10\%} = \frac{12\%}{10\%} = \mathbf{1.2}
+\text{Sharpe Ratio} = \frac{15\% - 3\%}{10\%} = \frac{12\%}{10\%} = \mathbf{1.2}
 $$</div>
 <ul>
-<li><strong>해석</strong>: "위험(변동성) <span class="math-inline">$1\%$</span>를 감수할 때마다 은행 정기예금보다 <span class="math-inline">$1.2\%$</span>의 초과 수익을 안정적으로 얻는다."</li>
+<li><strong>해석</strong>: "위험 1%를 감수할 때마다 은행 예금보다 1.2%의 순수 초과 수익을 안정적으로 얻는다."</li>
 </ul>
-<h5 id="수계산-2-일간-백테스트-데이터를-연율화annualization하는-수계산">[수계산 2] 일간 백테스트 데이터를 연율화(Annualization)하는 수계산</h5>
-<p>실제 백테스트 엔진(Python)은 일간 수익률을 계산한 뒤, 1년 영업일 수(<span class="math-inline">$252$</span>일)의 제곱근(<span class="math-inline">$\sqrt{252} \approx 15.8745$</span>)을 곱해 연율화합니다.</p>
+<h4 id="⑤-샤프-지수-성적표-해석-기준">⑤ 샤프 지수 성적표 해석 기준</h4>
 <ul>
-<li><strong>조건</strong>: </li>
-<li>일간 평균 초과수익률 <span class="math-inline">$\mu = 0.08\%$</span> (<span class="math-inline">$0.0008$</span>)</li>
-<li>일간 수익률 표준편차 <span class="math-inline">$\sigma_{\text{일}} = 1.0\%$</span> (<span class="math-inline">$0.01$</span>)</li>
-<li><strong>계산식</strong>:</li>
-</ul>
-<div class="math-block">$$
-\text{일간 샤프 지수} = \frac{\mu}{\sigma_{\text{일}}} = \frac{0.0008}{0.01} = 0.08
-$$</div>
-<div class="math-block">$$
-\text{연율화 샤프 지수} = 0.08 \times \sqrt{252} = 0.08 \times 15.8745 \approx \mathbf{1.27}
-$$</div>
-<h4 id="⑤-샤프-지수의-해석-기준과-실전-활용처">⑤ 샤프 지수의 해석 기준과 실전 활용처</h4>
-<ul>
-<li><strong>어디에 쓰이는가?</strong>: 여러 전략을 결합할 때, <strong>어떤 전략에 내 자본을 더 많이 배분할지(포트폴리오 가중치 결정)</strong> 판단하는 절대적 잣대로 쓰입니다. (샤프 지수는 매매 시점의 신호가 아니라, 백테스트가 끝난 후 채점하는 성적표입니다.)</li>
-<li><strong>1.0 미만</strong>: 감수한 흔들림에 비해 초과수익이 부족함. 전략 보완 필요.</li>
-<li><strong>1.0 ~ 1.5</strong>: 헤지펀드나 기관에서 실전 운용 가능한 양호한 전략.</li>
-<li><strong>1.5 ~ 2.0</strong>: 시장을 압도하는 매우 우수한 전략.</li>
-<li><strong>2.0 초과</strong>: 실전에서는 극히 드물며, 백테스트 코드에 미래 데이터가 섞였거나(Look-ahead Bias), 파라미터가 과최적화(Overfitting)되었을 가능성을 반드시 의심해야 함.</li>
+<li><strong>1.0 미만</strong>: 위험 대비 초과수익 부족 (전략 보완 필요)</li>
+<li><strong>1.0 ~ 1.5</strong>: <strong>양호</strong> (기관/헤지펀드 실전 운용 가능)</li>
+<li><strong>1.5 ~ 2.0</strong>: <strong>매우 우수</strong> (시장을 압도하는 고효율 전략)</li>
+<li><strong>2.0 초과</strong>: <strong>과최적화(Overfitting) 의심</strong> (실전에서는 극히 드묾)</li>
 </ul>
 <hr />
 <h3 id="5-승률win-rate의-함정과-손익비payoff-ratio">5. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</h3>
