@@ -2102,6 +2102,22 @@ $$</div>
 <hr />
 <h3 id="4-샤프-지수sharpe-ratio-수계산으로-이해하는-전략의-순도">4. 샤프 지수(Sharpe Ratio) — 수계산으로 이해하는 전략의 '순도'</h3>
 <p>샤프 지수는 <strong>"내가 감수한 위험(변동성 <span class="math-inline">$\sigma_p$</span>) 1단위 대비 무위험 자산(예: 국채/예금 금리 <span class="math-inline">$R_f$</span>)보다 얼마나 더 많은 초과 수익을 올렸는가?"</strong>를 측정하는 글로벌 퀀트 표준 지표입니다.</p>
+<h4 id="math_inline_19수익률와-math_inline_20변동성는-어디서-가져오는-값인가">💡 <span class="math-inline">$R_p$</span>(수익률)와 <span class="math-inline">$\sigma_p$</span>(변동성)는 어디서 가져오는 값인가?</h4>
+<p>수강생분들이 가장 많이 질문하는 핵심 데이터의 출처입니다:</p>
+<ol>
+<li><strong>포트폴리오 기대 수익률 (<span class="math-inline">$R_p$</span>)</strong>:
+   - 백테스트 기간 동안 매일매일 기록된 <strong>일간 수익률의 평균값(산술평균)</strong>을 1년치(<span class="math-inline">$252$</span>일)로 환산한 값입니다.
+   - <em>CAGR과의 차이</em>: CAGR은 자산의 시작과 끝을 잇는 <strong>기하평균(복리)</strong>인 반면, 전통적인 샤프 지수의 <span class="math-inline">$R_p$</span>는 표준편차(<span class="math-inline">$\sigma_p$</span>)와 수학적으로 짝을 맞추기 위해 <strong>일간 평균 수익률(<span class="math-inline">$\text{mean}$</span>)을 연율화</strong>하여 사용합니다.</li>
+<li><strong>변동성 / 위험 (<span class="math-inline">$\sigma_p$</span>)</strong>:
+   - 매일 계좌 잔고가 위아래로 출렁인 <strong>일간 수익률의 표준편차(Standard Deviation)</strong>입니다.
+   - 하루는 <span class="math-inline">$+2\%$</span>, 다음 날은 <span class="math-inline">$-1.5\%$</span>처럼 등락폭이 심할수록 <span class="math-inline">$\sigma_p$</span>가 커져 분모가 커지므로 샤프 지수는 낮아집니다.
+   - 파이썬 코드로 단 3줄로 계산됩니다:
+     <code>python
+     daily_returns = df['portfolio_value'].pct_change() # 일간 수익률 시계열
+     annual_return = daily_returns.mean() * 252         # R_p (연간 기대 수익률)
+     annual_volatility = daily_returns.std() * np.sqrt(252) # sigma_p (연간 변동성)
+     sharpe_ratio = (annual_return - rf) / annual_volatility</code></li>
+</ol>
 <h4 id="샤프-지수-직접-수계산-예시-2가지">🔢 샤프 지수 직접 수계산 예시 2가지</h4>
 <h5 id="수계산-1-연간-단위-직관적-수계산">[수계산 1] 연간 단위 직관적 수계산</h5>
 <ul>
