@@ -2009,7 +2009,7 @@ window.MathJax = {
 <tr>
 <td><strong>MDD</strong><br>(Maximum Drawdown<br>최대 낙폭 / 최대 손실)</td>
 <td><span class="math-inline">$\max_{t} \left( \frac{\text{Peak}_t - V_t}{\text{Peak}_t} \right)$</span><br>단, <span class="math-inline">$\text{Peak}_t = \max_{\tau \le t} V_\tau$</span></td>
-<td><strong>-15% 이내</strong> 유지 필수<br>(-30% 초과 시 실전 포기)</td>
+<td><strong>단일 전략: -20~-30% 선 방어</strong><br>(S&amp;P500 단순보유 -50% 대비 절반)<br><strong>자산배분 포트폴리오: -15% 이내</strong></td>
 <td><strong>위험 예산(Risk Budget) 및 손절 정책 수립</strong><br>(감당 가능한 레버리지 및 종목당 투자 비중 결정)</td>
 </tr>
 <tr>
@@ -2041,10 +2041,15 @@ $$</div>
 <ul>
 <li><strong>결과 해석</strong>: "이 계좌는 3년 동안 매년 정확히 <span class="math-inline">$+20.0\%$</span>씩 복리로 불어난 것과 100% 동일한 성장 속도를 보였다."</li>
 </ul>
+<blockquote>
+<p>💡 <strong>왜 자산 성장에서는 산술평균이 왜곡을 일으키는가? (변동성 손실, Volatility Drag)</strong><br />
+1,000만 원으로 첫해 <span class="math-inline">$+50\%$</span>를 벌고(1,500만 원), 둘째 해 <span class="math-inline">$-50\%$</span>를 잃으면 잔고는 750만 원(<span class="math-inline">$-25\%$</span> 손실)이 됩니다.<br />
+이때 산술평균은 <span class="math-inline">$(+50\% - 50\%) \div 2 = \mathbf{0\%}$</span>라고 거짓말을 하지만, 기하평균(CAGR)은 <span class="math-inline">$\sqrt{0.75}-1 = \mathbf{-13.4\%}$</span>로 실제 내 잔고가 쪼그라든 현실을 정확히 반영합니다.</p>
+</blockquote>
 <hr />
 <h3 id="3-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">3. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</h3>
 <p>초보 투자자는 "누적 수익률 500%"라는 광고 문구만 보고 뛰어듭니다. 하지만 중간에 <strong>MDD(Maximum Drawdown)가 -50%</strong>인 전략은 실제 계좌에서 결코 버틸 수 없습니다.</p>
-<h4 id="①-mdd-공식의-핵심-고점math_inline_11이란-무엇인가">① MDD 공식의 핵심: '고점(<span class="math-inline">$\text{Peak}_t$</span>)'이란 무엇인가?</h4>
+<h4 id="①-mdd-공식의-핵심-고점math_inline_16이란-무엇인가">① MDD 공식의 핵심: '고점(<span class="math-inline">$\text{Peak}_t$</span>)'이란 무엇인가?</h4>
 <div class="math-block">$$
 \text{Drawdown}_t = \frac{\text{Peak}_t - V_t}{\text{Peak}_t}, \quad \text{where } \text{Peak}_t = \max_{\tau \le t} V_\tau
 $$</div>
@@ -2053,7 +2058,15 @@ $$</div>
 <li><strong><span class="math-inline">$\text{Drawdown}_t$</span> (현재 낙폭)</strong>: 최고 잔고 대비 현재 계좌가 얼마나 하락해 있는지를 나타내는 비율입니다.</li>
 <li><strong><span class="math-inline">$\text{MDD}$</span> (최대 낙폭)</strong>: 백테스트 전체 기간 중 <span class="math-inline">$\text{Drawdown}_t$</span>가 가장 깊게 파였던 최악의 수치입니다.</li>
 </ul>
-<h4 id="②-비대칭-복리의-함정-잃은-돈을-복구하기-어려운-이유">② 비대칭 복리의 함정 — 잃은 돈을 복구하기 어려운 이유</h4>
+<h4 id="②-현실적인-mdd-기준치-30년-백테스트의-진실">② 현실적인 MDD 기준치: 30년 백테스트의 진실</h4>
+<p>"MDD -15% 이내"는 주식 하나만 들고 있거나 단일 전략만으로는 30년 초장기 백테스트에서 달성하기 매우 어렵습니다. 실전에서는 다음과 같은 현실적 잣대로 평가합니다:</p>
+<ol>
+<li><strong>지수 단순 보유 (S&amp;P 500, KOSPI 등)</strong>: 30년간 2000년 닷컴 버블(-49%), 2008년 금융위기(-56%)를 거치며 <strong>MDD -50% ~ -55%</strong>를 기록합니다.</li>
+<li><strong>단일 퀀트 전략 (추세추종, 페어트레이딩 등)</strong>: 위기 국면을 회피하여 MDD를 <strong>-20% ~ -30%</strong> 선에서 막아낸다면, 단순 보유 대비 위험을 절반으로 줄인 매우 훌륭한 전략입니다.</li>
+<li><strong>다중 자산배분 포트폴리오 (올웨더 등)</strong>: 주식·채권·원자재·현금을 배분해야 비로소 <strong>MDD -15% 이내</strong>의 안정적인 계좌를 완성할 수 있습니다.</li>
+<li><strong>위험 한계선</strong>: 단일 전략이라도 MDD가 <strong>-35%</strong>를 넘어가면 일반 투자자는 바닥에서 공포를 이기지 못하고 시스템을 끄게 됩니다.</li>
+</ol>
+<h4 id="③-비대칭-복리의-함정-잃은-돈을-복구하기-어려운-이유">③ 비대칭 복리의 함정 — 잃은 돈을 복구하기 어려운 이유</h4>
 <p>계좌가 하락할 때와 회복할 때 필요한 수익률은 완전히 비대칭적입니다.</p>
 <table>
 <thead>
@@ -2077,7 +2090,7 @@ $$</div>
 <tr>
 <td><strong>-30%</strong></td>
 <td><strong>+42.9%</strong></td>
-<td><strong>일반 투자자의 심리적 한계선</strong> (전략 중단 위기)</td>
+<td><strong>일반 투자자의 심리적 한계선</strong> (단일 전략 방어 목표)</td>
 </tr>
 <tr>
 <td><strong>-50%</strong></td>
@@ -2096,28 +2109,45 @@ $$</div>
 • 평가: 1억 원이 3,500만 원으로 토막 나는 구간 발생. 실전에서 99%의 투자자가 바닥에서 시스템을 끄고 퇴출당함.
 
 [전략 B: 단단한 퀀트 포트폴리오]
-• 누적 수익률: +180% (CAGR 18%) | MDD: -12% | 샤프 지수: 1.45
-• 평가: 1억 원이 최악의 순간에도 8,800만 원 이상 유지됨. 10년 이상 장기 복리로 안심하고 무인 가동 가능.
+• 누적 수익률: +180% (CAGR 18%) | MDD: -22% | 샤프 지수: 1.45
+• 평가: 1억 원이 최악의 순간에도 7,800만 원 이상 유지되며 지수(-50%) 대비 위험을 절반으로 방어. 10년 이상 장기 복리로 안심 가동 가능.
 </code></pre>
 <hr />
 <h3 id="4-샤프-지수sharpe-ratio-수계산으로-이해하는-전략의-순도">4. 샤프 지수(Sharpe Ratio) — 수계산으로 이해하는 전략의 '순도'</h3>
 <p>샤프 지수는 <strong>"내가 감수한 위험(변동성 <span class="math-inline">$\sigma_p$</span>) 1단위 대비 무위험 자산(예: 국채/예금 금리 <span class="math-inline">$R_f$</span>)보다 얼마나 더 많은 초과 수익을 올렸는가?"</strong>를 측정하는 글로벌 퀀트 표준 지표입니다.</p>
-<h4 id="math_inline_19수익률와-math_inline_20변동성는-어디서-가져오는-값인가">💡 <span class="math-inline">$R_p$</span>(수익률)와 <span class="math-inline">$\sigma_p$</span>(변동성)는 어디서 가져오는 값인가?</h4>
-<p>수강생분들이 가장 많이 질문하는 핵심 데이터의 출처입니다:</p>
+<div class="math-block">$$
+\text{Sharpe Ratio} = \frac{E[R_p - R_f]}{\sigma_p} \times \sqrt{252}
+$$</div>
+<h4 id="math_inline_24-math_inline_25-math_inline_26의-데이터-출처와-계산-원리">💡 <span class="math-inline">$R_p$</span>, <span class="math-inline">$R_f$</span>, <span class="math-inline">$\sigma_p$</span>의 데이터 출처와 계산 원리</h4>
+<p>수강생분들이 가장 궁금해하는 세 가지 변수의 출처와 수학적 원리입니다:</p>
 <ol>
-<li><strong>포트폴리오 기대 수익률 (<span class="math-inline">$R_p$</span>)</strong>:
-   - 백테스트 기간 동안 매일매일 기록된 <strong>일간 수익률의 평균값(산술평균)</strong>을 1년치(<span class="math-inline">$252$</span>일)로 환산한 값입니다.
-   - <em>CAGR과의 차이</em>: CAGR은 자산의 시작과 끝을 잇는 <strong>기하평균(복리)</strong>인 반면, 전통적인 샤프 지수의 <span class="math-inline">$R_p$</span>는 표준편차(<span class="math-inline">$\sigma_p$</span>)와 수학적으로 짝을 맞추기 위해 <strong>일간 평균 수익률(<span class="math-inline">$\text{mean}$</span>)을 연율화</strong>하여 사용합니다.</li>
-<li><strong>변동성 / 위험 (<span class="math-inline">$\sigma_p$</span>)</strong>:
-   - 매일 계좌 잔고가 위아래로 출렁인 <strong>일간 수익률의 표준편차(Standard Deviation)</strong>입니다.
-   - 하루는 <span class="math-inline">$+2\%$</span>, 다음 날은 <span class="math-inline">$-1.5\%$</span>처럼 등락폭이 심할수록 <span class="math-inline">$\sigma_p$</span>가 커져 분모가 커지므로 샤프 지수는 낮아집니다.
-   - 파이썬 코드로 단 3줄로 계산됩니다:
-     <code>python
-     daily_returns = df['portfolio_value'].pct_change() # 일간 수익률 시계열
-     annual_return = daily_returns.mean() * 252         # R_p (연간 기대 수익률)
-     annual_volatility = daily_returns.std() * np.sqrt(252) # sigma_p (연간 변동성)
-     sharpe_ratio = (annual_return - rf) / annual_volatility</code></li>
+<li><strong>포트폴리오 수익률 (<span class="math-inline">$R_p$</span>) — 왜 여기서는 일간 산술평균을 쓰는가?</strong>
+   - <strong>CAGR과의 역할 분담</strong>: CAGR(기하평균)은 "10년 뒤 내 최종 잔고가 몇 배가 되었는가"를 잴 때 쓰고, 샤프 지수는 "매일매일 감수한 출렁거림 대비 효율이 얼마인가"라는 <strong>통계적 확률 모형(기대값 <span class="math-inline">$E[X]$</span> / 표준편차 <span class="math-inline">$\sigma_X$</span>)</strong>을 잴 때 씁니다.
+   - <strong>일간 데이터의 수학적 특성</strong>: 하루 단위 수익률(예: <span class="math-inline">$+0.05\%$</span>)은 크기가 매우 작아 <strong>일간 산술평균과 기하평균의 차이가 사실상 <span class="math-inline">$0$</span>에 수렴</strong>합니다. 따라서 일간 초과수익률의 산술평균(<span class="math-inline">$\text{mean}$</span>)을 구한 뒤 <span class="math-inline">$\times 252$</span>로 연율화하는 것이 전 세계 금융계 및 퀀트 라이브러리(QuantStats 등)의 공식 표준입니다.</li>
+<li><strong>무위험 수익률 (<span class="math-inline">$R_f$</span>) — 어디서 가져오며, 30년 백테스트는 어떻게 하나?</strong>
+   - <strong>출처</strong>: 주가 데이터가 아니라 <strong>단기 국채 금리 시계열</strong>에서 가져옵니다 (미국: FRED 3개월 T-Bill 금리, 한국: 통안채 91일 또는 CD 91일 금리, 암호화폐: <span class="math-inline">$R_f = 0$</span> 설정).
+   - <strong>30년 초장기 백테스트 시 처리법</strong>:<ul>
+<li><em>1차 분석 &amp; 손계산</em>: 전체 기간에 <strong>연 3.0%</strong>(역사적 평균 무위험 금리)를 상수로 적용하여 전략들을 일관된 기준으로 비교합니다.</li>
+<li><em>실무 백테스트 엔진</em>: 매일매일 그날의 일간 단기 금리(<span class="math-inline">$r_{f,t} \approx \text{연금리} / 252$</span>)를 일간 수익률에서 차감(<span class="math-inline">$r_t - r_{f,t}$</span>)하여 계산합니다.</li>
+<li><em>구간별 샤프 분석</em>: 30년을 통째로 하나의 샤프로만 보면 2010년대 저금리 시대와 1990년대 고금리 시대가 섞이므로, <strong>10년 단위 또는 고금리/저금리 국면별로 나누어 샤프 지수의 일관성을 점검</strong>합니다.</li>
+</ul>
+</li>
+<li><strong>변동성 / 위험 (<span class="math-inline">$\sigma_p$</span>)과 왜 <span class="math-inline">$\times \sqrt{252}$</span>인가?</strong>
+   - <strong>출처</strong>: 일간 수익률 시계열의 <strong>표준편차(Standard Deviation)</strong>입니다.
+   - <strong><span class="math-inline">$\times 252$</span>와 <span class="math-inline">$\times \sqrt{252}$</span>의 차이</strong>:<ul>
+<li>일간 평균 수익(<span class="math-inline">$\mu$</span>)은 1년(약 252영업일) 동안 날짜 수만큼 선형으로 더해지므로 <span class="math-inline">$\times 252$</span>입니다.</li>
+<li>하지만 <strong>변동성의 바탕이 되는 분산(<span class="math-inline">$\sigma^2$</span>)</strong>이 날짜 수만큼 더해지기 때문에(<span class="math-inline">$252 \times \sigma_{\text{일}}^2$</span>), 표준편차(변동성)는 제곱근을 씌워 <span class="math-inline">$\sigma_{\text{연}} = \sigma_{\text{일}} \times \sqrt{252}$</span> (<span class="math-inline">$\approx 15.8745$</span>)가 됩니다.</li>
+<li><em>직관적 이해</em>: 하루 <span class="math-inline">$\pm 1\%$</span> 출렁인다고 해서 1년 변동성이 <span class="math-inline">$1\% \times 252 = 252\%$</span>가 되지 않는 이유는, 매일의 흔들림이 한 방향으로 쌓이는 것이 아니라 위아래로 상쇄되기 때문입니다.</li>
+</ul>
+</li>
 </ol>
+<ul>
+<li>파이썬 코드로 단 4줄로 계산됩니다:
+  <code>python
+  daily_returns = df['portfolio_value'].pct_change() # 일간 수익률 시계열
+  excess_returns = daily_returns - (0.03 / 252)       # 무위험 금리(연 3%) 일간 차감
+  sharpe_ratio = (excess_returns.mean() / excess_returns.std()) * np.sqrt(252)</code></li>
+</ul>
 <h4 id="샤프-지수-직접-수계산-예시-2가지">🔢 샤프 지수 직접 수계산 예시 2가지</h4>
 <h5 id="수계산-1-연간-단위-직관적-수계산">[수계산 1] 연간 단위 직관적 수계산</h5>
 <ul>
@@ -2146,7 +2176,11 @@ $$</div>
 $$</div>
 <h4 id="샤프-지수의-해석-기준과-실전-활용처">샤프 지수의 해석 기준과 실전 활용처</h4>
 <ul>
-<li><strong>어디에 쓰이는가?</strong>: 여러 전략을 결합할 때, <strong>어떤 전략에 내 자본을 더 많이 배분할지(포트폴리오 가중치 결정)</strong> 판단하는 절대적 잣대로 쓰입니다.</li>
+<li><strong>어디에 쓰이는가?</strong>: 여러 전략을 결합할 때, <strong>어떤 전략에 내 자본을 더 많이 배분할지(포트폴리오 가중치 결정)</strong> 판단하는 절대적 잣대로 쓰입니다. (샤프 지수는 매매 시점의 신호가 아니라, 백테스트가 끝난 후 채점하는 성적표입니다.)</li>
+<li><strong>1.0 미만</strong>: 감수한 흔들림에 비해 초과수익이 부족함. 전략 보완 필요.</li>
+<li><strong>1.0 ~ 1.5</strong>: 헤지펀드나 기관에서 실전 운용 가능한 양호한 전략.</li>
+<li><strong>1.5 ~ 2.0</strong>: 시장을 압도하는 매우 우수한 전략.</li>
+<li><strong>2.0 초과</strong>: 실전에서는 극히 드물며, 백테스트 코드에 미래 데이터가 섞였거나(Look-ahead Bias), 파라미터가 과최적화(Overfitting)되었을 가능성을 반드시 의심해야 함.</li>
 <li><strong>1.0 미만</strong>: 감수한 흔들림에 비해 초과수익이 부족함. 전략 보완 필요.</li>
 <li><strong>1.0 ~ 1.5</strong>: 헤지펀드나 기관에서 실전 운용 가능한 양호한 전략.</li>
 <li><strong>1.5 ~ 2.0</strong>: 시장을 압도하는 매우 우수한 전략.</li>
