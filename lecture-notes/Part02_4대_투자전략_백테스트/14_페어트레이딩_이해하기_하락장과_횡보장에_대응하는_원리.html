@@ -2033,7 +2033,7 @@ window.MathJax = {
 <tr>
 <td><strong>4단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
-<td><code>Ratio = df['A'] / df['B']</code><br><code>Z = (Ratio - Ratio.rolling(60).mean()) / Ratio.rolling(60).std()</code><br>임계선 돌파 시 익일 시가 스위칭(Lookahead Bias 방지) 및 편도 0.15% 거래비용 차감</td>
+<td><code>Ratio = df['A'] / df['B']</code><br><code>Z = (Ratio - Ratio.rolling(60).mean()) / Ratio.rolling(60).std()</code><br><code>Signal = np.where(Z &lt;= -1.5, 'A', np.where(Z &gt;= 1.5, 'B', np.nan))</code> (익일 시가 체결, 편도 0.15% 비용 차감)</td>
 </tr>
 <tr>
 <td><strong>알고리즘 트레이딩</strong></td>
