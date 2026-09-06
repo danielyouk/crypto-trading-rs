@@ -2115,17 +2115,17 @@ $$</div>
 <hr />
 <h3 id="4-샤프-지수sharpe-ratio-위험-대비-초과수익의-퀀트-표준">4. 샤프 지수(Sharpe Ratio) — 위험 대비 초과수익의 퀀트 표준</h3>
 <p>샤프 지수는 <strong>"내가 감수한 위험(변동성 <span class="math-inline">$\sigma$</span>) 1단위당 무위험 자산(국채/예금 <span class="math-inline">$R_f$</span>) 대비 얼마나 더 많은 초과 수익을 올렸는가?"</strong>를 측정하는 글로벌 표준 지표입니다.</p>
-<h4 id="①-핵심-공식-약분으로-이해하는-연율화-원리">① 핵심 공식: 약분으로 이해하는 연율화 원리</h4>
+<h4 id="①-핵심-공식-데이터-주기-통일과-연율화-원리">① 핵심 공식: 데이터 주기 통일과 연율화 원리</h4>
 <div class="math-block">$$
-\text{Sharpe Ratio} = \frac{R_{\text{연}} - R_{f,\text{연}}}{\sigma_{\text{연}}} = \frac{(r_{\text{일}} - r_{f,\text{일}}) \times 252}{\sigma_{\text{일}} \times \sqrt{252}} = \frac{r_{\text{일}} - r_{f,\text{일}}}{\sigma_{\text{일}}} \times \mathbf{\sqrt{252}}
+\text{Sharpe Ratio} = \frac{R_{\text{연}} - R_{f,\text{연}}}{\sigma_{\text{연}}} = \frac{r_{\text{일}} \times 252 - R_{f,\text{연}}}{\sigma_{\text{일}} \times \sqrt{252}} = \frac{r_{\text{일}} - r_{f,\text{일}}}{\sigma_{\text{일}}} \times \mathbf{\sqrt{252}}
 $$</div>
 <blockquote>
-<p>💡 <strong>약분의 마법 (<span class="math-inline">$\frac{252}{\sqrt{252}} = \sqrt{252}$</span>)</strong><br />
-• 연간 수익률은 252영업일 동안 더해지므로 <span class="math-inline">$\times 252$</span>입니다.<br />
-• 연간 변동성은 분산이 더해진 뒤 제곱근을 씌우므로 <span class="math-inline">$\times \sqrt{252}$</span>입니다.<br />
-• 따라서 분모·분자를 약분하면 최종 공식은 <strong>(일간 샤프 지수) <span class="math-inline">$\times \mathbf{\sqrt{252}}$</span></strong>가 됩니다.</p>
+<p>💡 <strong>왜 공식이 이렇게 생겼을까요? (데이터 비대칭성과 <span class="math-inline">$\sqrt{252}$</span>의 원리)</strong><br />
+• <strong>데이터 주기의 비대칭성</strong>: 주가 데이터와 거래는 <strong>매일(일 단위 <span class="math-inline">$r_{\text{일}}$</span>)</strong> 발생하지만, 은행/국채 무위험 금리는 항상 <strong>연 단위(<span class="math-inline">$R_{f,\text{연}} = 3\%$</span>)</strong>로 주어집니다. 따라서 기준을 연간으로 맞추기 위해 일간 수익에 <span class="math-inline">$\times 252$</span>를 합니다.<br />
+• <strong><span class="math-inline">$\sqrt{252}$</span>로 복구하는 이유</strong>: 변동성(표준편차 <span class="math-inline">$\sigma$</span>)은 본래 분산(<span class="math-inline">$\sigma^2$</span>)에 제곱근을 씌운 개념입니다. 252일 동안 더해지는 것은 분산(<span class="math-inline">$252 \times \sigma_{\text{일}}^2$</span>)이므로, 이를 다시 변동성으로 환산할 때는 <span class="math-inline">$\mathbf{\sqrt{252}}$</span>를 곱해 원상 복구합니다.<br />
+• <strong>약분의 결과</strong>: <span class="math-inline">$\frac{252}{\sqrt{252}} = \sqrt{252}$</span>이므로 결국 <strong>(일간 샤프 지수) <span class="math-inline">$\times \mathbf{\sqrt{252}}$</span></strong>로 아주 단순해집니다.</p>
 </blockquote>
-<h4 id="②-세-변수math_inline_28-핵심-정리">② 세 변수(<span class="math-inline">$R, R_f, \sigma$</span>) 핵심 정리</h4>
+<h4 id="②-세-변수math_inline_35-핵심-정리">② 세 변수(<span class="math-inline">$R, R_f, \sigma$</span>) 핵심 정리</h4>
 <table>
 <thead>
 <tr>

@@ -728,6 +728,213 @@ tr:hover td { background: #f8fafc; }
   padding: 0 2px;
 }
 
+/* ==========================================================================
+   4-BLOCK PROMPT ANATOMY CARDS
+   ========================================================================== */
+.anatomy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+
+.anatomy-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.anatomy-card.context {
+  border-left-color: var(--navy-light);
+}
+.anatomy-card.deliverable {
+  border-left-color: #2563eb;
+}
+.anatomy-card.guardrail {
+  border-left-color: #dc2626;
+  background: #fffafa;
+}
+.anatomy-card.verification {
+  border-left-color: #16a34a;
+  background: #fcfdfc;
+}
+
+.anatomy-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.anatomy-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.anatomy-badge.context { background: var(--navy-light); }
+.anatomy-badge.deliverable { background: #2563eb; }
+.anatomy-badge.guardrail { background: #dc2626; }
+.anatomy-badge.verification { background: #16a34a; }
+
+.anatomy-aim {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.anatomy-prompt {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-main);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+}
+
+.anatomy-why {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  padding-left: 4px;
+}
+
+.anatomy-why strong {
+  color: var(--navy-primary);
+}
+
+/* ==========================================================================
+   4-BLOCK FRAMEWORK CARDS & THREAT-DEFENSE GRID
+   ========================================================================== */
+.framework-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+@media (max-width: 900px) {
+  .framework-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 540px) {
+  .framework-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.framework-col {
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-top: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.framework-col.c1 { border-top-color: var(--navy-light); }
+.framework-col.c2 { border-top-color: #2563eb; }
+.framework-col.c3 { border-top-color: #dc2626; background: #fffdfd; }
+.framework-col.c4 { border-top-color: #16a34a; background: #fdfdfd; }
+
+.framework-col .col-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+
+.framework-col .col-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 8px;
+}
+
+.framework-col .col-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  flex: 1;
+}
+
+.guard-defense-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+@media (max-width: 800px) {
+  .guard-defense-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guard-defense-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.guard-defense-card .threat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.guard-defense-card .threat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 6px;
+}
+
+.guard-defense-card .threat-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.guard-defense-card .defense-box {
+  background: #f8fafc;
+  border-left: 3px solid #dc2626;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-main);
+  border-radius: 0 4px 4px 0;
+}
+
+.guard-defense-card .defense-box strong {
+  color: #b91c1c;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1840,9 +2047,9 @@ $$</div>
 <hr />
 <h2 id="실습-시각화-및-신호-검증">실습 — 시각화 및 신호 검증</h2>
 <p>Claude Code에게 KOSPI 지수 또는 삼성전자의 200일 이동평균선 돌파 매매 신호(골든크로스/데드크로스)를 시각화하도록 요청합니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>200일 이동평균선 기반 추세추종 전략의 매매 신호와 시장 국면을 분석하고 싶어. (Context)
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 200일 이동평균선(SMA 200) 기반 추세추종 전략의 매매 신호와 시장 국면을 분석하고 시각화하고 싶어.
 
-다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'kospi_trend_signals.py'를 작성하고 실행해줘:
 1. FinanceDataReader를 사용해 KOSPI 종합지수('KS11')의 2018년부터 2024년까지 일봉 데이터를 불러와줘.
 2. 200일 단순 이동평균선(SMA 200)을 계산하고, 다음과 같이 매매 신호를 정의해줘:
    - 매수 신호(골든크로스): 종가가 200일선 아래에서 위로 상향 돌파하는 날
@@ -1851,7 +2058,11 @@ $$</div>
 4. 하단 차트에는 시스템의 포지션 상태(보유 중=1, 현금=0)를 영역(Area) 차트로 채워줘.
 5. 차트 이미지 파일은 'kospi_trend_following_signals.png'로 저장해줘.
 
-실행 후 최근 5년간 발생한 매수/매도 신호 날짜 및 당시 종가 목록을 화면에 요약해줘. (Verification)
+[하지 말 것]
+- GUI 팝업 창(plt.show)을 띄우지 말고 이미지 파일로 직접 저장해.
+- 불필요한 보조지표를 임의로 추가하지 말고 200일선과 포지션 상태만 직관적으로 시각화해.
+
+[확인] 스크립트 실행 후 최근 5년간 발생한 매수/매도 신호 날짜 및 당시 종가 목록을 대화창에 표로 요약 출력하고, 'kospi_trend_following_signals.png' 파일이 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
