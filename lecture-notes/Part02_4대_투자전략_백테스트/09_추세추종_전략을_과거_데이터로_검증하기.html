@@ -2012,7 +2012,7 @@ window.MathJax = {
 </tr>
 <tr>
 <td><strong>시장 비교 (Step 2)</strong></td>
-<td>같은 엔진을 <strong>미국 SPY</strong>(1994~2024)에 재실행 — 규칙과 비용은 고정, 대상·기간만 바꿔 한국과 비교</td>
+<td>같은 엔진을 <strong>미국 SPY</strong>(1994년부터 최근까지 약 30년)에 재실행 — 규칙과 비용은 고정, 대상·기간만 바꿔 한국과 비교</td>
 </tr>
 </tbody>
 </table>
@@ -2236,10 +2236,10 @@ $$</div>
 <h2 id="실습-실습-04-추세추종-백테스트-한국-10년-미국-30년">실습 — 실습 04: 추세추종 백테스트 — 한국 10년, 미국 30년</h2>
 <h3 id="step-1-kodex-200-10년-백테스트-엔진-구동">Step 1. KODEX 200 10년 백테스트 엔진 구동</h3>
 <p>Claude Code 대화창에 아래의 표준 퀀트 백테스트 프롬프트를 입력하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] KODEX 200 ETF를 대상으로 200일 이동평균선(SMA 200) 추세추종 전략의 10년 백테스트를 수행하고, 횡보장 휩소(Whipsaw)와 거래비용의 영향을 분석하고 싶어.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] KODEX 200 ETF를 대상으로 200일 이동평균선(SMA 200) 추세추종 전략의 최근 10년 백테스트를 수행하고, 횡보장 휩소(Whipsaw)와 거래비용의 영향을 분석하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 백테스트 파이썬 스크립트 'trend_following_backtest.py'를 작성하고 실행해줘:
-1. FinanceDataReader를 사용해 KODEX 200(종목코드: '069500')의 2014-01-01 ~ 2024-12-31 일봉 데이터를 불러와줘. (200일선 계산에 앞 200거래일이 필요하니 데이터는 그보다 앞서 받고, 성과 계산은 이 구간만 해줘.)
+1. FinanceDataReader를 사용해 KODEX 200(종목코드: '069500')의 최근 10년 일봉 데이터를 불러와줘. (200일선 계산을 위한 워밍업 기간을 포함해 충분히 불러와줘.)
 2. 200일 단순 이동평균선을 계산하고, 당일 종가가 200일선 상향 돌파 시 익일 시가 매수, 하향 이탈 시 익일 시가 매도로 시뮬레이션해줘. (Lookahead Bias 철저 방지)
 3. 매매 시 왕복 거래비용 0.25%(슬리피지 0.1% + 매매수수료 및 세금 0.15%)를 매회 차감해줘.
 4. 단순 보유(Buy &amp; Hold)와 추세추종 전략(비용 반영 전 Gross vs 비용 반영 후 Net)의 성과를 다음 지표로 비교하는 Markdown 표를 대화창에 출력해줘:
@@ -2259,10 +2259,9 @@ $$</div>
 - 신호 당일 종가로 즉시 체결하는 미래참조(Lookahead Bias) 오류를 범하지 마.
 - GUI 팝업 창(plt.show)을 띄우지 말고 이미지 파일로 직접 저장해.
 
-[확인] 대화창에 단순 보유 vs 추세추종(Gross/Net) 성과 비교표가 출력되었는지, 성과표의 첫 날짜와 마지막 날짜가 2014년과 2024년인지, 그리고 차트 파일 'trend_following_backtest_result.png'가 패널 2개로 정상 저장되었는지 확인해줘.
+[확인] 대화창에 단순 보유 vs 추세추종(Gross/Net) 성과 비교표가 출력되었는지, 그리고 차트 파일 'trend_following_backtest_result.png'가 패널 2개로 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <blockquote>
-<p>💡 <strong>왜 "최근까지"가 아니라 2024-12-31로 끊나요</strong>: 두 가지 이유입니다. 첫째, <strong>재현성</strong> — 끝 날짜를 고정해야 여러분이 언제 실행해도 일관된 백테스트 결과를 얻을 수 있습니다. 둘째, <strong>국면 격리</strong> — 장기 박스권 횡보 국면의 휩소와 비용 영향을 정밀하게 분석하기 위함입니다.</p>
 <p>💡 <strong>차트 사양을 프롬프트에 명시하는 이유</strong>: 사양을 구체적으로 주지 않으면 AI가 여러 패널을 복잡하게 생성해 판독이 어려워집니다. 핵심 지표(로그 자산 곡선 + 현금 구간 음영 + 언더워터 플롯)만 깔끔하게 시각화하도록 제어하는 것입니다.</p>
 </blockquote>
 <hr />
@@ -2271,7 +2270,7 @@ $$</div>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 방금 만든 trend_following_backtest.py의 200일선 추세추종 규칙을 그대로 미국 시장에 적용해서, 한국 결과와 나란히 비교하고 싶어. 규칙과 거래비용은 그대로 두고 시장만 바꿔야 차이를 시장 탓이라고 말할 수 있어.
 
 [수정할 것] 매매 대상과 기간을 인자로 바꿀 수 있게 스크립트를 고치고, 아래 설정으로 한 번 더 실행해줘:
-1. 매매 대상: SPY (S&amp;P 500 ETF), 기간: 1994-01-01 ~ 2024-12-31.
+1. 매매 대상: SPY (S&amp;P 500 ETF), 기간: 1994-01-01부터 최근까지 (약 30년).
 2. 거래비용은 Step 1과 동일하게 왕복 0.25% 유지. (한국 증권사로 해외주식을 매매하는 기준)
 3. Step 1과 같은 형식의 성과표(단순 보유 / Gross / Net × 총수익률·CAGR·MDD·샤프·거래 횟수·승률)를 출력하고, 마지막에 KODEX 200과 SPY의 Net 결과를 한 표에 나란히 놓아줘.
 4. 차트는 Step 1과 같은 사양(패널 2개, 로그 스케일, 현금 구간 음영, MDD 표시)으로 'trend_following_backtest_result_spy.png'에 따로 저장해줘.
