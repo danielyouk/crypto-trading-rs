@@ -1600,19 +1600,19 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
+            <a class="nav-heading level-3" href="#1-4단계-로드맵-아이디어에서-알고리즘-트레이딩까지">1. 4단계 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
             
-            <a class="nav-heading level-3" href="#1-시장-중립-방향이-아니라-격차에-베팅한다">1. 시장 중립: 방향이 아니라 격차에 베팅한다</a>
+            <a class="nav-heading level-3" href="#2-시장-중립-방향이-아니라-격차에-베팅한다">2. 시장 중립: 방향이 아니라 격차에 베팅한다</a>
             
-            <a class="nav-heading level-3" href="#2-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">2. 상관관계(Correlation) vs 공적분(Cointegration): 퀀트의 흔한 착각</a>
+            <a class="nav-heading level-3" href="#3-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">3. 상관관계(Correlation) vs 공적분(Cointegration): 퀀트의 흔한 착각</a>
             
-            <a class="nav-heading level-3" href="#3-스프레드와-z-score-벌어진-정도를-숫자-하나로">3. 스프레드와 Z-Score: 벌어진 정도를 숫자 하나로</a>
+            <a class="nav-heading level-3" href="#4-스프레드와-z-score-벌어진-정도를-숫자-하나로">4. 스프레드와 Z-Score: 벌어진 정도를 숫자 하나로</a>
             
-            <a class="nav-heading level-3" href="#4-치명적-리스크-구조적-결별structural-break과-하드스탑">4. 치명적 리스크: 구조적 결별(Structural Break)과 하드스탑</a>
+            <a class="nav-heading level-3" href="#5-치명적-리스크-구조적-결별structural-break과-하드스탑">5. 치명적 리스크: 구조적 결별(Structural Break)과 하드스탑</a>
             
-            <a class="nav-heading level-3" href="#5-한국에서는-어떻게-하나-공매도-대신-롱-온리-스위칭">5. 한국에서는 어떻게 하나: 공매도 대신 롱 온리 스위칭</a>
+            <a class="nav-heading level-3" href="#6-한국에서는-어떻게-하나-공매도-대신-롱-온리-스위칭">6. 한국에서는 어떻게 하나: 공매도 대신 롱 온리 스위칭</a>
             
-            <a class="nav-heading level-3" href="#6-선택-헤지펀드는-왜-페어를-50개나-쓸까">6. (선택) 헤지펀드는 왜 페어를 50개나 쓸까</a>
+            <a class="nav-heading level-3" href="#7-선택-헤지펀드는-왜-페어를-50개나-쓸까">7. (선택) 헤지펀드는 왜 페어를 50개나 쓸까</a>
             
             <a class="nav-heading level-2" href="#오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</a>
             
@@ -2007,13 +2007,13 @@ window.MathJax = {
 </blockquote>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
-<p>클립 06에서 정립한 원칙에 따라, 페어트레이딩 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
+<h3 id="1-4단계-로드맵-아이디어에서-알고리즘-트레이딩까지">1. 4단계 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
+<p>클립 06에서 정립한 4단계(<strong>아이디어 → 매매 규칙 → 알고리즘 → 알고리즘 트레이딩</strong>)에 따라, 페어트레이딩 전략이 구체적인 알고리즘 코드로 바뀌는 과정입니다. 2단계 매매 규칙은 클립 06과 같이 <strong>지표 · 진입·청산 · 위험관리</strong> 세 요소로 나눠 적었습니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>단계</th>
-<th>변환 항목</th>
+<th>내용</th>
 <th>페어트레이딩의 구체적 정의</th>
 </tr>
 </thead>
@@ -2024,29 +2024,34 @@ window.MathJax = {
 <td>"같은 사업 모델을 가진 두 우량주는 장기적으로 함께 움직이며, <strong>일시적인 가격 괴리는 결국 고무줄처럼 평균으로 되돌아온다</strong>."</td>
 </tr>
 <tr>
-<td><strong>2단계: 지표화</strong></td>
-<td>수학적 데이터 정의</td>
+<td><strong>2단계: 매매 규칙 ① 지표</strong></td>
+<td>아이디어를 재는 숫자</td>
 <td>• 가격 비율: <span class="math-inline">$\text{Price Ratio} = \frac{\text{Price}_A}{\text{Price}_B}$</span><br>• 정규화 점수: 60일 롤링 Z-Score <span class="math-inline">$Z = \frac{\text{Ratio} - \mu_{60}}{\sigma_{60}}$</span></td>
 </tr>
 <tr>
-<td><strong>3단계: 매매 규칙</strong></td>
-<td>진입 / 청산 / 위험관리</td>
-<td>• <strong>스위칭 진입</strong>: <span class="math-inline">$Z \le -1.5$</span> (A 저평가) ➔ A 100% 매수 / <span class="math-inline">$Z \ge +1.5$</span> (B 저평가) ➔ B 100% 매수<br>• <strong>유지</strong>: <span class="math-inline">$-0.5 < Z < +0.5$</span> (균형 복귀) ➔ 기존 포지션 유지<br>• <strong>위험관리(가드레일)</strong>: <span class="math-inline">$|Z| \ge 3.0$</span> (펀더멘털 결별) 발생 시 하드스탑 손절</td>
+<td><strong>2단계: 매매 규칙 ② 진입·청산</strong></td>
+<td>언제 사고 파는지를 참/거짓으로</td>
+<td>• <strong>스위칭 진입</strong>: <span class="math-inline">$Z \le -1.5$</span> (A 저평가) ➔ A 100% 매수 / <span class="math-inline">$Z \ge +1.5$</span> (B 저평가) ➔ B 100% 매수<br>• <strong>유지</strong>: <span class="math-inline">$-0.5 < Z < +0.5$</span> (균형 복귀) ➔ 기존 포지션 유지</td>
 </tr>
 <tr>
-<td><strong>4단계: 알고리즘</strong></td>
+<td><strong>2단계: 매매 규칙 ③ 위험관리</strong></td>
+<td>얼마를 걸고 어디서 끊을지</td>
+<td>이 클립에서는 정하지 않습니다. 비중·손절 같은 위험관리는 <strong>Part 3(시장 변화·전략 점검·개선)</strong>에서 백테스트로 드러난 약점을 보며 자연스럽게 채웁니다</td>
+</tr>
+<tr>
+<td><strong>3단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
 <td><code>Ratio = df['A'] / df['B']</code><br><code>Z = (Ratio - Ratio.rolling(60).mean()) / Ratio.rolling(60).std()</code><br><code>Signal = np.where(Z &lt;= -1.5, 'A', np.where(Z &gt;= 1.5, 'B', np.nan))</code> (익일 시가 체결, 편도 0.15% 비용 차감)</td>
 </tr>
 <tr>
-<td><strong>알고리즘 트레이딩</strong></td>
+<td><strong>4단계: 알고리즘 트레이딩</strong></td>
 <td>검증 및 실전 집행</td>
 <td>코스피 급락장에서도 시장 중립 알파 확인 ➔ Part 4/5 2-Tier 일간 모니터링 및 KIS API 스위칭 자동 주문</td>
 </tr>
 </tbody>
 </table></div>
 <hr />
-<h3 id="1-시장-중립-방향이-아니라-격차에-베팅한다">1. 시장 중립: 방향이 아니라 격차에 베팅한다</h3>
+<h3 id="2-시장-중립-방향이-아니라-격차에-베팅한다">2. 시장 중립: 방향이 아니라 격차에 베팅한다</h3>
 <p>일반적인 주식 투자는 지수가 폭락하면 아무리 좋은 종목도 함께 떨어지는 <strong>시장 위험</strong>에 노출됩니다. 이 위험의 크기를 <strong>베타(<span class="math-inline">$\beta$</span>)</strong>라고 부릅니다. 베타 1이면 시장과 똑같이 오르내리고, 베타 0이면 시장이 어디로 가든 영향을 받지 않습니다.</p>
 <p>정통 페어트레이딩은 <strong>고평가된 종목을 공매도</strong>하고 <strong>저평가된 종목을 매수</strong>해서 베타를 0에 가깝게 만듭니다. <strong>공매도(Short)</strong>는 갖고 있지 않은 주식을 빌려서 먼저 팔고, 나중에 사서 되갚는 거래입니다. 주가가 내리면 이익이 납니다.</p>
 <div class="math-block">$$
@@ -2060,7 +2065,7 @@ $$</div>
 </code></pre>
 <p>두 종목이 <strong>같은 방향으로 움직이기만 하면</strong> 시장의 등락은 서로 상쇄되고, 남는 것은 두 종목 사이의 <strong>격차 변화</strong>만입니다. 그래서 이 전략은 상승장이 아니라 <strong>하락장과 횡보장</strong>에서 진가를 드러냅니다.</p>
 <hr />
-<h3 id="2-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">2. 상관관계(Correlation) vs 공적분(Cointegration): 퀀트의 흔한 착각</h3>
+<h3 id="3-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">3. 상관관계(Correlation) vs 공적분(Cointegration): 퀀트의 흔한 착각</h3>
 <p>"두 종목이 같이 움직인다"는 말에는 두 가지 뜻이 섞여 있습니다. 이 둘을 구분하지 못하면 페어트레이딩은 물타기 끝에 파산하는 전략이 됩니다.</p>
 <div class="compare-box">
   <div class="compare-card bad">
@@ -2083,7 +2088,7 @@ $$</div>
 
 <p>페어트레이딩이 노리는 것은 <strong>공적분</strong>입니다. 같은 업종에서 같은 규제, 같은 금리, 같은 원자재 가격을 공유하는 두 기업이 그 후보입니다. 그래서 다음 클립에서 KB금융과 신한지주를 고른 것입니다.</p>
 <hr />
-<h3 id="3-스프레드와-z-score-벌어진-정도를-숫자-하나로">3. 스프레드와 Z-Score: 벌어진 정도를 숫자 하나로</h3>
+<h3 id="4-스프레드와-z-score-벌어진-정도를-숫자-하나로">4. 스프레드와 Z-Score: 벌어진 정도를 숫자 하나로</h3>
 <p>두 종목의 격차를 재는 가장 단순한 방법은 가격을 나누는 것입니다. 이 비율이 <strong>스프레드(Spread)</strong>입니다.</p>
 <div class="math-block">$$
 \text{Price Ratio}_t = \frac{\text{Price}_{A, t}}{\text{Price}_{B, t}}
@@ -2110,7 +2115,7 @@ $$</div>
 
 <p><strong>왜 60일, 왜 ±1.5인가</strong>: 60거래일은 약 3개월로, 분기 실적 한 사이클을 담으면서도 최근 흐름을 반영할 만큼 짧은 창입니다. ±1.5는 "너무 잦은 진입으로 수수료만 내는 것"과 "너무 드물어 기회를 놓치는 것" 사이의 교과서적 절충값입니다. 둘 다 정답이 아니라 출발점이며, Part 3에서 이런 값을 검증하는 법을 배웁니다.</p>
 <hr />
-<h3 id="4-치명적-리스크-구조적-결별structural-break과-하드스탑">4. 치명적 리스크: 구조적 결별(Structural Break)과 하드스탑</h3>
+<h3 id="5-치명적-리스크-구조적-결별structural-break과-하드스탑">5. 치명적 리스크: 구조적 결별(Structural Break)과 하드스탑</h3>
 <p>"언젠가 평균으로 돌아온다"는 믿음이 이 전략에서 가장 위험합니다. 한 기업에 횡령, 대규모 적자, 독점 신기술 격차처럼 <strong>본질적 변화</strong>가 생기면 두 기업의 격차는 영원히 벌어집니다. 이것이 <strong>구조적 결별</strong>이고, 공적분이 깨진 것입니다.</p>
 <p>이때 Z-Score는 계속 커지고, "더 벌어졌으니 더 좋은 기회"라고 읽으면 물타기가 됩니다. 그래서 프로 퀀트는 <strong><span class="math-inline">$|Z| \ge 3.0$</span>에 도달하면 이유를 묻지 않고 청산하는 하드스탑</strong>을 코드에 반드시 넣습니다. 평소 흔들림의 3배를 넘어 벌어졌다면 "이례적"이 아니라 "관계가 바뀐 것"으로 보는 규칙입니다.</p>
 <div class="table-wrapper"><table>
@@ -2144,7 +2149,7 @@ $$</div>
 </tbody>
 </table></div>
 <hr />
-<h3 id="5-한국에서는-어떻게-하나-공매도-대신-롱-온리-스위칭">5. 한국에서는 어떻게 하나: 공매도 대신 롱 온리 스위칭</h3>
+<h3 id="6-한국에서는-어떻게-하나-공매도-대신-롱-온리-스위칭">6. 한국에서는 어떻게 하나: 공매도 대신 롱 온리 스위칭</h3>
 <p>수강생분들이 가장 많이 묻는 질문입니다. <strong>"한국에서도 개인이 공매도할 수 있지 않나요?"</strong> 제도적으로는 가능하지만, 자동매매 관점에서는 현실적 장벽이 큽니다. 그래서 이 강의는 세 번째 방식을 씁니다.</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -2174,12 +2179,12 @@ $$</div>
 </table></div>
 <p>롱 온리 스위칭은 베타가 0이 아니므로 "완전한 시장 중립"은 아닙니다. 대신 <strong>두 종목 중 항상 상대적으로 싼 쪽을 들고 있는 상대가치 전략</strong>이 됩니다. 두 종목을 각각 단순 보유하는 것보다 나은지가 다음 클립 실습에서 확인할 기준입니다.</p>
 <hr />
-<h3 id="6-선택-헤지펀드는-왜-페어를-50개나-쓸까">6. (선택) 헤지펀드는 왜 페어를 50개나 쓸까</h3>
+<h3 id="7-선택-헤지펀드는-왜-페어를-50개나-쓸까">7. (선택) 헤지펀드는 왜 페어를 50개나 쓸까</h3>
 <p>오늘 수업 범위 밖이지만, 궁금해하실 질문이라 한 문단만 남깁니다.</p>
 <ul>
 <li><strong>단일 페어는 구조적 결별 한 번에 계좌가 흔들립니다.</strong> 그래서 헤지펀드는 섹터별로 수십 개 페어를 동시에 돌립니다. 한 페어의 승률 55~65%는 운에 흔들리지만, 수천 번의 거래로 쌓이면 통계로 수렴합니다. 이것이 <strong>대수의 법칙(Law of Large Numbers)</strong>입니다.</li>
 <li>정통 롱숏에서는 공매도로 들어온 현금 담보에 <strong>단기 국채 이자</strong>가 붙습니다. 헤지펀드의 시장 중립 수익 중 상당 부분은 이 이자이므로, 성과를 볼 때는 <strong>이자를 뺀 순수 알파</strong>로 봐야 합니다.</li>
-<li>이 방식은 실행 인프라와 비용 모델이 개인 범위를 넘어갑니다. 직접 돌려보고 싶은 분은 다음 클립 <strong>부록</strong>의 프롬프트로 해볼 수 있습니다.</li>
+<li>이 방식은 실행 인프라와 비용 모델이 개인 범위를 넘어가므로 이 강의에서는 다루지 않습니다.</li>
 </ul>
 <hr />
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>

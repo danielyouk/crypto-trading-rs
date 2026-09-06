@@ -1554,15 +1554,15 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
+            <a class="nav-heading level-3" href="#1-4단계-로드맵-아이디어에서-알고리즘-트레이딩까지">1. 4단계 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
             
-            <a class="nav-heading level-3" href="#1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</a>
+            <a class="nav-heading level-3" href="#2-변동성-돌파-전략vbo의-수학적-정의">2. 변동성 돌파 전략(VBO)의 수학적 정의</a>
             
-            <a class="nav-heading level-3" href="#2-직관적-손계산-예시">2. 직관적 손계산 예시</a>
+            <a class="nav-heading level-3" href="#3-직관적-손계산-예시">3. 직관적 손계산 예시</a>
             
-            <a class="nav-heading level-3" href="#3-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">3. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</a>
+            <a class="nav-heading level-3" href="#4-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">4. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</a>
             
-            <a class="nav-heading level-3" href="#4-변동성-돌파의-치명적-약점-윗꼬리-음봉과-횡보장-마찰">4. 변동성 돌파의 치명적 약점: 윗꼬리 음봉과 횡보장 마찰</a>
+            <a class="nav-heading level-3" href="#5-변동성-돌파의-치명적-약점-윗꼬리-음봉과-횡보장-마찰">5. 변동성 돌파의 치명적 약점: 윗꼬리 음봉과 횡보장 마찰</a>
             
             <a class="nav-heading level-2" href="#오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</a>
             
@@ -1999,13 +1999,13 @@ window.MathJax = {
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
-<p>클립 06에서 배운 원칙에 따라, 변동성 돌파 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
+<h3 id="1-4단계-로드맵-아이디어에서-알고리즘-트레이딩까지">1. 4단계 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
+<p>클립 06에서 정립한 4단계(<strong>아이디어 → 매매 규칙 → 알고리즘 → 알고리즘 트레이딩</strong>)에 따라, 변동성 돌파 전략이 구체적인 알고리즘 코드로 바뀌는 과정입니다. 2단계 매매 규칙은 클립 06과 같이 <strong>지표 · 진입·청산 · 위험관리</strong> 세 요소로 나눠 적었습니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>단계</th>
-<th>변환 항목</th>
+<th>내용</th>
 <th>변동성 돌파 전략(Volatility Breakout)의 구체적 정의</th>
 </tr>
 </thead>
@@ -2016,29 +2016,34 @@ window.MathJax = {
 <td>"하루 동안 가격이 전일 변동폭의 일정 비율(<span class="math-inline">$k$</span>) 이상 튀어 오르면, <strong>장 마감까지 강력한 당일 수급 관성(모멘텀)</strong>이 유지된다."</td>
 </tr>
 <tr>
-<td><strong>2단계: 지표화</strong></td>
-<td>수학적 데이터 정의</td>
+<td><strong>2단계: 매매 규칙 ① 지표</strong></td>
+<td>아이디어를 재는 숫자</td>
 <td>• 전일 변동폭: <span class="math-inline">$\text{Range}_{t-1} = \text{High}_{t-1} - \text{Low}_{t-1}$</span><br>• 당일 목표가: <span class="math-inline">$\text{Target}_t = \text{Open}_t + (\text{Range}_{t-1} \times k)$</span> (<span class="math-inline">$k=0.5$</span>)<br>• 추세 가드레일: 200일 이동평균선 (<span class="math-inline">$\text{SMA}_{200}$</span>)</td>
 </tr>
 <tr>
-<td><strong>3단계: 매매 규칙</strong></td>
-<td>진입 / 청산 / 위험관리</td>
-<td>• <strong>진입 조건</strong>: (당일 시가 <span class="math-inline">$\ge \text{SMA}_{200}$</span>) AND (장중 최고가 <span class="math-inline">$\ge \text{Target}_t$</span>) 만족 시 즉시 매수<br>• <strong>청산 조건</strong>: 익일 시가(09:00) 전량 시장가 매도 (최장 24시간 보유, 오버나이트 리스크 통제)</td>
+<td><strong>2단계: 매매 규칙 ② 진입·청산</strong></td>
+<td>언제 사고 파는지를 참/거짓으로</td>
+<td>• <strong>진입</strong>: (당일 시가 <span class="math-inline">$\ge \text{SMA}_{200}$</span>) AND (장중 최고가 <span class="math-inline">$\ge \text{Target}_t$</span>) 만족 시 즉시 매수<br>• <strong>청산</strong>: 익일 시가(09:00) 전량 시장가 매도</td>
 </tr>
 <tr>
-<td><strong>4단계: 알고리즘</strong></td>
+<td><strong>2단계: 매매 규칙 ③ 위험관리</strong></td>
+<td>얼마를 걸고 어디서 끊을지</td>
+<td>이 클립에서는 정하지 않습니다. 비중·손절 같은 위험관리는 <strong>Part 3(시장 변화·전략 점검·개선)</strong>에서 백테스트로 드러난 약점을 보며 자연스럽게 채웁니다</td>
+</tr>
+<tr>
+<td><strong>3단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
 <td><code>Target = df['Open'] + (df['High'].shift(1) - df['Low'].shift(1)) * 0.5</code><br><code>Trend_Filter = df['Open'] &gt;= df['SMA200'].shift(1)</code><br><code>Buy = Trend_Filter &amp; (df['High'] &gt;= Target)</code> ➔ 익일 시가 청산 및 왕복 0.25% 비용 차감</td>
 </tr>
 <tr>
-<td><strong>알고리즘 트레이딩</strong></td>
+<td><strong>4단계: 알고리즘 트레이딩</strong></td>
 <td>검증 및 실전 집행</td>
 <td>단독 VBO의 1,000회 잦은 거래세 마찰 진단 ➔ 200일선 결합으로 하락장 진입 원천 차단 ➔ Part 4 KIS API 조건부 자동 주문 연동</td>
 </tr>
 </tbody>
 </table></div>
 <hr />
-<h3 id="1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
+<h3 id="2-변동성-돌파-전략vbo의-수학적-정의">2. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
 <p>변동성 돌파 전략은 매일 아침 장 시작(09:00) 직후 <strong>'당일 목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수한 뒤 다음 날 장 시작 시 전량 매도하는 규칙 기반 단기 모멘텀 전략입니다.</p>
 <div class="math-block">$$
 \text{Range}_{t-1} = \text{High}_{t-1} - \text{Low}_{t-1} \quad (\text{전일 고가} - \text{전일 저가})
@@ -2064,7 +2069,7 @@ $$</div>
 </div>
 
 <hr />
-<h3 id="2-직관적-손계산-예시">2. 직관적 손계산 예시</h3>
+<h3 id="3-직관적-손계산-예시">3. 직관적 손계산 예시</h3>
 <p>변동성 돌파의 계산 원리는 매우 단순하여 누구나 암산으로 즉시 계산할 수 있습니다.</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -2108,7 +2113,7 @@ $$</div>
 </tbody>
 </table></div>
 <hr />
-<h3 id="3-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">3. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</h3>
+<h3 id="4-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">4. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</h3>
 <div class="compare-box">
   <div class="compare-card info">
     <div class="tag">일반적인 잔파동 (Noise Market)</div>
@@ -2129,7 +2134,7 @@ $$</div>
 </div>
 
 <hr />
-<h3 id="4-변동성-돌파의-치명적-약점-윗꼬리-음봉과-횡보장-마찰">4. 변동성 돌파의 치명적 약점: 윗꼬리 음봉과 횡보장 마찰</h3>
+<h3 id="5-변동성-돌파의-치명적-약점-윗꼬리-음봉과-횡보장-마찰">5. 변동성 돌파의 치명적 약점: 윗꼬리 음봉과 횡보장 마찰</h3>
 <p>세상에 완벽한 무적의 전략은 없습니다. 변동성 돌파 전략 역시 다음과 같은 명확한 약점을 가집니다.</p>
 <ol>
 <li><strong>가짜 돌파(False Breakout)와 윗꼬리 장대음봉</strong>: 장 초반에 반짝 급등하여 목표가를 뚫고 매수되었으나, 오후 들어 기관의 대량 차익실현 매물이 쏟아져 종가가 시가 아래로 폭락하는 경우 당일 큰 손실(-3% ~ -5%)을 입게 됩니다.</li>
