@@ -1562,6 +1562,8 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
+            <a class="nav-heading level-3" href="#0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
+            
             <a class="nav-heading level-3" href="#1-듀얼-모멘텀dual-momentum의-2중-필터링-구조">1. 듀얼 모멘텀(Dual Momentum)의 2중 필터링 구조</a>
             
             <a class="nav-heading level-3" href="#2-동적-자산배분의-마법-음-의-상관관계와-변동성-축소">2. 동적 자산배분의 마법 — 음(-)의 상관관계와 변동성 축소</a>
@@ -1982,6 +1984,45 @@ window.MathJax = {
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
+<h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
+<p>클립 06에서 정립한 원칙에 따라, 듀얼 모멘텀 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>변환 항목</th>
+<th>4대 ETF 듀얼 모멘텀 자산배분 전략의 구체적 정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1단계: 투자 아이디어</strong></td>
+<td>시장에 대한 직관/가설</td>
+<td>"가장 강하게 상승하는 1등 주식을 보유하되, <strong>주식 시장 전체가 침체에 빠지면 채권/현금으로 100% 피신하여 자산을 방어</strong>하자."</td>
+</tr>
+<tr>
+<td><strong>2단계: 지표화</strong></td>
+<td>수학적 데이터 정의</td>
+<td>최근 6개월(120거래일) 수익률 <span class="math-inline">$\text{Return}_{6M} = \frac{\text{Price}_t}{\text{Price}_{t-120}} - 1$</span><br>• 공격 자산 2종(나스닥100 <code>133690</code>, 코스피200 <code>069500</code>)<br>• 방어 자산 2종(미국채10년 <code>305080</code>, 단기채 <code>214980</code>)</td>
+</tr>
+<tr>
+<td><strong>3단계: 매매 규칙</strong></td>
+<td>진입 / 청산 / 위험관리</td>
+<td>• <strong>상대 모멘텀</strong>: 나스닥 vs 코스피 중 6개월 수익률 1위 자산 선정<br>• <strong>절대 모멘텀</strong>: 1위 자산 수익률 &gt; 단기채(금리)이면 익월 1위 자산 100% 보유<br>• <strong>수비 전환</strong>: 1위 자산조차 단기채보다 낮으면(절대 탈락), 미국채10년 vs 단기채 중 높은 쪽 100% 보유</td>
+</tr>
+<tr>
+<td><strong>4단계: 알고리즘</strong></td>
+<td>파이썬 코드 구현</td>
+<td>매월 마지막 거래일 종가로 120일 수익률 랭킹 계산 ➔ 익월 첫 거래일 시가에 포지션 교체 (Lookahead Bias 방지, 편도 0.1% 비용 차감)</td>
+</tr>
+<tr>
+<td><strong>알고리즘 트레이딩</strong></td>
+<td>검증 및 실전 집행</td>
+<td>10년 백테스트로 Sharpe 1.13+ 달성 확인 ➔ 월 1회 리밸런싱으로 일상생활과 병행 ➔ Part 4/5 2-Tier 월간 정책 승인 및 KIS API 자동 주문</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="1-듀얼-모멘텀dual-momentum의-2중-필터링-구조">1. 듀얼 모멘텀(Dual Momentum)의 2중 필터링 구조</h3>
 <p>듀얼 모멘텀은 두 가지 독립적인 모멘텀 판정 기준을 직렬로 결합하여 시장의 모든 국면에 대응합니다.</p>
 <div class="arch-grid">

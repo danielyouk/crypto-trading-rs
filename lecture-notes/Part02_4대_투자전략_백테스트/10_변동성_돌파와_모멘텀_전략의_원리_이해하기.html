@@ -1539,6 +1539,8 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
+            <a class="nav-heading level-3" href="#0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
+            
             <a class="nav-heading level-3" href="#1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</a>
             
             <a class="nav-heading level-3" href="#2-직관적-손계산-예시">2. 직관적 손계산 예시</a>
@@ -1982,6 +1984,45 @@ window.MathJax = {
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
+<h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
+<p>클립 06에서 배운 원칙에 따라, 변동성 돌파 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>변환 항목</th>
+<th>변동성 돌파 전략(Volatility Breakout)의 구체적 정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1단계: 투자 아이디어</strong></td>
+<td>시장에 대한 직관/가설</td>
+<td>"하루 동안 가격이 전일 변동폭의 일정 비율(<span class="math-inline">$k$</span>) 이상 튀어 오르면, <strong>장 마감까지 강력한 당일 수급 관성(모멘텀)</strong>이 유지된다."</td>
+</tr>
+<tr>
+<td><strong>2단계: 지표화</strong></td>
+<td>수학적 데이터 정의</td>
+<td>• 전일 변동폭: <span class="math-inline">$\text{Range}_{t-1} = \text{High}_{t-1} - \text{Low}_{t-1}$</span><br>• 당일 목표가: <span class="math-inline">$\text{Target}_t = \text{Open}_t + (\text{Range}_{t-1} \times k)$</span> (<span class="math-inline">$k=0.5$</span>)<br>• 추세 가드레일: 200일 이동평균선 (<span class="math-inline">$\text{SMA}_{200}$</span>)</td>
+</tr>
+<tr>
+<td><strong>3단계: 매매 규칙</strong></td>
+<td>진입 / 청산 / 위험관리</td>
+<td>• <strong>진입 조건</strong>: (당일 시가 <span class="math-inline">$\ge \text{SMA}_{200}$</span>) AND (장중 최고가 <span class="math-inline">$\ge \text{Target}_t$</span>) 만족 시 즉시 매수<br>• <strong>청산 조건</strong>: 익일 시가(09:00) 전량 시장가 매도 (최장 24시간 보유, 오버나이트 리스크 통제)</td>
+</tr>
+<tr>
+<td><strong>4단계: 알고리즘</strong></td>
+<td>파이썬 코드 구현</td>
+<td><code>Target = df['Open'] + (df['High'].shift(1) - df['Low'].shift(1)) * 0.5</code><br><code>Trend_Filter = df['Open'] &gt;= df['SMA200'].shift(1)</code><br><code>Buy = Trend_Filter &amp; (df['High'] &gt;= Target)</code> ➔ 익일 시가 청산 및 왕복 0.25% 비용 차감</td>
+</tr>
+<tr>
+<td><strong>알고리즘 트레이딩</strong></td>
+<td>검증 및 실전 집행</td>
+<td>단독 VBO의 1,000회 잦은 거래세 마찰 진단 ➔ 200일선 결합으로 하락장 진입 원천 차단 ➔ Part 4 KIS API 조건부 자동 주문 연동</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
 <p>변동성 돌파 전략은 매일 아침 장 시작(09:00) 직후 <strong>'당일 목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수한 뒤 다음 날 장 시작 시 전량 매도하는 규칙 기반 단기 모멘텀 전략입니다.</p>
 <div class="math-block">$$
@@ -2015,38 +2056,38 @@ $$</div>
 <tr>
 <th>항목</th>
 <th>계산 수식</th>
-<th>실제 가격 예시 (KODEX 레버리지)</th>
+<th>실제 가격 예시 (KODEX 200)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>어제 고가 (<span class="math-inline">$\text{High}_{t-1}$</span>)</strong></td>
 <td>전일 장중 최고 체결가</td>
-<td>20,000원</td>
+<td>35,000원</td>
 </tr>
 <tr>
 <td><strong>어제 저가 (<span class="math-inline">$\text{Low}_{t-1}$</span>)</strong></td>
 <td>전일 장중 최저 체결가</td>
-<td>19,000원</td>
+<td>34,000원</td>
 </tr>
 <tr>
 <td><strong>전일 변동폭 (<span class="math-inline">$\text{Range}_{t-1}$</span>)</strong></td>
-<td><span class="math-inline">$20,000 - 19,000$</span></td>
+<td><span class="math-inline">$35,000 - 34,000$</span></td>
 <td><strong>1,000원</strong></td>
 </tr>
 <tr>
 <td><strong>오늘 시가 (<span class="math-inline">$\text{Open}_t$</span>)</strong></td>
 <td>오늘 09:00 장 시작 가격</td>
-<td>19,500원</td>
+<td>34,500원</td>
 </tr>
 <tr>
 <td><strong>목표 매수가 (<span class="math-inline">$\text{Target}_t$</span>)</strong></td>
-<td><span class="math-inline">$19,500 + (1,000 \times 0.5)$</span></td>
-<td><strong>20,000원</strong></td>
+<td><span class="math-inline">$34,500 + (1,000 \times 0.5)$</span></td>
+<td><strong>35,000원</strong></td>
 </tr>
 <tr>
 <td><strong>시스템 행동</strong></td>
-<td>장중 가격 <span class="math-inline">$\ge 20,000$</span>원 도달 시</td>
+<td>장중 가격 <span class="math-inline">$\ge 35,000$</span>원 도달 시</td>
 <td><strong>즉시 시장가 매수 체결</strong></td>
 </tr>
 </tbody>
@@ -2080,12 +2121,15 @@ $$</div>
 <li><strong>박스권 횡보장에서의 거래세 누적</strong>: 박스권 장세에서는 목표가를 살짝 건드리고 제자리로 내려오는 매매가 반복되며, 연간 80~120회의 잦은 거래로 인해 <strong>증권거래세(0.15%)와 슬리피지가 계좌를 갉아먹는 현상</strong>이 발생합니다.</li>
 </ol>
 <blockquote>
-<p>💡 <strong>약점 극복의 열쇠</strong>: 다음 클립(11)에서는 KODEX 레버리지 ETF의 다년간 백테스트를 통해 이러한 약점 구간을 데이터로 직접 확인하고, <strong>"200일선 위에 있을 때만 변동성 돌파를 실행하는 이동평균 필터"</strong>를 결합하여 약점을 방어하는 퀀트 엔지니어링을 실습합니다.</p>
+<p>💡 <strong>약점 극복의 가드레일: 200일 이동평균 추세 필터</strong><br />
+• <strong>폭락 후 섣부른 재매수 방지</strong>: 주가가 200일선 아래로 폭락하면(예: 2020년 3월 코로나, 2022년 하락장), 단기적으로 변동성이 커져 당일 목표가 돌파가 자주 일어나더라도 <strong>시가가 200일선 아래에 머무는 동안에는 매수 조건이 잠겨(Lock-out) 신호가 0회</strong>로 차단됩니다.<br />
+• 즉, 하락장 바닥에서 손절과 재매수를 반복하며 계좌가 녹아내리는 치명적인 휩소를 원천 봉쇄합니다.<br />
+• 다음 클립(11)에서는 KODEX 200(069500) ETF의 10년 백테스트를 통해 이러한 필터 결합 효과를 직접 검증합니다.</p>
 </blockquote>
 <hr />
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
 <p>이 클립에서는 래리 윌리엄스 변동성 돌파 전략의 수식 구조와 목표 매수가 계산 원리, 그리고 당일 데이트레이딩의 장단점을 이론적으로 학습했습니다.</p>
-<p>실제 <strong>KODEX 레버리지 ETF 데이터를 활용해 10년(2016~2026년 8월 31일) 백테스트를 실행하고, 200일 이동평균 필터를 결합하여 성과를 극대화하는 실습(실습 05)</strong>은 바로 다음 클립인 <strong>[11_변동성_돌파_전략을_검증하고_약점_구간_찾기]</strong>에서 Claude Code와 함께 실행합니다.</p>
+<p>실제 <strong>KODEX 200(069500) ETF 데이터를 활용해 10년(2016~2026년 8월 31일) 백테스트를 실행하고, 200일 이동평균 필터를 결합하여 성과를 극대화하는 실습(실습 05)</strong>은 바로 다음 클립인 <strong>[11_변동성_돌파_전략을_검증하고_약점_구간_찾기]</strong>에서 Claude Code와 함께 실행합니다.</p>
 <table>
 <thead>
 <tr>
@@ -2098,7 +2142,7 @@ $$</div>
 <tr>
 <td><strong>핵심 목표</strong></td>
 <td>Range 수식, <span class="math-inline">$k=0.5$</span> 목표가 손계산, 모멘텀 이해</td>
-<td>KODEX 레버리지 대상 백테스트 엔진 구동</td>
+<td>KODEX 200 대상 백테스트 엔진 구동</td>
 </tr>
 <tr>
 <td><strong>전략 비교</strong></td>
@@ -2113,7 +2157,7 @@ $$</div>
 <tr>
 <td><strong>결과 산출물</strong></td>
 <td>목표가 산출 논리 및 오버나이트 통제 원리 정립</td>
-<td><strong>성과 비교표 + 누적 수익률·MDD 2-패널 차트 PNG</strong></td>
+<td><strong>성과 비교표 + 대화형 Plotly HTML 2-패널 차트</strong></td>
 </tr>
 </tbody>
 </table>
@@ -2122,8 +2166,8 @@ $$</div>
 <ul>
 <li class="check-item"><input type="checkbox"> 변동성 돌파 전략의 목표가 수식(<span class="math-inline">$\text{Target} = \text{Open} + \text{Range} \times k$</span>)의 의미를 정확히 이해했다.</li>
 <li class="check-item"><input type="checkbox"> 당일 장중 돌파 시 매수하고 익일 시가에 청산하는 오버나이트 리스크 통제 원리를 파악했다.</li>
-<li class="check-item"><input type="checkbox"> 변동성 돌파의 주요 위험 요인(가짜 돌파, 윗꼬리 음봉, 고회전 거래세 마찰)을 이해했다.</li>
-<li class="check-item"><input type="checkbox"> 다음 클립(11)에서 KODEX 레버리지 백테스트와 이동평균 필터 개선 효과를 직접 검증할 준비를 마쳤다.</li>
+<li class="check-item"><input type="checkbox"> 200일 이동평균선 필터가 하락장 폭락 시 섣부른 재진입 휩소를 차단하는 가드레일 역할을 이해했다.</li>
+<li class="check-item"><input type="checkbox"> 다음 클립(11)에서 KODEX 200 백테스트와 이동평균 필터 개선 효과를 직접 검증할 준비를 마쳤다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>

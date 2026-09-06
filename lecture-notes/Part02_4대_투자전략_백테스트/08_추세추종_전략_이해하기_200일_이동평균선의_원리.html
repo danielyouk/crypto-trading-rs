@@ -1516,6 +1516,8 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
+            <a class="nav-heading level-3" href="#0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
+            
             <a class="nav-heading level-3" href="#1-200일-이동평균선sma-200이란-무엇인가">1. 200일 이동평균선(SMA 200)이란 무엇인가?</a>
             
             <a class="nav-heading level-3" href="#2-추세추종의-핵심-철학-손절은-짧게-수익은-길게-cut-losses-short-let-profits-run">2. 추세추종의 핵심 철학: 손절은 짧게, 수익은 길게 (Cut Losses Short, Let Profits Run)</a>
@@ -1983,6 +1985,45 @@ window.MathJax = {
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
+<h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
+<p>클립 06에서 정립한 원칙에 따라, 추세추종 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>변환 항목</th>
+<th>추세추종 전략(Trend Following)의 구체적 정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1단계: 투자 아이디어</strong></td>
+<td>시장에 대한 직관/가설</td>
+<td>"주가가 오를 때는 관성으로 계속 오르고, 내릴 때는 깊게 폭락하니 <strong>상승 추세에만 올라타고 하락장엔 현금으로 피신</strong>하자."</td>
+</tr>
+<tr>
+<td><strong>2단계: 지표화</strong></td>
+<td>수학적 데이터 정의</td>
+<td>시장 참여자들의 10개월 평균 매수 단가인 <strong>200일 단순 이동평균선(<span class="math-inline">$\text{SMA}_{200}$</span>)</strong> 산출</td>
+</tr>
+<tr>
+<td><strong>3단계: 매매 규칙</strong></td>
+<td>진입 / 청산 / 위험관리</td>
+<td>• <strong>진입 조건</strong>: 종가가 200일선을 상향 돌파 시 익일 시가 매수<br>• <strong>청산/손절 조건</strong>: 종가가 200일선을 하향 이탈 시 익일 시가 전량 매도 (현금 100% 피신)</td>
+</tr>
+<tr>
+<td><strong>4단계: 알고리즘</strong></td>
+<td>파이썬 코드 구현</td>
+<td><code>df['SMA200'] = df['Close'].rolling(200).mean()</code><br><code>Signal = (Close &gt; SMA200).shift(1)</code> (Lookahead Bias 방지)<br>왕복 0.25% 거래비용 차감 및 일별 수익률 시뮬레이션</td>
+</tr>
+<tr>
+<td><strong>알고리즘 트레이딩</strong></td>
+<td>검증 및 실전 집행</td>
+<td>10년 백테스트로 횡보장 휩소(Whipsaw) 약점 진단 ➔ Part 3 완충 밴드 필터로 개선 ➔ Part 4 KIS API 자동 주문 연동</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="1-200일-이동평균선sma-200이란-무엇인가">1. 200일 이동평균선(SMA 200)이란 무엇인가?</h3>
 <p>1년은 약 252 거래일입니다. 200일 이동평균선은 <strong>약 10개월간 시장 참여자들이 해당 자산을 매수한 평균 단가</strong>를 나타냅니다.</p>
 <div class="math-block">$$

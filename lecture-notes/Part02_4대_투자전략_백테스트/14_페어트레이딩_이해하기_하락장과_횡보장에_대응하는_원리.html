@@ -1585,6 +1585,8 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
+            <a class="nav-heading level-3" href="#0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</a>
+            
             <a class="nav-heading level-3" href="#1-시장-중립market-neutral이란-무엇인가">1. 시장 중립(Market Neutral)이란 무엇인가?</a>
             
             <a class="nav-heading level-3" href="#2-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">2. 상관관계(Correlation) vs 공적분(Cointegration) — 퀀트의 흔한 착각</a>
@@ -1983,6 +1985,45 @@ window.MathJax = {
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
+<h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
+<p>클립 06에서 정립한 원칙에 따라, 페어트레이딩 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>변환 항목</th>
+<th>통계적 차익거래 페어트레이딩(Pairs Trading)의 구체적 정의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1단계: 투자 아이디어</strong></td>
+<td>시장에 대한 직관/가설</td>
+<td>"같은 비즈니스 모델을 가진 두 우량 은행은 장기적으로 함께 움직이며, <strong>일시적인 가격 괴리(스프레드)는 결국 고무줄처럼 평균으로 되돌아온다</strong>."</td>
+</tr>
+<tr>
+<td><strong>2단계: 지표화</strong></td>
+<td>수학적 데이터 정의</td>
+<td>• 가격 비율: <span class="math-inline">$\text{Price Ratio} = \frac{\text{Price}_A}{\text{Price}_B}$</span><br>• 정규화 점수: 60일 롤링 Z-Score <span class="math-inline">$Z = \frac{\text{Ratio} - \mu_{60}}{\sigma_{60}}$</span></td>
+</tr>
+<tr>
+<td><strong>3단계: 매매 규칙</strong></td>
+<td>진입 / 청산 / 위험관리</td>
+<td>• <strong>스위칭 진입</strong>: <span class="math-inline">$Z \le -1.5$</span> (A 저평가) ➔ A 100% 매수 / <span class="math-inline">$Z \ge +1.5$</span> (B 저평가) ➔ B 100% 매수<br>• <strong>유지/청산</strong>: <span class="math-inline">$-0.5 < Z < +0.5$</span> (균형 복귀) ➔ 기존 포지션 유지<br>• <strong>위험관리(가드레일)</strong>: <span class="math-inline">$Z \ge \pm 3.0$</span> (펀더멘털 결별) 발생 시 하드 스탑 손절</td>
+</tr>
+<tr>
+<td><strong>4단계: 알고리즘</strong></td>
+<td>파이썬 코드 구현</td>
+<td><code>Ratio = df['A'] / df['B']</code><br><code>Z = (Ratio - Ratio.rolling(60).mean()) / Ratio.rolling(60).std()</code><br>임계선 돌파 시 익일 시가 스위칭(Lookahead Bias 방지) 및 편도 0.15% 거래비용 차감</td>
+</tr>
+<tr>
+<td><strong>알고리즘 트레이딩</strong></td>
+<td>검증 및 실전 집행</td>
+<td>코스피 급락장에서도 시장 중립 알파 확인 ➔ Part 4/5 2-Tier 일간 모니터링 및 KIS API 스위칭 자동 주문</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="1-시장-중립market-neutral이란-무엇인가">1. 시장 중립(Market Neutral)이란 무엇인가?</h3>
 <p>일반적인 주식 투자는 코스피 지수가 폭락하면 아무리 좋은 종목도 함께 떨어지는 '시장 위험(Beta Risk)'에 노출됩니다.<br />
 하지만 페어트레이딩은 <strong>고평가된 종목을 매도(또는 비중 축소)하고, 저평가된 종목을 매수</strong>하여 시장 전체의 등락을 서로 상쇄시킵니다.</p>
