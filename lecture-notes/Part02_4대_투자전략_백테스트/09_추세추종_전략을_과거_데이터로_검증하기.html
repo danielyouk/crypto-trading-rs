@@ -1526,11 +1526,11 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-백테스트-시뮬레이션의-계산-논리">1. 백테스트 시뮬레이션의 계산 논리</a>
             
-            <a class="nav-heading level-3" href="#2-실행-전-예상-단순-보유-vs-추세추종-무엇이-좋아지고-무엇이-나빠질까">2. 실행 전 예상: 단순 보유 vs 추세추종 — 무엇이 좋아지고 무엇이 나빠질까?</a>
+            <a class="nav-heading level-3" href="#2-추세추종의-3대-시장-국면과-자산-곡선-메커니즘">2. 추세추종의 3대 시장 국면과 자산 곡선 메커니즘</a>
             
             <a class="nav-heading level-3" href="#3-성과표를-읽는-세-가지-질문">3. 성과표를 읽는 세 가지 질문</a>
             
-            <a class="nav-heading level-3" href="#4-같은-규칙-다른-시장-미국-spy-30년을-나란히-놓으면">4. 같은 규칙, 다른 시장 — 미국 SPY 30년을 나란히 놓으면</a>
+            <a class="nav-heading level-3" href="#4-시장-구조의-차이-미국spy-vs-한국kodex-200">4. 시장 구조의 차이: 미국(SPY) vs 한국(KODEX 200)</a>
             
             <a class="nav-heading level-2" href="#실습-실습-04-추세추종-백테스트-한국-10년-미국-30년">실습 — 실습 04: 추세추종 백테스트 — 한국 10년, 미국 30년</a>
             
@@ -1977,7 +1977,7 @@ window.MathJax = {
       <main>
         <h2 id="이번-클립에서-만들-것-실습-편">이번 클립에서 만들 것 (실습 편)</h2>
 <p>클립 08에서 200일선의 <strong>원리</strong>를 배웠다면, 이 클립에서는 그 규칙을 <strong>실제 거래 가능한 ETF인 KODEX 200(069500)</strong>에 10년간 기계적으로 적용했을 때 어떤 성적표가 나오는지 Claude Code로 직접 확인합니다. 클립 07에서 배운 <strong>CAGR, MDD, 샤프 지수, 승률</strong>이 처음으로 여러분 화면에 숫자로 찍히는 순간입니다.</p>
-<p>그리고 한 걸음 더 갑니다. <strong>똑같은 규칙, 똑같은 코드</strong>를 미국 <strong>SPY(S&amp;P 500 ETF) 30년</strong>에 돌려 한국 결과와 나란히 놓습니다. 규칙도 비용도 같은데 결과가 정반대로 나오는 것을 보면, 성과를 가르는 것이 "규칙"이 아니라 <strong>"시장에 따라갈 추세가 있었는가"</strong>라는 사실이 숫자로 드러납니다.</p>
+<p>그리고 한 걸음 더 나아가, <strong>동일한 엔진을 미국 SPY(S&amp;P 500 ETF)</strong>에도 실행해 봅니다. 같은 규칙이라도 시장의 추세 구조에 따라 결과가 어떻게 갈리는지 여러분 화면에서 직접 대조합니다.</p>
 <blockquote>
 <p>💡 <strong>수강생 안심 안내</strong>: 백테스트 파이썬 코드를 외울 필요가 없습니다. 우리는 백테스트 엔진에 <strong>"매매 대상, 신호 조건, 체결 시점(익일 시가), 왕복 거래비용 0.25%(슬리피지 0.1% + 수수료·세금 0.15%)"</strong>를 명확하게 전달하고, 출력된 성과표를 읽고 판단하는 퀀트 CIO의 역할을 수행합니다.</p>
 </blockquote>
@@ -2012,7 +2012,7 @@ window.MathJax = {
 </tr>
 <tr>
 <td><strong>시장 비교 (Step 2)</strong></td>
-<td>같은 엔진을 <strong>미국 SPY 30년</strong>(1994~2024)에 재실행 — 규칙과 비용은 고정, 대상·기간만 바꿔 한국과 나란히 비교</td>
+<td>같은 엔진을 <strong>미국 SPY</strong>(1994~2024)에 재실행 — 규칙과 비용은 고정, 대상·기간만 바꿔 한국과 비교</td>
 </tr>
 </tbody>
 </table>
@@ -2033,35 +2033,141 @@ $$</div>
 <p>⚠️ <strong>미래 데이터 참조 편향(Lookahead Bias) 방지</strong>: 오늘(t) 종가로 계산된 신호는 내일(t+1)부터 적용되어야 합니다. 오늘 신호로 오늘 수익을 얻는 것으로 계산하면 백테스트가 비현실적으로 과대 포장됩니다.</p>
 </blockquote>
 <hr />
-<h3 id="2-실행-전-예상-단순-보유-vs-추세추종-무엇이-좋아지고-무엇이-나빠질까">2. 실행 전 예상: 단순 보유 vs 추세추종 — 무엇이 좋아지고 무엇이 나빠질까?</h3>
-<p>백테스트를 돌리기 전에 먼저 예상을 적어 두세요. 결과가 나온 뒤 예상과 비교하는 습관이 성과표를 읽는 힘을 키웁니다.</p>
-<div class="compare-box">
-  <div class="compare-card info">
-    <div class="tag">단순 보유 (Buy & Hold)</div>
-    <div class="steps">
-      • 시장이 오를 때도, 반토막 날 때도 100% 포지션 유지.<br>
-      • 2020년, 2022년 폭락장을 온몸으로 맞음.<br>
-      • <strong>예상 MDD: -35% ~ -45%</strong> (심리적 고통 극심).<br>
-      • 거래가 없으므로 <strong>거래비용 0</strong>.
-    </div>
+<h3 id="2-추세추종의-3대-시장-국면과-자산-곡선-메커니즘">2. 추세추종의 3대 시장 국면과 자산 곡선 메커니즘</h3>
+<p>200일선 추세추종이 시장 국면에 따라 어떻게 움직이고, 왜 단순 보유나 비용 차감 전후(Gross vs Net)로 자산 곡선이 갈라지는지 아래 개념도로 한눈에 파악할 수 있습니다.</p>
+<div class="chart-container" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:24px 16px; margin:24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); overflow-x:auto;">
+<svg viewBox="0 0 800 440" width="100%" height="auto" style="font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display:block;">
+  <defs>
+    <linearGradient id="bullGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.01"/>
+    </linearGradient>
+    <linearGradient id="bearGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0.01"/>
+    </linearGradient>
+    <linearGradient id="sideGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.01"/>
+    </linearGradient>
+    <marker id="arrowUp" markerWidth="6" markerHeight="6" refX="3" refY="6" orient="auto">
+      <polygon points="0,6 3,0 6,6" fill="#10b981"/>
+    </marker>
+    <marker id="arrowDown" markerWidth="6" markerHeight="6" refX="3" refY="0" orient="auto">
+      <polygon points="0,0 3,6 6,0" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <!-- Background Grids & Sections -->
+  <rect x="50" y="35" width="230" height="155" fill="url(#bullGrad)" rx="4"/>
+  <rect x="280" y="35" width="230" height="155" fill="url(#bearGrad)" rx="4"/>
+  <rect x="510" y="35" width="240" height="155" fill="url(#sideGrad)" rx="4"/>
+
+  <!-- Section Borders -->
+  <line x1="280" y1="35" x2="280" y2="395" stroke="#cbd5e1" stroke-dasharray="3,3" stroke-width="1"/>
+  <line x1="510" y1="35" x2="510" y2="395" stroke="#cbd5e1" stroke-dasharray="3,3" stroke-width="1"/>
+
+  <!-- Section Labels Top -->
+  <text x="165" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#047857">① 강력한 상승 추세 국면</text>
+  <text x="395" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">② 대세 하락 / 폭락 국면</text>
+  <text x="630" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">③ 박스권 횡보 국면 (휩소)</text>
+
+  <!-- Panel Labels -->
+  <text x="50" y="52" font-size="11" font-weight="700" fill="#475569">[패널 1] 시장 가격 vs 200일선</text>
+  <text x="50" y="235" font-size="11" font-weight="700" fill="#475569">[패널 2] 전략 vs 보유 자산 곡선 (개념도)</text>
+
+  <!-- Panel 1 Axes -->
+  <line x1="50" y1="190" x2="750" y2="190" stroke="#94a3b8" stroke-width="1"/>
+  <line x1="50" y1="35" x2="50" y2="190" stroke="#94a3b8" stroke-width="1"/>
+
+  <!-- Panel 1 Curves -->
+  <!-- SMA 200 Line (Orange Dashed) -->
+  <path d="M 50 150 C 120 145, 200 100, 280 85 C 340 75, 420 120, 510 140 C 580 145, 660 140, 750 142" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,4"/>
+
+  <!-- Price Line (Dark Blue) -->
+  <path d="M 50 165 Q 70 160 90 148 T 160 100 T 230 70 T 280 55 C 310 55, 330 95, 340 105 C 370 140, 440 180, 510 175 C 540 170, 560 125, 580 130 C 600 135, 620 160, 640 155 C 660 150, 680 125, 700 130 C 720 135, 740 155, 750 145" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+
+  <!-- Signals in Panel 1 -->
+  <!-- Golden cross at x=90, y=148 -->
+  <circle cx="90" cy="148" r="4" fill="#10b981"/>
+  <path d="M 90 170 L 90 156" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowUp)"/>
+  <text x="90" y="182" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">골든크로스(매수)</text>
+
+  <!-- Death cross at x=340, y=105 -->
+  <circle cx="340" cy="105" r="4" fill="#ef4444"/>
+  <path d="M 340 85 L 340 99" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+  <text x="340" y="80" text-anchor="middle" font-size="10" font-weight="700" fill="#b91c1c">데드크로스(매도·현금화)</text>
+
+  <!-- Whipsaw Marks in Panel 1 -->
+  <circle cx="568" cy="136" r="3" fill="#f59e0b"/>
+  <circle cx="612" cy="143" r="3" fill="#f59e0b"/>
+  <circle cx="688" cy="133" r="3" fill="#f59e0b"/>
+  <text x="630" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">잦은 거짓 돌파 (Whipsaw)</text>
+
+  <!-- Status badges in Panel 1 -->
+  <rect x="130" y="55" width="100" height="20" rx="3" fill="#d1fae5" stroke="#10b981" stroke-width="1"/>
+  <text x="180" y="69" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46">보유 상태 (포지션 1)</text>
+
+  <rect x="360" y="130" width="120" height="20" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1"/>
+  <text x="420" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="#991b1b">현금 100% 피신 (포지션 0)</text>
+
+  <!-- Panel 2: Equity Curves -->
+  <line x1="50" y1="395" x2="750" y2="395" stroke="#94a3b8" stroke-width="1"/>
+  <line x1="50" y1="240" x2="50" y2="395" stroke="#94a3b8" stroke-width="1"/>
+
+  <!-- Buy & Hold Curve (Gray Dashed) -->
+  <path d="M 50 370 Q 70 365 90 355 T 160 310 T 230 280 T 280 265 C 310 265, 330 305, 340 315 C 370 350, 440 390, 510 385 C 540 380, 580 350, 640 370 T 750 360" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4,3"/>
+
+  <!-- Strategy Gross (Green Solid) -->
+  <path d="M 50 370 L 90 370 T 160 310 T 230 280 T 280 265 L 340 315 L 510 315 L 580 310 L 640 320 L 700 315 L 750 318" fill="none" stroke="#10b981" stroke-width="2.5"/>
+
+  <!-- Strategy Net (Blue Solid with Cost Drag in Sideways) -->
+  <path d="M 50 370 L 90 370 T 160 310 T 230 280 T 280 265 L 340 318 L 510 318 L 580 325 L 640 345 L 700 355 L 750 368" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+
+  <!-- Annotations in Panel 2 -->
+  <rect x="365" y="275" width="110" height="34" rx="4" fill="#ffffff" stroke="#10b981" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.05))"/>
+  <text x="420" y="290" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">폭락장 방어 성공</text>
+  <text x="420" y="303" text-anchor="middle" font-size="9" fill="#475569">현금 보유로 MDD 축소</text>
+
+  <path d="M 450 350 L 450 378" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+  <text x="450" y="344" text-anchor="middle" font-size="9" font-weight="700" fill="#b91c1c">단순 보유 -50% 폭락</text>
+
+  <rect x="580" y="255" width="140" height="34" rx="4" fill="#ffffff" stroke="#2563eb" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.05))"/>
+  <text x="650" y="270" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">횡보장 마찰 비용 누적</text>
+  <text x="650" y="283" text-anchor="middle" font-size="9" fill="#64748b">잦은 매매로 Net 계좌 침하</text>
+
+  <!-- Legend Bottom -->
+  <g transform="translate(140, 418)">
+    <line x1="0" y1="6" x2="24" y2="6" stroke="#64748b" stroke-width="2" stroke-dasharray="4,3"/>
+    <text x="30" y="10" font-size="11" fill="#475569">단순 보유 (Buy &amp; Hold)</text>
+
+    <line x1="180" y1="6" x2="204" y2="6" stroke="#10b981" stroke-width="2.5"/>
+    <text x="210" y="10" font-size="11" fill="#065f46" font-weight="700">전략 Gross (비용 전)</text>
+
+    <line x1="360" y1="6" x2="384" y2="6" stroke="#2563eb" stroke-width="2.5"/>
+    <text x="390" y="10" font-size="11" fill="#1e40af" font-weight="700">전략 Net (비용 차감 후)</text>
+  </g>
+</svg>
+</div>
+
+<div class="architecture-grid">
+  <div class="arch-card">
+    <div class="card-title">① 상승 추세 국면 (수익 추종)</div>
+    <div class="card-desc">골든크로스 이후 200일선 위에서 포지션을 100% 유지하며 <strong>시장 상승의 대부분을 함께 향유</strong>합니다.</div>
   </div>
-  <div class="compare-card good">
-    <div class="tag">200일 이평 추세추종 전략</div>
-    <div class="steps">
-      • 대세 하락 국면에서는 현금 100%로 전환 ➔ <strong>MDD는 단순 보유보다 확실히 낮아질 것 (-20% ~ -35%)</strong>. 단, 2020년 3월처럼 3주 만에 끝나는 급락은 200일선이 느려서 일부만 피함.<br>
-      • 대신 횡보장에서는 200일선을 잦게 넘나들며 <strong>수십 회의 휩소 매매</strong> 발생.<br>
-      • 매 거래마다 0.25%가 빠지므로 <strong>Gross와 Net의 차이가 벌어짐</strong>.<br>
-      • <strong>예상 결론</strong>: "덜 잃는 데는 성공, 더 버는 데는 실패"일 가능성 높음.
-    </div>
+  <div class="arch-card">
+    <div class="card-title">② 대세 하락 국면 (MDD 방어)</div>
+    <div class="card-desc">데드크로스 발생 즉시 <strong>현금 100%로 피신</strong>하여 단순 보유가 -50% 폭락할 때 자산 가치를 수평으로 지켜냅니다.</div>
+  </div>
+  <div class="arch-card">
+    <div class="card-title">③ 횡보 국면 (휩소 마찰)</div>
+    <div class="card-desc">200일선 주변에서 거짓 돌파가 반복되어 잦은 진입·손절이 발생하며, <strong>매매비용(세금·수수료) 차감 후 계좌가 점진적으로 깎입니다</strong>.</div>
   </div>
 </div>
 
-<blockquote>
-<p>⚠️ <strong>미리 알려드립니다</strong>: 클립 07에서 배운 현실적 기준(단일 전략 MDD -20~-30%)을 기억하세요. 한국 시장에서 200일선 하나만으로 MDD -15%를 만드는 것은 비현실적입니다. 이 클립의 목표는 "추세추종이 최고임을 증명"하는 것이 아니라, <strong>성과표를 정직하게 읽고 약점을 찾아내는 것</strong>입니다.</p>
-</blockquote>
 <hr />
 <h3 id="3-성과표를-읽는-세-가지-질문">3. 성과표를 읽는 세 가지 질문</h3>
-<p>결과가 나오면 아래 순서로만 읽습니다. 수익률부터 보지 마세요.</p>
+<p>백테스트를 실행한 뒤 Claude Code 화면에 출력된 성과표는 아래 세 가지 질문 순서대로 읽습니다.</p>
 <table>
 <thead>
 <tr>
@@ -2076,148 +2182,56 @@ $$</div>
 <td><strong>①</strong></td>
 <td><strong>MDD가 줄었나?</strong></td>
 <td>단순 보유 MDD vs 전략 MDD</td>
-<td>절반 이하로 줄었으면 "방어 성공"</td>
+<td>대세 하락장에서 현금 피신으로 낙폭을 확실히 방어했는가</td>
 </tr>
 <tr>
 <td><strong>②</strong></td>
 <td><strong>비용 후에도 남나?</strong></td>
 <td>Gross CAGR vs <strong>Net CAGR</strong></td>
-<td>Net이 0% 근처면 "휩소에 비용을 다 뜯긴 것"</td>
+<td>거래비용(왕복 0.25%) 차감 후에도 계좌가 생존하는가</td>
 </tr>
 <tr>
 <td><strong>③</strong></td>
 <td><strong>어디서 약했나?</strong></td>
 <td>언더워터 플롯 + 거래 횟수·승률</td>
-<td>거래 수십 회·승률 30% 이하면 "횡보장 톱질"</td>
+<td>횡보 구간에서 잦은 매매와 마찰 손실이 누적되었는가</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>💡 <strong>강사 사전 시연 결과 미리보기 (KODEX 200, 2014~2024, 11년)</strong>: 60회 거래(연 5.5회) · 승률 13% · 단순 보유 MDD -41% → 전략 MDD -31% · 단순 보유 CAGR +2.0% · 전략 Gross CAGR +0.4% → <strong>Net CAGR -0.9%</strong>. "덜 잃었지만 벌지 못했고, 비용까지 빼면 오히려 잃었다"는 이 결과가 바로 클립 10~15에서 <strong>나머지 세 전략</strong>을, Part 3에서 <strong>완충 밴드 필터</strong>를 배워야 하는 이유입니다. 여러분의 숫자는 데이터 출처와 실행 날짜에 따라 다르겠지만, 세 질문의 결론은 비슷하게 나올 것입니다.</p>
-</blockquote>
 <hr />
-<h3 id="4-같은-규칙-다른-시장-미국-spy-30년을-나란히-놓으면">4. 같은 규칙, 다른 시장 — 미국 SPY 30년을 나란히 놓으면</h3>
-<p>한국 결과만 보면 "200일선 전략은 쓸모없다"로 끝나기 쉽습니다. 그래서 <strong>규칙·코드·거래비용은 그대로 두고 대상과 기간 두 값만 바꿔</strong> 미국 SPY에 다시 돌립니다. 비용까지 같게 두는 이유는 하나입니다 — 그래야 결과 차이를 <strong>오직 시장의 차이</strong>로 읽을 수 있습니다. 아래는 강사가 사전에 돌린 결과입니다(가격 기준, 배당 제외).</p>
-<p><strong>왜 SPY, 왜 1994년부터인가</strong>: SPY는 S&amp;P 500을 그대로 복제하는, 세계에서 가장 많이 거래되는 ETF입니다. 1993년 1월에 상장했고 200일선 계산에 첫 200거래일이 소모되므로 <strong>1994년이 첫 완전한 해</strong>입니다. 이 30년 안에 <strong>2000년 IT 버블, 2008년 금융위기, 2020년 코로나, 2022년 금리 인상</strong> 네 번의 하락장이 모두 들어 있습니다.</p>
-<p><strong>미국 주식 거래비용은 정말 0에 가까운가</strong>: "미국 주식은 수수료 0"이라는 말은 <strong>미국 현지 증권사</strong>(Schwab, Fidelity 등) 이야기입니다. 한국에서 한국 증권사의 해외주식 서비스로 SPY를 사면 사정이 다릅니다.</p>
+<h3 id="4-시장-구조의-차이-미국spy-vs-한국kodex-200">4. 시장 구조의 차이: 미국(SPY) vs 한국(KODEX 200)</h3>
+<p>동일한 200일선 규칙과 비용을 미국 시장과 한국 시장에 각각 적용했을 때 결과가 달라지는 이유는 <strong>시장의 장기 추세 구조</strong> 때문입니다.</p>
 <table>
 <thead>
 <tr>
-<th>누가 어디서 매매하나</th>
-<th>편도 수수료</th>
-<th>거래세</th>
-<th>왕복 비용 (슬리피지 0.1% 포함)</th>
+<th>비교 항목</th>
+<th>미국 시장 (SPY / S&amp;P 500)</th>
+<th>한국 시장 (KODEX 200 / KOSPI)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>한국 투자자 → <strong>한국 증권사</strong> 해외주식</td>
-<td>기본 약 0.25%, 비대면·이벤트 우대 시 <strong>0.07~0.1%</strong></td>
-<td>없음 (매도 시 SEC Fee 0.003% 안팎만)</td>
-<td><strong>약 0.25~0.6%</strong> + 달러 환전 스프레드 별도</td>
+<td><strong>장기 추세 구조</strong></td>
+<td><strong>강력한 장기 우상향 추세</strong><br>상승 추세 기간이 길어 거래 횟수가 적고 추세 지속성이 높음</td>
+<td><strong>박스권 횡보장 빈번</strong><br>200일선 근처를 잦게 넘나드는 톱니 구간 다수</td>
 </tr>
 <tr>
-<td>한국 투자자 → <strong>한국 증권사</strong> 국내주식 (KODEX 200)</td>
-<td>약 0.015% 이하</td>
-<td><strong>매도 시 0.15%</strong></td>
-<td><strong>약 0.25%</strong></td>
+<td><strong>거래비용 환경</strong></td>
+<td>거래세 없음 (SEC Fee 0.003% 안팎)<br>한국 증권사 해외주식 수수료 고려 시 왕복 약 0.25%</td>
+<td><strong>증권거래세 부담 (매도 시 0.15%)</strong><br>잦은 휩소 매매 시 거래세로 마찰 비용 누적</td>
 </tr>
 <tr>
-<td>미국 거주자 → 미국 현지 증권사</td>
-<td>0</td>
-<td>없음 (SEC Fee만)</td>
-<td>약 0.03%</td>
+<td><strong>추세추종의 정체</strong></td>
+<td><strong>위험 관리 도구 (MDD 대폭 방어)</strong><br>대세 하락장을 회피하여 최악의 낙폭을 크게 축소</td>
+<td><strong>횡보장 휩소 극복 과제</strong><br>추세추종 단독 사용 시 횡보장 마찰 손실 발생</td>
+</tr>
+<tr>
+<td><strong>퀀트 대응 전략</strong></td>
+<td>200일선 기반 자산배분 및 위험 관리</td>
+<td><strong>완충 밴드 필터(Part 3) 및 4대 전략 분산 필수</strong></td>
 </tr>
 </tbody>
 </table>
-<p>즉 이 강의를 듣는 한국 투자자 기준으로는 <strong>미국 ETF도 왕복 0.25% 안팎이 현실적</strong>이고, 그래서 Step 2도 한국과 똑같이 0.25%를 씁니다. 미국은 "거래세가 없다"는 것이지 "비용이 없다"는 것이 아닙니다.</p>
-<table>
-<thead>
-<tr>
-<th>항목</th>
-<th>🇰🇷 KODEX 200 (2014~2024, 11년)</th>
-<th>🇺🇸 SPY (1994~2024, 31년)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>왕복 거래비용</strong></td>
-<td><strong>0.25%</strong></td>
-<td><strong>0.25%</strong> (한국 증권사 기준, 동일)</td>
-</tr>
-<tr>
-<td><strong>단순 보유</strong> CAGR / MDD</td>
-<td>+2.0% / <strong>-41%</strong></td>
-<td>+8.5% / <strong>-57%</strong></td>
-</tr>
-<tr>
-<td><strong>전략 Gross</strong> CAGR / MDD</td>
-<td>+0.4% / -31%</td>
-<td>+6.8% / -29%</td>
-</tr>
-<tr>
-<td><strong>전략 Net</strong> CAGR / MDD</td>
-<td><strong>-0.9%</strong> / -34%</td>
-<td><strong>+5.8%</strong> / <strong>-33%</strong></td>
-</tr>
-<tr>
-<td><strong>거래 횟수</strong> (연평균)</td>
-<td>60회 (5.5회/년)</td>
-<td>109회 (3.5회/년)</td>
-</tr>
-<tr>
-<td><strong>승률</strong> (Net 기준)</td>
-<td>13%</td>
-<td>28%</td>
-</tr>
-<tr>
-<td><strong>비용이 깎아 간 CAGR</strong></td>
-<td><strong>1.4%p / 년</strong></td>
-<td>0.9%p / 년</td>
-</tr>
-<tr>
-<td><strong>샤프 지수</strong> 단순 보유 → 전략 Net (무위험 이자율 3% 가정)</td>
-<td>0.03 → -0.29</td>
-<td>0.37 → 0.28</td>
-</tr>
-<tr>
-<td><em>(참고) 미국 현지 증권사 비용 0.03%일 때 전략 Net</em></td>
-<td>—</td>
-<td><em>CAGR +6.6% / MDD -30% / 샤프 0.35</em></td>
-</tr>
-</tbody>
-</table>
-<p><strong>이 표에서 읽어야 할 것 세 가지:</strong></p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>관찰</th>
-<th>의미</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>①</strong></td>
-<td>미국에서 전략은 <strong>MDD를 -57%에서 -33%로</strong> 크게 줄였지만, CAGR은 8.5%에서 5.8%로 <strong>약 2.7%p를 내주었다</strong>. 샤프 지수도 0.37에서 0.28로 낮아졌다 (비용이 0.03%면 0.35로 거의 같아진다)</td>
-<td>추세추종은 <strong>알파(초과수익) 도구가 아니라 위험 관리 도구</strong>다. "수익 일부와 약간의 효율을 지불하고 최악의 순간을 크게 깎는" 것이 정확한 효과다</td>
-</tr>
-<tr>
-<td><strong>②</strong></td>
-<td><strong>비용이 똑같은데</strong> 한국은 Net이 마이너스, 미국은 +5.8%다. 한국 시장 자체가 11년간 연 2%밖에 안 올랐다</td>
-<td>규칙도, 비용도 같으니 남는 변수는 하나 — <strong>시장에 따라갈 추세가 있었느냐</strong>. 같은 코드가 미국에서는 연 3.5회만 거래했고 한국에서는 5.5회 거래했다. 추세가 없으면 거래만 늘고 톱질만 남는다</td>
-</tr>
-<tr>
-<td><strong>③</strong></td>
-<td>비용이 깎아 간 CAGR은 한국 1.4%p, 미국 0.9%p. 미국은 Gross가 6.8%라 0.9%p를 내고도 살았고, 한국은 Gross가 0.4%라 1.4%p에 죽었다</td>
-<td><strong>비용은 Gross가 얇을수록 치명적</strong>이다. 그리고 한국은 그 비용의 절반 이상이 거래세다 — <strong>거래세는 휩소 전략의 천적</strong>이라는 말은 그래서 나온다</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>⚠️ <strong>기간이 다른데 비교가 되나요?</strong> 결론이 기간에 의존하는지 확인하려고 SPY를 한국과 같은 2014~2024 구간으로도 돌렸습니다(비용 0.03% 기준). 단순 보유 CAGR +11.2% / MDD -34% → 전략 Net CAGR +6.9% / MDD -22%, 거래 36회(연 3.3회). <strong>"MDD는 크게 줄고, CAGR은 일부 양보"</strong>라는 미국의 결론은 10년이든 30년이든 같습니다.</p>
-<p>💡 <strong>배당은 왜 뺐나요?</strong> 두 시장 모두 가격만으로 계산했습니다. SPY는 연 약 1.5~2%의 배당이 있는데, 단순 보유는 이를 100% 받고 전략은 현금 보유 기간만큼 놓칩니다. 즉 배당까지 넣으면 미국에서 <strong>단순 보유와 전략의 CAGR 격차는 위 표보다 더 벌어집니다</strong>. 미화하지 않기 위해 미리 적어 둡니다.</p>
-</blockquote>
 <hr />
 <h2 id="실습-실습-04-추세추종-백테스트-한국-10년-미국-30년">실습 — 실습 04: 추세추종 백테스트 — 한국 10년, 미국 30년</h2>
 <h3 id="step-1-kodex-200-10년-백테스트-엔진-구동">Step 1. KODEX 200 10년 백테스트 엔진 구동</h3>
@@ -2248,13 +2262,12 @@ $$</div>
 [확인] 대화창에 단순 보유 vs 추세추종(Gross/Net) 성과 비교표가 출력되었는지, 성과표의 첫 날짜와 마지막 날짜가 2014년과 2024년인지, 그리고 차트 파일 'trend_following_backtest_result.png'가 패널 2개로 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <blockquote>
-<p>💡 <strong>왜 "최근까지"가 아니라 2024-12-31로 끊나요</strong>: 두 가지 이유입니다. 첫째, <strong>재현성</strong> — 끝 날짜를 고정해야 여러분의 성과표가 이 노트의 숫자, 그리고 옆 사람의 숫자와 같아집니다. "최근까지"로 두면 실행하는 날마다 결과가 달라져 대조가 불가능합니다. 둘째, <strong>국면 격리</strong> — 끝을 오늘로 늘리면 2025년 이후의 급등·급락 국면이 11년 전체의 CAGR과 MDD를 통째로 바꿔 버립니다. 그 구간은 확인이 끝난 뒤 따로 늘려 보는 것이 순서입니다(자주 발생하는 문제 참고).</p>
-<p>💡 <strong>차트 사양을 프롬프트에 왜 이렇게 길게 쓰나요</strong>: 사양을 안 주면 AI는 패널 3~4개에 글자가 작은 차트를 만들기 쉽고, 단순 보유가 몇 배로 오른 뒤에는 선형 스케일 패널은 아무것도 보여주지 못합니다. <strong>"무엇이 보여야 하는가"를 먼저 정하고 그것만 요청하는 것</strong> — 클립 03의 <code>[만들 것]</code> 원칙이 차트에도 그대로 적용됩니다. 로그 스케일 하나, 현금 구간 음영, MDD 최저점 표시 — 세 질문(MDD·비용·약점 구간)에 답하는 데 필요한 것만 남긴 사양입니다.</p>
+<p>💡 <strong>왜 "최근까지"가 아니라 2024-12-31로 끊나요</strong>: 두 가지 이유입니다. 첫째, <strong>재현성</strong> — 끝 날짜를 고정해야 여러분이 언제 실행해도 일관된 백테스트 결과를 얻을 수 있습니다. 둘째, <strong>국면 격리</strong> — 장기 박스권 횡보 국면의 휩소와 비용 영향을 정밀하게 분석하기 위함입니다.</p>
+<p>💡 <strong>차트 사양을 프롬프트에 명시하는 이유</strong>: 사양을 구체적으로 주지 않으면 AI가 여러 패널을 복잡하게 생성해 판독이 어려워집니다. 핵심 지표(로그 자산 곡선 + 현금 구간 음영 + 언더워터 플롯)만 깔끔하게 시각화하도록 제어하는 것입니다.</p>
 </blockquote>
-<p><strong>Step 1을 먼저 체크리스트 ①~③으로 확인한 뒤</strong> Step 2로 넘어갑니다. 한국 성적표를 자기 눈으로 읽어 본 다음에 미국을 봐야 대비가 살아납니다.</p>
 <hr />
 <h3 id="step-2-같은-엔진을-미국-spy-30년에-재실행">Step 2. 같은 엔진을 미국 SPY 30년에 재실행</h3>
-<p>이미 만들어진 엔진을 <strong>다시 만들지 않습니다.</strong> 클립 05에서 배운 <strong>후속 4칸</strong>으로, 바뀌는 것 두 가지(대상·기간)만 지정합니다. 규칙(200일선, 익일 시가 체결)도, 거래비용 0.25%도 그대로 둔다는 점을 <code>[하지 말 것]</code>에 명시하는 것이 이 프롬프트의 핵심입니다 — 비교 실험에서는 <strong>바꾸는 것 외에 전부 고정</strong>해야 결과 차이를 시장의 차이라고 주장할 수 있습니다.</p>
+<p>이미 만들어진 엔진을 <strong>다시 만들지 않습니다.</strong> 클립 05에서 배운 <strong>후속 4칸</strong>으로, 바뀌는 것 두 가지(대상·기간)만 지정합니다. 규칙과 거래비용은 동일하게 유지하여 결과 차이가 <strong>시장의 구조적 차이</strong>에서 비롯됨을 확인합니다.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 방금 만든 trend_following_backtest.py의 200일선 추세추종 규칙을 그대로 미국 시장에 적용해서, 한국 결과와 나란히 비교하고 싶어. 규칙과 거래비용은 그대로 두고 시장만 바꿔야 차이를 시장 탓이라고 말할 수 있어.
 
 [수정할 것] 매매 대상과 기간을 인자로 바꿀 수 있게 스크립트를 고치고, 아래 설정으로 한 번 더 실행해줘:
@@ -2270,42 +2283,34 @@ $$</div>
 
 [확인] 두 시장의 Net CAGR · MDD · 거래 횟수가 한 표에 나란히 출력되었는지, 그리고 SPY 성과 계산이 실제로 1994년부터 시작하는지(첫 행 날짜) 확인해줘.
 </code></pre></div>
-<blockquote>
-<p>💡 <strong>미국 현지 증권사 비용(0.03%)으로도 보고 싶다면</strong>: 확인이 끝난 뒤 후속 4칸 한 번으로 "거래비용만 0.03%로 바꿔 SPY를 한 번 더 돌려줘"라고 요청하세요. 4절 표의 마지막 행이 그 결과입니다 — Net CAGR이 5.8%에서 6.6%로 올라갑니다. 비용이 8분의 1이 되어도 결론(MDD 크게 감소, CAGR 일부 양보)은 바뀌지 않는다는 것을 확인하는 용도입니다.</p>
-</blockquote>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <p><strong>Step 1 — 한국 (KODEX 200)</strong></p>
 <ul>
-<li class="check-item"><input type="checkbox"> <strong>① MDD 방어 확인</strong>: 성과표에서 단순 보유 MDD(예: -35~-45%) 대비 전략 MDD(예: -20~-35%)가 확실히 줄었다. 절반 근처면 "방어 성공", 그보다 못하면 ③에서 이유를 찾는다.</li>
-<li class="check-item"><input type="checkbox"> <strong>② 비용 후 생존 확인</strong>: Gross CAGR과 Net CAGR의 차이를 확인하고, 그 차이가 "연평균 거래 횟수 × 0.25%"와 대략 맞는지 계산해 봤다.</li>
-<li class="check-item"><input type="checkbox"> <strong>③ 약점 구간 확인</strong>: <code>trend_following_backtest_result.png</code> 하단 언더워터 플롯에서 2020년 3월·2022년 하락장에는 낙폭이 수평(현금)을 유지했지만, 횡보 구간에서 잔손실이 촘촘히 쌓이는 모습을 봤다.</li>
+<li class="check-item"><input type="checkbox"> <strong>① MDD 방어 확인</strong>: 성과표에서 단순 보유 MDD 대비 전략 MDD가 의미 있게 줄어들었는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>② 비용 후 생존 확인</strong>: Gross CAGR과 Net CAGR의 차이를 확인하고, 거래비용(왕복 0.25%)이 잦은 매매와 결합할 때 미치는 영향을 파악했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>③ 약점 구간 확인</strong>: <code>trend_following_backtest_result.png</code> 하단 언더워터 플롯에서 대세 하락장에는 현금으로 자산을 방어했지만, 횡보 구간에서 잦은 매매로 잔손실이 누적된 모습을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>성과표 비교표에 CAGR · MDD · Sharpe · 승률 네 지표가 모두 있고, 단순 보유 vs Gross vs Net 세 열이 나란히 출력</strong>되었다.</li>
 </ul>
 <p><strong>Step 2 — 미국 (SPY)</strong></p>
 <ul>
-<li class="check-item"><input type="checkbox"> <strong>데이터 시작 확인</strong>: 성과표 또는 차트의 첫 날짜가 <strong>1994년</strong>이다. (2010년대부터 시작하면 데이터를 다 못 받은 것 — 후속 4칸으로 기간을 다시 요청)</li>
-<li class="check-item"><input type="checkbox"> <strong>① MDD</strong>: 단순 보유 -50%대 vs 전략 -30%대로 <strong>크게 줄었다</strong>.</li>
-<li class="check-item"><input type="checkbox"> <strong>② 비용</strong>: Gross와 Net CAGR 차이가 <strong>1%p 안팎</strong>(연 3.5회 × 0.25%)이다. 한국(1.4%p)과 비슷한 비용을 냈는데 미국은 Gross가 두꺼워 살았고 한국은 얇아서 죽었다는 점을 두 성과표를 나란히 놓고 확인했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>③ 양보한 것</strong>: 전략 CAGR이 단순 보유보다 <strong>약 2.5~3%p 낮다</strong>는 것을 확인하고, "그래도 MDD가 이만큼 줄면 받아들일 거래인가"를 스스로 답해 봤다.</li>
-<li class="check-item"><input type="checkbox"> <code>trend_following_backtest_result_spy.png</code> 언더워터 플롯에서 <strong>2000~2002년, 2008년</strong> 구간이 단순 보유는 깊게 파이고 전략은 얕게 끝나는 것을 눈으로 봤다.</li>
+<li class="check-item"><input type="checkbox"> <strong>데이터 시작 확인</strong>: 성과표 또는 차트의 첫 날짜가 <strong>1994년</strong>인지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>① MDD</strong>: 2000년 IT 버블, 2008년 금융위기 등 장기 하락장에서 단순 보유 대비 전략 MDD가 크게 방어되었는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>② 비용</strong>: 같은 비용(0.25%)을 적용해도 강한 추세장에서는 Gross와 Net의 격차가 계좌를 훼손하지 않는 구조를 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>③ 위험 관리 도구로서의 역할</strong>: 추세추종이 무조건 높은 초과수익을 내는 마법이 아니라, 극단적인 폭락 위험(MDD)을 통제하는 위험 관리 도구임을 이해했다.</li>
 </ul>
 <hr />
 <h2 id="자주-발생하는-문제">자주 발생하는 문제</h2>
 <ul>
-<li><strong>"Net CAGR이 0% 근처인데 실패한 건가요?"</strong>: 실패가 아니라 <strong>진단 성공</strong>입니다. 단일 200일선이 한국 횡보장에서 어떻게 비용에 뜯기는지 숫자로 확인한 것이며, 이 약점을 고치는 것이 이후 클립의 내용입니다.</li>
-<li><strong>거래비용이 너무 많이 깎이는 현상</strong>: 횡보장의 잦은 진입/청산 때문입니다. 다음 클립의 <strong>변동성 돌파(VBO)</strong>, 클립 12의 <strong>듀얼 모멘텀</strong>, 클립 14의 <strong>페어트레이딩</strong>으로 분산하고, Part 3에서 <strong>돌파 버퍼 필터</strong>로 휩소를 걸러냅니다.</li>
+<li><strong>"Net CAGR이 마이너스이거나 낮은데 실패한 건가요?"</strong>: 실패가 아니라 <strong>정확한 진단</strong>입니다. 단일 200일선 추세추종이 횡보장에서 겪는 휩소와 거래비용의 한계를 숫자로 확인한 것이며, 이 한계를 극복하기 위해 이후 클립에서 <strong>변동성 돌파(클립 10), 듀얼 모멘텀(클립 12), 페어트레이딩(클립 14)</strong> 및 <strong>완충 밴드 필터(Part 3)</strong>를 배웁니다.</li>
 <li><strong>성과표에 벤치마크(단순 보유) 열이 빠진 경우</strong>: 후속 4칸 프롬프트로 "단순 보유 열을 추가해줘"라고 요청하세요. 벤치마크 없는 성과표는 반쪽입니다.</li>
-<li><strong>"결과가 노트 숫자와 완전히 다른데요?"</strong>: 먼저 성과표의 <strong>끝 날짜</strong>를 보세요. 프롬프트의 2024-12-31 대신 "최근까지"로 실행됐다면, 2025년 이후 한국 시장의 급등·급락 국면이 11년 전체의 CAGR과 MDD를 통째로 바꿉니다. 이때 단순 보유·Gross·Net 세 열의 <strong>MDD가 똑같은 숫자</strong>로 나올 수 있는데, 버그가 아닙니다 — 신고가 직후 며칠 만에 무너지는 급락은 200일선보다 훨씬 위에서 시작되어 전략이 100% 투자 상태로 낙폭을 그대로 맞기 때문입니다. "느린 200일선은 느린 하락장만 피한다"의 극단적 사례이고, 확인이 끝난 뒤 기간을 늘려 이 국면을 따로 보는 것은 좋은 추가 실습입니다. 그리고 하루 ±10%가 넘는 값이 여럿 보이면 <strong>다른 시세 출처와 그 날짜를 한 번 대조</strong>하세요 — 데이터 오류일 가능성도 함께 봐야 합니다.</li>
-<li><strong>"미국에서도 전략 CAGR이 단순 보유보다 낮은데, 그럼 그냥 사서 들고 있는 게 낫지 않나요?"</strong>: 수익률 한 줄만 보면 그렇습니다. 그런데 단순 보유의 -57%는 "1억이 4,300만 원이 되는 것을 수년간 견디는 것"입니다. 대부분의 사람은 그 지점에서 팔고 시장을 떠납니다. 전략은 그 고통을 -33%로 줄이는 대신 연 2.7%p를 지불한 것입니다. 어느 쪽이 나은지는 수익률이 아니라 <strong>내가 견딜 수 있는 MDD</strong>가 결정합니다 — 클립 07의 MDD 기준표가 바로 이 질문에 답하기 위한 것입니다.</li>
-<li><strong>"미국 주식은 수수료가 0이라던데 왜 0.25%를 쓰나요?"</strong>: 수수료 0은 미국 현지 증권사 이야기입니다. 한국 증권사의 해외주식 서비스는 편도 0.07~0.25% 수수료가 붙고 달러 환전 스프레드도 따로 듭니다. 이 강의는 한국 투자자 기준이므로 0.25%가 현실적이고, 두 시장을 같은 비용으로 두어야 비교도 깨끗해집니다. 4절의 비용 표를 참고하세요.</li>
-<li><strong>SPY 데이터가 1994년이 아니라 최근 몇 년만 내려온 경우</strong>: 데이터 출처가 미국 종목의 장기 이력을 제한하는 경우가 있습니다. 후속 4칸으로 "다른 데이터 출처를 시도해서 1994년부터 받아줘"라고 요청하고, <code>[확인]</code>에 첫 행 날짜를 다시 넣으세요.</li>
+<li><strong>"미국 주식 수수료는 왜 0.25%로 설정하나요?"</strong>: 미국 현지 증권사는 수수료가 없지만, 한국 투자자가 국내 증권사의 해외주식 서비스를 이용할 경우 편도 약 0.07~0.25%의 수수료와 환전 스프레드가 발생합니다. 따라서 실전 기준인 0.25%를 적용하여 두 시장을 동일한 잣대로 비교합니다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>첫 성과표를 손에 넣었습니다. 200일선 추세추종은 <strong>미국에서는 MDD를 -57%에서 -33%로 깎는 위험 관리 도구로 작동했지만, 같은 비용을 낸 한국에서는 따라갈 추세가 없어 휩소에 수익을 다 뜯겼습니다.</strong> 같은 규칙, 다른 시장, 반대 결론 — 이것이 우리가 한 가지 전략에 올인하지 않고 네 가지를 배우는 이유입니다.<br />
-그렇다면 느린 이동평균선이 놓치는 <strong>"하루 안에 폭발하는 수급 모멘텀"</strong>을 잡는 방법은 없을까요?<br />
-다음 클립에서는 단기 트레이딩의 제왕이라 불리는 <strong>'래리 윌리엄스의 변동성 돌파(Volatility Breakout) 전략'</strong>의 원리를 파헤쳐 보겠습니다.</p>
+<p>첫 성과표를 손에 넣었습니다. 200일선 추세추종은 <strong>대세 하락장에서의 자산 방어에는 강력하지만, 횡보장 휩소와 거래비용으로 인해 단독 운영에는 한계가 있음</strong>을 데이터로 확인했습니다.<br />
+그렇다면 느린 이동평균선이 놓치는 <strong>"하루 안에 폭발하는 수급 모멘텀"</strong>을 포착하는 방법은 없을까요?<br />
+다음 클립에서는 단기 트레이딩의 대표 전략인 <strong>'래리 윌리엄스의 변동성 돌파(Volatility Breakout) 전략'</strong>의 원리를 파헤쳐 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">
