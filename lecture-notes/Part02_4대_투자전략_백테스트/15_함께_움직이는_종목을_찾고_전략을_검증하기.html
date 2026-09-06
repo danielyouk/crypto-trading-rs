@@ -1606,15 +1606,15 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이번-클립에서-만들-것-실습-편">이번 클립에서 만들 것 (실습 편)</a>
             
-            <a class="nav-heading level-2" href="#실습-1-국내-금융-섹터-페어-스위칭-5년-백테스트">실습 1 — 국내 금융 섹터 페어 스위칭 5년 백테스트</a>
-            
-            <a class="nav-heading level-2" href="#실습-2-글로벌-확장-미국-정통-11-longshort-페어트레이딩-백테스트">실습 2 (글로벌 확장) — 미국 정통 1:1 Long/Short 페어트레이딩 백테스트</a>
-            
-            <a class="nav-heading level-2" href="#실습-3-헤지펀드-완성형-sp-500-50개-페어-30년-정밀-stat-arb-백테스트-실제-t-bill-금리-대주비용-연동">실습 3 (헤지펀드 완성형) — S&amp;P 500 50개 페어 30년 정밀 Stat-Arb 백테스트 (실제 T-Bill 금리 &amp; 대주비용 연동)</a>
+            <a class="nav-heading level-2" href="#실습-실습-07-국내-금융-페어-스위칭-7년-백테스트">실습 — 실습 07: 국내 금융 페어 스위칭 7년 백테스트</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
+            <a class="nav-heading level-2" href="#자주-발생하는-문제">자주 발생하는 문제</a>
+            
             <a class="nav-heading level-2" href="#part-2-종합-결산-4대-핵심-퀀트-전략-비교-매트릭스">Part 2 종합 결산: 4대 핵심 퀀트 전략 비교 매트릭스</a>
+            
+            <a class="nav-heading level-2" href="#part-3-로드맵-단일-전략의-한계를-극복하고-실전-시스템으로-도약하기">Part 3 로드맵: 단일 전략의 한계를 극복하고 실전 시스템으로 도약하기</a>
             
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
             
@@ -1981,11 +1981,9 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것-실습-편">이번 클립에서 만들 것 (실습 편)</h2>
-<p>이 클립이 끝나면, 여러분은 국내 대표 금융 페어(KB금융 vs 신한지주) 및 글로벌 정통 오일 메이저(XOM vs CVX)를 대상으로 <strong>롤링 Z-Score 기반 페어트레이딩 백테스트를 완벽하게 수행</strong>하여, 하락장과 횡보장에서도 시장 지수나 개별 종목 단순 보유 대비 더 높은 샤프 지수와 우수한 절대 수익(알파)을 창출하는 성과표와 대화형 Plotly 차트를 얻게 됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 국내 대표 금융 페어(KB금융 vs 신한지주)를 대상으로 <strong>60일 롤링 Z-Score 기반 롱 온리 페어 스위칭 백테스트</strong>를 실행하고, 두 종목을 각각 단순 보유한 것과 비교한 성과표와 대화형 Plotly 차트를 손에 넣게 됩니다. Part 2의 마지막 실습입니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>:<br />
-• <strong>국내 시장 실전</strong>: 공매도 제약이 없는 <strong>"롱 온리(Long-Only) 페어 스위칭 전략"</strong>으로 개인 실전 계좌에서 100% 동일하게 구현할 수 있습니다.<br />
-• <strong>글로벌 시장 확장</strong>: 공매도(Short)가 자유로운 미국 주식(XOM vs CVX)의 <strong>"정통 1:1 Long/Short 페어트레이딩"</strong> 백테스트 프롬프트도 함께 제공합니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 이 실습은 공매도를 쓰지 않는 <strong>롱 온리 스위칭</strong>이므로, 결과가 마음에 들면 개인 현물 계좌에서 그대로 실행할 수 있습니다. 공매도가 자유로운 미국 시장용 프롬프트는 이 클립 맨 아래 <strong>부록</strong>에 따로 두었습니다. 수업 범위 밖이니 시간이 있을 때 보셔도 됩니다.</p>
 </blockquote>
 <p><strong>클립 14(이론)에는 없고 이 클립(실습)에서 새로 추가되는 것:</strong></p>
 <div class="table-wrapper"><table>
@@ -1998,32 +1996,30 @@ window.MathJax = {
 <tbody>
 <tr>
 <td><strong>롱 온리 페어 스위칭 엔진</strong></td>
-<td>공매도 없이 저평가 종목으로 교체 매수하는 <strong>국내 실전 최적화 백테스트</strong></td>
-</tr>
-<tr>
-<td><strong>미국 정통 Long/Short 엔진</strong></td>
-<td>롱 50% + 숏 50%로 시장 베타를 0으로 만드는 <strong>글로벌 헤지펀드식 백테스트</strong></td>
+<td>공매도 없이 저평가 종목으로 교체 매수하는 국내 실전 방식의 백테스트</td>
 </tr>
 <tr>
 <td><strong>롤링 Z-Score 동적 산출</strong></td>
-<td>60일 윈도우로 가격 비율의 평균과 표준편차를 동적으로 업데이트</td>
+<td>60일 윈도우로 가격 비율의 평균과 표준편차를 매일 다시 계산</td>
 </tr>
 <tr>
 <td><strong>비용 차감 실측</strong></td>
-<td>포지션 스위칭 시마다 <strong>편도 0.15%</strong>(증권거래세 + 수수료)를 차감해 Net 성과 검증</td>
+<td>스위칭마다 <strong>편도 0.15%</strong>(증권거래세 + 수수료)를 차감해 비용 뒤의 성과 검증</td>
 </tr>
 <tr>
 <td><strong>대화형 Plotly 차트</strong></td>
-<td>누적 자산 성장 곡선 + 롤링 Z-Score 및 진입/청산 임계선 2-패널 HTML 저장</td>
+<td>누적 자산 성장 곡선 + 롤링 Z-Score 및 임계선 2-패널 HTML 저장</td>
 </tr>
 <tr>
 <td><strong>Part 2 종합 결산표</strong></td>
-<td>4대 퀀트 전략(추세추종, 변동성돌파, 듀얼모멘텀, 페어트레이딩)의 특성 매트릭스 총정리</td>
+<td>4대 퀀트 전략(추세추종, 변동성 돌파, 듀얼 모멘텀, 페어트레이딩)의 특성 매트릭스 총정리</td>
 </tr>
 </tbody>
 </table></div>
 <hr />
-<h2 id="실습-1-국내-금융-섹터-페어-스위칭-5년-백테스트">실습 1 — 국내 금융 섹터 페어 스위칭 5년 백테스트</h2>
+<h2 id="실습-실습-07-국내-금융-페어-스위칭-7년-백테스트">실습 — 실습 07: 국내 금융 페어 스위칭 7년 백테스트</h2>
+<p><strong>왜 KB금융과 신한지주인가</strong>: 같은 업종(은행 지주), 같은 규제, 같은 금리 환경을 공유하는 국내 1·2위 금융지주입니다. 클립 14에서 배운 "공적분 후보"의 교과서적 조건이고, 두 종목 모두 포털에서 1초 만에 시세를 대조할 수 있습니다.</p>
+<p><strong>왜 2019년부터인가</strong>: 2020년 코로나 급락, 2022년 금리 인상 하락장, 2024~2025년 밸류업 상승장이 모두 들어 있어, "하락장과 횡보장에서 버티는가"를 한 번에 볼 수 있는 가장 짧은 구간입니다.</p>
 <p>Claude Code 대화창에 아래의 국내 페어트레이딩 백테스트 프롬프트를 입력하세요.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 금융 대표 페어(KB금융 105560 vs 신한지주 055550)를 대상으로 60일 롤링 Z-Score 기반의 롱 온리(Long-Only) 상대가치 페어 스위칭 전략의 2019년부터 2026년 8월 31일까지 백테스트를 수행하고 싶어.
 
@@ -2044,83 +2040,37 @@ window.MathJax = {
 
 [하지 말 것]
 - 한국 시장에서 개인 실행이 어려운 공매도(Short)를 쓰지 말고, 롱 온리 스위칭 방식으로 설계해.
+- 당일 종가로 판단한 신호를 당일 종가에 체결하는 미래참조를 범하지 말고, 익일 시가에 체결해.
 - 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
 [확인] 대화창에 개별 종목 대비 페어트레이딩 성과 비교표가 출력되었는지, 그리고 대화형 차트 파일 'pair_trading_korea_result.html'이 패널 2개로 정상 저장되었는지 확인해줘.
 </code></pre></div>
-<hr />
-<h2 id="실습-2-글로벌-확장-미국-정통-11-longshort-페어트레이딩-백테스트">실습 2 (글로벌 확장) — 미국 정통 1:1 Long/Short 페어트레이딩 백테스트</h2>
-<p>미국 주식 시장에서 공매도(Short)를 결합하여 <strong>시장 등락과 무관한 절대 수익(Market Neutral <span class="math-inline">$\beta \approx 0$</span>)</strong>을 검증하고 싶다면 아래 프롬프트를 실행해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 미국 대표 에너지 메이저 페어인 엑슨모빌(XOM)과 셰브론(CVX)을 대상으로, 정통 1:1 Long/Short 공적분 페어트레이딩 전략의 2019년부터 2026년 8월 31일까지 백테스트를 수행하고 싶어.
-
-[만들 것] 다음 조건에 맞춰 파이썬 백테스트 스크립트 'pairs_trading_us_longshort.py'를 작성하고 실행해줘:
-1. FinanceDataReader 또는 yfinance를 사용해 XOM과 CVX의 2019-01-01부터 2026-08-31까지 일봉 데이터를 수집해줘.
-2. 두 종목의 가격 비율(Price Ratio = XOM 종가 / CVX 종가)을 구하고, 60일 롤링 Z-Score를 산출해줘.
-3. 정통 1:1 Long/Short 페어트레이딩 로직 (편도 비용 0.05% 차감):
-   - Z &lt;= -1.5 (XOM 저평가): XOM 50% 롱(Long) + CVX 50% 숏(Short) 진입
-   - Z &gt;= +1.5 (CVX 저평가): XOM 50% 숏(Short) + CVX 50% 롱(Long) 진입
-   - -0.5 &lt; Z &lt; +0.5 (평균 복귀): 전량 청산 후 현금 100% 대기
-   - Z &gt;= +3.0 또는 Z &lt;= -3.0 (구조적 결별): 즉시 하드스탑 손절 청산
-4. S&amp;P 500(SPY) 단순 보유 vs 1:1 Long/Short 페어 전략의 총수익률(%), CAGR(%), MDD(%), 샤프 지수 비교표를 출력해줘.
-5. 대화형 Plotly 차트를 'pair_trading_us_result.html' 파일로 저장해줘:
-   - 패널 2개: 상단 = SPY vs 롱숏 페어 누적 수익률, 하단 = Z-Score 및 포지션 상태 표시
-
-[하지 말 것]
-- Lookahead Bias 오류를 범하지 말고 신호 익일 시가에 체결해.
-- 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일로 저장해.
-
-[확인] 대화창에 벤치마크 대비 성과 비교표가 출력되고, 차트 파일 'pair_trading_us_result.html'이 정상 저장되었는지 확인해줘.
-</code></pre></div>
-<hr />
-<h2 id="실습-3-헤지펀드-완성형-sp-500-50개-페어-30년-정밀-stat-arb-백테스트-실제-t-bill-금리-대주비용-연동">실습 3 (헤지펀드 완성형) — S&amp;P 500 50개 페어 30년 정밀 Stat-Arb 백테스트 (실제 T-Bill 금리 &amp; 대주비용 연동)</h2>
-<p>단일 페어의 개별 기업 리스크를 극복하고, <strong>실제 역사적 국채 금리(^IRX), 숏 대주 수수료(연 0.35%), 2.5배 레버리지, 시대별 알파 감쇄(1995~2010 vs 2011~2026)까지 완벽하게 분해하는 기관급 통계적 차익거래 프롬프트</strong>입니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] S&amp;P 500 유니버스 10개 섹터 50개 페어를 대상으로, 1995년부터 2026년 8월 31일까지 30년간 1:1 Long/Short 통계적 차익거래(Stat-Arb) 포트폴리오 백테스트를 수행하고 싶어. 단순 시뮬레이션의 착시를 없애기 위해 실제 역사적 금리와 프라임 브로커 대주 비용을 엄격히 반영하고자 해.
-
-[만들 것] 다음 정밀 사양에 맞춰 파이썬 백테스트 스크립트 'us_stat_arb_50pairs_backtest.py'를 작성하고 실행해줘:
-1. 데이터 수집:
-   - FinanceDataReader로 S&amp;P 500 10개 섹터 50개 페어의 일봉 수정주가 수집 (1994년 9월 워밍업 포함).
-   - 야후 파이낸스 3개월 미국 국채 금리(^IRX) 일별 시계열을 수집하여 실제 역사적 현금 담보 이자율로 연동.
-2. 페어별 매매 로직 (편도 비용 0.05%/레그, 익일 시가 체결):
-   - 60일 롤링 Z-Score: Z_entry = ±2.0, Z_exit = ±0.3, Z_stop = ±3.5 (하드스탑 후 |Z| &lt; 0.3 복귀 전까지 재진입 금지).
-3. 실전 프라임 브로커 비용 및 레버리지 모델:
-   - 2.5배 레버리지(Gross 250%) 운용.
-   - 숏 포지션에 대해 연 0.35% 대주 수수료(Short Borrow Fee)를 일할 차감.
-   - 현금 담보에 대해 실제 당일 ^IRX 국채 금리를 일간 복리로 가산.
-4. 시대별 알파 분해 성과표 (Markdown 출력):
-   - 전체 30년 (1995~2026), 1기 퀀트 황금기 (1995~2010), 2기 알고리즘 밀집·저금리 시대 (2011~2026)로 분리.
-   - 각 구간별 총수익률(%), CAGR(%), MDD(%), 샤프 지수, 연환산 변동성(%), 승률(%), 닷컴버블·2008금융위기·2022금리인상기 방어율 비교표 출력.
-5. 대화형 Plotly 3패널 차트 'us_stat_arb_50pairs_result.html' 저장:
-   - 1패널: 누적 자산 성장 곡선 (SPY vs Stat-Arb 2.5x 로그 스케일)
-   - 2패널: 일별 활성 페어 수 영역 차트
-   - 3패널: 언더워터 플롯 (낙폭 %)
-
-[하지 말 것]
-- 비현실적인 고정 금리(예: 일률 연 3.5%)를 가정하지 말고 반드시 ^IRX 실제 시계열을 결합해.
-- 숏 포지션에 대한 대주 비용(연 0.35%) 누락 금지.
-- 30년 전체 평균만 하나로 뭉뚱그리지 말고 반드시 2010년 이전/이후 구간을 분해해.
-- GUI 창을 띄우지 말고 단독 HTML 파일로 저장해.
-
-[확인] 대화창에 실제 T-Bill 금리 및 대주비용이 반영된 시대별 성과표가 출력되고, 차트 파일 'us_stat_arb_50pairs_result.html'이 정상 저장되었는지 확인해줘.
-</code></pre></div>
+<p><strong>왜 "익일 시가 체결"을 못 박았는가</strong>: Z-Score는 오늘 종가로 계산됩니다. 그 값을 보고 오늘 종가에 산다는 것은 장이 끝난 뒤에 장중 가격으로 사는 것이라 현실에서는 불가능합니다. AI가 이 실수를 자주 하므로, 이 한 줄이 백테스트 숫자를 믿을 수 있게 만드는 가장 중요한 조건입니다.</p>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> <strong>알파 창출 확인</strong>: KB금융과 신한지주를 번갈아 스위칭하는 전략이 두 종목을 각각 단순 보유한 것보다 높은 수익률과 개선된 샤프 지수를 기록했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>시장 중립적 방어력 확인</strong>: 코스피 지수가 급락하거나 횡보할 때도 상대가치 스프레드 회귀를 통해 계좌를 안정적으로 방어했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>대화형 차트 시각화 확인</strong>: 생성된 <code>pair_trading_korea_result.html</code>을 브라우저로 열어, 하단 차트에서 Z-Score가 극단값(<span class="math-inline">$\pm 1.5$</span>)에 도달했을 때 정확히 저평가 종목으로 교체 매수된 궤적을 마우스 호버로 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>성과표 대조</strong>: 페어 스위칭 전략의 CAGR과 샤프 지수를 KB금융 단순 보유, 신한지주 단순 보유와 나란히 놓고 비교했다. 어느 쪽이 나은지 숫자로 말할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> <strong>하락장 방어 확인</strong>: 상단 차트에서 2020년 3월과 2022년 하락 구간의 낙폭이 두 종목 단순 보유보다 얕은지(또는 아닌지) 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>스위칭 시점 확인</strong>: <code>pair_trading_korea_result.html</code>을 브라우저로 열어, 하단 Z-Score가 <span class="math-inline">$\pm 1.5$</span>에 닿은 날 <strong>다음 거래일</strong>에 보유 종목이 바뀌는 것을 마우스 호버로 확인했다.</li>
+</ul>
+<hr />
+<h2 id="자주-발생하는-문제">자주 발생하는 문제</h2>
+<ul>
+<li><strong>"Z가 -1.5를 넘은 날 바로 안 바뀌고 다음 날 바뀌는데, 버그 아닌가요?"</strong>: 정상입니다. 오늘 종가로 계산한 Z를 보고 내일 시가에 사는 것이 현실의 순서입니다. 당일에 바뀐다면 그쪽이 미래참조 버그입니다.</li>
+<li><strong>"스위칭 전략이 두 종목 단순 보유보다 못하면 실패인가요?"</strong>: 실패가 아니라 결과입니다. 페어트레이딩은 상승장보다 하락장·횡보장에서 힘을 내는 전략이라, 기간 대부분이 강한 상승장이면 한 종목을 계속 들고 있는 쪽이 이길 수 있습니다. 그래서 성과표에서 총수익률 하나만 보지 말고 MDD와 샤프 지수를 함께 보는 것입니다.</li>
+<li><strong>"스위칭 횟수가 너무 많아 비용이 큰 것 같아요"</strong>: Z 임계값(±1.5)을 ±2.0으로 올리면 진입이 줄어듭니다. 단, 이렇게 값을 바꿔가며 좋은 결과를 고르는 것이 Part 3에서 다루는 과최적화의 시작입니다. 지금은 바꾸지 말고 기록만 해두세요.</li>
 </ul>
 <hr />
 <h2 id="part-2-종합-결산-4대-핵심-퀀트-전략-비교-매트릭스">Part 2 종합 결산: 4대 핵심 퀀트 전략 비교 매트릭스</h2>
-<p>여러분은 이제 퀀트 금융의 4대 핵심 축을 모두 백테스트 엔진으로 검증했습니다.</p>
+<p>여러분은 이제 금융 시장의 서로 다른 국면을 공략하는 4가지 강력한 무기를 모두 완성하고 백테스트로 검증했습니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>전략명</th>
 <th>핵심 지표</th>
 <th>거래 주기</th>
-<th>최적의 시장 환경</th>
-<th>주요 취약점</th>
-<th>Part 3 보완책</th>
+<th>최적의 시장 환경 (강점)</th>
+<th>단일 전략의 본질적 한계 (취약점)</th>
 </tr>
 </thead>
 <tbody>
@@ -2129,40 +2079,67 @@ window.MathJax = {
 <td>200일 SMA</td>
 <td>주~월 단위</td>
 <td>대세 상승장 / 대폭락장 방어</td>
-<td>횡보장 휩소(Whipsaw) 마찰</td>
-<td><strong>완충 밴드 필터(히스테리시스)</strong></td>
+<td>횡보장 휩소(Whipsaw)로 인한 잦은 손절 및 계좌 마모</td>
 </tr>
 <tr>
 <td><strong>② 변동성 돌파</strong></td>
 <td>Range <span class="math-inline">$\times k$</span></td>
 <td>당일 일중 (Day)</td>
 <td>강력한 단기 수급 폭발장</td>
-<td>윗꼬리 음봉 / 거래세 마찰</td>
-<td><strong>200일 이동평균 추세 필터</strong></td>
+<td>익일 시가 청산으로 장기 추세 미참여 &amp; 윗꼬리 음봉 손실</td>
 </tr>
 <tr>
 <td><strong>③ 듀얼 모멘텀</strong></td>
 <td>6~12개월 모멘텀</td>
 <td>월간 1회</td>
 <td>자산군별 순환 상승장</td>
-<td>주식/채권 동반 침체기</td>
-<td><strong>절대 모멘텀 단기채 파킹</strong></td>
+<td>주식·채권 동반 약세장(2022년 등) 및 월 1회 리밸런싱 지연</td>
 </tr>
 <tr>
 <td><strong>④ 페어트레이딩</strong></td>
 <td>공적분 Z-Score</td>
 <td>수일~수주 단위</td>
 <td>박스권 횡보장 / 시장 중립</td>
-<td>기업 펀더멘털 영구 결별</td>
-<td><strong><span class="math-inline">$Z \ge \pm 3.0$</span> 하드 스탑 손절</strong></td>
+<td>개별 기업 펀더멘털 결별(구조적 파괴) 및 단일 페어 표본 부족</td>
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p>⚠️ <strong>Part 2의 결론: "세상에 모든 시장에서 승리하는 단일 전략은 없다"</strong><br />
+4가지 전략 모두 자신만의 확실한 승리 구간이 있지만, 동시에 치명적인 약점 구간을 가집니다.<br />
+따라서 단 하나의 전략에 올인하는 것은 필연적으로 장기 침체기(MDD)를 부릅니다.</p>
+</blockquote>
+<hr />
+<h2 id="part-3-로드맵-단일-전략의-한계를-극복하고-실전-시스템으로-도약하기">Part 3 로드맵: 단일 전략의 한계를 극복하고 실전 시스템으로 도약하기</h2>
+<p>Part 3에서는 개별 전략의 단순 백테스트를 넘어, <strong>과거 데이터의 속임수를 걸러내고 4대 전략을 하나의 유기적인 앙상블 포트폴리오로 완성하는 4단계 개선 프로세스</strong>를 본격적으로 진행합니다.</p>
+<div class="step-flow">
+  <div class="step-card">
+    <span class="step-num">Step 1</span>
+    <div class="card-title">공정한 체급 비교 (Clip 16~17)</div>
+    <div class="card-desc">4대 전략을 완벽히 동일한 조건(2018~2026, 1천만 원, 편도 0.15%)에 올려 <strong>칼마 비율(Calmar Ratio)</strong>과 <strong>상관관계 히트맵</strong>으로 상호 보완성을 검증합니다.</div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">Step 2</span>
+    <div class="card-title">과최적화 필터: WFA 전진 분석 (Clip 18~20)</div>
+    <div class="card-desc">과거 데이터에 억지로 맞춘 거짓 성과를 걸러내기 위해, 데이터를 <strong>훈련(In-Sample)과 실전(Out-of-Sample)</strong>으로 쪼개어 전략의 미래 지속 가능성을 점검합니다.</div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">Step 3</span>
+    <div class="card-title">AI 손실 진단 리포트 (Clip 21~23)</div>
+    <div class="card-desc">MDD가 발생했을 때 감정에 휘둘리지 않고, <strong>AI가 손실 원인(시장 국면 vs 전략 결함)을 객관적으로 분석하는 자동화 보고서 루프</strong>를 구축합니다.</div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">Step 4</span>
+    <div class="card-title">4대 전략 앙상블 포트폴리오 (Clip 24~25)</div>
+    <div class="card-desc">상승장(추세/VBO) + 횡보장(페어) + 하락장(모멘텀 채권)을 결합하여, <strong>개별 전략의 MDD를 절반으로 깎고 매끄러운 우상향을 만드는 올웨더 시스템</strong>을 완성합니다.</div>
+  </div>
+</div>
+
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>축하합니다! 여러분은 금융 시장의 서로 다른 국면을 공략하는 4가지 강력한 무기를 모두 완성했습니다.<br />
-하지만 백테스트에서 아무리 성과가 좋아도, <strong>과거 데이터에 억지로 맞춘 과최적화(Overfitting)</strong>라면 실전에서 반드시 깨집니다.<br />
-Part 3에서는 <strong>'과거 데이터의 거짓말을 걸러내는 워크포워드(WFA) 전진 분석과 손실 진단 루프'</strong>를 본격적으로 시작합니다!</p>
+<p>축하합니다! 여러분은 퀀트 금융의 4대 핵심 전략을 모두 직접 코딩하고 검증했습니다.<br />
+이제 다음 시간부터는 <strong>Part 3: 시장 변화에 맞춰 전략을 점검하고 개선하기</strong>로 넘어갑니다.<br />
+첫 번째 시간인 <strong>Clip 16: 네 가지 전략의 수익률과 위험을 같은 기준으로 비교하기</strong>에서 4대 전략의 통합 비교 대시보드를 직접 만들어보겠습니다!</p>
       </main>
 
       <nav class="pager-nav">
