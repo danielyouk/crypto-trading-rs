@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -2071,7 +2086,7 @@ window.MathJax = {
   </div>
 </div>
 
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>오늘 만나는 상황</th>
@@ -2092,7 +2107,7 @@ window.MathJax = {
 <td>말로 설명하지 말고 <strong>화면을 붙여넣기</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h4 id="오류-추적-로그traceback의-비밀">오류 추적 로그(Traceback)의 비밀</h4>
 <p><strong>Traceback</strong>: 프로그램이 멈추기 직전까지 <strong>어느 파일의 몇 번째 줄</strong>을 거쳐 왔는지 적어 준 기록입니다.</p>
 <p>초보자는 마지막 한 줄만 복사합니다. AI에게는 <strong>중간 줄의 파일 이름과 줄 번호</strong>가 더 중요합니다. 위아래를 통째로 복사한 뒤 <code>"""</code>로 감싸세요.</p>

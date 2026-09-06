@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -1973,7 +1988,7 @@ window.MathJax = {
 <p>💡 <strong>수강생 안심 안내</strong>: 백테스트 파이썬 코드를 외울 필요가 없습니다. 우리는 백테스트 엔진에 <strong>"매매 대상, 신호 조건, 체결 시점(익일 시가), 왕복 거래비용 0.25%(슬리피지 0.1% + 수수료·세금 0.15%)"</strong>를 명확하게 전달하고, 출력된 성과표를 읽고 판단하는 퀀트 CIO의 역할을 수행합니다.</p>
 </blockquote>
 <p><strong>클립 08(이론)에는 없고 이 클립(실습)에서 새로 추가되는 것:</strong></p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>추가 요소</th>
@@ -2002,7 +2017,7 @@ window.MathJax = {
 <td>"MDD는 줄었나 / 비용 후에도 남나 / 어디서 약했나" 세 질문으로 성적표 읽기</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-백테스트-시뮬레이션의-계산-논리">1. 백테스트 시뮬레이션의 계산 논리</h3>
@@ -2022,7 +2037,7 @@ $$</div>
 <hr />
 <h3 id="2-성과표를-읽는-세-가지-질문">2. 성과표를 읽는 세 가지 질문</h3>
 <p>백테스트를 실행한 뒤 Claude Code 화면에 출력된 성과표는 아래 세 가지 질문 순서대로 읽습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>순서</th>
@@ -2051,7 +2066,7 @@ $$</div>
 <td>횡보 구간에서 잦은 매매와 마찰 손실이 누적되었는가</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="실습-실습-04-kodex-200-추세추종-10년-백테스트">실습 — 실습 04: KODEX 200 추세추종 10년 백테스트</h2>
 <p>Claude Code 대화창에 아래의 표준 퀀트 백테스트 프롬프트를 입력하세요.</p>

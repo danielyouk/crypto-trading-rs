@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -2022,7 +2037,7 @@ window.MathJax = {
         ↓ (무인 자동 실행)
 [4. 알고리즘 트레이딩]: 사람 개입 없이 알고리즘이 스스로 계좌를 운용하는 자동화 매매 체계
 </code></pre>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>개념</th>
@@ -2052,7 +2067,7 @@ window.MathJax = {
 <td>매일 장 마감 시각에 데이터를 자동 수집하고, 알고리즘 판정 결과에 따라 증권사 API로 주문을 무인 집행</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p>💡 <strong>핵심 요약</strong>:<br />
 머릿속 <strong>생각(아이디어)</strong>을 숫자로 구체화하면 <strong>매매 규칙(Trading Rule)</strong>이 되고, 그 규칙을 논리적 절차로 코드화한 것이 <strong>알고리즘(Algorithm)</strong>이며, 이를 실제 계좌와 연결해 무인으로 매매를 돌리는 것이 <strong>알고리즘 트레이딩</strong>입니다.<br />
@@ -2079,7 +2094,7 @@ window.MathJax = {
 <hr />
 <h3 id="4-변환-4단계-아이디어를-규칙으로-바꾸는-한-줄-경로">4. 변환 4단계 — 아이디어를 규칙으로 바꾸는 한 줄 경로</h3>
 <p>이 클립에서 <strong>4단계</strong>는 이것 하나뿐입니다. 위에서 말한 것과 같은 순서입니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>단계</th>
@@ -2109,12 +2124,12 @@ window.MathJax = {
 <td>비중 20%, 진입가 대비 −3%면 판다</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>네 줄이 채워지면 규칙이 끝입니다. 컴퓨터는 그 규칙만 보고 <strong>지금 대기인지 보유인지</strong>를 고릅니다. 그 전환을 <strong>상태 전이</strong>라고 부릅니다. 지금 외우실 필요 없습니다. 네 번째 단계가 아니라, 1~4가 모인 <strong>결과</strong>입니다.</p>
 <hr />
 <h3 id="5-part-2에서-마스터할-4대-핵심-퀀트-전략-미리보기">5. Part 2에서 마스터할 4대 핵심 퀀트 전략 미리보기</h3>
 <p>우리는 금융 역사상 수십 년간 생존해 온 대표적인 4가지 퀀트 전략을 직접 백테스트하고 검증합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>전략명</th>
@@ -2149,7 +2164,7 @@ window.MathJax = {
 <td>횡보장, 완만한 하락장</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="따라-해보기-실습">따라 해보기 — 실습</h2>
 <p>Claude Code 대화창을 열고, 여러분이 평소 생각하던 막연한 투자 아이디어를 엄격한 매매 규칙(Trading Rule)으로 변환해 보도록 요청하세요.</p>

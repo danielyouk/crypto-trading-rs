@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -1986,7 +2001,7 @@ window.MathJax = {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
 <p>클립 06에서 배운 원칙에 따라, 변동성 돌파 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>단계</th>
@@ -2021,7 +2036,7 @@ window.MathJax = {
 <td>단독 VBO의 1,000회 잦은 거래세 마찰 진단 ➔ 200일선 결합으로 하락장 진입 원천 차단 ➔ Part 4 KIS API 조건부 자동 주문 연동</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
 <p>변동성 돌파 전략은 매일 아침 장 시작(09:00) 직후 <strong>'당일 목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수한 뒤 다음 날 장 시작 시 전량 매도하는 규칙 기반 단기 모멘텀 전략입니다.</p>
@@ -2051,7 +2066,7 @@ $$</div>
 <hr />
 <h3 id="2-직관적-손계산-예시">2. 직관적 손계산 예시</h3>
 <p>변동성 돌파의 계산 원리는 매우 단순하여 누구나 암산으로 즉시 계산할 수 있습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>항목</th>
@@ -2091,7 +2106,7 @@ $$</div>
 <td><strong>즉시 시장가 매수 체결</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="3-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">3. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</h3>
 <div class="compare-box">
@@ -2130,7 +2145,7 @@ $$</div>
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
 <p>이 클립에서는 래리 윌리엄스 변동성 돌파 전략의 수식 구조와 목표 매수가 계산 원리, 그리고 당일 데이트레이딩의 장단점을 이론적으로 학습했습니다.</p>
 <p>실제 <strong>KODEX 200(069500) ETF 데이터를 활용해 10년(2016~2026년 8월 31일) 백테스트를 실행하고, 200일 이동평균 필터를 결합하여 성과를 극대화하는 실습(실습 05)</strong>은 바로 다음 클립인 <strong>[11_변동성_돌파_전략을_검증하고_약점_구간_찾기]</strong>에서 Claude Code와 함께 실행합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>구분</th>
@@ -2160,7 +2175,7 @@ $$</div>
 <td><strong>성과 비교표 + 대화형 Plotly HTML 2-패널 차트</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>

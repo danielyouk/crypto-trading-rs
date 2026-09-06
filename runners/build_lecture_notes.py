@@ -172,6 +172,9 @@ def render_markdown(body: str) -> tuple[str, list[dict]]:
         html,
     )
 
+    # 4. table 태그를 .table-wrapper 로 감싸서 가로 잘림 방지 및 반응형 스크롤 지원
+    html = re.sub(r"(<table>[\s\S]*?</table>)", r'<div class="table-wrapper">\1</div>', html)
+
     return html, page_toc
 
 

@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -1990,7 +2005,7 @@ window.MathJax = {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-백테스트-4대-핵심-지표-매트릭스와-실전-활용처">1. 백테스트 4대 핵심 지표 매트릭스와 실전 활용처</h3>
 <p>백테스트 성과표를 볼 때 전략의 우수성을 다각도로 검증하는 4가지 절대 지표입니다. 모든 약어의 정식 명칭과 실전 활용 목적을 정확히 숙지해야 합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>지표명 (약어 및 풀네임)</th>
@@ -2025,7 +2040,7 @@ window.MathJax = {
 <td><strong>전략 유형(추세추종 vs 페어트레이딩) 진단</strong><br>(승률이 낮아도 손익비가 높으면 돈을 버는 구조 파악)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="2-cagr연평균-복리-수익률-수계산으로-이해하는-복리의-힘">2. CAGR(연평균 복리 수익률) — 수계산으로 이해하는 복리의 힘</h3>
 <p>단순 총수익률을 투자 기간으로 나누는 <strong>산술평균(단리)</strong>은 심각한 착시를 일으킵니다. 퀀트는 항상 복리 효과를 역산한 <strong>기하평균(CAGR, Compound Annual Growth Rate)</strong>을 사용합니다.</p>
@@ -2068,7 +2083,7 @@ $$</div>
 </ol>
 <h4 id="③-비대칭-복리의-함정-잃은-돈을-복구하기-어려운-이유">③ 비대칭 복리의 함정 — 잃은 돈을 복구하기 어려운 이유</h4>
 <p>계좌가 하락할 때와 회복할 때 필요한 수익률은 완전히 비대칭적입니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>발생한 손실률 (MDD)</th>
@@ -2103,7 +2118,7 @@ $$</div>
 <td>계좌 회복 사실상 불가능</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <pre><code class="language-text">[전략 A: 위험한 불나방]
 • 누적 수익률: +300% (CAGR 25%) | MDD: -65% | 샤프 지수: 0.6
 • 평가: 1억 원이 3,500만 원으로 토막 나는 구간 발생. 실전에서 99%의 투자자가 바닥에서 시스템을 끄고 퇴출당함.
@@ -2126,7 +2141,7 @@ $$</div>
 • <strong>약분의 결과</strong>: <span class="math-inline">$\frac{252}{\sqrt{252}} = \sqrt{252}$</span>이므로 결국 <strong>(일간 샤프 지수) <span class="math-inline">$\times \mathbf{\sqrt{252}}$</span></strong>로 아주 단순해집니다.</p>
 </blockquote>
 <h4 id="②-세-변수math_inline_35-핵심-정리">② 세 변수(<span class="math-inline">$R, R_f, \sigma$</span>) 핵심 정리</h4>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>변수</th>
@@ -2155,7 +2170,7 @@ $$</div>
 <td>일간 수익률 표준편차</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h4 id="③-파이썬-코드-실무-표준-3줄">③ 파이썬 코드 (실무 표준 3줄)</h4>
 <pre><code class="language-python">import numpy as np
 
@@ -2179,7 +2194,7 @@ $$</div>
 <h4 id="⑤-샤프-지수-성적표-해석-기준-전략-유형별-현실적-기준">⑤ 샤프 지수 성적표 해석 기준: 전략 유형별 현실적 기준</h4>
 <p>초보자가 가장 많이 범하는 실수는 "모든 전략의 샤프 지수가 1.5 이상이어야 한다"고 오해하는 것입니다. 퀀트 금융의 기본 법칙(<span class="math-inline">$\text{IR} \approx \text{IC} \times \sqrt{N}$</span>)에 따르면, 샤프 지수는 <strong>(예측력) <span class="math-inline">$\times \sqrt{\text{독립 베팅 횟수 } N}$</span></strong>에 비례합니다.</p>
 <p>따라서 10년 동안 베팅 사이클이 몇 번 없는 단일 자산 전략과, 수백 번 분산 베팅하는 퀀트 포트폴리오의 샤프 기준은 완전히 달라야 합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>전략 유형</th>
@@ -2219,7 +2234,7 @@ $$</div>
 <td>파라미터 끼워맞추기, 미래참조 버그, 표본 기간 부족 가능성 99%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p>💡 <strong>"단일 자산 전략 백테스트에서 샤프 1.5가 안 나온다고 실망하지 마세요"</strong><br />
 단일 ETF 이동평균 전략은 파라미터를 아무리 튜닝해도 샤프 <span class="math-inline">$0.5 \sim 0.7$</span>에 갇히는 것이 수학적으로 지극히 정상입니다.<br />

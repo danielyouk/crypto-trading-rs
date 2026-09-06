@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -2086,7 +2101,7 @@ window.MathJax = {
 </ol>
 <h4 id="1-2-자율권-모드-설정-auto-권장">1-2. 자율권 모드 설정 (Auto 권장)</h4>
 <p>프롬프트 입력창 하단의 모드 버튼을 클릭하거나 <code>Shift + Tab</code>을 눌러 모드를 설정합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>모드</th>
@@ -2121,7 +2136,7 @@ window.MathJax = {
 <td><strong>초기 환경 구축 및 일괄 실행 시 (권장)</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p>💡 <strong>Plan 모드란?</strong>: 코드를 전혀 건드리지 않고 <strong>"어떤 방식으로 구현할지 계획서(전략 로드맵)만 먼저 작성"</strong>하는 모드입니다. 큰 구조를 바꿀 때 유용합니다.</p>
 <p>💡 <strong>안내</strong>: 오늘처럼 초기 환경 구축 시에는 <strong><code>Auto</code> 모드가 가장 편리</strong>합니다. 목록에 <code>Auto</code>가 보이지 않는 경우 <code>Edit automatically</code>를 선택하고, 명령어 실행 팝업 시 <strong><code>Yes, and don't ask again</code></strong>을 선택하시면 됩니다.</p>
@@ -2138,7 +2153,7 @@ window.MathJax = {
 </code></pre></div>
 <h4 id="진단-결과에-따른-대응">진단 결과에 따른 대응</h4>
 <p>AI의 진단 결과 표를 확인하고, 내 컴퓨터 상태에 맞춰 Step 3 프롬프트를 진행합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>진단 결과 유형</th>
@@ -2163,7 +2178,7 @@ window.MathJax = {
 <td>Step 3 프롬프트 <code>[만들 것]</code> 첫 줄에 <strong>"uv를 사용해서 파이썬 3.12 가상환경을 만들어줘."</strong> 추가</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p>💡 <strong>왜 uv가 만능 해결책인가요?</strong><br />
 <code>uv</code>는 내 컴퓨터의 복잡한 파이썬 설치 상태나 윈도우/맥/리눅스 환경 차이와 무관하게, <strong>프로젝트 폴더 안에 완벽하고 독립된 파이썬 환경을 1초 만에 깔끔하게 구축</strong>해 주는 현대적인 표준 도구입니다. 진단에서 무언가 부족하다고 나오면 <code>uv</code>를 지정해 주면 모든 문제가 한 번에 해결됩니다.</p>

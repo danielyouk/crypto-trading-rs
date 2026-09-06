@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -1987,7 +2002,7 @@ window.MathJax = {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
 <p>클립 06에서 정립한 원칙에 따라, 추세추종 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>단계</th>
@@ -2022,7 +2037,7 @@ window.MathJax = {
 <td>10년 백테스트로 횡보장 휩소(Whipsaw) 약점 진단 ➔ Part 3 완충 밴드 필터로 개선 ➔ Part 4 KIS API 자동 주문 연동</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="1-200일-이동평균선sma-200이란-무엇인가">1. 200일 이동평균선(SMA 200)이란 무엇인가?</h3>
 <p>1년은 약 252 거래일입니다. 200일 이동평균선은 <strong>약 10개월간 시장 참여자들이 해당 자산을 매수한 평균 단가</strong>를 나타냅니다.</p>
@@ -2069,7 +2084,7 @@ $$</div>
 ─────────────────────────────────────────────────────────────
 ▶ 최종 결과: 승률 40%이지만 순수익 +108% 달성! (② 대세 하락장 -50% 폭락은 100% 전량 회피)
 </code></pre>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>3대 시장 국면</th>
@@ -2098,7 +2113,7 @@ $$</div>
 <td><strong>"손절은 짧게!" (Cut Losses Short)</strong><br>손실이 커지기 전에 싹을 자름 (대세 상승을 잡기 위한 '입장료')</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p>⚠️ <strong>토이 모델 vs 실전 200일선의 차이 (왜 실제로는 다를까?)</strong>:<br />
 위 10회 시뮬레이션은 손익비의 수학적 원리를 설명하기 위한 <strong>개념적 모델(Toy Model)</strong>입니다.<br />
@@ -2118,7 +2133,7 @@ $$</div>
 ▶ 주가는 제자리인데 계좌만 톱으로 썰려나가는 '마찰 손실' 발생
 </code></pre>
 <h4 id="②-한국-주식-시장kodex-200에서의-200일선-특징">② 한국 주식 시장(KODEX 200)에서의 200일선 특징</h4>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>분석 항목</th>
@@ -2143,7 +2158,7 @@ $$</div>
 <td><strong>위험 관리 도구 (방패)</strong>: 초과수익 마법이 아니라 "최악의 순간을 방어"<br>횡보장 휩소를 극복하기 위해 <strong>변동성 돌파(클립 10), 자산배분(클립 12), 페어트레이딩(클립 14)</strong> 분산 필수</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="4-매매-신호-알고리즘-골든크로스와-데드크로스의-판정-로직">4. 매매 신호 알고리즘: 골든크로스와 데드크로스의 판정 로직</h3>
 <p>추세추종 규칙을 컴퓨터가 오차 없이 실행하려면 신호 발생 조건을 수학적 논리식으로 정의해야 합니다.</p>
@@ -2274,7 +2289,7 @@ $$</div>
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
 <p>이 클립에서는 200일 이동평균선의 수학적 원리와 추세추종의 손익비 철학, 그리고 휩소(Whipsaw)와 한국 시장의 거래비용 구조를 이론적으로 정립했습니다.</p>
 <p>클립 07에서 배운 <strong>4대 핵심 성과표(CAGR, MDD, Sharpe Ratio, Win Rate vs Payoff)</strong>와 <strong>현실 거래비용(0.25%)</strong>을 완벽하게 계산하는 <strong>10년치 백테스트 실습(실습 04)</strong>은 바로 다음 클립인 <strong>[09_추세추종_전략을_과거_데이터로_검증하기]</strong>에서 Claude Code와 함께 집중적으로 실행합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>구분</th>
@@ -2304,7 +2319,7 @@ $$</div>
 <td><strong>성과 비교표 + 자산 성장 곡선·언더워터 플롯 차트 PNG</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>

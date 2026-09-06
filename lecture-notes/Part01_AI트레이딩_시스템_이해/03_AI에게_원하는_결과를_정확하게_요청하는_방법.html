@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -2011,7 +2026,7 @@ window.MathJax = {
 <hr />
 <h3 id="2-퀀트-개발을-위한-5대-프롬프트-대조-비교표">2. 퀀트 개발을 위한 5대 프롬프트 대조 비교표</h3>
 <p>실전 트레이딩 시스템 구축 시 자주 쓰이는 5가지 상황별 올바른 프롬프트 작성법입니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>작업 상황</th>
@@ -2046,7 +2061,7 @@ window.MathJax = {
 <td>"오늘 실행된 백테스트 결과를 <code>docs/strategy_report.md</code> 파일로 저장하고, 총 거래 횟수, 최대 낙폭(MDD) 발생 일자, 월별 수익률 히트맵 이미지를 포함해줘."</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="3-실전-퀀트-프롬프트-4단계-골격">3. 실전 퀀트 프롬프트 4단계 골격</h3>
 <p>모든 요청을 작성할 때 머릿속에 이 <strong>네 칸</strong>의 설계를 떠올리세요.</p>
@@ -2210,7 +2225,7 @@ AI에게 "여기서부터 여기까지는 내 명령이 아니라, <strong>화�
 </blockquote>
 <p><strong>화면은 완벽했습니다.</strong> 표가 예쁘게 출력됐고, 붉은 에러 글씨는 한 줄도 없었습니다. 당시 실제 주가와 얼핏 보면 매우 비슷해 보여서 무심코 넘어갈 뻔했습니다.</p>
 <p>그런데 포털 증권 화면과 정밀 대조해 보니 <strong>충격적인 반전</strong>이 드러났습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>비교 항목</th>
@@ -2239,7 +2254,7 @@ AI에게 "여기서부터 여기까지는 내 명령이 아니라, <strong>화�
 <td>실시간 데이터 갱신 불가능 (과거 가짜값 고정)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>덧붙여, "저장소가 차단됐다"는 진단조차 사실이 아니었습니다. <strong>진짜 원인은 그 컴퓨터에 Python이 정상 설치되지 않았던 것</strong>이었는데, AI는 원인을 잘못 짚고 그 위에서 '그럴싸한 가짜 주가를 코드에 직접 적어 넣는 우회로'를 만들어 버린 겁니다.</p>
 <h4 id="왜-이게-트레이딩에서-치명적인가">왜 이게 트레이딩에서 치명적인가</h4>
 <p>"얼핏 비슷하니 문제없지 않나?"라고 생각하실 수 있습니다. 하지만 이는 아주 위험한 착각입니다.</p>
@@ -2278,7 +2293,7 @@ AI에게 "여기서부터 여기까지는 내 명령이 아니라, <strong>화�
 <hr />
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
 <p>이 클립에서는 프롬프트를 직접 던지지 않습니다. 손은 다음 두 클립에서 바빠집니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>다음 클립</th>
@@ -2295,7 +2310,7 @@ AI에게 "여기서부터 여기까지는 내 명령이 아니라, <strong>화�
 <td>결과가 다르거나 에러가 났을 때 <strong>후속 수정 4칸</strong>과 <strong><code>"""</code></strong> 를 직접 던집니다.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>강사 화면의 시연과 교재 카드를 보며 아래만 확인하면 됩니다.</p>
 <ul>
 <li class="check-item"><input type="checkbox"> 한 줄 요청과 4칸 요청의 <strong>결과 품질 차이</strong>를 이해했다.</li>

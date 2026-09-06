@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -1986,7 +2001,7 @@ window.MathJax = {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="0-4단계-변환-로드맵-아이디어에서-알고리즘-트레이딩까지">0. 4단계 변환 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
 <p>클립 06에서 정립한 원칙에 따라, 듀얼 모멘텀 전략이 구체적인 알고리즘 코드로 전환되는 4단계 체계는 다음과 같습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>단계</th>
@@ -2021,7 +2036,7 @@ window.MathJax = {
 <td>10년 백테스트로 Sharpe 1.13+ 달성 확인 ➔ 월 1회 리밸런싱으로 일상생활과 병행 ➔ Part 4/5 2-Tier 월간 정책 승인 및 KIS API 자동 주문</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="1-듀얼-모멘텀dual-momentum의-2중-필터링-구조">1. 듀얼 모멘텀(Dual Momentum)의 2중 필터링 구조</h3>
 <p>듀얼 모멘텀은 두 가지 독립적인 모멘텀 판정 기준을 직렬로 결합하여 시장의 모든 국면에 대응합니다.</p>
@@ -2053,7 +2068,7 @@ $$</div>
 <hr />
 <h3 id="3-한국-시장-상장-etf를-활용한-4대-자산-유니버스">3. 한국 시장 상장 ETF를 활용한 4대 자산 유니버스</h3>
 <p>국내 개인 투자자도 국내 증권 계좌에서 손쉽게 거래할 수 있는 한국 상장 대표 ETF 4종으로 완벽한 글로벌 듀얼 모멘텀 포트폴리오를 구성할 수 있습니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>구분</th>
@@ -2088,7 +2103,7 @@ $$</div>
 <td>절대 모멘텀 미달 시 원금 보존용 단기 파킹 금리 ETF</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="4-월간-리밸런싱의-경제학-낮은-회전율과-거래비용-제로화">4. 월간 리밸런싱의 경제학: 낮은 회전율과 거래비용 제로화</h3>
 <p>앞선 변동성 돌파 전략이 연간 100회 이상 매매하며 거래세 마찰을 겪었던 반면, 듀얼 모멘텀 전략은 <strong>매월 마지막 거래일에 단 1회만 자산을 점검</strong>합니다.</p>
@@ -2102,7 +2117,7 @@ $$</div>
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
 <p>이 클립에서는 게리 안토나치의 듀얼 모멘텀 2중 필터링 원리와 음의 상관관계를 통한 MDD 축소 원리를 이론적으로 정립했습니다.</p>
 <p>국내 상장 ETF 4종을 활용해 <strong>실제 8~10개년 장기 백테스트를 수행하고, 월별 자산 배분 비중 변화와 한 자릿수 MDD(-8% 내외)를 실측하는 실습(실습 06)</strong>은 바로 다음 클립인 <strong>[13_ETF_데이터를_활용해_자산배분_전략_검증하기]</strong>에서 Claude Code와 함께 실행합니다.</p>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>구분</th>
@@ -2132,7 +2147,7 @@ $$</div>
 <td><strong>성과표 + 자산곡선·비중변화·언더워터 3-패널 차트 PNG</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>

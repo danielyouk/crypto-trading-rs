@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -2027,7 +2042,7 @@ window.MathJax = {
 <p><strong>💡 핵심 결론: 2-Tier 하이브리드(Weekly Governance + Daily Autonomous Execution) 모델의 필연성</strong><br />
 24시간 데이터 감시와 정형화된 수치 계산은 <strong>AI 시스템</strong>에 맡기고, 거시적 시장 국면 판단과 주간 매매 정책(<code>weekly_policy.json</code>) 승인은 <strong>사람(나 / 최고투자책임자 CIO)</strong>이 결정하며, 장중 급변에 대한 손절은 <strong>코드 레벨의 무인 하드 가드레일</strong>이 0.1초 만에 즉각 집행해야만 살아남을 수 있습니다.</p>
 </blockquote>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>계층 (Tier)</th>
@@ -2062,7 +2077,7 @@ window.MathJax = {
 <td>오늘의 체결·손익 분석 및 일일 매매 일지 자동 저장, 내일 기준가 산출</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h3 id="3-우리가-완성할-시스템의-5대-핵심-서브시스템">3. 우리가 완성할 시스템의 5대 핵심 서브시스템</h3>
 <p>5개 파트에 걸쳐 여러분 컴퓨터에 구축될 전체 시스템은 다음과 같이 유기적으로 연결된 5개의 독립 모듈로 구성됩니다.</p>
@@ -2117,7 +2132,7 @@ window.MathJax = {
 </ul>
 <hr />
 <h3 id="5-앞으로-5개-파트-완주-로드맵">5. 앞으로 5개 파트 완주 로드맵</h3>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>파트</th>
@@ -2158,7 +2173,7 @@ window.MathJax = {
 <td>장 마감 일일 점검 루프, 주문 한도/긴급 정지, 운영 루틴</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="실습-및-확인-관전-포인트">실습 및 확인 관전 포인트</h2>
 <p>이번 첫 클립은 시스템 전체가 동작하는 <strong>시뮬레이션 조감도(애니메이션 및 구조 다이어그램)</strong>를 관람하는 시간입니다. 화면을 보시면서 아래의 핵심 흐름 4가지를 눈여겨보세요.</p>

@@ -327,7 +327,7 @@ body {
 }
 
 .docs-content {
-  max-width: 860px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
   padding: 32px 36px 120px;
@@ -501,15 +501,27 @@ hr {
 /* ==========================================================================
    6. TABLES
    ========================================================================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0 28px;
+  margin: 0;
   font-size: 14.5px;
   background: #ffffff;
-  border: 1px solid var(--line-color);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  table-layout: auto;
 }
 
 th {
@@ -520,21 +532,24 @@ th {
   padding: 11px 16px;
   border-bottom: 2px solid var(--line-color);
   font-size: 14px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 td {
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid var(--line-color);
   color: var(--ink-main);
   vertical-align: middle;
   line-height: 1.6;
+  word-break: keep-all;
 }
 
 td:first-child {
-  white-space: nowrap;
+  white-space: normal;
   font-weight: 600;
   color: var(--navy-dark);
+  word-break: keep-all;
 }
 
 tr:last-child td { border-bottom: none; }
@@ -2001,7 +2016,7 @@ window.MathJax = {
 
 <hr />
 <h3 id="2-top-3-손실-구간의-정밀-분해-테이블-구조">2. Top-3 손실 구간의 정밀 분해 테이블 구조</h3>
-<table>
+<div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>순위</th>
@@ -2042,7 +2057,7 @@ window.MathJax = {
 <td>코로나19 팬데믹 단기 쇼크</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="실습-실습-09-top-3-최대-손실-구간-자동-탐색-및-시각화">실습 — 실습 09: Top-3 최대 손실 구간 자동 탐색 및 시각화</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하여 전략의 최악 구간들을 찾아내고 확대 차트를 생성하세요.</p>
