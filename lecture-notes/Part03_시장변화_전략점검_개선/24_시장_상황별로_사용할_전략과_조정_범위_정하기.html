@@ -728,6 +728,213 @@ tr:hover td { background: #f8fafc; }
   padding: 0 2px;
 }
 
+/* ==========================================================================
+   4-BLOCK PROMPT ANATOMY CARDS
+   ========================================================================== */
+.anatomy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+
+.anatomy-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.anatomy-card.context {
+  border-left-color: var(--navy-light);
+}
+.anatomy-card.deliverable {
+  border-left-color: #2563eb;
+}
+.anatomy-card.guardrail {
+  border-left-color: #dc2626;
+  background: #fffafa;
+}
+.anatomy-card.verification {
+  border-left-color: #16a34a;
+  background: #fcfdfc;
+}
+
+.anatomy-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.anatomy-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.anatomy-badge.context { background: var(--navy-light); }
+.anatomy-badge.deliverable { background: #2563eb; }
+.anatomy-badge.guardrail { background: #dc2626; }
+.anatomy-badge.verification { background: #16a34a; }
+
+.anatomy-aim {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.anatomy-prompt {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-main);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+}
+
+.anatomy-why {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  padding-left: 4px;
+}
+
+.anatomy-why strong {
+  color: var(--navy-primary);
+}
+
+/* ==========================================================================
+   4-BLOCK FRAMEWORK CARDS & THREAT-DEFENSE GRID
+   ========================================================================== */
+.framework-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+@media (max-width: 900px) {
+  .framework-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 540px) {
+  .framework-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.framework-col {
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-top: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.framework-col.c1 { border-top-color: var(--navy-light); }
+.framework-col.c2 { border-top-color: #2563eb; }
+.framework-col.c3 { border-top-color: #dc2626; background: #fffdfd; }
+.framework-col.c4 { border-top-color: #16a34a; background: #fdfdfd; }
+
+.framework-col .col-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+
+.framework-col .col-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 8px;
+}
+
+.framework-col .col-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  flex: 1;
+}
+
+.guard-defense-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+@media (max-width: 800px) {
+  .guard-defense-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guard-defense-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.guard-defense-card .threat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.guard-defense-card .threat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 6px;
+}
+
+.guard-defense-card .threat-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.guard-defense-card .defense-box {
+  background: #f8fafc;
+  border-left: 3px solid #dc2626;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-main);
+  border-radius: 0 4px 4px 0;
+}
+
+.guard-defense-card .defense-box strong {
+  color: #b91c1c;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1836,7 +2043,7 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>시장 국면(Bull/Bear/Sideway)에 따라 4대 전략의 비중을 동적으로 조절하는 레짐 스위칭 백테스트를 수행해줘. (Context)
 
 다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
-1. 2018-01-01부터 2024-12-31까지 KOSPI의 200일선 및 ADX 지표를 기준으로 매월 말일 시장 국면을 [상승/하락/횡보] 중 하나로 자동 판별해줘.
+1. 2018-01-01부터 2026-08-31까지 KOSPI의 200일선 및 ADX 지표를 기준으로 매월 말일 시장 국면을 [상승/하락/횡보] 중 하나로 자동 판별해줘.
 2. 각 국면별로 정의된 가중치(상승: 추세40+돌파30+모멘텀20+페어10, 하락: 채권모멘텀60+페어20+현금20, 횡보: 페어50+모멘텀30+현금20)를 다음 달 1달간 적용해줘.
 3. 단순 고정 균등 배분(각 25%) 포트폴리오와 동적 레짐 스위칭 포트폴리오의 CAGR, MDD, 샤프 지수를 비교하는 Markdown 표를 대화창에 출력해줘.
 4. 상단에는 두 포트폴리오의 누적 자산 성장 곡선, 하단에는 시간에 따른 4대 전략 비중 변화 스택 영역 차트(Regime Transition Plot)를 'regime_switching_portfolio.png'로 저장해줘.

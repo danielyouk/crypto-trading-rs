@@ -728,6 +728,213 @@ tr:hover td { background: #f8fafc; }
   padding: 0 2px;
 }
 
+/* ==========================================================================
+   4-BLOCK PROMPT ANATOMY CARDS
+   ========================================================================== */
+.anatomy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+
+.anatomy-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-left: 4px solid var(--navy-primary);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.anatomy-card.context {
+  border-left-color: var(--navy-light);
+}
+.anatomy-card.deliverable {
+  border-left-color: #2563eb;
+}
+.anatomy-card.guardrail {
+  border-left-color: #dc2626;
+  background: #fffafa;
+}
+.anatomy-card.verification {
+  border-left-color: #16a34a;
+  background: #fcfdfc;
+}
+
+.anatomy-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.anatomy-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.anatomy-badge.context { background: var(--navy-light); }
+.anatomy-badge.deliverable { background: #2563eb; }
+.anatomy-badge.guardrail { background: #dc2626; }
+.anatomy-badge.verification { background: #16a34a; }
+
+.anatomy-aim {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.anatomy-prompt {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-main);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+}
+
+.anatomy-why {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  padding-left: 4px;
+}
+
+.anatomy-why strong {
+  color: var(--navy-primary);
+}
+
+/* ==========================================================================
+   4-BLOCK FRAMEWORK CARDS & THREAT-DEFENSE GRID
+   ========================================================================== */
+.framework-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+@media (max-width: 900px) {
+  .framework-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 540px) {
+  .framework-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.framework-col {
+  background: var(--bg-card);
+  border: 1px solid var(--line-color);
+  border-top: 3px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.framework-col.c1 { border-top-color: var(--navy-light); }
+.framework-col.c2 { border-top-color: #2563eb; }
+.framework-col.c3 { border-top-color: #dc2626; background: #fffdfd; }
+.framework-col.c4 { border-top-color: #16a34a; background: #fdfdfd; }
+
+.framework-col .col-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+
+.framework-col .col-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 8px;
+}
+
+.framework-col .col-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  flex: 1;
+}
+
+.guard-defense-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+@media (max-width: 800px) {
+  .guard-defense-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guard-defense-card {
+  background: #ffffff;
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.guard-defense-card .threat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+.guard-defense-card .threat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-dark);
+  margin-bottom: 6px;
+}
+
+.guard-defense-card .threat-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.guard-defense-card .defense-box {
+  background: #f8fafc;
+  border-left: 3px solid #dc2626;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-main);
+  border-radius: 0 4px 4px 0;
+}
+
+.guard-defense-card .defense-box strong {
+  color: #b91c1c;
+}
+
 pre {
   background: #0f172a;
   color: #f1f5f9;
@@ -1767,7 +1974,7 @@ window.MathJax = {
                 <span class="clip-id">Clip 03</span>
                 <span class="clip-title">AI에게 원하는 결과를 정확하게 요청하는 방법</span>
                 
-                <span class="mini-tag time">22분</span>
+                <span class="mini-tag time">20분</span>
               </a>
             </li>
             
@@ -1789,7 +1996,7 @@ window.MathJax = {
                 
                 <span class="mini-tag prac">실습 03</span>
                 
-                <span class="mini-tag time">18분</span>
+                <span class="mini-tag time">20분</span>
               </a>
             </li>
             
