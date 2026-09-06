@@ -1604,15 +1604,17 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-시장-중립market-neutral과-공매도short-selling의-위력">1. 시장 중립(Market Neutral)과 공매도(Short Selling)의 위력</a>
             
-            <a class="nav-heading level-3" href="#2-미국-주식-시장의-대표적인-정통-롱숏-페어-classics">2. 미국 주식 시장의 대표적인 정통 롱숏 페어 (Classics)</a>
+            <a class="nav-heading level-3" href="#2-미국-주식-시장의-대표-페어와-interactive-brokersibkr-금액-단위-매매">2. 미국 주식 시장의 대표 페어와 Interactive Brokers(IBKR) 금액 단위 매매</a>
             
-            <a class="nav-heading level-3" href="#3-한국-시장에서도-공매도가-가능한가-실전-3대-실행-경로">3. 한국 시장에서도 공매도가 가능한가? (실전 3대 실행 경로)</a>
+            <a class="nav-heading level-3" href="#3-단일-페어의-함정-vs-50개-멀티-페어-포트폴리오-math_inline_13-법칙">3. 단일 페어의 함정 vs 50개 멀티 페어 포트폴리오 (@@@MATH_INLINE_13@@@ 법칙)</a>
             
-            <a class="nav-heading level-3" href="#4-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">4. 상관관계(Correlation) vs 공적분(Cointegration) — 퀀트의 흔한 착각</a>
+            <a class="nav-heading level-3" href="#4-한국-시장에서도-공매도가-가능한가-실전-3대-실행-경로">4. 한국 시장에서도 공매도가 가능한가? (실전 3대 실행 경로)</a>
             
-            <a class="nav-heading level-3" href="#5-스프레드와-z-score의-계산-공식">5. 스프레드와 Z-Score의 계산 공식</a>
+            <a class="nav-heading level-3" href="#5-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">5. 상관관계(Correlation) vs 공적분(Cointegration) — 퀀트의 흔한 착각</a>
             
-            <a class="nav-heading level-3" href="#6-페어트레이딩의-치명적-리스크-구조적-결별structural-break">6. 페어트레이딩의 치명적 리스크: 구조적 결별(Structural Break)</a>
+            <a class="nav-heading level-3" href="#6-스프레드와-z-score의-계산-공식">6. 스프레드와 Z-Score의 계산 공식</a>
+            
+            <a class="nav-heading level-3" href="#7-페어트레이딩의-치명적-리스크-구조적-결별structural-break">7. 페어트레이딩의 치명적 리스크: 구조적 결별(Structural Break)</a>
             
             <a class="nav-heading level-2" href="#오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</a>
             
@@ -2056,7 +2058,7 @@ $$</div>
 ▶ 포트폴리오 순손익: -20% + 35% = +15% 절대 수익 달성!
 </code></pre>
 <hr />
-<h3 id="2-미국-주식-시장의-대표적인-정통-롱숏-페어-classics">2. 미국 주식 시장의 대표적인 정통 롱숏 페어 (Classics)</h3>
+<h3 id="2-미국-주식-시장의-대표-페어와-interactive-brokersibkr-금액-단위-매매">2. 미국 주식 시장의 대표 페어와 Interactive Brokers(IBKR) 금액 단위 매매</h3>
 <p>미국 시장(NYSE/NASDAQ)은 마진 계좌를 통해 공매도(Short)가 매우 자유롭기 때문에, 세계적인 퀀트 헤지펀드들이 1:1 정통 롱숏 페어트레이딩을 주력으로 구사합니다.</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -2084,8 +2086,29 @@ $$</div>
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p>💡 <strong>IBKR 소수점 매매(Fractional Shares)와 정밀한 달러 중립(Dollar Neutral) 구현</strong>:<br />
+과거에는 주당 가격(예: XOM <span class="math-inline">$110, CVX$</span>150) 때문에 정수(1주) 단위로 매매하면 잔여 현금이 남거나 포지션 비율이 어긋났습니다.<br />
+하지만 <strong>Interactive Brokers(IBKR)</strong> 등 현대 글로벌 증권사는 <strong>소수점 4자리 주문 및 금액 단위(Cash Quantity) 주문</strong>을 지원합니다.<br />
+즉, `CashAmount: <span class="math-inline">$10,000`으로 주문하면 XOM$</span>10,000 매수(90.9091주)와 CVX <span class="math-inline">$10,000 공매도(66.6667주)를 **1센트의 오차도 없이 완벽한 50:50 달러 중립($</span>\beta \approx 0$)**으로 집행할 수 있습니다.</p>
+</blockquote>
 <hr />
-<h3 id="3-한국-시장에서도-공매도가-가능한가-실전-3대-실행-경로">3. 한국 시장에서도 공매도가 가능한가? (실전 3대 실행 경로)</h3>
+<h3 id="3-단일-페어의-함정-vs-50개-멀티-페어-포트폴리오-math_inline_13-법칙">3. 단일 페어의 함정 vs 50개 멀티 페어 포트폴리오 (<span class="math-inline">$\sqrt{N}$</span> 법칙)</h3>
+<p>왜 프로 퀀트 헤지펀드는 XOM/CVX 단 하나의 페어만 거래하지 않고 <strong>50~100개 페어 포트폴리오(통계적 차익거래)</strong>를 운영할까요?</p>
+<pre><code class="language-text">[단일 페어 (1 Pair)의 취약점 vs 50개 멀티 페어 포트폴리오 (50 Pairs)의 기적]
+
+① 단일 페어 (N = 1):
+  • 엑슨모빌의 가이아나 유전 대박 같은 기업 고유 이벤트 발생 시 Z-Score가 ±3.0을 뚫고 12회 하드스탑 발생.
+  • 연간 거래가 5~6회에 불과해 통계적 표본 부족으로 단독 운용 시 손실(-13%) 및 MDD -20% 발생 가능.
+
+② 50개 멀티 페어 포트폴리오 (N = 50, 자본의 2%씩 1/N 배분):
+  • 1개 페어가 -2% 하드스탑 손절을 맞아도, 전체 계좌에 미치는 영향은 -2% × 2% = 단 -0.04%에 불과!
+  • 나머지 49개 페어에서 매일 독립적인 평균 회귀 스프레드 이익이 지속적으로 발생.
+  • 퀀트의 기본 정리 (IR ≈ IC × √N)에 따라 독립적 베팅 수(N)가 50배로 늘어나며 샤프 지수가 1.5 ~ 2.5로 폭발!
+  • 30년간 닷컴버블(2000), 금융위기(2008), 코로나(2020)에서도 MDD를 -5% ~ -8%로 완벽히 방어.
+</code></pre>
+<hr />
+<h3 id="4-한국-시장에서도-공매도가-가능한가-실전-3대-실행-경로">4. 한국 시장에서도 공매도가 가능한가? (실전 3대 실행 경로)</h3>
 <p>수강생분들이 가장 많이 질문하는 포인트입니다: <strong>"한국에서도 코스피200 대형주는 개인 대주(공매도)가 가능하지 않나요?"</strong></p>
 <p>네, 제도적으로는 가능하지만, 개인 퀀트 자동화 관점에서는 다음과 같은 현실적 차이와 3가지 실행 대안이 존재합니다.</p>
 <div class="compare-box">
@@ -2116,7 +2139,7 @@ $$</div>
 </div>
 
 <hr />
-<h3 id="4-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">4. 상관관계(Correlation) vs 공적분(Cointegration) — 퀀트의 흔한 착각</h3>
+<h3 id="5-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">5. 상관관계(Correlation) vs 공적분(Cointegration) — 퀀트의 흔한 착각</h3>
 <p>많은 초보 퀀트가 두 종목의 가격 상관계수가 높다는 이유만으로 페어트레이딩을 시도하다가 큰 손실을 입습니다.</p>
 <div class="compare-box">
   <div class="compare-card bad">
@@ -2138,7 +2161,7 @@ $$</div>
 </div>
 
 <hr />
-<h3 id="5-스프레드와-z-score의-계산-공식">5. 스프레드와 Z-Score의 계산 공식</h3>
+<h3 id="6-스프레드와-z-score의-계산-공식">6. 스프레드와 Z-Score의 계산 공식</h3>
 <p>두 종목 <span class="math-inline">$A$</span>와 <span class="math-inline">$B$</span>의 가격 비율(또는 스프레드)을 계산하고, 이를 롤링 윈도우의 평균(<span class="math-inline">$\mu$</span>)과 표준편차(<span class="math-inline">$\sigma$</span>)로 정규화한 것이 <strong>Z-Score</strong>입니다.</p>
 <div class="math-block">$$
 \text{Price Ratio}_t = \frac{\text{Price}_{A, t}}{\text{Price}_{B, t}}
@@ -2162,7 +2185,7 @@ $$</div>
 </div>
 
 <hr />
-<h3 id="6-페어트레이딩의-치명적-리스크-구조적-결별structural-break">6. 페어트레이딩의 치명적 리스크: 구조적 결별(Structural Break)</h3>
+<h3 id="7-페어트레이딩의-치명적-리스크-구조적-결별structural-break">7. 페어트레이딩의 치명적 리스크: 구조적 결별(Structural Break)</h3>
 <p>"언젠가 평균으로 돌아온다"는 믿음은 가장 위험합니다.<br />
 한 기업에 횡령, 배임, 대규모 적자, 독점 신기술 격차 등 <strong>본질적 펀더멘털 변화가 발생하면 두 기업의 가격 격차는 영원히 벌어집니다(Structural Break)</strong>.<br />
 따라서 프로 퀀트는 반드시 <strong><span class="math-inline">$Z \ge \pm 3.0$</span> 도달 시 무조건 손절 청산하는 하드 스탑 안전망</strong>을 코드에 필수적으로 탑재합니다.</p>
