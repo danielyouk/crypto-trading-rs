@@ -2011,24 +2011,24 @@ window.MathJax = {
    - -0.5 &lt; Z &lt; +0.5 (평균 복귀): 균형 상태 ➔ 기존 포지션 유지.
    - 포지션 교체(스위칭) 시마다 편도 0.15%(수수료 및 증권거래세)를 차감.
 4. 개별 종목 단순 보유(KB금융 B&amp;H, 신한지주 B&amp;H)와 페어 스위칭 전략의 총수익률(%), CAGR(%), MDD(%), 샤프 지수, 총 스위칭 횟수를 비교하는 Markdown 표를 대화창에 출력해줘.
-5. 차트 한 장을 'pair_trading_backtest_result.png'로 저장해줘. 사양은 다음과 같아:
-   - 패널 2개:
-     * 상단: 개별 종목 단순 보유 vs 페어 스위칭 전략의 정규화 누적 수익률 곡선 (기준일=100)
-     * 하단: 60일 롤링 Z-Score 시계열 및 매매 임계선 (+1.5, 0.0, -1.5 수평선)
-   - 크기 14×8인치, dpi 150, 글자 크기 최소 11pt, 범례는 선과 겹치지 않게.
+5. 마우스 호버로 일자별 수치 확인과 줌/패닝이 가능한 대화형 Plotly 차트를 'pair_trading_backtest_result.html' 파일로 저장해줘:
+   - 패널 2개 서브플롯:
+     * 상단: 개별 종목 단순 보유(KB금융, 신한지주) vs 페어 스위칭 전략의 정규화 누적 자산 성장 곡선 (기준점=100)
+     * 하단: 60일 롤링 Z-Score 시계열 및 매매 임계선 (+1.5 상단 돌파선, 0.0 중심선, -1.5 하단 돌파선)
+   - 마우스 호버 시 [날짜, 현재 보유 종목, Z-Score 수치, 누적 자산] 툴팁이 한글로 표시되게 설정.
 
 [하지 말 것]
 - 한국 시장에서 개인 실행이 어려운 공매도(Short)를 쓰지 말고, 롱 온리 스위칭 방식으로 설계해.
-- GUI 팝업 창(plt.show)을 띄우지 말고 이미지 파일로 직접 저장해.
+- 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
-[확인] 대화창에 개별 종목 대비 페어트레이딩 성과 비교표가 출력되었는지, 그리고 차트 파일 'pair_trading_backtest_result.png'가 패널 2개로 정상 저장되었는지 확인해줘.
+[확인] 대화창에 개별 종목 대비 페어트레이딩 성과 비교표가 출력되었는지, 그리고 대화형 차트 파일 'pair_trading_backtest_result.html'이 패널 2개로 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> <strong>알파 창출 확인</strong>: KB금융과 신한지주를 번갈아 스위칭하는 전략이 두 종목을 각각 단순 보유한 것보다 높은 수익률과 개선된 샤프 지수를 기록했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>시장 중립적 방어력 확인</strong>: 코스피 지수가 급락하거나 횡보할 때도 상대가치 스프레드 회귀를 통해 계좌를 안정적으로 방어했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>차트 시각화 확인</strong>: <code>pair_trading_backtest_result.png</code> 하단 차트에서 Z-Score가 극단값(<span class="math-inline">$\pm 1.5$</span>)에 도달했을 때 정확히 저평가 종목으로 교체 매수된 궤적을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>대화형 차트 시각화 확인</strong>: <code>pair_trading_backtest_result.html</code>을 브라우저로 열어, 하단 차트에서 Z-Score가 극단값(<span class="math-inline">$\pm 1.5$</span>)에 도달했을 때 정확히 저평가 종목으로 교체 매수된 궤적을 마우스 호버로 확인했다.</li>
 </ul>
 <hr />
 <h2 id="part-2-종합-결산-4대-핵심-퀀트-전략-비교-매트릭스">Part 2 종합 결산: 4대 핵심 퀀트 전략 비교 매트릭스</h2>
