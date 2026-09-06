@@ -1606,7 +1606,7 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#2-미국-주식-시장의-대표-페어와-interactive-brokersibkr-금액-단위-매매">2. 미국 주식 시장의 대표 페어와 Interactive Brokers(IBKR) 금액 단위 매매</a>
             
-            <a class="nav-heading level-3" href="#3-헤지펀드-stat-arb의-3대-비밀-z값-보정-현금이자-레버리지-math_inline_13-법칙">3. 헤지펀드 Stat-Arb의 3대 비밀: Z값 보정, 현금이자, 레버리지 (@@@MATH_INLINE_13@@@ 법칙)</a>
+            <a class="nav-heading level-3" href="#3-헤지펀드-stat-arb의-3대-비밀-z값-보정-현금이자-레버리지-math_inline_11-법칙">3. 헤지펀드 Stat-Arb의 3대 비밀: Z값 보정, 현금이자, 레버리지 (@@@MATH_INLINE_11@@@ 법칙)</a>
             
             <a class="nav-heading level-3" href="#4-한국-시장에서도-공매도가-가능한가-실전-3대-실행-경로">4. 한국 시장에서도 공매도가 가능한가? (실전 3대 실행 경로)</a>
             
@@ -2088,12 +2088,12 @@ $$</div>
 </table></div>
 <blockquote>
 <p>💡 <strong>IBKR 소수점 매매(Fractional Shares)와 정밀한 달러 중립(Dollar Neutral) 구현</strong>:<br />
-과거에는 주당 가격(예: XOM <span class="math-inline">$110, CVX$</span>150) 때문에 정수(1주) 단위로 매매하면 잔여 현금이 남거나 포지션 비율이 어긋났습니다.<br />
+과거에는 주당 가격(예: XOM 110달러, CVX 150달러) 때문에 정수(1주) 단위로 매매하면 잔여 현금이 남거나 포지션 비율이 어긋났습니다.<br />
 하지만 <strong>Interactive Brokers(IBKR)</strong> 등 현대 글로벌 증권사는 <strong>소수점 4자리 주문 및 금액 단위(Cash Quantity) 주문</strong>을 지원합니다.<br />
-즉, `CashAmount: <span class="math-inline">$10,000`으로 주문하면 XOM$</span>10,000 매수(90.9091주)와 CVX <span class="math-inline">$10,000 공매도(66.6667주)를 **1센트의 오차도 없이 완벽한 50:50 달러 중립($</span>\beta \approx 0$)**으로 집행할 수 있습니다.</p>
+즉, <code>CashAmount: 10,000 USD</code>로 주문하면 XOM 1만 달러 매수(90.9091주)와 CVX 1만 달러 공매도(66.6667주)를 <strong>1센트의 오차도 없이 완벽한 50:50 달러 중립(<span class="math-inline">$\beta \approx 0$</span>)</strong>으로 집행할 수 있습니다.</p>
 </blockquote>
 <hr />
-<h3 id="3-헤지펀드-stat-arb의-3대-비밀-z값-보정-현금이자-레버리지-math_inline_13-법칙">3. 헤지펀드 Stat-Arb의 3대 비밀: Z값 보정, 현금이자, 레버리지 (<span class="math-inline">$\sqrt{N}$</span> 법칙)</h3>
+<h3 id="3-헤지펀드-stat-arb의-3대-비밀-z값-보정-현금이자-레버리지-math_inline_11-법칙">3. 헤지펀드 Stat-Arb의 3대 비밀: Z값 보정, 현금이자, 레버리지 (<span class="math-inline">$\sqrt{N}$</span> 법칙)</h3>
 <p>왜 프로 퀀트 헤지펀드(시타델, 밀레니엄)의 통계적 차익거래(Stat-Arb)는 단일 페어와 차원이 다른 성과를 낼까요?</p>
 <pre><code class="language-text">[50개 멀티 페어 Stat-Arb 포트폴리오의 3대 핵심 메커니즘]
 

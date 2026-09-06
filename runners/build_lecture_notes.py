@@ -108,7 +108,7 @@ def render_markdown(body: str) -> tuple[str, list[dict]]:
 
     # 0. LaTeX 수식 보호: markdown 파서가 _ 또는 * 기호를 기울임(<em>)으로 오인하는 현상 방지
     body = re.sub(r"\$\$([\s\S]*?)\$\$", save_block_math, body)
-    body = re.sub(r"(?<!\$)\$(?!\$)(.*?)(?<!\$)\$(?!\$)", save_inline_math, body)
+    body = re.sub(r"(?<![\$\\])\$(?!\s|\$)([^\n\$]+?)(?<!\s|[\$\\])\$(?!\$)", save_inline_math, body)
 
     converter = markdown.Markdown(extensions=MD_EXTENSIONS)
     html = converter.convert(body)
