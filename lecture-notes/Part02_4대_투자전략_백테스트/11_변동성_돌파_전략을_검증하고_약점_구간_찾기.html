@@ -1543,19 +1543,17 @@ window.MathJax = {
           
           <div class="nav-page-toc">
             
-            <a class="nav-heading level-2" href="#이번-클립에서-만들-것">이번 클립에서 만들 것</a>
+            <a class="nav-heading level-2" href="#이번-클립에서-만들-것-실습-편">이번 클립에서 만들 것 (실습 편)</a>
             
-            <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
+            <a class="nav-heading level-2" href="#이론-핵심-프로-퀀트의-약점-보완-필터">이론 핵심: 프로 퀀트의 약점 보완 필터</a>
             
-            <a class="nav-heading level-3" href="#1-변동성-돌파-백테스트의-실제-성과-구조">1. 변동성 돌파 백테스트의 실제 성과 구조</a>
+            <a class="nav-heading level-3" href="#200일선-결합-vbo-trend-filter">200일선 결합 (VBO + Trend Filter)</a>
             
-            <a class="nav-heading level-3" href="#2-변동성-돌파의-약점-구간과-원인-분석">2. 변동성 돌파의 약점 구간과 원인 분석</a>
-            
-            <a class="nav-heading level-3" href="#3-프로-퀀트의-약점-보완-필터-200일선-결합-vbo-trend-filter">3. 프로 퀀트의 약점 보완 필터: 200일선 결합 (VBO + Trend Filter)</a>
-            
-            <a class="nav-heading level-2" href="#실습-실습-05-백테스트-및-필터-개선-효과-검증">실습 — 실습 05: 백테스트 및 필터 개선 효과 검증</a>
+            <a class="nav-heading level-2" href="#실습-실습-05-kodex-레버리지-vbo-백테스트-및-필터-효과-검증">실습 — 실습 05: KODEX 레버리지 VBO 백테스트 및 필터 효과 검증</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
+            
+            <a class="nav-heading level-2" href="#자주-발생하는-문제">자주 발생하는 문제</a>
             
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
             
@@ -1967,82 +1965,91 @@ window.MathJax = {
       </div>
 
       <main>
-        <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 KODEX 레버리지 및 코스닥 대표 ETF를 대상으로 <strong>변동성 돌파(VBO) 전략의 다년간 백테스트를 실행</strong>하고, 높은 수익률 뒤에 도사린 <strong>'잦은 거래세/수수료 누적'</strong>과 <strong>'장 마감 직전 급락(윗꼬리 장대음봉) 트랩'</strong>이라는 약점 구간을 진단하여 이를 방어할 해결책을 수립하게 됩니다.</p>
+        <h2 id="이번-클립에서-만들-것-실습-편">이번 클립에서 만들 것 (실습 편)</h2>
+<p>이 클립이 끝나면, 여러분은 KODEX 레버리지(122630) ETF를 대상으로 <strong>변동성 돌파(VBO) 전략의 8년 백테스트를 실행</strong>하고, 높은 수익률 뒤에 도사린 <strong>'잦은 거래세/수수료 누적'</strong>과 <strong>'장 마감 직전 급락(윗꼬리 장대음봉) 트랩'</strong>이라는 약점 구간을 진단하여, 이를 <strong>200일 이동평균 필터</strong>로 방어하는 완성형 성과표와 차트를 손에 넣게 됩니다.</p>
 <blockquote>
 <p>💡 <strong>수강생 안심 안내</strong>: 모든 전략에는 '유리한 환경'과 '불리한 환경'이 공존합니다. 완벽한 무적의 전략은 존재하지 않습니다. 진정한 퀀트의 실력은 <strong>전략의 약점 구간을 정확히 알고, 필터를 씌워 방어하는 능력</strong>에서 나옵니다.</p>
 </blockquote>
-<ul>
-<li><strong>실습 05</strong>: KODEX 레버리지(122630) 대상 <span class="math-inline">$k=0.5$</span> 변동성 돌파 백테스트 엔진 가동</li>
-<li>거래비용(세금 + 수수료 + 슬리피지 편도 0.15%)이 연간 누적될 때 발생하는 충격 검증</li>
-<li>변동성 돌파의 2대 치명적 약점: <strong>가짜 돌파(False Breakout)</strong>와 <strong>지루한 박스권 횡보장</strong></li>
-<li>약점 보완책 1: <strong>이동평균선 추세 필터(Moving Average Filter)</strong> 결합</li>
-<li>약점 보완책 2: <strong>변동성 조절 자산배분(Volatility Targeting)</strong></li>
-</ul>
+<p><strong>클립 10(이론)에는 없고 이 클립(실습)에서 새로 추가되는 것:</strong></p>
+<table>
+<thead>
+<tr>
+<th>추가 요소</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>실전 체결 메커니즘</strong></td>
+<td>장중 돌파 시 매수, <strong>익일 시가 청산</strong> — Lookahead Bias 없는 일중 백테스트 엔진 구동</td>
+</tr>
+<tr>
+<td><strong>비용 차감 실측</strong></td>
+<td>연간 80~120회 거래마다 <strong>왕복 0.25%</strong>를 차감하여 실질 Net 성과 검증</td>
+</tr>
+<tr>
+<td><strong>200일 이평 필터 결합</strong></td>
+<td>대세 하락장 매수 금지 필터를 추가하여 기본 VBO와의 성과 개선폭 측정</td>
+</tr>
+<tr>
+<td><strong>3자 비교 성과표</strong></td>
+<td>단순 보유 vs 기본 VBO vs 필터 VBO의 <strong>CAGR, MDD, Sharpe, 거래 횟수, 승률</strong> 대조</td>
+</tr>
+<tr>
+<td><strong>차트 2장</strong></td>
+<td>누적 자산 성장 곡선(로그 스케일) + 고점 대비 낙폭(Underwater Plot) PNG 저장</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-변동성-돌파-백테스트의-실제-성과-구조">1. 변동성 돌파 백테스트의 실제 성과 구조</h3>
-<p>변동성 돌파 전략은 연간 거래 횟수가 80~130회에 달하는 준-데이트레이딩 전략입니다. 따라서 거래비용을 0으로 둔 '이상적 백테스트'와 실제 '비용 차감 백테스트'의 차이가 극단적으로 벌어집니다.</p>
+<h2 id="이론-핵심-프로-퀀트의-약점-보완-필터">이론 핵심: 프로 퀀트의 약점 보완 필터</h2>
+<h3 id="200일선-결합-vbo-trend-filter">200일선 결합 (VBO + Trend Filter)</h3>
+<p>기본 변동성 돌파 전략의 가장 큰 약점은 하락장에서도 반짝 반등 시 매수했다가 물리는 것입니다.<br />
+이를 해결하는 가장 강력한 필터는 <strong>"오늘 시가가 200일선 위에 있는 상승 추세장에서만 목표가 돌파 매수를 허용한다"</strong>는 단순한 규칙입니다.</p>
 <div class="math-block">$$
-\text{Trade Return} = \frac{\text{Close}_t - \text{Target}_t}{\text{Target}_t} - \text{Slippage \& Fees}
+\text{진입 규칙}: \text{당일 장중 최고가} \ge \text{목표 매수가} \quad \mathbf{AND} \quad \text{당일 시가} \ge \text{SMA}_{200}(\text{당일})
 $$</div>
-<pre><code class="language-text">[거래비용 미반영 백테스트] ──&gt; 누적 수익률 +450%, CAGR +35% (환상 속의 숫자)
-         ↓ (실제 마찰비용 왕복 0.25% 반영 시)
-[실제 순수익 백테스트]     ──&gt; 누적 수익률 +120%, CAGR +14%, MDD -18%
-</code></pre>
-<hr />
-<h3 id="2-변동성-돌파의-약점-구간과-원인-분석">2. 변동성 돌파의 약점 구간과 원인 분석</h3>
-<div class="compare-box">
-  <div class="compare-card bad">
-    <div class="tag">약점 1: 가짜 돌파 (False Breakout & 윗꼬리 음봉)</div>
-    <div class="steps">
-      • 오전 9시 30분에 급등하여 목표가를 뚫고 매수 체결됨.<br>
-      • 오후 2시 이후 외국인/기관 매도 폭탄으로 종가가 시가 아래로 폭락.<br>
-      • <strong>결과</strong>: 당일 -4% ~ -6%의 큰 손실 발생.
-    </div>
-  </div>
-  <div class="compare-card bad">
-    <div class="tag">약점 2: 거래세 누적으로 인한 계좌 마모 (Chop Market)</div>
-    <div class="steps">
-      • 박스권 장세에서 매일 소폭 돌파 후 제자리 마감.<br>
-      • 수익률은 0%인데 매도 시마다 0.18% 거래세와 수수료가 계속 차감됨.<br>
-      • <strong>결과</strong>: 누적 거래비용으로 인해 완만한 우하향 곡선 발생.
-    </div>
-  </div>
-</div>
-
-<hr />
-<h3 id="3-프로-퀀트의-약점-보완-필터-200일선-결합-vbo-trend-filter">3. 프로 퀀트의 약점 보완 필터: 200일선 결합 (VBO + Trend Filter)</h3>
-<p>이 약점을 해결하는 가장 우아한 방법은 <strong>"대세 하락장이나 200일선 아래에서는 변동성 돌파 신호가 나와도 매수하지 않는다"</strong>는 필터를 추가하는 것입니다.</p>
 <div class="math-block">$$
-\text{Execution Rule}: \text{Current Price} \ge \text{Target Price} \quad \mathbf{AND} \quad \text{Open}_t > \text{SMA}_{200}(t)
+\text{목표 매수가} = \text{당일 시가} + (\text{전일 고가} - \text{전일 저가}) \times 0.5
 $$</div>
 <hr />
-<h2 id="실습-실습-05-백테스트-및-필터-개선-효과-검증">실습 — 실습 05: 백테스트 및 필터 개선 효과 검증</h2>
-<p>Claude Code 대화창에 아래 프롬프트를 입력하여 기본 변동성 돌파와 200일 이평 필터 결합형 전략의 성과를 비교해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] KODEX 레버리지(122630)를 대상으로 변동성 돌파(VBO) 전략의 8년 백테스트를 수행하고, 200일 이평 필터 결합을 통한 하락장 방어 효과를 검증하고 싶어.
+<h2 id="실습-실습-05-kodex-레버리지-vbo-백테스트-및-필터-효과-검증">실습 — 실습 05: KODEX 레버리지 VBO 백테스트 및 필터 효과 검증</h2>
+<p>Claude Code 대화창에 아래의 표준 퀀트 백테스트 프롬프트를 입력하세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] KODEX 레버리지 ETF(122630)를 대상으로 래리 윌리엄스의 변동성 돌파(VBO) 전략 8년 백테스트를 수행하고, 200일 이동평균 필터 결합을 통한 하락장 방어 효과를 검증하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 백테스트 스크립트 'vbo_filter_backtest.py'를 작성하고 실행해줘:
-1. FinanceDataReader를 사용해 KODEX 레버리지의 최근 8개년(2016~2024) 일봉 데이터를 불러와줘.
-2. 다음 3가지 전략의 성과를 시뮬레이션해줘 (모두 왕복 거래비용 0.25% 차감):
-   - 전략 1 (기본 VBO): <span class="math-inline">$k=0.5$</span>, 당일 목표가 돌파 시 익일 시가 청산
-   - 전략 2 (필터 VBO): 당일 시가가 200일선 이상인 상승 추세에서만 목표가 돌파 매수
-   - 벤치마크: KODEX 레버리지 단순 보유 (Buy &amp; Hold)
-3. 세 전략의 CAGR, MDD, 샤프 지수, 총 거래 횟수, 승률을 비교하는 Markdown 표를 대화창에 출력해줘.
-4. 누적 자산 성장 곡선과 언더워터 플롯(MDD)을 비교한 차트를 'vbo_filter_comparison.png'로 저장해줘.
+1. FinanceDataReader를 사용해 KODEX 레버리지(122630)의 최근 8개년(2016~2024) 일봉 데이터를 불러와줘. (200일선 계산을 위한 워밍업 기간을 포함해 충분히 불러와줘.)
+2. 다음 3가지 전략의 성과를 시뮬레이션해줘 (모든 매매마다 왕복 거래비용 0.25% 차감):
+   - 전략 1 (기본 VBO): k=0.5, 전일 변동폭(전일 고가 - 전일 저가)을 이용해 목표 매수가(당일 시가 + 변동폭 * 0.5)를 계산하고, 당일 최고가가 목표가 이상이면 진입, 익일 시가에 전량 매도 청산.
+   - 전략 2 (필터 VBO): 기본 VBO 조건에 더해, '당일 시가 &gt;= 200일 이동평균선'인 상승 추세 날에만 매수 진입.
+   - 벤치마크: KODEX 레버리지 단순 보유 (Buy &amp; Hold).
+3. 세 전략의 성과(총수익률 %, CAGR %, MDD %, 샤프 지수, 총 거래 횟수, 승률 %)를 비교하는 Markdown 표를 대화창에 출력해줘.
+4. 차트 한 장을 'vbo_filter_comparison.png'로 저장해줘. 사양은 다음과 같아:
+   - 패널 2개: 위 = 누적 자산 성장 곡선(로그 스케일), 아래 = 언더워터 플롯(고점 대비 낙폭 %).
+   - 크기 14×8인치, dpi 150, 글자 크기 최소 11pt, 범례는 선과 겹치지 않는 위치.
+   - 선 3개: 단순 보유(회색 점선), 기본 VBO(주황색), 필터 VBO(진한 파랑).
+   - 아래 패널에 세 전략의 MDD 최저점 날짜와 수치를 텍스트로 표시.
 
 [하지 말 것]
 - 거래비용(왕복 0.25%)을 누락하지 말고 모든 매매마다 엄격히 차감해.
+- 당일 종가나 미래 가격을 시가에 미리 참조하는 미래참조(Lookahead Bias) 오류를 범하지 마.
 - GUI 팝업 창(plt.show)을 띄우지 말고 이미지 파일로 직접 저장해.
 
-[확인] 대화창에 3개 전략의 성과 비교표가 출력되었는지, 그리고 차트 파일 'vbo_filter_comparison.png'가 정상 저장되었는지 확인해줘.
+[확인] 대화창에 3개 전략의 성과 비교표가 출력되었는지, 그리고 차트 파일 'vbo_filter_comparison.png'가 패널 2개로 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 기본 VBO 대비 200일 이평 필터를 적용했을 때 거래 횟수가 절반 가까이 줄어들며 거래세가 절감되었다.</li>
-<li class="check-item"><input type="checkbox"> 2018년 및 2022년 하락장 구간에서 필터 결합형 전략의 MDD가 크게 방어되었다.</li>
-<li class="check-item"><input type="checkbox"> 생성된 차트 이미지(<code>vbo_filter_comparison.png</code>)에서 개선된 전략의 완만한 우상향 곡선을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>거래 횟수 절감 확인</strong>: 기본 VBO 대비 200일 이평 필터를 적용했을 때 거래 횟수가 대폭 줄어들며 불필요한 거래세가 절감되었다.</li>
+<li class="check-item"><input type="checkbox"> <strong>하락장 MDD 방어 확인</strong>: 2018년 및 2022년 대세 하락장 구간에서 필터 결합형 전략의 MDD가 단순 보유 대비 크게 방어되었다.</li>
+<li class="check-item"><input type="checkbox"> <strong>차트 시각화 확인</strong>: <code>vbo_filter_comparison.png</code> 차트에서 기본 VBO의 횡보장 우하향 마찰 구간을 필터 VBO가 완만하게 방어하는 모습을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>성과표 3열 대조</strong>: 단순 보유 vs 기본 VBO vs 필터 VBO의 CAGR, MDD, 샤프 지수가 한눈에 비교되었다.</li>
+</ul>
+<hr />
+<h2 id="자주-발생하는-문제">자주 발생하는 문제</h2>
+<ul>
+<li><strong>"기본 VBO의 거래 횟수가 너무 많고 수익률이 깎여요"</strong>: 지극히 정상적인 결과입니다. 단기 돌파 전략은 횡보장에서 잦은 진입과 거래세(0.15%)로 인해 계좌 마모가 발생합니다. 바로 그렇기 때문에 200일 이동평균 필터를 결합해 불리한 시장을 회피하는 것입니다.</li>
+<li><strong>"필터 VBO가 진입 횟수는 적은데 샤프 지수는 더 높은가요?"</strong>: 네, 맞습니다. 퀀트 투자에서 '거래를 덜 하는 것' 자체가 훌륭한 위험 관리이자 비용 절감 전략입니다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>

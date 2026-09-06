@@ -1535,15 +1535,19 @@ window.MathJax = {
           
           <div class="nav-page-toc">
             
-            <a class="nav-heading level-2" href="#이번-클립에서-만들-것">이번 클립에서 만들 것</a>
+            <a class="nav-heading level-2" href="#이번-클립에서-배울-것-이론-편">이번 클립에서 배울 것 (이론 편)</a>
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
             <a class="nav-heading level-3" href="#1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</a>
             
-            <a class="nav-heading level-3" href="#2-변동성-돌파가-작동하는-시장-심리적-배경">2. 변동성 돌파가 작동하는 시장 심리적 배경</a>
+            <a class="nav-heading level-3" href="#2-직관적-손계산-예시">2. 직관적 손계산 예시</a>
             
-            <a class="nav-heading level-2" href="#따라-해보기-시각화-실습">따라 해보기 — 시각화 실습</a>
+            <a class="nav-heading level-3" href="#3-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">3. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</a>
+            
+            <a class="nav-heading level-3" href="#4-변동성-돌파의-치명적-약점-윗꼬리-음봉과-횡보장-마찰">4. 변동성 돌파의 치명적 약점: 윗꼬리 음봉과 횡보장 마찰</a>
+            
+            <a class="nav-heading level-2" href="#오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -1965,96 +1969,167 @@ window.MathJax = {
       </div>
 
       <main>
-        <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 1987년 로빈스 트레이딩 챔피언십에서 1만 달러를 114만 달러(11,376% 수익률)로 불린 래리 윌리엄스(Larry Williams)의 전설적인 <strong>'변동성 돌파(Volatility Breakout, VBO) 전략'</strong>의 수학적 수식과 당일 데이트레이딩 메커니즘을 완벽하게 이해하게 됩니다.</p>
+        <h2 id="이번-클립에서-배울-것-이론-편">이번 클립에서 배울 것 (이론 편)</h2>
+<p>이 클립에서는 1987년 로빈스 트레이딩 챔피언십에서 1만 달러를 114만 달러(11,376% 수익률)로 불린 래리 윌리엄스(Larry Williams)의 전설적인 <strong>'변동성 돌파(Volatility Breakout, VBO) 전략'</strong>의 수학적 수식과 당일 데이트레이딩 메커니즘을 이론적으로 완벽하게 정립합니다.</p>
 <blockquote>
 <p>💡 <strong>래리 윌리엄스의 철학</strong>: <em>"시장의 변동성은 수축과 확장을 반복한다. 하루 동안 가격이 전일 변동폭의 일정 비율 이상 튀어 오른다면, 그 방향으로 장 마감까지 강력한 관성(모멘텀)이 유지된다."</em></p>
 </blockquote>
 <ul>
-<li>변동성 돌파 전략의 핵심 파라미터인 <strong>전일 변동폭(Range = High - Low)과 <span class="math-inline">$k$</span>-계수</strong>의 원리</li>
+<li>변동성 돌파 전략의 핵심 파라미터인 <strong>전일 변동폭(<span class="math-inline">$\text{Range} = \text{High} - \text{Low}$</span>)과 <span class="math-inline">$k$</span>-계수</strong>의 수식 원리</li>
 <li>당일 진입 후 당일 장 마감(또는 익일 시가) 전량 청산하는 <strong>오버나이트 리스크 통제 기법</strong></li>
-<li>한국 시장(KOSPI/KOSDAQ 및 레버리지 ETF)에서 변동성 돌파 전략이 유효한 이유</li>
-<li>모멘텀(Momentum)과 가격 관성의 물리학적 유추</li>
-<li><strong>실습</strong>: 실시간 일중 가격이 돌파 기준가(<span class="math-inline">$\text{Target Price}$</span>)를 뚫는 메커니즘 시각화</li>
+<li>한국 시장(KOSPI/KOSDAQ 및 레버리지 ETF)에서 변동성 돌파 전략이 유효한 수급적 배경</li>
+<li>횡보장에서의 잦은 거짓 돌파(False Breakout)와 거래비용 누적이라는 <strong>전략 본연의 취약점 분석</strong></li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-변동성-돌파-전략vbo의-수학적-정의">1. 변동성 돌파 전략(VBO)의 수학적 정의</h3>
-<p>변동성 돌파 전략은 장 시작(09:00) 직후 <strong>'목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수하여 당일 장 마감 또는 익일 시가에 전량 매도하는 단순하고 강력한 전략입니다.</p>
+<p>변동성 돌파 전략은 매일 아침 장 시작(09:00) 직후 <strong>'당일 목표 매수가'</strong>를 산출하고, 장중 현재가가 이 목표가를 0.1원이라도 상향 돌파하면 즉시 매수한 뒤 다음 날 장 시작 시 전량 매도하는 규칙 기반 단기 모멘텀 전략입니다.</p>
 <div class="math-block">$$
-\text{Range}_{t-1} = \text{High}_{t-1} - \text{Low}_{t-1} \quad (\text{전일 고가 - 전일 저가})
+\text{Range}_{t-1} = \text{High}_{t-1} - \text{Low}_{t-1} \quad (\text{전일 고가} - \text{전일 저가})
 $$</div>
 <div class="math-block">$$
 \text{Target Price}_t = \text{Open}_t + (\text{Range}_{t-1} \times k)
 $$</div>
 <div class="math-block">$$
-\text{Buy Condition}: \text{Current Price}_t \ge \text{Target Price}_t
+\text{진입 조건 (Entry)}: \text{Current Price}_t \ge \text{Target Price}_t \quad (\text{장중 돌파 시 즉시 매수})
 $$</div>
 <div class="math-block">$$
-\text{Sell Condition}: \text{익일 시가(09:00) 또는 당일 종가(15:30) 전량 시장가 매도}
+\text{청산 조건 (Exit)}: \text{익일 시가(09:00) 전량 시장가 매도} \quad (\text{보유 기간: 최장 24시간})
 $$</div>
 <div class="arch-grid">
   <div class="arch-card">
     <div class="card-title">① 변동폭 계수 (<span class="math-inline">$k$</span>-factor)</div>
-    <div class="card-desc">통상 0.4 ~ 0.6 사이의 값을 사용합니다. (가장 대중적인 표준값 <span class="math-inline">$k = 0.5$</span>). <span class="math-inline">$k$</span>가 클수록 진입 횟수가 줄어들고 안전해집니다.</div>
+    <div class="card-desc">통상 0.4 ~ 0.6 사이의 값을 사용합니다. (가장 대중적인 표준값 <span class="math-inline">$k = 0.5$</span>). <span class="math-inline">$k$</span>가 클수록 진입 기준이 높아져 거래 횟수가 줄고 안전해집니다.</div>
   </div>
   <div class="arch-card">
     <div class="card-title">② 오버나이트 리스크 제로화</div>
-    <div class="card-desc">밤사이 발생하는 미국 증시 폭락이나 글로벌 악재에 노출되지 않고, 매일 장 마감 후 100% 현금 상태로 숙면할 수 있습니다.</div>
+    <div class="card-desc">밤사이 발생하는 미국 증시 급락이나 글로벌 돌발 악재에 장기 노출되지 않고, 하루 단위로 포지션을 정리하여 계좌의 예측 가능성을 높입니다.</div>
   </div>
 </div>
 
 <hr />
-<h3 id="2-변동성-돌파가-작동하는-시장-심리적-배경">2. 변동성 돌파가 작동하는 시장 심리적 배경</h3>
+<h3 id="2-직관적-손계산-예시">2. 직관적 손계산 예시</h3>
+<p>변동성 돌파의 계산 원리는 매우 단순하여 누구나 암산으로 즉시 계산할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>계산 수식</th>
+<th>실제 가격 예시 (KODEX 레버리지)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>어제 고가 (<span class="math-inline">$\text{High}_{t-1}$</span>)</strong></td>
+<td>전일 장중 최고 체결가</td>
+<td>20,000원</td>
+</tr>
+<tr>
+<td><strong>어제 저가 (<span class="math-inline">$\text{Low}_{t-1}$</span>)</strong></td>
+<td>전일 장중 최저 체결가</td>
+<td>19,000원</td>
+</tr>
+<tr>
+<td><strong>전일 변동폭 (<span class="math-inline">$\text{Range}_{t-1}$</span>)</strong></td>
+<td><span class="math-inline">$20,000 - 19,000$</span></td>
+<td><strong>1,000원</strong></td>
+</tr>
+<tr>
+<td><strong>오늘 시가 (<span class="math-inline">$\text{Open}_t$</span>)</strong></td>
+<td>오늘 09:00 장 시작 가격</td>
+<td>19,500원</td>
+</tr>
+<tr>
+<td><strong>목표 매수가 (<span class="math-inline">$\text{Target}_t$</span>)</strong></td>
+<td><span class="math-inline">$19,500 + (1,000 \times 0.5)$</span></td>
+<td><strong>20,000원</strong></td>
+</tr>
+<tr>
+<td><strong>시스템 행동</strong></td>
+<td>장중 가격 <span class="math-inline">$\ge 20,000$</span>원 도달 시</td>
+<td><strong>즉시 시장가 매수 체결</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="3-변동성-돌파가-작동하는-시장-심리와-모멘텀-원리">3. 변동성 돌파가 작동하는 시장 심리와 모멘텀 원리</h3>
 <div class="compare-box">
   <div class="compare-card info">
-    <div class="tag">일반적인 잔파동 (Noise)</div>
+    <div class="tag">일반적인 잔파동 (Noise Market)</div>
     <div class="steps">
       • 시가 근처에서 소폭 등락을 거듭하며 특별한 추세가 없는 상태.<br>
       • 목표가(<span class="math-inline">$\text{Open} + \text{Range} \times 0.5$</span>)에 도달하지 못함.<br>
-      • <strong>시스템 행동</strong>: 관망 및 매수 미실행 (현금 100% 유지).
+      • <strong>시스템 행동</strong>: 관망 및 매수 미실행 (현금 100% 안전 유지).
     </div>
   </div>
   <div class="compare-card good">
     <div class="tag">강력한 기관/외인 수급 유입 (Breakout)</div>
     <div class="steps">
-      • 강력한 매수세가 전일 변동폭의 절반 이상을 순식간에 끌어올림.<br>
-      • 돌파 기준가를 뚫는 순간 <strong>강력한 추세 관성(Momentum)</strong> 형성.<br>
-      • <strong>시스템 행동</strong>: 즉시 편승 매수 ➔ 장 마감까지 상승 향유.
+      • 강력한 매수세가 유입되어 전일 변동폭의 절반 이상을 시가 위로 끌어올림.<br>
+      • 돌파 기준가를 뚫는 순간 <strong>강력한 당일 상승 관성(Momentum)</strong> 형성.<br>
+      • <strong>시스템 행동</strong>: 즉시 편승 매수 ➔ 익일 시가까지 상승 탄력 향유.
     </div>
   </div>
 </div>
 
 <hr />
-<h2 id="따라-해보기-시각화-실습">따라 해보기 — 시각화 실습</h2>
-<p>Claude Code에게 특정 종목의 일별 변동성 돌파 기준선과 실제 체결 여부를 시각화하도록 요청해 보겠습니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 래리 윌리엄스의 변동성 돌파(Volatility Breakout) 전략의 목표 매수가 계산 원리와 일중 체결 메커니즘을 분석하고 시각화하고 싶어.
-
-[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'vbo_mechanism_demo.py'를 작성하고 실행해줘:
-1. FinanceDataReader를 사용해 KODEX 레버리지(122630) 또는 삼성전자(005930)의 최근 6개월 일봉 데이터를 가져와줘.
-2. 매일의 변동폭(<span class="math-inline">$\text{Range} = \text{High} - \text{Low}$</span>)을 구하고, <span class="math-inline">$k=0.5$</span> 기준의 목표 매수가(<span class="math-inline">$\text{Target} = \text{Open} + \text{Range} \times 0.5$</span>)를 계산해줘.
-3. 당일의 최고가(<span class="math-inline">$\text{High}$</span>)가 목표 매수가 이상인 날을 '매수 체결일'로 판정하고, 매수 체결된 날의 진입가(Target)와 익일 시가(청산가) 간의 일간 수익률을 계산해줘.
-4. 상단 차트에는 캔들스틱과 함께 매일의 목표 매수가 선(주황색 점선)을 긋고, 돌파 체결된 날에는 화살표를 표시해줘.
-5. 차트 이미지는 'volatility_breakout_mechanism.png'로 저장해줘.
-
-[하지 말 것]
-- GUI 팝업 창(plt.show)을 띄우지 말고 이미지 파일로 직접 저장해.
-- 미래의 고가/저가를 오늘 시가에 미리 참조하는 미래참조 오류를 범하지 마.
-
-[확인] 스크립트 실행 후 최근 10거래일의 날짜, 시가, 고가, 목표 매수가, 돌파 여부(True/False), 일간 수익률을 대화창에 표로 요약 출력하고, 'volatility_breakout_mechanism.png' 파일이 정상 저장되었는지 확인해줘.
-</code></pre></div>
+<h3 id="4-변동성-돌파의-치명적-약점-윗꼬리-음봉과-횡보장-마찰">4. 변동성 돌파의 치명적 약점: 윗꼬리 음봉과 횡보장 마찰</h3>
+<p>세상에 완벽한 무적의 전략은 없습니다. 변동성 돌파 전략 역시 다음과 같은 명확한 약점을 가집니다.</p>
+<ol>
+<li><strong>가짜 돌파(False Breakout)와 윗꼬리 장대음봉</strong>: 장 초반에 반짝 급등하여 목표가를 뚫고 매수되었으나, 오후 들어 기관의 대량 차익실현 매물이 쏟아져 종가가 시가 아래로 폭락하는 경우 당일 큰 손실(-3% ~ -5%)을 입게 됩니다.</li>
+<li><strong>박스권 횡보장에서의 거래세 누적</strong>: 박스권 장세에서는 목표가를 살짝 건드리고 제자리로 내려오는 매매가 반복되며, 연간 80~120회의 잦은 거래로 인해 <strong>증권거래세(0.15%)와 슬리피지가 계좌를 갉아먹는 현상</strong>이 발생합니다.</li>
+</ol>
+<blockquote>
+<p>💡 <strong>약점 극복의 열쇠</strong>: 다음 클립(11)에서는 KODEX 레버리지 ETF의 다년간 백테스트를 통해 이러한 약점 구간을 데이터로 직접 확인하고, <strong>"200일선 위에 있을 때만 변동성 돌파를 실행하는 이동평균 필터"</strong>를 결합하여 약점을 방어하는 퀀트 엔지니어링을 실습합니다.</p>
+</blockquote>
+<hr />
+<h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
+<p>이 클립에서는 래리 윌리엄스 변동성 돌파 전략의 수식 구조와 목표 매수가 계산 원리, 그리고 당일 데이트레이딩의 장단점을 이론적으로 학습했습니다.</p>
+<p>실제 <strong>KODEX 레버리지 ETF 데이터를 활용해 8개년 백테스트를 실행하고, 200일 이동평균 필터를 결합하여 성과를 극대화하는 실습(실습 05)</strong>은 바로 다음 클립인 <strong>[11_변동성_돌파_전략을_검증하고_약점_구간_찾기]</strong>에서 Claude Code와 함께 실행합니다.</p>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>클립 10 (이론: 원리 이해)</th>
+<th>클립 11 (실습 05: 백테스트 &amp; 필터)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>핵심 목표</strong></td>
+<td>Range 수식, <span class="math-inline">$k=0.5$</span> 목표가 손계산, 모멘텀 이해</td>
+<td>KODEX 레버리지 대상 백테스트 엔진 구동</td>
+</tr>
+<tr>
+<td><strong>전략 비교</strong></td>
+<td>노이즈 vs 돌파 수급 메커니즘</td>
+<td><strong>기본 VBO vs 200일선 필터 VBO vs 단순 보유</strong> 3자 비교</td>
+</tr>
+<tr>
+<td><strong>비용 분석</strong></td>
+<td>고회전 매매에 따른 거래세 마찰 원리</td>
+<td>매 거래마다 <strong>왕복 0.25%</strong> 차감 후 실질 Net 성과 도출</td>
+</tr>
+<tr>
+<td><strong>결과 산출물</strong></td>
+<td>목표가 산출 논리 및 오버나이트 통제 원리 정립</td>
+<td><strong>성과 비교표 + 누적 수익률·MDD 2-패널 차트 PNG</strong></td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 매일 아침 시가(<span class="math-inline">$\text{Open}$</span>)에 전일 변동폭의 50%를 더한 목표 매수가가 정확하게 계산되었다.</li>
-<li class="check-item"><input type="checkbox"> 주가가 크게 급등한 날에는 목표가를 뚫고 화살표(매수) 신호가 표시되었음을 확인했다.</li>
-<li class="check-item"><input type="checkbox"> 주가가 지지부진했던 횡보일에는 매수가 발생하지 않고 현금을 지킨 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 변동성 돌파 전략의 목표가 수식(<span class="math-inline">$\text{Target} = \text{Open} + \text{Range} \times k$</span>)의 의미를 정확히 이해했다.</li>
+<li class="check-item"><input type="checkbox"> 당일 장중 돌파 시 매수하고 익일 시가에 청산하는 오버나이트 리스크 통제 원리를 파악했다.</li>
+<li class="check-item"><input type="checkbox"> 변동성 돌파의 주요 위험 요인(가짜 돌파, 윗꼬리 음봉, 고회전 거래세 마찰)을 이해했다.</li>
+<li class="check-item"><input type="checkbox"> 다음 클립(11)에서 KODEX 레버리지 백테스트와 이동평균 필터 개선 효과를 직접 검증할 준비를 마쳤다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
 <p>변동성 돌파의 명쾌한 원리를 확인했습니다.<br />
-하지만 변동성 돌파 전략 역시 하루 종일 주가가 올랐다가 장 마감 직전에 폭락하는 '윗꼬리 음봉'이나 횡보장에서 손실을 입을 수 있습니다.<br />
-다음 클립에서는 <strong>변동성 돌파 전략의 10년 백테스트를 수행하고, 이 전략의 취약 구간과 약점을 극복하는 보완책</strong>을 분석해 보겠습니다.</p>
+그렇다면 실제로 이 전략을 KODEX 레버리지 ETF에 8년간 적용했을 때 어떤 성과가 나왔고, 약점 구간은 어디였을까요?<br />
+다음 클립에서는 <strong>변동성 돌파 전략의 백테스트를 수행하고, 200일 이평 필터로 약점을 극복하는 실습</strong>을 진행해 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">
