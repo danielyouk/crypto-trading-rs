@@ -1520,7 +1520,7 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#2-추세추종의-핵심-철학-손절은-짧게-수익은-길게-cut-losses-short-let-profits-run">2. 추세추종의 핵심 철학: 손절은 짧게, 수익은 길게 (Cut Losses Short, Let Profits Run)</a>
             
-            <a class="nav-heading level-3" href="#3-휩소whipsaw의-정체와-미국-vs-한국-시장의-결정적-차이">3. 휩소(Whipsaw)의 정체와 미국 vs 한국 시장의 결정적 차이</a>
+            <a class="nav-heading level-3" href="#3-휩소whipsaw의-정체와-한국-시장kodex-200의-특성">3. 휩소(Whipsaw)의 정체와 한국 시장(KODEX 200)의 특성</a>
             
             <a class="nav-heading level-3" href="#4-매매-신호-알고리즘-골든크로스와-데드크로스의-판정-로직">4. 매매 신호 알고리즘: 골든크로스와 데드크로스의 판정 로직</a>
             
@@ -2022,60 +2022,57 @@ $$</div>
 <h3 id="2-추세추종의-핵심-철학-손절은-짧게-수익은-길게-cut-losses-short-let-profits-run">2. 추세추종의 핵심 철학: 손절은 짧게, 수익은 길게 (Cut Losses Short, Let Profits Run)</h3>
 <p>초보자는 "승률 90% 전략"을 찾아 헤매지만, 그런 전략은 한 번의 -50% 폭락으로 파산합니다.<br />
 추세추종은 <strong>10번 중 6번을 지더라도, 질 때는 -2%만 잃고 이길 때는 +30%, +100%를 취하는 비대칭 손익비 구조</strong>로 승리합니다.</p>
-<pre><code class="language-text">[10회 매매 시뮬레이션]
+<pre><code class="language-text">[개념적 산술 모델: 높은 손익비의 승리 원리]
 • 6회 손실: 각각 -2% 손절  ──&gt; 합계: -12%
 • 4회 수익: 각각 +15%, +20%, +35%, +50% ──&gt; 합계: +120%
 ─────────────────────────────────────────────
 ▶ 최종 결과: 승률 40%이지만 순수익 +108% 달성!
 </code></pre>
+<blockquote>
+<p>⚠️ <strong>토이 모델 vs 실전 200일선의 차이 (왜 실제로는 다를까?)</strong>:<br />
+위 10회 시뮬레이션은 손익비의 수학적 원리를 설명하기 위한 <strong>개념적 모델(Toy Model)</strong>입니다.<br />
+실제 단일 200일선 백테스트(KODEX 200 12년 등)에서는 <strong>60회 이상의 거래 중 상위 1~3회의 초대형 대세 상승(+40% ~ +200%)이 전체 수익의 대부분을 견인</strong>하고, 나머지 수십 회는 0% 근처에서 잦은 휩소 손절이 반복되는 극단적인 비대칭 분포를 보입니다.<br />
+여기에 매 거래마다 0.25%의 마찰 비용(증권거래세+수수료)이 누적되면 수익이 깎이게 됩니다. 이것이 바로 우리가 단순 200일선에 만족하지 않고, Part 3의 <strong>완충 밴드 필터(히스테리시스)</strong>와 <strong>4대 전략 분산</strong>을 배우는 진짜 이유입니다.</p>
+</blockquote>
 <hr />
-<h3 id="3-휩소whipsaw의-정체와-미국-vs-한국-시장의-결정적-차이">3. 휩소(Whipsaw)의 정체와 미국 vs 한국 시장의 결정적 차이</h3>
+<h3 id="3-휩소whipsaw의-정체와-한국-시장kodex-200의-특성">3. 휩소(Whipsaw)의 정체와 한국 시장(KODEX 200)의 특성</h3>
 <h4 id="①-휩소whipsaw-톱질-현상란-무엇인가">① 휩소(Whipsaw, 톱질 현상)란 무엇인가?</h4>
 <p>'Whipsaw'는 벌목꾼의 <strong>양손 톱질처럼 주가가 이평선을 위아래로 쉼 없이 오르내리는 횡보장</strong>에서 발생합니다.</p>
 <pre><code class="language-text">[횡보장 휩소의 악순환]
 200일선 상향 돌파 ➔ 매수 진입! (+0.1%)
-다음날 200일선 하향 이탈 ➔ 손절 매도! (-0.5% + 거래비용 0.3%)
+다음날 200일선 하향 이탈 ➔ 손절 매도! (-0.5% + 거래비용 0.25%)
 다다음날 다시 200일선 돌파 ➔ 재매수 진입!
 또 다음날 다시 이탈 ➔ 또 손절 매도!
 ─────────────────────────────────────────────
 ▶ 주가는 제자리인데 계좌만 톱으로 썰려나가는 '마찰 손실' 발생
 </code></pre>
-<h4 id="②-미국-주식sp-500-spy-vs-한국-주식kospi-kodex-200-비교">② 미국 주식(S&amp;P 500 / SPY) vs 한국 주식(KOSPI / KODEX 200) 비교</h4>
-<p>추세추종 전략을 미국 시장과 한국 시장에 적용했을 때 나타나는 성과의 차이는 시장 구조에서 비롯됩니다.</p>
+<h4 id="②-한국-주식-시장kodex-200에서의-200일선-특징">② 한국 주식 시장(KODEX 200)에서의 200일선 특징</h4>
 <table>
 <thead>
 <tr>
-<th>비교 항목</th>
-<th>미국 시장 (SPY / S&amp;P 500)</th>
-<th>한국 시장 (KODEX 200 / KOSPI)</th>
+<th>분석 항목</th>
+<th>한국 시장 (KODEX 200 / KOSPI) 실전 특성</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>장기 추세 구조</strong></td>
-<td><strong>강력한 장기 우상향 (Strong Trend)</strong><br>한 번 상승 추세를 타면 수년간 지속됨</td>
-<td><strong>박스권 횡보장 빈번 (Box Range)</strong><br>200일선 근처를 잦게 넘나드는 톱니 구간 다수</td>
+<td><strong>시장 구조</strong></td>
+<td><strong>박스권 횡보장 빈번 (Box Range)</strong><br>장기 우상향보다는 200일선 근처를 잦게 넘나드는 톱니 구간 다수</td>
 </tr>
 <tr>
-<td><strong>거래비용 / 세금</strong></td>
-<td><strong>거래세 없음</strong> (매도 시 SEC Fee 0.003% 안팎만)<br>단, 한국 증권사로 매매하면 편도 수수료 0.07~0.25% + 환전 스프레드 ➔ 왕복 0.25% 안팎으로 한국 주식과 비슷. 미국 현지 증권사만 수수료 0</td>
-<td><strong>증권거래세 부담 (매도 시 약 0.15~0.20%)</strong><br>잦은 휩소 매매 시 거래세로 계좌가 녹아내림</td>
+<td><strong>거래비용과 세금</strong></td>
+<td><strong>증권거래세 부담 (매도 시 약 0.15%)</strong><br>잦은 휩소 매매 시 거래세와 슬리피지로 마찰 비용 누적</td>
 </tr>
 <tr>
-<td><strong>200일선 단독 성과</strong> (다음 클립에서 실측)</td>
-<td><strong>대세 하락장 MDD 획기적 방어</strong><br>장기 폭락장을 피하여 계좌의 극단적 붕괴를 통제</td>
-<td><strong>MDD는 줄지만 횡보장 수익 잠식</strong><br>거래비용 차감 후 잦은 휩소로 마찰 손실 발생 가능</td>
+<td><strong>200일선 단독 성과</strong></td>
+<td><strong>대세 하락장(2008년, 2022년) MDD 획기적 방어</strong><br>폭락장에 현금 100%로 피신하여 계좌의 극단적 붕괴를 통제</td>
 </tr>
 <tr>
-<td><strong>200일선의 정체</strong></td>
-<td><strong>위험 관리 도구</strong>: 초과수익 마법이 아니라 "최악의 순간을 방어"</td>
-<td>추세가 없는 시장에서는 톱질만 남음 ➔ <strong>완충 밴드 필터(Part 3) 및 4대 전략 분산 필수</strong></td>
+<td><strong>200일선의 본질</strong></td>
+<td><strong>위험 관리 도구 (방패)</strong>: 초과수익 마법이 아니라 "최악의 순간을 방어"<br>횡보장 휩소를 극복하기 위해 <strong>변동성 돌파(클립 10), 자산배분(클립 12), 페어트레이딩(클립 14)</strong> 분산 필수</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>💡 <strong>강의 핵심 인사이트</strong>: 미국 시장에서 200일선 추세추종은 2000년 IT 버블과 2008년 금융위기처럼 <strong>몇 달에 걸쳐 천천히 무너지는 하락장</strong>을 효과적으로 피합니다. 하지만 2020년 3월처럼 3주 만에 끝나는 급락은 200일선이 느려서 일부만 피하고, 그 대가로 상승장 초입을 놓쳐 CAGR을 일부 내줍니다. 즉 <strong>"더 벌게 해 주는 도구"가 아니라 "덜 잃게 해 주는 도구"</strong>입니다. 반면 한국 시장에서는 따라갈 장기 추세 자체가 약하고 거래세까지 붙어, 박스피 휩소를 이겨내려면 <strong>변동성 돌파(클립 10), 듀얼 모멘텀(클립 12), 페어트레이딩(클립 14)</strong>을 결합해야 합니다. 두 시장의 실제 숫자는 다음 클립에서 여러분이 직접 뽑습니다.</p>
-</blockquote>
 <hr />
 <h3 id="4-매매-신호-알고리즘-골든크로스와-데드크로스의-판정-로직">4. 매매 신호 알고리즘: 골든크로스와 데드크로스의 판정 로직</h3>
 <p>추세추종 규칙을 컴퓨터가 오차 없이 실행하려면 신호 발생 조건을 수학적 논리식으로 정의해야 합니다.</p>
@@ -2218,7 +2215,7 @@ $$</div>
 
 <hr />
 <h2 id="오늘-확인할-것-이-클립은-이론입니다">오늘 확인할 것 — 이 클립은 이론입니다</h2>
-<p>이 클립에서는 200일 이동평균선의 수학적 원리와 추세추종의 손익비 철학, 그리고 휩소(Whipsaw)와 미국 vs 한국 시장의 차이를 이론적으로 정립했습니다.</p>
+<p>이 클립에서는 200일 이동평균선의 수학적 원리와 추세추종의 손익비 철학, 그리고 휩소(Whipsaw)와 한국 시장의 거래비용 구조를 이론적으로 정립했습니다.</p>
 <p>클립 07에서 배운 <strong>4대 핵심 성과표(CAGR, MDD, Sharpe Ratio, Win Rate vs Payoff)</strong>와 <strong>현실 거래비용(0.25%)</strong>을 완벽하게 계산하는 <strong>10년치 백테스트 실습(실습 04)</strong>은 바로 다음 클립인 <strong>[09_추세추종_전략을_과거_데이터로_검증하기]</strong>에서 Claude Code와 함께 집중적으로 실행합니다.</p>
 <table>
 <thead>
@@ -2232,7 +2229,7 @@ $$</div>
 <tr>
 <td><strong>핵심 목표</strong></td>
 <td>200일선 수식, 손익비 철학, 휩소 이해</td>
-<td>KODEX 200 10년 + <strong>SPY 30년</strong> 백테스트 엔진 구동</td>
+<td><strong>KODEX 200 10년 백테스트 엔진 구동</strong></td>
 </tr>
 <tr>
 <td><strong>성과 지표</strong></td>
@@ -2241,8 +2238,8 @@ $$</div>
 </tr>
 <tr>
 <td><strong>비용 분석</strong></td>
-<td>미국 vs 한국 시장 거래세 구조 이해</td>
-<td>두 시장에 <strong>같은 왕복 0.25%</strong>를 차감해 Gross vs Net 실측 — 비용을 고정해 시장 차이만 남김</td>
+<td>한국 시장 증권거래세와 마찰 비용 원리 파악</td>
+<td><strong>왕복 0.25%</strong>를 차감해 Gross vs Net 실측</td>
 </tr>
 <tr>
 <td><strong>결과 산출물</strong></td>
@@ -2256,7 +2253,7 @@ $$</div>
 <ul>
 <li class="check-item"><input type="checkbox"> 200일 이동평균선의 수식 의미(<span class="math-inline">$\text{Close}(t-i)$</span>를 통해 과거 200영업일 종가를 평균 낸 것)를 정확히 이해했다.</li>
 <li class="check-item"><input type="checkbox"> 추세추종이 낮은 승률(35~45%)에도 불구하고 높은 손익비(3:1)로 계좌를 우상향시키는 비대칭 수익 구조를 파악했다.</li>
-<li class="check-item"><input type="checkbox"> 횡보장에서 잦은 손절을 일으키는 휩소(Whipsaw)와 미국(장기 추세/저비용) vs 한국(박스권/거래세) 시장의 차이를 이해했다.</li>
+<li class="check-item"><input type="checkbox"> 횡보장에서 잦은 손절을 일으키는 휩소(Whipsaw)와 한국 시장(증권거래세 마찰)의 특성을 이해했다.</li>
 <li class="check-item"><input type="checkbox"> 다음 클립(09)에서 KODEX 200 10년 백테스트를 통해 CAGR, MDD, 샤프 지수를 직접 산출할 준비를 마쳤다.</li>
 </ul>
 <hr />
