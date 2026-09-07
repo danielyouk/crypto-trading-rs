@@ -1539,7 +1539,7 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-백테스트-시뮬레이션의-계산-논리">1. 백테스트 시뮬레이션의 계산 논리</a>
+            <a class="nav-heading level-3" href="#1-매매-신호와-체결-시점의-원칙">1. 매매 신호와 체결 시점의 원칙</a>
             
             <a class="nav-heading level-3" href="#2-성과표를-읽는-세-가지-질문">2. 성과표를 읽는 세 가지 질문</a>
             
@@ -1997,8 +1997,8 @@ window.MathJax = {
 </thead>
 <tbody>
 <tr>
-<td><strong>체결 시차 규칙</strong></td>
-<td>신호는 오늘 종가, 체결은 <strong>내일 시가</strong> — 결정과 체결 사이의 시차를 코드로 강제</td>
+<td><strong>체결 시점 규칙</strong></td>
+<td>오늘 종가로 신호 판정, <strong>내일 시가</strong>에 주문 체결</td>
 </tr>
 <tr>
 <td><strong>거래비용 차감</strong></td>
@@ -2020,45 +2020,16 @@ window.MathJax = {
 </table></div>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-백테스트-시뮬레이션의-계산-논리">1. 백테스트 시뮬레이션의 계산 논리</h3>
-<p>과거 시계열 데이터에서 매일의 수익률을 계산할 때 가장 중요한 것은 <strong>신호 발생 시점(t)과 실제 체결 시점(t+1)의 시차(Lag)</strong>를 엄격하게 적용하는 것입니다.</p>
+<h3 id="1-매매-신호와-체결-시점의-원칙">1. 매매 신호와 체결 시점의 원칙</h3>
+<p>백테스트 시뮬레이션에서 지켜야 할 원칙은 아주 단순합니다: <strong>"신호는 오늘 장 마감 종가로 판정하고, 실제 매매 체결은 다음 날 아침 시가에 일어난다."</strong></p>
 <div class="math-block">$$
-\text{Signal}_t = \begin{cases} 1 & \text{if } \text{Close}_t > \text{SMA}_{200}(t) \\ 0 & \text{otherwise} \end{cases}
+\text{오늘(t) 장 마감 종가로 신호 판정} \implies \text{다음 날(t+1) 아침 시가(Open)에 매매 체결}
 $$</div>
-<div class="math-block">$$
-\text{Position}_{t+1} = \text{Signal}_t \quad (\text{오늘 장 마감 신호 보고 내일 시가 매수})
-$$</div>
-<p>내일(t+1) 하루의 전략 수익률은 그날 포지션이 바뀌는지에 따라 세 가지로 나뉩니다. 분석은 오늘 종가로 하고, 거래는 내일 장이 열리는 순간 일어난다는 가정입니다.</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>내일(t+1)의 상황</th>
-<th>전략 수익률</th>
-<th>뜻</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>진입일</strong> (Signal이 0→1)</td>
-<td><span class="math-inline">$\frac{\text{Close}_{t+1}}{\text{Open}_{t+1}} - 1 - \text{Cost}$</span></td>
-<td>내일 시가에 사서 종가까지 보유. 밤사이 갭(오늘 종가 → 내일 시가)은 못 먹음</td>
-</tr>
-<tr>
-<td><strong>보유 중인 날</strong> (1→1)</td>
-<td><span class="math-inline">$\frac{\text{Close}_{t+1}}{\text{Close}_t} - 1$</span></td>
-<td>어제 종가에서 오늘 종가까지 그대로 보유</td>
-</tr>
-<tr>
-<td><strong>청산일</strong> (1→0)</td>
-<td><span class="math-inline">$\frac{\text{Open}_{t+1}}{\text{Close}_t} - 1 - \text{Cost}$</span></td>
-<td>밤사이 갭까지만 반영하고 내일 시가에 팜</td>
-</tr>
-</tbody>
-</table></div>
-<blockquote>
-<p>⚠️ <strong>체결 시차를 지키세요</strong>: 오늘(t) 종가로 계산된 신호는 <strong>내일(t+1) 시가</strong>부터 적용되어야 합니다. 오늘 신호로 오늘 수익(어제 종가 → 오늘 종가)을 얻는 것으로 계산하면, 그 시점에는 아직 모르는 값(오늘 종가)으로 번 셈이 되어 백테스트가 비현실적으로 과대 포장됩니다.</p>
-<p>종가 대 종가 수익률에 <code>shift(1)</code>만 적용하는 교과서식 계산은 모르는 값을 쓰지는 않지만, <strong>신호를 계산한 바로 그 종가에 체결한 셈</strong>이 됩니다. 종가는 확정된 뒤에는 거래할 수 없습니다. 갭이 크게 뜨는 날에는 실제 시가 체결과 차이가 나므로, 이 강의의 백테스트는 위 표처럼 교체일에 시가를 씁니다.</p>
-</blockquote>
+<ul>
+<li><strong>오늘 장 마감 후</strong>: 오늘의 종가가 200일선 위에 있는지 확인하고 매수/매도 시그널을 결정합니다.</li>
+<li><strong>다음 날 장 시작 시</strong>: 결정된 시그널에 따라 다음 날 아침 시가(Open)에 실제로 주문을 체결합니다.</li>
+<li><strong>단순한 이유</strong>: 오늘 장이 끝난 뒤에 확정된 종가로는 이미 오늘 거래할 수 없습니다. 따라서 다음 날 아침 시가에 매매하는 것이 실전과 똑같은 가장 정직한 백테스트입니다.</li>
+</ul>
 <hr />
 <h3 id="2-성과표를-읽는-세-가지-질문">2. 성과표를 읽는 세 가지 질문</h3>
 <p>백테스트를 실행한 뒤 Claude Code 화면에 출력된 성과표는 아래 세 가지 질문 순서대로 읽습니다.</p>
@@ -2099,7 +2070,7 @@ $$</div>
 
 [만들 것] 다음 조건에 맞춰 백테스트 파이썬 스크립트 'trend_following_backtest.py'를 작성하고 실행해줘:
 1. FinanceDataReader를 사용해 KODEX 200(종목코드: '069500')의 최근 10년 일봉 데이터를 불러와줘. (200일선 계산을 위한 워밍업 기간을 포함해 충분히 불러와줘.)
-2. 200일 단순 이동평균선을 계산하고, 당일 종가가 200일선 상향 돌파 시 익일 시가 매수, 하향 이탈 시 익일 시가 매도로 시뮬레이션해줘. (신호는 오늘 종가, 체결은 다음 거래일 시가라는 체결 시차를 반드시 지켜)
+2. 200일 단순 이동평균선을 계산하고, 당일 종가가 200일선 상향 돌파 시 익일 시가 매수, 하향 이탈 시 익일 시가 매도로 시뮬레이션해줘. (당일 종가 신호 판정 ➔ 익일 시가 체결)
 3. 매매 시 왕복 거래비용 0.25%(슬리피지 0.1% + 매매수수료 및 세금 0.15%)를 매회 차감해줘.
 4. 단순 보유(Buy &amp; Hold)와 추세추종 전략(비용 반영 전 Gross vs 비용 반영 후 Net)의 성과를 다음 지표로 비교하는 Markdown 표를 대화창에 출력해줘:
    - 총 누적 수익률(Total Return %)
@@ -2114,7 +2085,7 @@ $$</div>
    - 마우스 호버 시 [날짜, 종가, 200일선, 누적 수익률 %, 낙폭 %] 툴팁이 한글로 깔끔하게 표시되도록 설정.
 
 [하지 말 것]
-- 신호 당일 종가로 즉시 체결하는 것으로 계산하지 마. 종가는 확정된 뒤에는 거래할 수 없으니, 체결은 반드시 익일 시가로 해. 오늘 종가로 만든 신호로 오늘 수익을 계산하는 것도 금지야.
+- 신호 당일 종가로 즉시 체결하지 말고, 반드시 익일 시가에 체결되도록 해.
 - 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
 [확인] 대화창에 단순 보유 vs 추세추종(Gross/Net) 성과 비교표가 출력되었는지, 그리고 대화형 차트 파일 'trend_following_backtest_result.html'이 3패널로 정상 저장되었는지 확인해줘.
