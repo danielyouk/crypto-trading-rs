@@ -2033,7 +2033,7 @@ window.MathJax = {
 <tr>
 <td><strong>3단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
-<td><code>mom = closes / closes.shift(120) - 1</code><br><code>pick = best_attack if mom[best_attack] &gt; mom[cash] else (bond if mom[bond] &gt; mom[cash] else cash)</code><br><code>holdings.shift(1)</code> (체결 시차: 월말 종가 판정, 익월 첫 거래일 시가 체결) 및 편도 0.1% 비용 차감</td>
+<td><code>mom = closes / closes.shift(120) - 1</code>  (6개월 수익률)<br><code>top = 나스닥100 if mom[나스닥100] &gt; mom[코스피200] else 코스피200</code>  (상대 모멘텀 1위)<br><code>pick = top if mom[top] &gt; mom[단기채] else (미국채10년 if mom[미국채10년] &gt; mom[단기채] else 단기채)</code>  (절대 모멘텀 통과 / 탈락)<br><code>holdings.shift(1)</code> (체결 시차: 월말 종가 판정, 익월 첫 거래일 시가 체결) 및 편도 0.1% 비용 차감<br>변수 이름은 ① 지표 칸의 자산 이름 그대로입니다. 실제 코드에서는 종목코드(<code>133690</code> 등)를 씁니다</td>
 </tr>
 <tr>
 <td><strong>4단계: 알고리즘 트레이딩</strong></td>
