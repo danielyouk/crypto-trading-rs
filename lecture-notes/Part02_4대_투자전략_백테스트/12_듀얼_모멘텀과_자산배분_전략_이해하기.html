@@ -2033,7 +2033,7 @@ window.MathJax = {
 <tr>
 <td><strong>3단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
-<td><code>mom = closes / closes.shift(120) - 1</code><br><code>pick = best_attack if mom[best_attack] &gt; mom[cash] else (bond if mom[bond] &gt; mom[cash] else cash)</code><br><code>holdings.shift(1)</code> (Lookahead Bias 방지 익월 시가 체결) 및 편도 0.1% 비용 차감</td>
+<td><code>mom = closes / closes.shift(120) - 1</code><br><code>pick = best_attack if mom[best_attack] &gt; mom[cash] else (bond if mom[bond] &gt; mom[cash] else cash)</code><br><code>holdings.shift(1)</code> (체결 시차: 월말 종가 판정, 익월 첫 거래일 시가 체결) 및 편도 0.1% 비용 차감</td>
 </tr>
 <tr>
 <td><strong>4단계: 알고리즘 트레이딩</strong></td>

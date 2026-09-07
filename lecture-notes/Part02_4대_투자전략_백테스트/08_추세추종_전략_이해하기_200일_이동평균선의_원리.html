@@ -2034,7 +2034,7 @@ window.MathJax = {
 <tr>
 <td><strong>3단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
-<td><code>df['SMA200'] = df['Close'].rolling(200).mean()</code><br><code>Signal = (Close &gt; SMA200).shift(1)</code> (Lookahead Bias 방지)<br>왕복 0.25% 거래비용 차감 및 일별 수익률 시뮬레이션</td>
+<td><code>df['SMA200'] = df['Close'].rolling(200).mean()</code><br><code>Signal = (Close &gt; SMA200).shift(1)</code> (체결 시차: 오늘 종가 신호는 내일부터 적용)<br>왕복 0.25% 거래비용 차감 및 일별 수익률 시뮬레이션</td>
 </tr>
 <tr>
 <td><strong>4단계: 알고리즘 트레이딩</strong></td>
