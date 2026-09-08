@@ -2088,14 +2088,14 @@ $$</div>
   <div class="compare-card good">
     <div class="tag">공적분 (Cointegration) — 견고함</div>
     <div class="steps">
-      • <strong>뜻</strong>: 두 가격의 <strong>격차 자체</strong>가 일정한 범위 안에서 진동하고, 벌어지면 되돌아오는 성질.<br>
-      • 격차의 시계열이 <strong>정상성(Stationary)</strong>, 즉 평균과 진폭이 시간이 지나도 변하지 않는 성질을 가짐.<br>
+      • <strong>뜻</strong>: 두 가격의 <strong>비율(P_A / P_B) 자체</strong>가 일정한 범위 안에서 진동하고, 벌어지면 되돌아오는 성질.<br>
+      • 비율의 시계열이 <strong>정상성(Stationary)</strong>, 즉 평균과 진폭이 시간이 지나도 변하지 않는 성질을 가짐.<br>
       • <strong>결과</strong>: 고무줄처럼 벌어졌다가 돌아오므로, "벌어졌을 때 진입"이 통계적으로 정당화됨.
     </div>
   </div>
 </div>
 
-<p>세 용어를 수식으로 나란히 놓으면 차이가 분명해집니다. 앞의 둘은 <strong>수익률(하루하루의 변화)</strong>에 대한 것이고, 공적분은 <strong>가격 수준(격차 자체)</strong>에 대한 것입니다.</p>
+<p>세 용어를 수식으로 나란히 놓으면 차이가 분명해집니다. 앞의 둘은 <strong>수익률(하루하루의 변화)</strong>에 대한 것이고, 공적분은 <strong>가격 수준(두 가격의 비율)</strong>에 대한 것입니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -2121,14 +2121,15 @@ $$</div>
 <tr>
 <td><strong>공적분</strong></td>
 <td><span class="math-inline">$\text{Spread}_t = \log P_{A,t} - \gamma \log P_{B,t}$</span> 가 <strong>정상(stationary)</strong>: 평균과 진폭이 시간이 지나도 변하지 않음</td>
-<td>두 <strong>가격</strong>의 격차가 한 범위 안에 묶여 있어, 벌어지면 되돌아오는가</td>
+<td>두 <strong>가격의 비율</strong>이 한 범위 안에 묶여 있어, 벌어지면 되돌아오는가</td>
 <td>성립 / 불성립 (검정)</td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li>상관계수와 공분산은 <strong>오늘의 변화</strong>만 봅니다. 매일 방향이 같아도(높은 <span class="math-inline">$\rho$</span>) 작은 차이가 한쪽으로 쌓이면 격차는 랜덤워크처럼 영원히 벌어질 수 있습니다. 그래서 <span class="math-inline">$\rho$</span>가 높다는 것만으로는 "벌어지면 돌아온다"를 보장하지 못합니다.</li>
-<li>공적분은 <strong>격차의 시계열 자체</strong>가 정상인지를 봅니다. 격차가 평균 주위에서 진동한다면, 지금 벌어진 격차는 되돌아올 통계적 근거가 있습니다. 반대로 <span class="math-inline">$\rho$</span>가 낮아도 격차가 묶여 있으면 공적분일 수 있습니다.</li>
+<li>상관계수와 공분산은 <strong>오늘의 변화</strong>만 봅니다. 매일 방향이 같아도(높은 <span class="math-inline">$\rho$</span>) 작은 차이가 한쪽으로 쌓이면 비율은 랜덤워크처럼 영원히 벌어질 수 있습니다. 그래서 <span class="math-inline">$\rho$</span>가 높다는 것만으로는 "벌어지면 돌아온다"를 보장하지 못합니다.</li>
+<li>공적분은 <strong>비율의 시계열 자체</strong>가 정상인지를 봅니다. 비율이 평균 주위에서 진동한다면, 지금 벌어진 비율은 되돌아올 통계적 근거가 있습니다. 반대로 <span class="math-inline">$\rho$</span>가 낮아도 비율이 묶여 있으면 공적분일 수 있습니다.</li>
+<li><strong>왜 차이가 아니라 비율인가</strong>: 가격의 차이 <span class="math-inline">$P_A - P_B$</span>는 가격 수준에 비례해 커집니다. KB금융 8만 원, 신한지주 5만 원이 둘 다 2배가 되면 차이도 3만 원에서 6만 원으로 커지므로, 차이의 시계열은 정상일 수가 없습니다. 비율은 두 종목이 같이 오르든 내리든 그대로이므로, "묶여 있는가"를 물을 수 있는 것은 비율입니다. 로그를 취하면 <span class="math-inline">$\log P_A - \log P_B = \log(P_A / P_B)$</span>이므로, 위 스프레드 수식의 "차"는 실제로는 <strong>로그 가격의 차 = 비율</strong>입니다.</li>
 <li>이 강의의 지표 <span class="math-inline">$\text{Price Ratio} = P_A / P_B$</span>는 위 스프레드에서 <span class="math-inline">$\gamma = 1$</span>로 두고 로그를 벗긴 것입니다. 같은 업종의 1·2위 기업처럼 규모가 비슷한 페어에서 쓰는 단순화이며, Z-Score는 이 비율이 정상이라는 가정 위에서 "얼마나 벌어졌나"를 재는 도구입니다.</li>
 </ul>
 <p>페어트레이딩이 노리는 것은 <strong>공적분</strong>입니다. 같은 업종에서 같은 규제, 같은 금리, 같은 원자재 가격을 공유하는 두 기업이 그 후보입니다. 그래서 다음 클립에서 KB금융과 신한지주를 고른 것입니다.</p>
@@ -2274,7 +2275,7 @@ $$</div>
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 시장 중립이 "방향이 아니라 두 종목의 격차에 베팅하는 것"임을 한 문장으로 설명할 수 있다.</li>
-<li class="check-item"><input type="checkbox"> 공분산·상관계수(수익률의 동행)와 공적분(가격 격차의 정상성)의 차이를 구분할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 공분산·상관계수(수익률의 동행)와 공적분(가격 비율의 정상성)의 차이를 구분할 수 있고, 왜 차이가 아니라 비율을 보는지 설명할 수 있다.</li>
 <li class="check-item"><input type="checkbox"> 롱 온리 스위칭은 공매도 다리가 없어 하락장 MDD 방어를 기대할 수 없고, 판단 기준은 단순 보유 대비 CAGR·샤프 개선임을 안다.</li>
 <li class="check-item"><input type="checkbox"> Z-Score를 "평소 흔들림의 몇 배나 벌어졌는가"로 읽을 수 있다.</li>
 <li class="check-item"><input type="checkbox"> <span class="math-inline">$|Z| \ge 3.0$</span>에서 물타기가 아니라 청산해야 하는 이유(구조적 결별)를 설명할 수 있다.</li>
