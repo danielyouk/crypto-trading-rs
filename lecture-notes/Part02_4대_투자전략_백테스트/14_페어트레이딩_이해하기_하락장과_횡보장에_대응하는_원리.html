@@ -2095,42 +2095,36 @@ $$</div>
   </div>
 </div>
 
-<p>세 용어를 수식으로 나란히 놓으면 차이가 분명해집니다. 앞의 둘은 <strong>수익률(하루하루의 변화)</strong>에 대한 것이고, 공적분은 <strong>가격 수준(두 가격의 비율)</strong>에 대한 것입니다.</p>
+<p>클립 12의 공분산까지 포함해 세 용어를 한 줄씩 정리하면 이렇습니다. 앞의 둘은 <strong>수익률(하루하루의 변화)</strong>을 보고, 공적분은 <strong>가격의 비율</strong>을 봅니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>용어</th>
-<th>수식</th>
-<th>무엇을 재는가</th>
-<th>값의 범위</th>
+<th>무엇을 보는가</th>
+<th>한 줄 정의</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>공분산</strong> (클립 12)</td>
-<td><span class="math-inline">$\text{Cov}(r_A, r_B) = \mathbb{E}\big[(r_A - \mu_A)(r_B - \mu_B)\big]$</span></td>
-<td>두 수익률이 같은 방향으로 움직이는 정도. 단위가 있어 크기 비교가 어려움</td>
-<td>제한 없음</td>
+<td>수익률</td>
+<td>두 종목의 수익률이 같은 방향으로 움직이는 정도</td>
 </tr>
 <tr>
 <td><strong>상관계수</strong></td>
-<td><span class="math-inline">$\rho_{AB} = \dfrac{\text{Cov}(r_A, r_B)}{\sigma_A \, \sigma_B}$</span></td>
-<td>공분산을 각자의 흔들림으로 나눠 표준화한 것. "오늘 A가 오르면 B도 오르나"</td>
-<td><span class="math-inline">$-1 \le \rho \le +1$</span></td>
+<td>수익률</td>
+<td>공분산을 <span class="math-inline">$-1 \sim +1$</span>로 표준화한 것: <span class="math-inline">$\rho = \text{Cov}(r_A, r_B) \,/\, (\sigma_A \sigma_B)$</span></td>
 </tr>
 <tr>
 <td><strong>공적분</strong></td>
-<td><span class="math-inline">$\text{Spread}_t = \log P_{A,t} - \gamma \log P_{B,t}$</span> 가 <strong>정상(stationary)</strong>: 평균과 진폭이 시간이 지나도 변하지 않음</td>
-<td>두 <strong>가격의 비율</strong>이 한 범위 안에 묶여 있어, 벌어지면 되돌아오는가</td>
-<td>성립 / 불성립 (검정)</td>
+<td>가격의 비율</td>
+<td><span class="math-inline">$P_A / P_B$</span>가 시간이 지나도 일정한 범위 안에서 진동하는가 (정상성)</td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li>상관계수와 공분산은 <strong>오늘의 변화</strong>만 봅니다. 매일 방향이 같아도(높은 <span class="math-inline">$\rho$</span>) 작은 차이가 한쪽으로 쌓이면 비율은 랜덤워크처럼 영원히 벌어질 수 있습니다. 그래서 <span class="math-inline">$\rho$</span>가 높다는 것만으로는 "벌어지면 돌아온다"를 보장하지 못합니다.</li>
-<li>공적분은 <strong>비율의 시계열 자체</strong>가 정상인지를 봅니다. 비율이 평균 주위에서 진동한다면, 지금 벌어진 비율은 되돌아올 통계적 근거가 있습니다. 반대로 <span class="math-inline">$\rho$</span>가 낮아도 비율이 묶여 있으면 공적분일 수 있습니다.</li>
-<li><strong>왜 차이가 아니라 비율인가</strong>: 가격의 차이 <span class="math-inline">$P_A - P_B$</span>는 가격 수준에 비례해 커집니다. KB금융 8만 원, 신한지주 5만 원이 둘 다 2배가 되면 차이도 3만 원에서 6만 원으로 커지므로, 차이의 시계열은 정상일 수가 없습니다. 비율은 두 종목이 같이 오르든 내리든 그대로이므로, "묶여 있는가"를 물을 수 있는 것은 비율입니다. 로그를 취하면 <span class="math-inline">$\log P_A - \log P_B = \log(P_A / P_B)$</span>이므로, 위 스프레드 수식의 "차"는 실제로는 <strong>로그 가격의 차 = 비율</strong>입니다.</li>
-<li>이 강의의 지표 <span class="math-inline">$\text{Price Ratio} = P_A / P_B$</span>는 위 스프레드에서 <span class="math-inline">$\gamma = 1$</span>로 두고 로그를 벗긴 것입니다. 같은 업종의 1·2위 기업처럼 규모가 비슷한 페어에서 쓰는 단순화이며, Z-Score는 이 비율이 정상이라는 가정 위에서 "얼마나 벌어졌나"를 재는 도구입니다.</li>
+<li>상관계수가 높다는 것은 <strong>오늘 같은 방향으로 갔다</strong>는 뜻일 뿐입니다. 매일 방향이 같아도 작은 차이가 한쪽으로 쌓이면 비율은 영원히 벌어질 수 있습니다. 공적분은 그 <strong>비율 자체가 묶여 있는가</strong>를 묻습니다. "벌어지면 돌아온다"의 근거는 상관계수가 아니라 공적분입니다.</li>
+<li><strong>왜 차이가 아니라 비율인가</strong>: KB금융 8만 원, 신한지주 5만 원이 둘 다 2배가 되면 가격 차이도 3만 원에서 6만 원으로 커집니다. 차이는 가격 수준을 따라 커지므로 "묶여 있는가"를 물을 수 없고, 같이 오르든 내리든 그대로인 비율만 물을 수 있습니다. 그래서 다음 절의 지표도 비율입니다.</li>
 </ul>
 <p>페어트레이딩이 노리는 것은 <strong>공적분</strong>입니다. 같은 업종에서 같은 규제, 같은 금리, 같은 원자재 가격을 공유하는 두 기업이 그 후보입니다. 그래서 다음 클립에서 KB금융과 신한지주를 고른 것입니다.</p>
 <hr />
