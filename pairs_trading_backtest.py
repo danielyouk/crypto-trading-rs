@@ -15,8 +15,10 @@ KB금융(105560) vs 하나금융지주(086790) 60일 롤링 Z-Score 롱 온리 �
 - 체결: 시그널은 당일 종가 Z로 판단, 체결은 익일 시가 (미래참조 방지). 클립 09 추세추종과 같은 규약.
 - 비용: 편도 0.15% -> 스위칭 1회 = 매도 0.15% + 매수 0.15% = 0.30%, 최초 진입 0.15%
 - 벤치마크: KB금융 단순 보유, 하나금융 단순 보유 (첫날 시가 매수, 편도 0.15% 1회)
-- 참고 (비교용, 실행 불가): 가상 시장중립 롱숏 = 같은 신호로 저평가 종목 50% 매수 + 고평가 종목 50% 공매도.
-  스위칭 비용은 같은 방식으로 차감, 주식 대차 수수료는 제외. 클립 14의 "포트폴리오 베타 ≈ 0"을 눈으로 확인하기 위한 선.
+- 참고 (비교용, 실행 불가): 가상 시장중립 롱숏 = 같은 Z로 교과서 규칙 적용.
+    진입 |Z| >= 1.5 : 저평가 종목 50% 매수 + 고평가 종목 50% 공매도
+    청산 |Z| <  0.5 : 롱·숏 전량 청산 -> 현금.  그 사이 구간은 유지
+    진입·청산 시 각 다리 0.15% 비용, 주식 대차 수수료는 제외. 클립 14의 "포트폴리오 베타 ≈ 0"을 눈으로 확인하기 위한 선.
 - 산출: Markdown 비교표 + 연도별 수익률 표 + Plotly 대화형 2패널 차트 pair_trading_backtest_result.html
 """
 
@@ -32,6 +34,7 @@ START, END = "2016-01-01", "2026-08-31"
 WARMUP_START = "2015-09-01"
 WINDOW = 60
 ENTRY_Z = 1.5
+LS_EXIT_Z = 0.5  # 가상 롱숏 전용 청산 임계값 (롱 온리에는 청산 규칙 없음)
 COST = 0.0015  # 편도 0.15%
 TRADING_DAYS = 252
 OUT_HTML = "pair_trading_backtest_result.html"
@@ -87,14 +90,34 @@ def simulate_strategy(opens, closes, holdings) -> tuple[pd.Series, dict]:
     return daily, {"switches": switches, "first_entry": first_entry}
 
 
-def simulate_long_short(closes, holdings) -> pd.Series:
-    """가상 시장중립 롱숏: 보유 종목 50% 롱 + 반대 종목 50% 숏. 스위칭 시 왕복 비용, 대차 수수료 제외."""
+def build_long_short_side(z: pd.Series) -> pd.Series:
+    """가상 롱숏 상태: +1 = A 롱/B 숏, -1 = B 롱/A 숏, 0 = 현금. |Z|<0.5 청산. 익일 적용."""
+    side, out = 0.0, []
+    for val in z.values:
+        if np.isnan(val):
+            pass
+        elif val <= -ENTRY_Z:
+            side = 1.0
+        elif val >= ENTRY_Z:
+            side = -1.0
+        elif abs(val) < LS_EXIT_Z:
+            side = 0.0
+        out.append(side)
+    return pd.Series(out, index=z.index).shift(1).fillna(0.0)
+
+
+def simulate_long_short(closes, side) -> tuple[pd.Series, dict]:
+    """가상 시장중립 롱숏 수익률: side * (r_A - r_B) / 2. 진입·청산 시 각 다리 0.15%, 대차 수수료 제외."""
     rA, rB = closes[A].pct_change().fillna(0.0), closes[B].pct_change().fillna(0.0)
-    side = holdings.map({A: 1.0, B: -1.0, CASH: 0.0}).shift(0)
     daily = side * (rA - rB) / 2
-    switched = (holdings != holdings.shift(1)) & (holdings != CASH) & (holdings.shift(1) != CASH)
-    daily[switched] -= 2 * COST  # 롱·숏 두 다리 모두 교체
-    return daily.fillna(0.0)
+    prev = side.shift(1).fillna(0.0)
+    entries = int(((prev == 0) & (side != 0)).sum())
+    exits = int(((prev != 0) & (side == 0)).sum())
+    flips = int(((prev != 0) & (side != 0) & (prev != side)).sum())
+    daily[(prev == 0) & (side != 0)] -= COST          # 진입: 두 다리 × 0.15% × 50%
+    daily[(prev != 0) & (side == 0)] -= COST          # 청산: 두 다리 × 0.15% × 50%
+    daily[(prev != 0) & (side != 0) & (prev != side)] -= 2 * COST  # 직접 반전
+    return daily.fillna(0.0), {"entries": entries + flips, "exits": exits + flips}
 
 
 def simulate_buy_hold(opens, closes, code, idx) -> pd.Series:
@@ -121,11 +144,16 @@ def metrics(daily: pd.Series, trades) -> dict:
 def print_table(results: dict, first, last) -> None:
     print(f"\n### {NAMES[A]} vs {NAMES[B]} 롱 온리 페어 스위칭 ({first.date()} ~ {last.date()}, "
           f"60일 Z-Score, 진입 |Z| >= {ENTRY_Z}, 편도 비용 {COST:.2%})\n")
-    print("| 전략 | 총수익률 | CAGR | MDD | 샤프 지수 | 총 스위칭 횟수 |")
+    print("| 전략 | 총수익률 | CAGR | MDD | 샤프 지수 | 거래 횟수 |")
     print("|---|---:|---:|---:|---:|---:|")
     for name, m in results.items():
         t = m["Trades"]
-        tr = "-" if t is None else f"{t['switches']}"
+        if t is None:
+            tr = "-"
+        elif "switches" in t:
+            tr = f"스위칭 {t['switches']}회"
+        else:
+            tr = f"진입 {t['entries']} / 청산 {t['exits']}"
         print(f"| {name} | {m['Total']:+.2%} | {m['CAGR']:+.2%} | "
               f"{m['MDD']:.2%} ({m['MDDDate'].date()}) | {m['Sharpe']:.2f} | {tr} |")
 
@@ -170,8 +198,8 @@ def plot(results: dict, zs: pd.DataFrame, holdings: pd.Series) -> None:
         fig.add_trace(eq_trace(f"{NAMES[code]} 단순 보유", results[f"{NAMES[code]} 단순 보유"]["equity"],
                                COLORS[code], "dot", 1.6), 1, 1)
     fig.add_trace(eq_trace(strat_name, results[strat_name]["equity"], COLORS["strategy"], None, 2.4), 1, 1)
-    fig.add_trace(eq_trace("가상 롱숏 (비교용, 대차비용 제외)", results["가상 롱숏 (비교용)"]["equity"],
-                           "#8a8a86", "dash", 1.6), 1, 1)
+    fig.add_trace(eq_trace("가상 롱숏 (비교용, ±0.5 청산, 대차비용 제외)",
+                           results["가상 롱숏 (비교용, ±0.5 청산)"]["equity"], "#8a8a86", "dash", 1.6), 1, 1)
     # 스위칭 시점 마커
     strat_eq = results[strat_name]["equity"]
     changed = (holdings != holdings.shift(1)) & (holdings != CASH)
@@ -227,12 +255,13 @@ def main() -> None:
     strat_daily, trades = simulate_strategy(opens, closes, holdings)
     bh_a = simulate_buy_hold(opens, closes, A, holdings.index)
     bh_b = simulate_buy_hold(opens, closes, B, holdings.index)
-    ls_daily = simulate_long_short(closes, holdings)
+    ls_side = build_long_short_side(zs["z"]).loc[holdings.index]
+    ls_daily, ls_trades = simulate_long_short(closes, ls_side)
     results = {
         f"{NAMES[A]} 단순 보유": metrics(bh_a, None),
         f"{NAMES[B]} 단순 보유": metrics(bh_b, None),
         "페어 스위칭 전략": metrics(strat_daily, trades),
-        "가상 롱숏 (비교용)": metrics(ls_daily, trades),
+        "가상 롱숏 (비교용, ±0.5 청산)": metrics(ls_daily, ls_trades),
     }
     kospi = fdr.DataReader("KS11", START, END)["Close"].pct_change().reindex(holdings.index).fillna(0.0)
     first, last = holdings.index[0], holdings.index[-1]
@@ -243,7 +272,7 @@ def main() -> None:
     print_yearly({"KOSPI": kospi, f"{NAMES[A]} 보유": bh_a, f"{NAMES[B]} 보유": bh_b,
                   "페어 스위칭": strat_daily, "가상 롱숏": ls_daily})
     print(f"\n보유 일수: {NAMES[A]} {int((holdings == A).sum())}일, {NAMES[B]} {int((holdings == B).sum())}일, "
-          f"현금 대기 {int((holdings == CASH).sum())}일")
+          f"현금 대기 {int((holdings == CASH).sum())}일 | 가상 롱숏 현금 비중 {(ls_side == 0).mean():.0%}")
     plot(results, zs, holdings)
     print(f"\n차트 저장 완료: {OUT_HTML}")
 
