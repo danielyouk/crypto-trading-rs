@@ -11,6 +11,8 @@ KB금융(105560) vs 하나금융지주(086790) 60일 롤링 Z-Score 롱 온리 �
     Z >= +1.5 : 하나금융 저평가 -> 하나금융 100%
     그 외 (-1.5 < Z < 1.5) : 기존 포지션 유지. 롱 온리에는 청산할 스프레드 포지션이 없고,
                               현금으로 나가면 섹터 상승을 놓치므로 |Z|<0.5 청산 규칙을 두지 않음.
+    하드스탑 |Z| >= 3.0 : 구조적 결별 의심 -> 보유 종목 전량 매도, 현금. |Z|가 1.5 안으로
+                              돌아온 뒤에야 다시 신호를 받음 (클립 14 §5).
     첫 시그널 발생 전에는 현금(수익률 0) 대기
 - 체결: 시그널은 당일 종가 Z로 판단, 체결은 익일 시가 (미래참조 방지). 클립 09 추세추종과 같은 규약.
 - 비용: 편도 0.15% -> 스위칭 1회 = 매도 0.15% + 매수 0.15% = 0.30%, 최초 진입 0.15%
@@ -18,6 +20,7 @@ KB금융(105560) vs 하나금융지주(086790) 60일 롤링 Z-Score 롱 온리 �
 - 참고 (비교용, 실행 불가): 가상 시장중립 롱숏 = 같은 Z로 교과서 규칙 적용.
     진입 |Z| >= 1.5 : 저평가 종목 50% 매수 + 고평가 종목 50% 공매도
     청산 |Z| <  0.5 : 롱·숏 전량 청산 -> 현금.  그 사이 구간은 유지
+    하드스탑 |Z| >= 3.0 : 전량 청산 -> 현금, |Z| < 1.5 복귀 전 재진입 금지
     진입·청산 시 각 다리 0.15% 비용, 주식 대차 수수료는 제외. 클립 14의 "포트폴리오 베타 ≈ 0"을 눈으로 확인하기 위한 선.
 - 산출: Markdown 비교표 + 연도별 수익률 표 + Plotly 대화형 2패널 차트 pair_trading_backtest_result.html
 """
@@ -35,6 +38,10 @@ WARMUP_START = "2015-09-01"
 WINDOW = 60
 ENTRY_Z = 1.5
 LS_EXIT_Z = 0.5  # 가상 롱숏 전용 청산 임계값 (롱 온리에는 청산 규칙 없음)
+# 구조적 결별 하드스탑 (클립 14 §5, 두 전략 공통). None으로 두면 사용 안 함.
+# 보험료 실측: 3.0 → 10년간 24회 발동, 롱 온리 CAGR 24.9%→13.8%, 샤프 0.85→0.59.
+# 60일 창의 3σ는 유지된 페어에서는 '평균 복귀 직전'에 자주 발동한다. 결별 시 손실을 막는 대가.
+HARD_STOP_Z: float | None = 3.0
 COST = 0.0015  # 편도 0.15%
 TRADING_DAYS = 252
 OUT_HTML = "pair_trading_backtest_result.html"
@@ -60,10 +67,23 @@ def zscore(closes: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame({"ratio": ratio, "mean": mean, "std": std, "z": (ratio - mean) / std})
 
 
-def build_holdings(z: pd.Series) -> pd.Series:
-    """시그널 당일 종가 Z -> 익일부터 보유. 시그널 없으면 기존 포지션 유지. 첫 시그널 전 = CASH."""
-    signal = pd.Series(np.where(z <= -ENTRY_Z, A, np.where(z >= ENTRY_Z, B, None)), index=z.index)
-    return signal.shift(1).ffill().fillna(CASH)  # 익일 적용 + 유지
+def build_holdings(z: pd.Series) -> tuple[pd.Series, int]:
+    """시그널 당일 종가 Z -> 익일부터 보유. 시그널 없으면 유지. 첫 시그널 전 = CASH.
+    HARD_STOP_Z 설정 시: |Z| >= 그 값 -> CASH, |Z| < ENTRY_Z 복귀 전 재진입 금지."""
+    state, stopped, out, n_stops = CASH, False, [], 0
+    for val in z.values:
+        if np.isnan(val):
+            pass
+        elif HARD_STOP_Z is not None and abs(val) >= HARD_STOP_Z:
+            if state != CASH:
+                n_stops += 1
+            state, stopped = CASH, True
+        elif abs(val) < ENTRY_Z:
+            stopped = False                       # 정상 범위 복귀 -> 신호 다시 받음
+        elif not stopped:
+            state = A if val <= -ENTRY_Z else B
+        out.append(state)
+    return pd.Series(out, index=z.index).shift(1).fillna(CASH), n_stops  # 익일 적용
 
 
 # ---------------------------------------------------------------- 시뮬레이션
@@ -74,11 +94,13 @@ def simulate_strategy(opens, closes, holdings) -> tuple[pd.Series, dict]:
     switches, first_entry = 0, None
     for i, d in enumerate(idx):
         cur = holdings[d]
-        if cur == CASH:
-            continue                                                    # 첫 시그널 전 현금 대기
-        if prev == CASH:                                                # 최초 진입: 시가 매수(편도)
+        if cur == CASH and prev == CASH:
+            continue                                                    # 현금 대기
+        if cur == CASH:                                                 # 하드스탑 청산: 시가 매도(편도)
+            daily[d] = opens.at[d, prev] / closes.at[idx[i - 1], prev] * (1 - COST) - 1
+        elif prev == CASH:                                              # 진입: 시가 매수(편도)
             daily[d] = (1 - COST) * closes.at[d, cur] / opens.at[d, cur] - 1
-            first_entry = d
+            first_entry = first_entry or d
         elif cur == prev:                                               # 보유 지속
             daily[d] = closes.at[d, cur] / closes.at[idx[i - 1], cur] - 1
         else:                                                           # 스위칭: 구 종목 시가 매도 + 신 종목 시가 매수
@@ -92,16 +114,18 @@ def simulate_strategy(opens, closes, holdings) -> tuple[pd.Series, dict]:
 
 def build_long_short_side(z: pd.Series) -> pd.Series:
     """가상 롱숏 상태: +1 = A 롱/B 숏, -1 = B 롱/A 숏, 0 = 현금. |Z|<0.5 청산. 익일 적용."""
-    side, out = 0.0, []
+    side, stopped, out = 0.0, False, []
     for val in z.values:
         if np.isnan(val):
             pass
-        elif val <= -ENTRY_Z:
-            side = 1.0
-        elif val >= ENTRY_Z:
-            side = -1.0
-        elif abs(val) < LS_EXIT_Z:
-            side = 0.0
+        elif HARD_STOP_Z is not None and abs(val) >= HARD_STOP_Z:
+            side, stopped = 0.0, True              # 하드스탑 (옵션)
+        elif abs(val) < ENTRY_Z:
+            stopped = False
+            if abs(val) < LS_EXIT_Z:
+                side = 0.0                         # 평균 복귀 청산
+        elif not stopped:
+            side = 1.0 if val <= -ENTRY_Z else -1.0
         out.append(side)
     return pd.Series(out, index=z.index).shift(1).fillna(0.0)
 
@@ -248,7 +272,8 @@ def plot(results: dict, zs: pd.DataFrame, holdings: pd.Series) -> None:
 def main() -> None:
     opens, closes = load_prices()
     zs = zscore(closes)
-    holdings = build_holdings(zs["z"]).loc[START:END]
+    holdings, n_stops = build_holdings(zs["z"])
+    holdings = holdings.loc[START:END]
     opens, closes = opens.loc[holdings.index], closes.loc[holdings.index]
     n_nan = int(zs.loc[holdings.index, "z"].isna().sum())
 
@@ -272,7 +297,10 @@ def main() -> None:
     print_yearly({"KOSPI": kospi, f"{NAMES[A]} 보유": bh_a, f"{NAMES[B]} 보유": bh_b,
                   "페어 스위칭": strat_daily, "가상 롱숏": ls_daily})
     print(f"\n보유 일수: {NAMES[A]} {int((holdings == A).sum())}일, {NAMES[B]} {int((holdings == B).sum())}일, "
-          f"현금 대기 {int((holdings == CASH).sum())}일 | 가상 롱숏 현금 비중 {(ls_side == 0).mean():.0%}")
+          f"현금 대기 {int((holdings == CASH).sum())}일 | "
+          f"|Z|>=3.0인 날 {int((zs.loc[holdings.index, 'z'].abs() >= 3.0).sum())}일"
+          + (f", 하드스탑 발동 {n_stops}회" if HARD_STOP_Z is not None else " (하드스탑 미사용)")
+          + f" | 가상 롱숏 현금 비중 {(ls_side == 0).mean():.0%}")
     plot(results, zs, holdings)
     print(f"\n차트 저장 완료: {OUT_HTML}")
 
