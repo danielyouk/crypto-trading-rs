@@ -4,17 +4,16 @@ KB금융(105560) vs 신한지주(055550) 60일 롤링 Z-Score 롱 온리 페어 
 - Price Ratio = KB금융 종가 / 신한지주 종가
 - Z_t = (Ratio_t - 어제까지 60일 롤링 평균) / (어제까지 60일 롤링 표준편차)
         -> 평균·표준편차 창에 당일 비율은 포함하지 않음 (rolling 뒤 shift(1)).
-           "과거 분포에 비추어 오늘이 얼마나 이례적인가"를 묻는 것이며, 실전에서 15:15에
-           신호를 계산하는 시점에는 오늘 종가가 없으므로 어제까지의 창만 쓸 수 있음.
+           "과거 분포에 비추어 오늘이 얼마나 이례적인가"를 묻기 위함. 클립 10~11의 200일선
+           ("전일 종가까지")과 같은 규약.
 - 규칙 (공매도 없음, 항상 한 종목 100% 보유):
     Z <= -1.5 : KB금융 저평가  -> KB금융 100%
     Z >= +1.5 : 신한지주 저평가 -> 신한지주 100%
     그 외      : 기존 포지션 유지
     첫 시그널 발생 전에는 현금(수익률 0) 대기
-- 체결: 당일 종가 Z로 판정, 당일 종가에 체결 (실전: 15:15 현재가로 판정 -> 마감 동시호가 주문).
-        내일 이후 데이터는 오늘 판정에 사용하지 않음 (미래참조 방지)
+- 체결: 시그널은 당일 종가 Z로 판단, 체결은 익일 시가 (미래참조 방지). 클립 09 추세추종과 같은 규약.
 - 비용: 편도 0.15% -> 스위칭 1회 = 매도 0.15% + 매수 0.15% = 0.30%, 최초 진입 0.15%
-- 벤치마크: KB금융 단순 보유, 신한지주 단순 보유 (첫날 종가 매수, 편도 0.15% 1회)
+- 벤치마크: KB금융 단순 보유, 신한지주 단순 보유 (첫날 시가 매수, 편도 0.15% 1회)
 - 산출: Markdown 비교표 + Plotly 대화형 2패널 차트 pair_trading_backtest_result.html
 """
 
@@ -37,9 +36,14 @@ COLORS = {A: "#2a78d6", B: "#eb6834", "strategy": "#1f3f8f", "z": "#52514e"}
 
 
 # ---------------------------------------------------------------- 데이터/시그널
-def load_prices() -> pd.DataFrame:
-    closes = {code: fdr.DataReader(code, WARMUP_START, END)["Close"] for code in (A, B)}
-    return pd.DataFrame(closes).dropna().sort_index()
+def load_prices() -> tuple[pd.DataFrame, pd.DataFrame]:
+    opens, closes = {}, {}
+    for code in (A, B):
+        df = fdr.DataReader(code, WARMUP_START, END)
+        opens[code], closes[code] = df["Open"], df["Close"]
+    opens, closes = pd.DataFrame(opens), pd.DataFrame(closes)
+    idx = closes.dropna().index
+    return opens.loc[idx].sort_index(), closes.loc[idx].sort_index()
 
 
 def zscore(closes: pd.DataFrame) -> pd.DataFrame:
@@ -50,14 +54,13 @@ def zscore(closes: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_holdings(z: pd.Series) -> pd.Series:
-    """당일 종가 Z -> 당일 종가부터 보유 (마감 동시호가 체결). None = 현금 대기."""
+    """시그널 당일 종가 Z -> 익일부터 보유. None = 현금 대기."""
     signal = pd.Series(np.where(z <= -ENTRY_Z, A, np.where(z >= ENTRY_Z, B, None)), index=z.index)
-    return signal.ffill()  # 시그널 없으면 기존 포지션 유지
+    return signal.shift(1).ffill()  # 익일 적용 + 시그널 없으면 유지
 
 
 # ---------------------------------------------------------------- 시뮬레이션
-def simulate_strategy(closes, holdings) -> tuple[pd.Series, int, pd.Timestamp]:
-    """당일 종가 체결. 일수익률은 전일 종가 -> 당일 종가 기준."""
+def simulate_strategy(opens, closes, holdings) -> tuple[pd.Series, int, pd.Timestamp]:
     idx = holdings.index
     daily = pd.Series(0.0, index=idx)
     prev, switches, first_entry = None, 0, None
@@ -65,22 +68,23 @@ def simulate_strategy(closes, holdings) -> tuple[pd.Series, int, pd.Timestamp]:
         cur = holdings[d]
         if pd.isna(cur):
             continue  # 현금 대기
-        if prev is None:  # 최초 진입: 당일 종가 매수 + 편도 비용
-            daily[d] = (1 - COST) - 1
+        if prev is None:  # 최초 진입: 시가 매수 + 편도 비용
+            daily[d] = (1 - COST) * closes.at[d, cur] / opens.at[d, cur] - 1
             first_entry = d
         elif cur == prev:
             daily[d] = closes.at[d, cur] / closes.at[idx[i - 1], cur] - 1
-        else:  # 스위칭: 구 종목 전일 종가 -> 당일 종가 보유 후 종가 매도(편도) + 신 종목 종가 매수(편도)
-            hold_leg = closes.at[d, prev] / closes.at[idx[i - 1], prev]
-            daily[d] = hold_leg * (1 - COST) * (1 - COST) - 1
+        else:  # 스위칭: 구 종목 시가 매도(편도) + 신 종목 시가 매수(편도)
+            sell_leg = opens.at[d, prev] / closes.at[idx[i - 1], prev] * (1 - COST)
+            buy_leg = (1 - COST) * closes.at[d, cur] / opens.at[d, cur]
+            daily[d] = sell_leg * buy_leg - 1
             switches += 1
         prev = cur
     return daily, switches, first_entry
 
 
-def simulate_buy_hold(closes, code, idx) -> pd.Series:
+def simulate_buy_hold(opens, closes, code, idx) -> pd.Series:
     daily = closes.loc[idx, code].pct_change().fillna(0.0)
-    daily.iloc[0] = (1 - COST) - 1  # 첫날 종가 매수 + 편도 비용
+    daily.iloc[0] = (1 - COST) * closes.at[idx[0], code] / opens.at[idx[0], code] - 1
     return daily
 
 
@@ -162,7 +166,7 @@ def plot(results: dict, zs: pd.DataFrame, holdings: pd.Series) -> None:
 
     fig.update_layout(
         title=dict(text=f"KB금융(105560) vs 신한지주(055550) 롱 온리 페어 스위칭 | {START} ~ {END}, "
-                        f"편도 비용 {COST:.2%}, 당일 종가 체결", x=0.01, font=dict(size=16)),
+                        f"편도 비용 {COST:.2%}, 익일 시가 체결", x=0.01, font=dict(size=16)),
         template="plotly_white", hovermode="x unified", height=820, width=1400,
         font=dict(size=12), paper_bgcolor="#fcfcfb", plot_bgcolor="#fcfcfb",
         legend=dict(orientation="h", yanchor="top", y=-0.08, xanchor="center", x=0.5),
@@ -178,16 +182,16 @@ def plot(results: dict, zs: pd.DataFrame, holdings: pd.Series) -> None:
 
 # ---------------------------------------------------------------- 메인
 def main() -> None:
-    closes = load_prices()
+    opens, closes = load_prices()
     zs = zscore(closes)
     holdings = build_holdings(zs["z"]).loc[START:END]
-    closes = closes.loc[holdings.index]
+    opens, closes = opens.loc[holdings.index], closes.loc[holdings.index]
     n_nan = int(zs.loc[holdings.index, "z"].isna().sum())
 
-    strat_daily, switches, first_entry = simulate_strategy(closes, holdings)
+    strat_daily, switches, first_entry = simulate_strategy(opens, closes, holdings)
     results = {
-        "KB금융 단순 보유": metrics(simulate_buy_hold(closes, A, holdings.index), None),
-        "신한지주 단순 보유": metrics(simulate_buy_hold(closes, B, holdings.index), None),
+        "KB금융 단순 보유": metrics(simulate_buy_hold(opens, closes, A, holdings.index), None),
+        "신한지주 단순 보유": metrics(simulate_buy_hold(opens, closes, B, holdings.index), None),
         "페어 스위칭 전략": metrics(strat_daily, switches),
     }
     first, last = holdings.index[0], holdings.index[-1]

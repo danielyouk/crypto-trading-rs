@@ -2041,18 +2041,22 @@ window.MathJax = {
 <tr>
 <td><strong>3단계: 알고리즘</strong></td>
 <td>파이썬 코드 구현</td>
-<td><code>Ratio = df['A'] / df['B']</code><br><code>mu = Ratio.rolling(60).mean().shift(1)</code><br><code>sigma = Ratio.rolling(60).std().shift(1)</code><br><code>Z = (Ratio - mu) / sigma</code><br><code>Signal = np.where(Z &lt;= -1.5, 'A', np.where(Z &gt;= 1.5, 'B', np.nan))</code> (당일 종가 체결, 편도 0.15% 비용 차감)</td>
+<td><code>Ratio = df['A'] / df['B']</code><br><code>mu = Ratio.rolling(60).mean().shift(1)</code><br><code>sigma = Ratio.rolling(60).std().shift(1)</code><br><code>Z = (Ratio - mu) / sigma</code><br><code>Signal = np.where(Z &lt;= -1.5, 'A', np.where(Z &gt;= 1.5, 'B', np.nan))</code> (오늘 종가 신호 ➔ 익일 시가 체결, 편도 0.15% 비용 차감)</td>
 </tr>
 <tr>
 <td><strong>4단계: 알고리즘 트레이딩</strong></td>
 <td>검증 및 실전 집행</td>
-<td>코스피 급락장에서도 시장 중립 알파 확인 ➔ Part 4/5 2-Tier 일간 모니터링 및 KIS API 스위칭 자동 주문</td>
+<td>다음 클립(15)에서 KB금융·신한지주 7년 백테스트 ➔ 두 종목을 각각 단순 보유한 것과 CAGR·MDD·샤프를 비교해 통과 여부 판단</td>
 </tr>
 </tbody>
 </table></div>
 <hr />
 <h3 id="2-시장-중립-방향이-아니라-격차에-베팅한다">2. 시장 중립: 방향이 아니라 격차에 베팅한다</h3>
 <p>일반적인 주식 투자는 지수가 폭락하면 아무리 좋은 종목도 함께 떨어지는 <strong>시장 위험</strong>에 노출됩니다. 이 위험의 크기를 <strong>베타(<span class="math-inline">$\beta$</span>, 시장 민감도)</strong>라고 부릅니다. 시장이 1% 움직일 때 종목이 1% 움직이면 베타 1, 시장이 어디로 가든 영향을 받지 않으면 베타 0입니다. 이 클립에서 베타는 이 뜻 하나로만 씁니다.</p>
+<p>베타는 클립 12에서 본 <strong>공분산</strong>으로 정의됩니다. 종목 수익률 <span class="math-inline">$r_A$</span>가 시장 수익률 <span class="math-inline">$r_M$</span>과 함께 움직이는 정도를, 시장 자체의 흔들림으로 나눈 값입니다.</p>
+<div class="math-block">$$
+\beta_A = \frac{\text{Cov}(r_A, r_M)}{\text{Var}(r_M)}
+$$</div>
 <p>종목 하나가 아니라 계좌 전체의 베타도 같은 방식으로 셉니다. <strong>포트폴리오 베타</strong>는 보유 종목 베타를 비중대로 더한 값이고, <strong>매수 포지션은 더하고 공매도 포지션은 뺍니다.</strong> 한 종목을 100% 들고 있으면 포트폴리오 베타는 그 종목의 베타와 같습니다.</p>
 <p>정통 페어트레이딩은 같은 업종의 두 종목을 <strong>같은 금액(1:1)으로 한쪽은 매수(Long), 한쪽은 공매도(Short)</strong>합니다. <strong>공매도(Short)</strong>는 갖고 있지 않은 주식을 빌려서 먼저 팔고, 나중에 사서 되갚는 거래입니다. 주가가 내리면 이익이 납니다.</p>
 <p>같은 업종의 두 종목은 시장에 반응하는 크기가 거의 같습니다(<span class="math-inline">$\beta_A \approx \beta_B$</span>). 정확한 값이 얼마인지는 중요하지 않습니다. 둘이 거의 같다는 것만 중요합니다. 한쪽을 사고 다른 쪽을 같은 금액만큼 공매도하면 두 베타가 서로 지워지기 때문입니다.</p>
@@ -2068,7 +2072,7 @@ $$</div>
 ─────────────────────────────────────────────────────────────────
 ▶ 포트폴리오 순손익: -200만 원 + 350만 원 = +150만 원 (+15%). 시장이 무너지는데 계좌는 플러스.
 </code></pre>
-<p>두 종목이 <strong>같은 방향으로 움직이기만 하면</strong> 시장의 등락은 서로 상쇄되고, 남는 것은 두 종목 사이의 <strong>격차 변화</strong>만입니다. 그래서 이 전략은 상승장이 아니라 <strong>하락장과 횡보장</strong>에서 진가를 드러냅니다.</p>
+<p>두 종목이 <strong>같은 방향으로 움직이기만 하면</strong> 시장의 등락은 서로 상쇄되고, 남는 것은 두 종목 사이의 <strong>격차 변화</strong>만입니다. 그래서 정통 롱숏 페어는 상승장이 아니라 <strong>하락장과 횡보장</strong>에서 진가를 드러냅니다. 공매도 없이 실행하는 한국식 롱 온리 스위칭(6번)은 이 하락장 방어 효과가 없다는 점을 뒤에서 다시 짚습니다.</p>
 <hr />
 <h3 id="3-상관관계correlation-vs-공적분cointegration-퀀트의-흔한-착각">3. 상관관계(Correlation) vs 공적분(Cointegration): 퀀트의 흔한 착각</h3>
 <p>"두 종목이 같이 움직인다"는 말에는 두 가지 뜻이 섞여 있습니다. 이 둘을 구분하지 못하면 페어트레이딩은 물타기 끝에 파산하는 전략이 됩니다.</p>
@@ -2091,6 +2095,42 @@ $$</div>
   </div>
 </div>
 
+<p>세 용어를 수식으로 나란히 놓으면 차이가 분명해집니다. 앞의 둘은 <strong>수익률(하루하루의 변화)</strong>에 대한 것이고, 공적분은 <strong>가격 수준(격차 자체)</strong>에 대한 것입니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>용어</th>
+<th>수식</th>
+<th>무엇을 재는가</th>
+<th>값의 범위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>공분산</strong> (클립 12)</td>
+<td><span class="math-inline">$\text{Cov}(r_A, r_B) = \mathbb{E}\big[(r_A - \mu_A)(r_B - \mu_B)\big]$</span></td>
+<td>두 수익률이 같은 방향으로 움직이는 정도. 단위가 있어 크기 비교가 어려움</td>
+<td>제한 없음</td>
+</tr>
+<tr>
+<td><strong>상관계수</strong></td>
+<td><span class="math-inline">$\rho_{AB} = \dfrac{\text{Cov}(r_A, r_B)}{\sigma_A \, \sigma_B}$</span></td>
+<td>공분산을 각자의 흔들림으로 나눠 표준화한 것. "오늘 A가 오르면 B도 오르나"</td>
+<td><span class="math-inline">$-1 \le \rho \le +1$</span></td>
+</tr>
+<tr>
+<td><strong>공적분</strong></td>
+<td><span class="math-inline">$\text{Spread}_t = \log P_{A,t} - \gamma \log P_{B,t}$</span> 가 <strong>정상(stationary)</strong>: 평균과 진폭이 시간이 지나도 변하지 않음</td>
+<td>두 <strong>가격</strong>의 격차가 한 범위 안에 묶여 있어, 벌어지면 되돌아오는가</td>
+<td>성립 / 불성립 (검정)</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>상관계수와 공분산은 <strong>오늘의 변화</strong>만 봅니다. 매일 방향이 같아도(높은 <span class="math-inline">$\rho$</span>) 작은 차이가 한쪽으로 쌓이면 격차는 랜덤워크처럼 영원히 벌어질 수 있습니다. 그래서 <span class="math-inline">$\rho$</span>가 높다는 것만으로는 "벌어지면 돌아온다"를 보장하지 못합니다.</li>
+<li>공적분은 <strong>격차의 시계열 자체</strong>가 정상인지를 봅니다. 격차가 평균 주위에서 진동한다면, 지금 벌어진 격차는 되돌아올 통계적 근거가 있습니다. 반대로 <span class="math-inline">$\rho$</span>가 낮아도 격차가 묶여 있으면 공적분일 수 있습니다.</li>
+<li>이 강의의 지표 <span class="math-inline">$\text{Price Ratio} = P_A / P_B$</span>는 위 스프레드에서 <span class="math-inline">$\gamma = 1$</span>로 두고 로그를 벗긴 것입니다. 같은 업종의 1·2위 기업처럼 규모가 비슷한 페어에서 쓰는 단순화이며, Z-Score는 이 비율이 정상이라는 가정 위에서 "얼마나 벌어졌나"를 재는 도구입니다.</li>
+</ul>
 <p>페어트레이딩이 노리는 것은 <strong>공적분</strong>입니다. 같은 업종에서 같은 규제, 같은 금리, 같은 원자재 가격을 공유하는 두 기업이 그 후보입니다. 그래서 다음 클립에서 KB금융과 신한지주를 고른 것입니다.</p>
 <hr />
 <h3 id="4-스프레드와-z-score-벌어진-정도를-숫자-하나로">4. 스프레드와 Z-Score: 벌어진 정도를 숫자 하나로</h3>
@@ -2104,7 +2144,7 @@ Z_t = \frac{\text{Price Ratio}_t - \mu_{t-1}(60\text{일})}{\sigma_{t-1}(60\text
 $$</div>
 <p><strong>Z-Score</strong>는 이렇게 읽습니다. <strong>"지금 벌어진 정도가 평소 흔들림의 몇 배인가."</strong> Z가 1.5면 평소 흔들림의 1.5배만큼 이례적으로 벌어졌다는 뜻이고, 이 정도면 되돌아올 가능성에 베팅할 만하다는 것이 이 전략의 판단 기준입니다.</p>
 <blockquote>
-<p>💡 <strong>왜 "어제까지의 60일"인가</strong>: 우리가 묻는 것은 "과거의 분포에 비추어 <strong>오늘</strong>이 얼마나 이례적인가"입니다. 오늘 값을 평균·표준편차 창에 넣으면 오늘이 자기 자신을 채점하는 셈이 됩니다. 오늘이 크게 벌어진 날일수록 평균은 오늘 쪽으로 끌려가고 표준편차는 커져서, 정확히 포착해야 하는 날에 Z가 눌립니다. 클립 10~11에서 200일선을 "전일 종가까지"로 계산한 것과 같은 규약입니다. 실전에서도 장중 15:15에 신호를 계산하는 시점에는 오늘 종가가 아직 없으므로, 어제까지의 창을 쓰는 것이 유일하게 가능한 방법입니다.</p>
+<p>💡 <strong>왜 "어제까지의 60일"인가</strong>: 우리가 묻는 것은 "과거의 분포에 비추어 <strong>오늘</strong>이 얼마나 이례적인가"입니다. 오늘 값을 평균·표준편차 창에 넣으면 오늘이 자기 자신을 채점하는 셈이 됩니다. 오늘이 크게 벌어진 날일수록 평균은 오늘 쪽으로 끌려가고 표준편차는 커져서, 정확히 포착해야 하는 날에 Z가 눌립니다. 클립 10~11에서 200일선을 "전일 종가까지"로 계산한 것과 같은 규약입니다.</p>
 </blockquote>
 <div class="arch-grid">
   <div class="arch-card">
@@ -2185,7 +2225,8 @@ $$</div>
 </tr>
 </tbody>
 </table></div>
-<p>롱 온리 스위칭은 공매도 포지션이 없어 빼 줄 베타가 없습니다. 항상 한 종목을 100% 들고 있으므로 <strong>포트폴리오 베타가 그 종목의 베타와 같아 0이 아니고</strong>, 따라서 "완전한 시장 중립"은 아닙니다. 대신 <strong>두 종목 중 항상 상대적으로 싼 쪽을 들고 있는 상대가치 전략</strong>이 됩니다. 두 종목을 각각 단순 보유하는 것보다 나은지가 다음 클립 실습에서 확인할 기준입니다.</p>
+<p>롱 온리 스위칭은 공매도 포지션이 없어 빼 줄 베타가 없습니다. 항상 한 종목을 100% 들고 있으므로 <strong>포트폴리오 베타가 그 종목의 베타와 같아 0이 아니고</strong>, 따라서 "완전한 시장 중립"은 아닙니다. 대신 <strong>두 종목 중 항상 상대적으로 싼 쪽을 들고 있는 상대가치 전략</strong>이 됩니다.</p>
+<p>이 차이는 성과표에서 그대로 드러납니다. 2번의 폭락장 예시에서 계좌를 지킨 것은 <strong>공매도 다리</strong>였습니다. 그 다리가 없는 롱 온리 스위칭은 은행주가 동반 폭락하면 들고 있는 한 종목의 낙폭을 그대로 맞습니다. 그래서 다음 클립의 백테스트에서 <strong>MDD는 두 종목 단순 보유와 비슷하게 나옵니다.</strong> 이 전략이 노리는 것은 하락장 방어가 아니라, 항상 싼 쪽을 들고 있어서 두 종목을 각각 단순 보유하는 것보다 <strong>CAGR과 샤프 지수가 나아지는가</strong>입니다. 그것이 다음 클립에서 확인할 기준입니다.</p>
 <hr />
 <h3 id="7-선택-헤지펀드는-왜-페어를-50개나-쓸까">7. (선택) 헤지펀드는 왜 페어를 50개나 쓸까</h3>
 <p>오늘 수업 범위 밖이지만, 궁금해하실 질문이라 한 문단만 남깁니다.</p>
@@ -2233,7 +2274,8 @@ $$</div>
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 시장 중립이 "방향이 아니라 두 종목의 격차에 베팅하는 것"임을 한 문장으로 설명할 수 있다.</li>
-<li class="check-item"><input type="checkbox"> 상관관계(하루하루 방향이 비슷함)와 공적분(격차가 벌어지면 돌아옴)의 차이를 구분할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 공분산·상관계수(수익률의 동행)와 공적분(가격 격차의 정상성)의 차이를 구분할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 롱 온리 스위칭은 공매도 다리가 없어 하락장 MDD 방어를 기대할 수 없고, 판단 기준은 단순 보유 대비 CAGR·샤프 개선임을 안다.</li>
 <li class="check-item"><input type="checkbox"> Z-Score를 "평소 흔들림의 몇 배나 벌어졌는가"로 읽을 수 있다.</li>
 <li class="check-item"><input type="checkbox"> <span class="math-inline">$|Z| \ge 3.0$</span>에서 물타기가 아니라 청산해야 하는 이유(구조적 결별)를 설명할 수 있다.</li>
 <li class="check-item"><input type="checkbox"> 한국에서 개인이 롱 온리 스위칭으로 실행하는 이유를 알고, 다음 클립 실습을 실행할 준비를 마쳤다.</li>
