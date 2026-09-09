@@ -2219,9 +2219,14 @@ $$</div>
 <td><strong>상관관계가 낮은 자산 분산</strong>으로 변동성(<span class="math-inline">$\sigma$</span>)을 낮춰 샤프를 0.8~1.0 이상으로 상승</td>
 </tr>
 <tr>
-<td><strong>시장중립 / 페어트레이딩</strong><br>(클립 14~15: 롱/숏 페어트레이딩)</td>
+<td><strong>시장중립 페어트레이딩 — 단일 페어</strong><br>(클립 14~15: KB금융/하나금융 1페어 롱숏)</td>
+<td><strong>0.5 ~ 0.8</strong></td>
+<td><strong>시장 베타는 제거되지만 베팅이 한 종류</strong>. 10년에 진입 수십 회가 전부이고 거래비용 비중이 커서, 단일 페어의 샤프는 단일 자산 추세추종과 비슷한 수준에 머무름</td>
+</tr>
+<tr>
+<td><strong>시장중립 페어트레이딩 — 다수 페어 포트폴리오</strong><br>(기관형: 수십 페어 동시 운용)</td>
 <td><strong>1.0 ~ 1.5</strong></td>
-<td><strong>시장 베타를 제거하고 순수 알파만 추출</strong>. 수십~수백 회의 독립 베팅으로 기관급 고효율 달성</td>
+<td><strong>서로 다른 페어를 수십 개 묶어 독립 베팅 수 <span class="math-inline">$N$</span>을 늘림</strong>. 단일 페어의 샤프가 <span class="math-inline">$\sqrt{N}$</span>에 비례해 올라가되, 페어 간 잔여 상관 때문에 한계가 있음 (아래 공식)</td>
 </tr>
 <tr>
 <td><strong>4대 융합 퀀트 시스템 (최종 완성형)</strong><br>(Part 3: 4대 전략 결합 + 완충 필터)</td>
@@ -2236,9 +2241,54 @@ $$</div>
 </tbody>
 </table></div>
 <blockquote>
+<p>⚠️ <strong>정정</strong>: 강의 영상 화면의 표에는 페어트레이딩이 "시장중립 / 페어트레이딩 1.0 ~ 1.5" 한 줄로 되어 있습니다. 클립 15의 실습(KB금융/하나금융 단일 페어 가상 롱숏)을 돌려 보니 샤프가 0.5 안팎으로 나와, 그 숫자가 <strong>단일 페어가 아니라 수십 페어를 묶은 기관 포트폴리오의 기준</strong>이었음을 확인하고 두 줄로 갈라 정정합니다.</p>
+</blockquote>
+<p><strong>페어를 여러 개 묶으면 샤프가 얼마나 오르는가.</strong> 샤프가 <span class="math-inline">$S$</span>인 페어 <span class="math-inline">$N$</span>개를 같은 비중으로 묶고, 페어 수익률 간 평균 상관계수가 <span class="math-inline">$\rho$</span>일 때 포트폴리오 샤프는</p>
+<div class="math-block">$$
+S_N = \frac{S \cdot \sqrt{N}}{\sqrt{1 + (N-1)\rho}}
+$$</div>
+<p>입니다. <span class="math-inline">$\rho = 0$</span>(완전 독립)이면 <span class="math-inline">$S\sqrt{N}$</span>이 되어 교과서의 "<span class="math-inline">$\sqrt{N}$</span> 법칙"이 그대로 나옵니다. 하지만 같은 시장의 페어들은 2020년 3월 같은 충격을 함께 맞기 때문에 <span class="math-inline">$\rho$</span>가 0이 아닙니다. 단일 페어 <span class="math-inline">$S = 0.6$</span>일 때:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>페어 수 <span class="math-inline">$N$</span></th>
+<th><span class="math-inline">$\rho = 0$</span> (이론 상한)</th>
+<th><span class="math-inline">$\rho = 0.2$</span></th>
+<th><span class="math-inline">$\rho = 0.3$</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.60</td>
+<td>0.60</td>
+<td>0.60</td>
+</tr>
+<tr>
+<td>10</td>
+<td>1.90</td>
+<td>1.13</td>
+<td>0.98</td>
+</tr>
+<tr>
+<td>50</td>
+<td>4.24</td>
+<td>1.29</td>
+<td>1.07</td>
+</tr>
+<tr>
+<td><span class="math-inline">$N \to \infty$</span></td>
+<td><span class="math-inline">$\infty$</span></td>
+<td><span class="math-inline">$0.6/\sqrt{0.2} = 1.34$</span></td>
+<td><span class="math-inline">$0.6/\sqrt{0.3} = 1.10$</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>페어를 아무리 늘려도 <span class="math-inline">$S/\sqrt{\rho}$</span>를 넘지 못합니다. 기관이 수십 페어로도 1.0 ~ 1.5에 머무는 이유가 이 분모이고, "50개 페어 = 샤프 <span class="math-inline">$0.6 \times \sqrt{50} = 4.2$</span>"가 나오지 않는 이유도 같습니다. 거래비용과 자금 한도까지 넣으면 더 낮아집니다.</p>
+<blockquote>
 <p>💡 <strong>"단일 자산 전략 백테스트에서 샤프 1.5가 안 나온다고 실망하지 마세요"</strong><br />
 단일 ETF 이동평균 전략은 파라미터를 아무리 튜닝해도 샤프 <span class="math-inline">$0.5 \sim 0.7$</span>에 갇히는 것이 수학적으로 지극히 정상입니다.<br />
-샤프 지수를 기관급(<span class="math-inline">$1.0 \sim 1.5$</span>)으로 끌어올리는 진짜 방법은 파라미터 과최적화가 아니라 <strong>① 상관관계가 낮은 멀티에셋 분산(자산배분)</strong>과 <strong>② 시장 중립 롱/숏(페어트레이딩)</strong>, 그리고 <strong>③ 4대 전략의 융합 포트폴리오(Part 3)</strong>입니다. 이것이 바로 우리가 4대 전략을 차례대로 배우는 이유입니다.</p>
+샤프 지수를 기관급(<span class="math-inline">$1.0 \sim 1.5$</span>)으로 끌어올리는 진짜 방법은 파라미터 과최적화가 아니라 <strong>① 상관관계가 낮은 멀티에셋 분산(자산배분)</strong>과 <strong>② 시장 중립 롱/숏을 여러 페어로 묶는 것(페어트레이딩 포트폴리오)</strong>, 그리고 <strong>③ 4대 전략의 융합 포트폴리오(Part 3)</strong>입니다. 셋 다 같은 원리, 상관이 낮은 베팅을 여럿 묶어 <span class="math-inline">$N$</span>을 늘리는 것입니다. 이것이 바로 우리가 4대 전략을 차례대로 배우는 이유입니다.</p>
 </blockquote>
 <hr />
 <h3 id="5-승률win-rate의-함정과-손익비payoff-ratio">5. 승률(Win Rate)의 함정과 손익비(Payoff Ratio)</h3>
