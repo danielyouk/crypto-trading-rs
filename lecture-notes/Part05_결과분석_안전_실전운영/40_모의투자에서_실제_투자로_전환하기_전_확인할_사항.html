@@ -360,6 +360,25 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* 촬영분과 교재가 다를 수 있음을 알리는 상단 고정 안내 */
+.errata-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 14px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #5b4a10;
+  background: #fff8e6;
+  border: 1px solid #f1dfa3;
+  border-left: 4px solid #e0b64a;
+  border-radius: 6px;
+}
+
+.errata-notice .icon { flex: 0 0 auto; }
+.errata-notice strong { color: #4a3a05; }
+
 .metadata-bar {
   display: flex;
   flex-wrap: wrap;
@@ -1977,6 +1996,11 @@ window.MathJax = {
             
           </div>
         </div>
+
+        <div class="errata-notice">
+          <span class="icon">⚠️</span>
+          <span><strong>강의 촬영분과 교재는 다를 수 있습니다.</strong> 교재는 촬영 이후에도 데이터 재검증 결과에 따라 계속 수정됩니다. 영상 화면과 달라진 곳은 본문에 <strong>⚠️ 정정</strong>으로 표시해 두었고, 두 내용이 다를 때는 <strong>교재가 기준</strong>입니다.</span>
+        </div>
       </div>
 
       <main>
@@ -2025,7 +2049,7 @@ window.MathJax = {
 <li><strong>[킬 스위치]</strong> <code>kill_switch.flag</code> 생성 시 즉시 모든 발주가 중단되는 비상 탈출구가 있는가?</li>
 <li><strong>[일일 저널]</strong> 매일 장 마감 후 체결 내역과 PnL이 파일로 자동 기록되는가?</li>
 <li><strong>[소액 시작 원칙]</strong> 최초 실전 투입 자금이 총 투자 가능 금액의 10% 이하(100~300만 원)인가?</li>
-<li><strong>[심리적 각오]</strong> 백테스트에서 확인한 최대 손실(MDD -10%)을 감내할 마음의 준비가 되었는가?</li>
+<li><strong>[심리적 각오]</strong> 백테스트에서 확인한 내 전략의 최대 손실(MDD)을 실제 돈으로 겪어도 감내할 마음의 준비가 되었는가?</li>
 </ol>
 <hr />
 <h2 id="실습-실습-28-실전-배포-적격성gono-go-감사">실습 — 실습 28: 실전 배포 적격성(Go/No-Go) 감사</h2>
