@@ -64,16 +64,21 @@ KIS_IS_PAPER=True
 Claude Code 대화창에 아래 프롬프트를 입력하세요.
 
 ```prompt
-한국투자증권(KIS) 모의투자 Open API와 연동하여 계좌 잔고를 조회하는 모듈을 만들고 싶어. (Context)
+[맥락] 한국투자증권(KIS) 모의투자 Open API와 연동하여 계좌 잔고를 조회하는 모듈을 만들고 싶어.
 
-다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'kis_auth.py'를 작성하고 실행해줘:
 1. python-dotenv와 requests 패키지를 확인 및 설치해줘.
 2. .env 파일 템플릿을 생성하고, 사용자가 입력한 KIS_APP_KEY, KIS_APP_SECRET, KIS_CANO, KIS_ACNT_PRDT_CD 환경변수를 안전하게 로드하도록 구현해줘.
 3. KIS 모의투자 서버(https://openapivts.koreainvestment.com:29443)의 OAuth2 토큰 발급 엔드포인트(/oauth2/tokenP)를 호출해 access_token을 발급받아줘.
 4. 발급된 토큰으로 '주식 잔고조회(TTTC8434R)' API를 호출하여 내 계좌의 총 예수금, 총 평가금액, 총 손익률을 대화창에 요약 표로 출력해줘.
-5. 전체 코드는 'kis_auth.py'로 저장해줘.
 
-실행 완료 후 화면에 내 모의투자 계좌의 예수금 요약표를 출력해서 정상 연결을 증명해줘. (Verification)
+[하지 말 것]
+- App Key, App Secret, 계좌번호를 코드 안에 직접 적지 마. 반드시 .env에서만 읽어.
+- .env 파일의 내용을 화면에 출력하거나 Git에 올리지 마. .gitignore에 .env가 들어 있는지 확인해.
+- 실전투자 서버 주소를 쓰지 마. 이 강의는 끝까지 모의투자 서버만 사용해.
+- 인증이나 조회에 실패하면 예수금 숫자를 지어내지 말고, 에러 코드와 메시지를 그대로 보여주고 멈춰.
+
+[확인] 대화창에 내 모의투자 계좌의 예수금 요약표가 출력되어 정상 연결이 증명되었는지, 그리고 'kis_auth.py'와 '.env' 파일이 생성되었는지 확인해줘.
 ```
 
 ---

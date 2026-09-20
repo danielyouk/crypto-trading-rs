@@ -2128,9 +2128,9 @@ window.MathJax = {
 <hr />
 <h2 id="실습-실습-13-동적-레짐-스위칭-포트폴리오-백테스트">실습 — 실습 13: 동적 레짐 스위칭 포트폴리오 백테스트</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하여 시장 국면에 따라 전략 비중이 자동으로 전환되는 동적 포트폴리오를 시뮬레이션해 보세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>시장 국면(Bull/Bear/Sideway)에 따라 4대 전략의 비중을 동적으로 조절하는 레짐 스위칭 백테스트를 수행해줘. (Context)
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 시장 국면(Bull/Bear/Sideway)에 따라 4대 전략의 비중을 동적으로 조절하는 레짐 스위칭 백테스트를 수행하고 싶어.
 
-다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'regime_switching_portfolio.py'를 작성하고 실행해줘:
 1. 2018-01-01부터 2026-08-31까지 KOSPI의 200일선 및 ADX 지표를 기준으로 매월 말일 시장 국면을 [상승/하락/횡보] 중 하나로 자동 판별해줘.
 2. 각 국면별로 정의된 가중치(상승: 추세40+돌파30+모멘텀20+페어10, 하락: 채권모멘텀60+페어20+현금20, 횡보: 페어50+모멘텀30+현금20)를 다음 달 1달간 적용해줘.
 3. 각 전략에는 클립 22의 위험관리 규칙(고점 대비 -10% 손절, 변동성 목표 15%)을 동일하게 얹어줘.
@@ -2138,9 +2138,11 @@ window.MathJax = {
 5. 상단에는 세 포트폴리오의 누적 자산 성장 곡선, 하단에는 시간에 따른 4대 전략 비중 변화 스택 영역 차트(Regime Transition Plot)를 마우스 호버와 줌/패닝이 가능한 대화형 Plotly 차트 'regime_switching_portfolio.html' 파일로 저장해줘.
 
 [하지 말 것]
+- 국면 판정에는 그 달 말일까지 확정된 데이터만 써. 다음 달 데이터를 보고 국면을 정하지 마(미래 참조 금지).
+- 국면별 가중치는 위에 적힌 값 그대로 써. 성과가 좋아 보이는 쪽으로 가중치를 조정하지 마.
 - 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
-실행 완료 후 화면에 비교 성과표를 출력하고 차트 저장 경로를 알려줘. (Verification)
+[확인] 대화창에 세 포트폴리오 비교 성과표가 출력되었는지, 그리고 대화형 차트 파일 'regime_switching_portfolio.html'이 2-패널로 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>

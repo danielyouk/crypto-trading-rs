@@ -71,15 +71,19 @@
 Claude Code 대화창에 아래 프롬프트를 입력하여, 우리의 시스템이 특정 도구에 종속되지 않는 범용적 표준 파이썬/JSON 아키텍처임을 최종 확인해 보세요.
 
 ```prompt
-우리가 만든 AI 트레이딩 시스템의 모든 모듈(kis_auth, market_data, realtime_signals, execute_orders, risk_guard)이 
-어떤 외부 도구(Codex, Cursor, 다양한 AI 코딩 환경)에서도 100% 동일하게 호환 및 실행 가능한지 아키텍처 독립성을 점검해줘. (Context)
+[맥락] 우리가 만든 AI 트레이딩 시스템의 모든 모듈(kis_auth, market_data, realtime_signals, execute_orders, risk_guard)이 어떤 외부 도구(Codex, Cursor, 다양한 AI 코딩 환경)에서도 100% 동일하게 호환 및 실행 가능한지 아키텍처 독립성을 점검하고 싶어.
 
-다음 작업을 수행해줘: (Deliverable)
+[만들 것] 다음 작업을 수행해줘:
 1. 시스템의 모든 의존성(requirements.txt)이 순수 표준 오픈소스 라이브러리로만 구성되어 있는지 감사해줘.
 2. weekly_policy.json과 signals.json이 표준 JSON 스키마 규격을 충족하는지 검증해줘.
 3. 다른 AI 도구(Codex 등)를 처음 사용하는 사람이 이 프로젝트를 인계받았을 때 1분 만에 실행할 수 있도록 작성된 'docs/universal_tool_guide.md' 매뉴얼을 생성해줘.
 
-실행 완료 후 화면에 아키텍처 독립성 감사 통과 여부를 출력해줘. (Verification)
+[하지 말 것]
+- 점검 중 발견한 문제를 소스 코드나 JSON 파일을 고쳐서 해결하지 마. 발견 사항만 기록해.
+- 특정 AI 도구 전용 설정 파일이나 플러그인을 새로 만들지 마. 가이드는 표준 파이썬과 터미널 명령만으로 써.
+- 검증 결과를 '통과'로 뭉뚱그리지 말고, 항목별로 통과/미통과와 근거를 적어.
+
+[확인] 대화창에 의존성·JSON 스키마·실행 가이드 3개 항목의 독립성 감사 결과가 출력되었는지, 그리고 'docs/universal_tool_guide.md' 파일이 저장되었는지 확인해줘.
 ```
 
 ---

@@ -2110,6 +2110,8 @@ df = fdr.DataReader('005930', '2021-01-01', '2026-08-31')
 <li><strong>원인</strong>: Matplotlib의 기본 폰트가 한글을 지원하지 않는 DejaVu Sans로 설정되어 있기 때문입니다.</li>
 <li><strong>해결</strong>: 아래 프롬프트를 보내면 Claude Code가 OS(Windows: <code>Malgun Gothic</code>, Mac: <code>AppleGothic</code>, Linux: <code>NanumGothic</code>)를 자동 판별하여 폰트를 재설정합니다.</li>
 </ul>
+<!-- prompt-check: skip — 후속 수정 4칸(클립 05)을 배우기 전의 트러블슈팅 한 줄 요청 -->
+
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>저장된 차트 이미지에서 한글 제목이 깨져서 나와.
 OS 환경을 자동 감지해서 사용 가능한 한글 폰트를 적용하고 차트를 다시 저장해줘.
 </code></pre></div>

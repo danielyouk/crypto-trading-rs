@@ -2034,16 +2034,21 @@ $$</div>
 <hr />
 <h2 id="실습-실습-22-ai-일일-매매-일지-자동-생성기-구동">실습 — 실습 22: AI 일일 매매 일지 자동 생성기 구동</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>장 마감 후 당일 매매 결과를 종합 분석하여 일일 매매 일지를 자동 작성하는 'daily_journal.py' 모듈을 완성해줘. (Context)
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 장 마감 후 당일 매매 결과를 종합 분석하여 일일 매매 일지를 자동 작성하는 모듈을 완성하고 싶어.
 
-다음 요구사항에 맞춰 파이썬 스크립트를 작성하고 실행해줘: (Deliverable)
+[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'daily_journal.py'를 작성하고 실행해줘:
 1. KIS API를 통해 당일 체결 내역과 현재 잔고 평가액을 조회해줘.
 2. 오늘의 시작 자산 대비 총 손익(원, %), 실현 손익, 보유 종목별 평가손익을 집계해줘.
 3. 체결된 주문들의 슬리피지(주문 당시 시세 vs 실제 체결단가 차이)를 추정 계산해줘.
 4. 분석 결과를 바탕으로 전문적인 마크다운 형식의 일일 매매 일지를 'docs/daily_journal_20260824.md' 파일로 저장해줘.
 5. 대화창에는 오늘 하루의 핵심 성과 요약 카드(Total PnL, Win Rate, Key Trades)를 출력해줘.
 
-실행 완료 후 화면에 요약 카드를 출력하고 생성된 일지 마크다운 파일 내용을 확인시켜줘. (Verification)
+[하지 말 것]
+- 체결 내역이나 잔고 조회에 실패하면 손익을 추정해서 채우지 마. 조회된 데이터만 쓰고, 비어 있는 항목은 '조회 실패'로 표시해.
+- 일지에 주문을 내거나 포지션을 바꾸는 코드를 넣지 마. 이 모듈은 읽고 기록만 해.
+- 요청한 일지 파일과 스크립트 외에 다른 파일을 만들지 마.
+
+[확인] 대화창에 오늘의 핵심 성과 요약 카드(Total PnL, Win Rate, Key Trades)가 출력되었는지, 그리고 'docs/daily_journal_20260824.md' 파일이 생성되어 내용이 표시되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
