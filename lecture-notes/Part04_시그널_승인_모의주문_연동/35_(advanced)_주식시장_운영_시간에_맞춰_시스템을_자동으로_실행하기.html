@@ -1992,7 +1992,7 @@ window.MathJax = {
           <div class="metadata-item">
             <span class="label">강의 유형:</span>
             
-            <span class="badge practice">실습 19 (실습 중심)</span>
+            <span class="badge practice">실습 23 (실습 중심)</span>
             
           </div>
         </div>
@@ -2021,22 +2021,30 @@ window.MathJax = {
 <h3 id="1-주식시장-타임테이블과-시스템-작업-맵핑">1. 주식시장 타임테이블과 시스템 작업 맵핑</h3>
 <pre><code class="language-text">[08:30] ──&gt; ① 사전 점검 &amp; 당일 시그널 생성 (generate_signals.py)
               • 토큰 갱신, 계좌 잔고 확인, 주간 정책(weekly_policy.json) 유효성 검사
+              • 전일 종가로 판정이 끝난 추세추종·듀얼 모멘텀·페어 신호를 signals.json에 기록
 
-[09:00] ──&gt; ② 개장 즉시 시가 주문 및 변동성 돌파 감시 시작 (execute_orders.py)
-              • 추세추종/자산배분 진입, 변동성 돌파 실시간 목표가 폴링
+[09:00] ──&gt; ② 개장 시가 주문 집행 (execute_orders.py)
+              • signals.json에 적힌 추세추종/듀얼 모멘텀/페어 진입을 시가에 발주
 
-[09:00 ~ 15:20] ──&gt; ③ 상시 하드 가드레일 감시 (risk_guard.py)
-                      • 0.5초 간격 개별 종목 -3% 손절 및 포트폴리오 -2% 서킷브레이커 감시
+[09:00 ~ 15:20] ──&gt; ③ 변동성 돌파 장중 감시 (realtime_signals.py, 상주 루프)
+                      • 1초 주기로 현재가와 당일 목표가를 대조, 돌파하면 수량 산출 후 발주
 
-[15:20] ──&gt; ④ 데이트레이딩(VBO) 당일 포지션 종가 청산
-[15:40] ──&gt; ⑤ 장 마감 후 일일 AI 매매 일지 작성 (daily_journal.py)
+[09:00 ~ 15:20] ──&gt; ④ 상시 하드 가드레일 감시 (risk_guard.py, 상주 루프)
+                      • 1초 주기 폴링(증권사 API 한도), 개별 종목 -3% 또는 계좌 -2% 도달 시
+                        사람에게 묻지 않고 0.1초 안에 청산 주문 전송
+
+[15:20] ──&gt; ⑤ 데이트레이딩(VBO) 당일 포지션 종가 청산
+[15:40] ──&gt; ⑥ 장 마감 후 일일 AI 매매 일지 작성 (daily_journal.py)
 </code></pre>
 <hr />
 <h3 id="2-크론탭crontab-설정-예시">2. 크론탭(Crontab) 설정 예시</h3>
 <pre><code class="language-bash"># 월~금(1-5) 평일 자동 실행 스케줄
-30 8 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/generate_signals.py &gt;&gt; /path/to/ai-trading/logs/signals.log 2&gt;&amp;1
-0 9 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/execute_orders.py &gt;&gt; /path/to/ai-trading/logs/orders.log 2&gt;&amp;1
-40 15 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/daily_journal.py &gt;&gt; /path/to/ai-trading/logs/journal.log 2&gt;&amp;1
+30 8 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/generate_signals.py  &gt;&gt; /path/to/ai-trading/logs/signals.log  2&gt;&amp;1
+0 9 * * 1-5  /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/execute_orders.py    &gt;&gt; /path/to/ai-trading/logs/orders.log   2&gt;&amp;1
+# 아래 두 줄은 09:00에 떠서 15:20까지 스스로 도는 상주 루프입니다 (빠뜨리면 장중 감시가 아예 없습니다)
+0 9 * * 1-5  /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/realtime_signals.py  &gt;&gt; /path/to/ai-trading/logs/realtime.log 2&gt;&amp;1
+0 9 * * 1-5  /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/risk_guard.py        &gt;&gt; /path/to/ai-trading/logs/risk.log     2&gt;&amp;1
+40 15 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/daily_journal.py    &gt;&gt; /path/to/ai-trading/logs/journal.log  2&gt;&amp;1
 </code></pre>
 <hr />
 <h2 id="실습-실습-23-무인-자동화-오케스트레이터-구축">실습 — 실습 23: 무인 자동화 오케스트레이터 구축</h2>
@@ -2044,7 +2052,7 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 시장 운영 시간에 맞춰 전체 퀀트 시스템을 자동으로 스케줄링하는 마스터 오케스트레이터를 완성하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 스크립트와 가이드를 작성하고 실행해줘:
-1. 아침 시그널 생성(08:30) ➔ 장중 매매/하드손절(09:00~15:20) ➔ 장 마감 일지(15:40)를 순차적으로 제어하는 마스터 파이썬 스크립트 'orchestrator.py'를 작성해줘.
+1. 아침 시그널 생성(08:30) ➔ 개장 발주(09:00) ➔ 장중 상주 루프 2개(변동성 돌파 감시 + 하드 가드레일, 09:00~15:20) ➔ 장 마감 일지(15:40)를 제어하는 마스터 파이썬 스크립트 'orchestrator.py'를 작성해줘. 상주 루프 둘은 각각 1초 주기로 돌고 15:20에 스스로 종료되게 해줘.
 2. 현재 OS 환경에 맞는 스케줄러 등록 가이드(Mac/Linux의 경우 crontab 파일, Windows의 경우 schtasks 스크립트)를 'docs/scheduler_setup.md'로 작성해줘.
 3. 모든 실행 출력과 에러 내용이 날짜별 로그 파일('logs/system_YYYYMMDD.log')로 안전하게 자동 저장되도록 로깅 시스템을 구성해줘.
 4. 전체 파이프라인의 1회 전체 순환 드라이런(Dry-run) 테스트를 실행하여 정상 작동을 증명해줘.
@@ -2060,6 +2068,7 @@ window.MathJax = {
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 마스터 오케스트레이터(<code>orchestrator.py</code>)가 전체 모듈을 순서대로 에러 없이 호출했다.</li>
+<li class="check-item"><input type="checkbox"> 스케줄러 가이드에 <strong>상주 루프 2개(<code>realtime_signals.py</code>, <code>risk_guard.py</code>)가 빠지지 않았는지</strong> 확인했다. 이 둘이 없으면 장중 감시가 아예 돌지 않는다.</li>
 <li class="check-item"><input type="checkbox"> <code>logs/</code> 폴더에 날짜별 통합 시스템 로그가 기록되는 것을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> 평일 아침부터 장 마감까지 컴퓨터가 스스로 시스템을 안전하게 운용할 준비를 마쳤다.</li>
 </ul>

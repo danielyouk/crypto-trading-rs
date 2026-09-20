@@ -52,7 +52,7 @@
     <span class="step-num">Step 2</span>
     <div class="step-body">
       <div class="step-title">Deliverable 동일 선언</div>
-      <div class="step-desc">"이 파일의 하드 손절 조건을 개별 종목 -3%에서 -2.5%로 수정하고, execute_orders.py의 테스트 결과를 표로 보여줘."</div>
+      <div class="step-desc">"weekly_policy.json의 목표 변동성을 허용 범위(12~20%) 안에서 15%에서 12%로 낮추고, 바뀐 값이 realtime_signals.py의 주문 수량에 어떻게 반영되는지 표로 보여줘."</div>
     </div>
   </div>
   <div class="step-card verify">

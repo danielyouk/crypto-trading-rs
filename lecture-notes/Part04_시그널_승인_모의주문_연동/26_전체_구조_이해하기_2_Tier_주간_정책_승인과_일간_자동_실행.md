@@ -25,7 +25,7 @@
     <div class="steps">
       • <strong>타이밍 지연 & 알림 피로</strong>: 회의나 운전 중에 신호를 놓쳐 진입 기회 상실.<br>
       • <strong>심리적 공포 개입</strong>: 연속 3번 손절 후 4번째 유효 신호가 왔을 때 무서워서 승인 거부 ➔ 이후 대세 상승을 놓침.<br>
-      • <strong>노이즈 과적합</strong>: 장중 흔들림에 맞춰 매일 전략을 바꾸다 계좌 파탄.
+      • <strong>노이즈 과최적화</strong>: 장중 흔들림에 맞춰 매일 전략을 바꾸다 계좌 파탄.
     </div>
   </div>
   <div class="compare-card good">
@@ -59,12 +59,12 @@
     <div class="card-desc">한국투자증권 Open API 모의투자 계좌 인증 및 OAuth2 토큰 자동 갱신 (Clip 27)</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">② 시장 데이터 파이프라인 (Data)</div>
-    <div class="card-desc">유니버스 종목들의 실시간 시세 및 기술적 지표 계산 (Clip 28)</div>
+    <div class="card-title">② 시장 데이터 & 시그널 (Data & Signal)</div>
+    <div class="card-desc">유니버스 종목 실시간 시세 수집과 매매 신호·주문 수량 산출 (Clip 28~29)</div>
   </div>
   <div class="arch-card">
     <div class="card-title">③ 주간 정책 합의 (Governance)</div>
-    <div class="card-desc">Claude Code와 주간 국면 분석 후 <code>weekly_policy.json</code> 서명 승인 (Clip 29~30)</div>
+    <div class="card-desc">Claude Code와 주간 국면 분석 후 <code>weekly_policy.json</code> 서명 승인 (Clip 30)</div>
   </div>
   <div class="arch-card">
     <div class="card-title">④ 무인 자동 발주 엔진 (Execution)</div>

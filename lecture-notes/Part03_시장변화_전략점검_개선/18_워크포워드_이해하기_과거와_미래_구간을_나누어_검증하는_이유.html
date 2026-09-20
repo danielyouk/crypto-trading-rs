@@ -2090,7 +2090,7 @@ $$</div>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 워크포워드 분석(WFA)의 롤링 윈도우 시간 분할 구조를 시각화하고 개념을 명확히 하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'wfa_timeline_architecture.py'를 작성하고 실행해줘:
-1. 2017년부터 2026년 8월 31일까지의 시계열 데이터를 기준으로, 3년 학습(In-Sample) + 1년 전진 검증(Out-of-Sample)으로 이루어지는 5단계 롤링 윈도우 분할 타임라인을 구성해줘.
+1. 2017년부터 2026년 8월 31일까지의 시계열 데이터를 기준으로, 3년 학습(In-Sample) + 1년 전진 검증(Out-of-Sample)으로 이루어지는 5단계 롤링 윈도우 분할 타임라인을 구성해줘. 마지막 Fold의 검증 구간만 남은 데이터 끝까지(2024-01-01 ~ 2026-08-31) 늘려줘.
 2. 각 단계(Fold 1 ~ Fold 5)별로 In-Sample 구간(파란색 막대)과 Out-of-Sample 구간(주황색 막대)이 시간 순서대로 전진하는 타임라인 간트 차트(Gantt Chart)를 그려줘.
 3. 차트 하단에는 5개 Out-of-Sample 구간이 하나로 합쳐져 '최종 실전 워크포워드 곡선(WFA Equity Curve)'이 완성되는 데이터 흐름도를 표시해줘.
 4. 마우스 호버로 각 Fold 기간을 확인할 수 있는 대화형 Plotly 차트를 'wfa_timeline_architecture.html' 파일로 저장해줘.

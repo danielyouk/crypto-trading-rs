@@ -293,7 +293,7 @@
     "clip": 3,
     "title": "거래비용을 반영해 전략 변경 여부 판단하기",
     "duration": 20,
-    "practice": "",
+    "practice": "실습 12",
     "clip_num": 23,
     "part_folder": "Part03_시장변화_전략점검_개선",
     "filename": "23_거래비용을_반영해_전략_변경_여부_판단하기"
@@ -306,7 +306,7 @@
     "clip": 1,
     "title": "시장 상황별로 사용할 전략과 조정 범위 정하기",
     "duration": 18,
-    "practice": "",
+    "practice": "실습 13",
     "clip_num": 24,
     "part_folder": "Part03_시장변화_전략점검_개선",
     "filename": "24_시장_상황별로_사용할_전략과_조정_범위_정하기"
@@ -319,7 +319,7 @@
     "clip": 2,
     "title": "검증을 마친 전략을 매매 신호와 알림으로 연결하기",
     "duration": 15,
-    "practice": "",
+    "practice": "실습 14",
     "clip_num": 25,
     "part_folder": "Part03_시장변화_전략점검_개선",
     "filename": "25_검증을_마친_전략을_매매_신호와_알림으로_연결하기"
@@ -345,7 +345,7 @@
     "clip": 2,
     "title": "한국투자증권 API와 모의투자 계좌 연결하기",
     "duration": 25,
-    "practice": "실습 12",
+    "practice": "실습 15",
     "clip_num": 27,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "27_한국투자증권_API와_모의투자_계좌_연결하기"
@@ -358,7 +358,7 @@
     "clip": 3,
     "title": "시장의 실시간 가격 데이터를 받아오기",
     "duration": 20,
-    "practice": "실습 13",
+    "practice": "실습 16",
     "clip_num": 28,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "28_시장의_실시간_가격_데이터를_받아오기"
@@ -371,7 +371,7 @@
     "clip": 4,
     "title": "설정한 조건에 따라 매매 신호 만들기",
     "duration": 22,
-    "practice": "실습 14",
+    "practice": "실습 17",
     "clip_num": 29,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "29_설정한_조건에_따라_매매_신호_만들기"
@@ -384,7 +384,7 @@
     "clip": 1,
     "title": "AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계",
     "duration": 22,
-    "practice": "실습 15",
+    "practice": "실습 18",
     "clip_num": 30,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "30_AI와_함께_설계하는_주간_전략_정책과_승인_체계"
@@ -397,7 +397,7 @@
     "clip": 2,
     "title": "승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기",
     "duration": 18,
-    "practice": "",
+    "practice": "실습 19",
     "clip_num": 31,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기"
@@ -410,7 +410,7 @@
     "clip": 3,
     "title": "사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현",
     "duration": 20,
-    "practice": "실습 16",
+    "practice": "실습 20",
     "clip_num": 32,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현"
@@ -423,7 +423,7 @@
     "clip": 4,
     "title": "시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일",
     "duration": 22,
-    "practice": "실습 17",
+    "practice": "실습 21",
     "clip_num": 33,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "33_시장_이상_징후_감지와_비상_정지_안전_가드레일"
@@ -436,7 +436,7 @@
     "clip": 5,
     "title": "장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검",
     "duration": 20,
-    "practice": "실습 18",
+    "practice": "실습 22",
     "clip_num": 34,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "34_장_마감_후_AI_일일_매매_일지_생성_및_다음_날_실행_점검"
@@ -449,7 +449,7 @@
     "clip": 1,
     "title": "(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기",
     "duration": 20,
-    "practice": "실습 19",
+    "practice": "실습 23",
     "clip_num": 35,
     "part_folder": "Part04_시그널_승인_모의주문_연동",
     "filename": "35_(advanced)_주식시장_운영_시간에_맞춰_시스템을_자동으로_실행하기"
@@ -462,7 +462,7 @@
     "clip": 1,
     "title": "장 마감 후 AI로 오늘의 매매 결과 분석하기",
     "duration": 22,
-    "practice": "실습 20",
+    "practice": "실습 24",
     "clip_num": 36,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "36_장_마감_후_AI로_오늘의_매매_결과_분석하기"
@@ -475,7 +475,7 @@
     "clip": 2,
     "title": "분석 결과를 전략 개선과 재검증으로 연결하기",
     "duration": 20,
-    "practice": "실습 21",
+    "practice": "실습 25",
     "clip_num": 37,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "37_분석_결과를_전략_개선과_재검증으로_연결하기"
@@ -488,7 +488,7 @@
     "clip": 1,
     "title": "횡보장·상승장·하락장에 맞춰 전략 설정하기",
     "duration": 20,
-    "practice": "",
+    "practice": "실습 26",
     "clip_num": 38,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "38_횡보장·상승장·하락장에_맞춰_전략_설정하기"
@@ -501,7 +501,7 @@
     "clip": 2,
     "title": "과도한 주문을 방지하는 주문 한도와 긴급 정지 기능 만들기",
     "duration": 20,
-    "practice": "실습 22",
+    "practice": "실습 27",
     "clip_num": 39,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "39_과도한_주문을_방지하는_주문_한도와_긴급_정지_기능_만들기"
@@ -514,7 +514,7 @@
     "clip": 3,
     "title": "모의투자에서 실제 투자로 전환하기 전 확인할 사항",
     "duration": 18,
-    "practice": "",
+    "practice": "실습 28",
     "clip_num": 40,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "40_모의투자에서_실제_투자로_전환하기_전_확인할_사항"
@@ -527,7 +527,7 @@
     "clip": 1,
     "title": "AI 사용 비용을 관리하며 시스템을 효율적으로 운영하기",
     "duration": 15,
-    "practice": "",
+    "practice": "실습 29",
     "clip_num": 41,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "41_AI_사용_비용을_관리하며_시스템을_효율적으로_운영하기"
@@ -540,7 +540,7 @@
     "clip": 2,
     "title": "같은 작업 방식을 Codex에도 적용하기",
     "duration": 18,
-    "practice": "실습 23",
+    "practice": "실습 30",
     "clip_num": 42,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "42_같은_작업_방식을_Codex에도_적용하기"
@@ -553,7 +553,7 @@
     "clip": 3,
     "title": "나만의 일간·주간·월간 운영 루틴 완성하기",
     "duration": 18,
-    "practice": "",
+    "practice": "실습 31",
     "clip_num": 43,
     "part_folder": "Part05_결과분석_안전_실전운영",
     "filename": "43_나만의_일간·주간·월간_운영_루틴_완성하기"

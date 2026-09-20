@@ -1898,11 +1898,15 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-시장-국면-판정-3대-센서">1. 시장 국면 판정 3대 센서</a>
+            <a class="nav-heading level-3" href="#1-판정-규칙은-새로-만들지-않습니다-클립-24의-표를-그대로-씁니다">1. 판정 규칙은 새로 만들지 않습니다 — 클립 24의 표를 그대로 씁니다</a>
             
-            <a class="nav-heading level-3" href="#2-시장-국면별-전략-비중-표준-룰북">2. 시장 국면별 전략 비중 표준 룰북</a>
+            <a class="nav-heading level-3" href="#2-vkospi와-환율은-비중을-정하지-않습니다-경보만-울립니다">2. VKOSPI와 환율은 비중을 정하지 않습니다 — 경보만 울립니다</a>
             
-            <a class="nav-heading level-2" href="#실습-실습-26-시장-국면-자동-진단-및-정책-추천기-구동">실습 — 실습 26: 시장 국면 자동 진단 및 정책 추천기 구동</a>
+            <a class="nav-heading level-3" href="#3-비상-위기는-국면이-아니라-킬-스위치입니다">3. "비상 위기"는 국면이 아니라 킬 스위치입니다</a>
+            
+            <a class="nav-heading level-3" href="#4-국면별-전략-비중-룰북-클립-24-기준표">4. 국면별 전략 비중 룰북 (클립 24 기준표)</a>
+            
+            <a class="nav-heading level-2" href="#실습-실습-26-월말-국면-판정-및-정책-초안-생성기-구동">실습 — 실습 26: 월말 국면 판정 및 정책 초안 생성기 구동</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -1992,7 +1996,7 @@ window.MathJax = {
           <div class="metadata-item">
             <span class="label">강의 유형:</span>
             
-            <span class="badge">이론 및 아키텍처 브리핑</span>
+            <span class="badge practice">실습 26 (실습 중심)</span>
             
           </div>
         </div>
@@ -2005,101 +2009,171 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 거시 시장의 계절 변화(금리, 환율, 지수 이평선)를 읽고, <strong>상승장·하락장·횡보장의 3대 레짐(Market Regime)별 최적 전략 포트폴리오 가중치 룰북</strong>을 완성하여, 주말마다 5분 만에 다음 주 <code>weekly_policy.json</code>을 확정할 수 있는 확고한 투자 기준을 갖추게 됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 클립 24에서 만든 <strong>국면별 전략 비중 기준표를 매월 자동으로 돌리는 진단기</strong>를 갖추게 되고, 주말마다 5분 만에 다음 주 <code>weekly_policy.json</code> 초안을 받아 승인만 하면 되는 운영 루틴을 완성하게 됩니다.</p>
 <blockquote>
 <p>💡 <strong>수강생 안심 안내</strong>: 시장을 예측하려 하지 마세요. 퀀트는 미래를 점치는 예언자가 아닙니다. 현재 시장의 상태(비가 오는지, 눈이 오는지)를 객관적으로 관측하고, <strong>그 날씨에 맞는 옷(전략 비중)을 갈아입는 대응자(Reactor)</strong>가 되어야 합니다.</p>
 </blockquote>
 <ul>
-<li>시장 3대 국면 판정을 위한 <strong>3대 핵심 매크로/기술적 센서</strong> (KOSPI 200일선 위치, V-KOSPI 변동성 지수, 원/달러 환율 추세)</li>
-<li>국면별 전략 가중치 할당 및 현금 비중 가이드라인 총정리</li>
-<li><strong>레짐 체인지(Regime Change)</strong> 감지 시 주간 정책 신속 전환 워크플로우</li>
-<li><strong>실습 26</strong>: 현재 시장 지표를 입력받아 다음 주 최적 전략 비중을 자동 추천하는 파이썬 진단기 실행</li>
+<li><strong>클립 24 국면 판정 규칙을 주간 운영 루틴으로 옮기는 법</strong> (판정은 월말, 주간 세션은 확인)</li>
+<li>국면별 전략 가중치와 현금 비중을 <code>weekly_policy.json</code>으로 옮기는 경로</li>
+<li>판정 지표와 <strong>보조 경보 지표(VKOSPI·환율)</strong>의 역할 구분 — 무엇이 비중을 정하고 무엇이 경고만 하는가</li>
+<li><strong>실습 26</strong>: 현재 시장 지표를 읽어 다음 주 정책 초안을 만드는 파이썬 진단기 실행</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-시장-국면-판정-3대-센서">1. 시장 국면 판정 3대 센서</h3>
-<div class="arch-grid">
-  <div class="arch-card">
-    <div class="card-title">① KOSPI 200일선 위치 & 기울기</div>
-    <div class="card-desc">지수가 200일선 위이고 기울기가 우상향이면 대세 강세장, 200일선 아래이면 약세장.</div>
+<h3 id="1-판정-규칙은-새로-만들지-않습니다-클립-24의-표를-그대로-씁니다">1. 판정 규칙은 새로 만들지 않습니다 — 클립 24의 표를 그대로 씁니다</h3>
+<p>이 클립에서 가장 흔한 실수는 <strong>"이번 주에 맞는 새 기준"을 매주 만드는 것</strong>입니다. 그러면 기준이 시장을 따라다니게 되고, 결국 지나고 나서 해석하는 사후 판정이 됩니다.</p>
+<p>판정 지표는 클립 24에서 이미 못 박았습니다. 여기서는 그것을 <strong>매월 말 한 번 돌리는 루틴</strong>으로 만들 뿐입니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>국면</th>
+<th>판정 기준 (클립 24와 동일)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>강세 상승 (Bull)</strong></td>
+<td>KOSPI 종가 &gt; 200일선 <strong>AND</strong> 20일 이평선 기울기 상승</td>
+</tr>
+<tr>
+<td><strong>약세 하락 (Bear)</strong></td>
+<td>KOSPI 종가 &lt; 200일선 <strong>AND</strong> 주간 수익률 마이너스</td>
+</tr>
+<tr>
+<td><strong>박스권 횡보 (Sideway)</strong></td>
+<td>KOSPI가 200일선 ±2% 안에 머묾 <strong>AND</strong> ADX &lt; 20</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>💡 <strong>왜 매월 말인가</strong>: 국면은 며칠 만에 바뀌는 것이 아닙니다. 판정 주기를 주 단위로 당기면 잡음에 반응해 비중을 자주 뒤집게 되고, 그 자체가 거래비용입니다. <strong>판정은 월말에 하고, 주말 세션에서는 "지난달 판정이 여전히 유효한가"만 확인</strong>합니다.</p>
+</blockquote>
+<hr />
+<h3 id="2-vkospi와-환율은-비중을-정하지-않습니다-경보만-울립니다">2. VKOSPI와 환율은 비중을 정하지 않습니다 — 경보만 울립니다</h3>
+<div class="compare-box">
+  <div class="compare-card info">
+    <div class="tag">판정 지표 (비중을 바꾼다)</div>
+    <div class="steps">
+      • KOSPI 200일선 위치와 기울기<br>
+      • ADX (추세 강도)<br>
+      • <strong>월말에 한 번</strong> 읽고 다음 달 비중을 정함.
+    </div>
   </div>
-  <div class="arch-card">
-    <div class="card-title">② VKOSPI (한국 변동성 지수)</div>
-    <div class="card-desc">VKOSPI < 15: 안정적 상승장 / 15~22: 일반적 횡보장 / > 25: 공포 및 시스템 위기 국면.</div>
-  </div>
-  <div class="arch-card">
-    <div class="card-title">③ 외국인/기관 수급 & 환율</div>
-    <div class="card-desc">원/달러 환율 급등 및 외국인 순매도 지속 시 주식 비중 축소, 미국채/달러 현금 비중 확대.</div>
+  <div class="compare-card good">
+    <div class="tag">보조 경보 지표 (사람을 부른다)</div>
+    <div class="steps">
+      • VKOSPI 급등 (예: 30 이상)<br>
+      • 원/달러 환율 급등, 외국인 대량 순매도<br>
+      • 비중을 자동으로 바꾸지 않고, <strong>"이번 주 정책을 사람이 다시 볼 것"</strong>이라는 알림만 띄움.
+    </div>
   </div>
 </div>
 
+<p>지표를 둘로 나누는 이유는 간단합니다. 비중을 바꾸는 손잡이가 여러 개면, 손실이 난 날 그중 가장 마음에 드는 손잡이를 잡게 됩니다. <strong>비중을 움직이는 것은 월말 판정 하나뿐</strong>이고, 나머지는 전부 경보입니다.</p>
 <hr />
-<h3 id="2-시장-국면별-전략-비중-표준-룰북">2. 시장 국면별 전략 비중 표준 룰북</h3>
+<h3 id="3-비상-위기는-국면이-아니라-킬-스위치입니다">3. "비상 위기"는 국면이 아니라 킬 스위치입니다</h3>
+<p>VKOSPI가 30을 넘는 블랙스완 상황에서 <strong>새 비중표를 계산하는 것은 너무 늦습니다.</strong> 그런 날 필요한 것은 배분이 아니라 정지입니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>상황</th>
+<th>대응</th>
+<th>담당 장치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>국면이 바뀜 (상승 ➔ 하락)</td>
+<td>다음 달 비중표 교체</td>
+<td>월말 판정 (이 클립)</td>
+</tr>
+<tr>
+<td>개별 종목 -3% / 계좌 -2%</td>
+<td>자동 청산</td>
+<td>2층 하드 가드레일 (클립 32)</td>
+</tr>
+<tr>
+<td>블랙스완, 증권사 장애, 원인 불명 급변</td>
+<td><strong>전 종목 청산 + 매매 전면 중단</strong></td>
+<td>킬 스위치 (클립 33)</td>
+</tr>
+</tbody>
+</table></div>
+<p>그래서 이 클립의 국면표에는 '위기' 행이 없습니다. 위기는 비중 0%로 표현하는 것이 아니라 <strong><code>kill_switch.py</code>를 실행해 시스템을 멈추는 것</strong>으로 표현합니다. 사람이 상황을 파악하고 직접 해제할 때까지 어떤 주문도 나가지 않습니다.</p>
+<hr />
+<h3 id="4-국면별-전략-비중-룰북-클립-24-기준표">4. 국면별 전략 비중 룰북 (클립 24 기준표)</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>시장 국면</th>
 <th>판정 기준</th>
-<th>주력 전략 (공격)</th>
-<th>방어 전략 (수비)</th>
-<th>현금 비중</th>
+<th style="text-align: right;">추세추종</th>
+<th style="text-align: right;">변동성 돌파</th>
+<th style="text-align: right;">듀얼 모멘텀</th>
+<th style="text-align: right;">페어트레이딩</th>
+<th style="text-align: right;">현금</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>대세 상승장 (Bull)</strong></td>
-<td>KOSPI &gt; 200일선, VKOSPI &lt; 18</td>
-<td>추세추종 40%, 변동성돌파 30%</td>
-<td>듀얼모멘텀(주식) 20%, 페어 10%</td>
-<td><strong>0%</strong></td>
+<td><strong>강세 상승 (Bull)</strong></td>
+<td>200일선 위 + 20일선 상승</td>
+<td style="text-align: right;"><strong>40%</strong></td>
+<td style="text-align: right;"><strong>30%</strong></td>
+<td style="text-align: right;">20%</td>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">0%</td>
 </tr>
 <tr>
-<td><strong>박스권 횡보장 (Sideway)</strong></td>
-<td>200일선 플랫, 박스권 등락</td>
-<td><strong>페어트레이딩 50%</strong>, 변동성돌파 20%</td>
-<td>듀얼모멘텀 20%</td>
-<td><strong>10%</strong></td>
+<td><strong>박스권 횡보 (Sideway)</strong></td>
+<td>200일선 ±2% + ADX &lt; 20</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">30%</td>
+<td style="text-align: right;"><strong>50%</strong></td>
+<td style="text-align: right;">20%</td>
 </tr>
 <tr>
-<td><strong>대세 하락장 (Bear)</strong></td>
-<td>KOSPI &lt; 200일선, VKOSPI &gt; 22</td>
-<td>추세추종 0%, 변동성돌파 0%</td>
-<td><strong>듀얼모멘텀(미국채/단기채) 60%</strong>, 페어 20%</td>
-<td><strong>20%</strong></td>
-</tr>
-<tr>
-<td><strong>비상 위기 (Crisis)</strong></td>
-<td>VKOSPI &gt; 30, 글로벌 블랙스완</td>
-<td>전 전략 0% (진입 전면 중단)</td>
-<td>초단기 파킹형 채권 50%</td>
-<td><strong>50%</strong></td>
+<td><strong>약세 하락 (Bear)</strong></td>
+<td>200일선 아래 + 주간 수익률 마이너스</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;"><strong>60%</strong></td>
+<td style="text-align: right;">20%</td>
+<td style="text-align: right;">20%</td>
 </tr>
 </tbody>
 </table></div>
+<p>어떤 국면에서도 한 전략이 60%를 넘지 않고, 약세장 현금은 20% 이상입니다. 이 두 줄은 클립 24에서 '변경 불가'로 못 박은 값입니다.</p>
 <hr />
-<h2 id="실습-실습-26-시장-국면-자동-진단-및-정책-추천기-구동">실습 — 실습 26: 시장 국면 자동 진단 및 정책 추천기 구동</h2>
+<h2 id="실습-실습-26-월말-국면-판정-및-정책-초안-생성기-구동">실습 — 실습 26: 월말 국면 판정 및 정책 초안 생성기 구동</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 최신 금융 데이터를 수집하여 현재 시장 국면을 진단하고 다음 주 전략 비중을 추천하는 국면 진단기를 만들고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'regime_advisor.py'를 작성하고 실행해줘:
-1. FinanceDataReader를 통해 KOSPI 종합지수(^KS11), 원/달러 환율(USD/KRW)의 최근 1년 데이터를 불러와줘.
-2. 지수의 200일선 이격도, 최근 20일 변동성(ATR), 환율 추세를 종합 평가하여 현재 시장 국면을 [상승/하락/횡보/위기] 중 하나로 판정해줘.
-3. 판정된 국면에 맞는 4대 전략 최적 가중치와 현금 권장 비중을 계산해줘.
-4. 분석 결과와 함께 다음 주 실행을 위한 'weekly_policy_recommended.json' 파일을 생성해줘.
+1. FinanceDataReader를 통해 KOSPI 종합지수(^KS11)와 원/달러 환율(USD/KRW)의 최근 1년 데이터를 불러와줘.
+2. 클립 24의 판정 규칙 그대로 직전 월말 기준 국면을 [상승/하락/횡보] 중 하나로 판정해줘. 판정에 쓴 값(200일선 대비 위치 %, 20일선 기울기, ADX)을 근거 수치로 함께 출력해줘.
+3. 판정된 국면에 해당하는 클립 24 기준표의 4대 전략 가중치와 현금 비중을 그대로 가져와줘.
+4. VKOSPI와 환율은 별도의 '경보' 항목으로 분리해서, 임계선을 넘었으면 &quot;사람이 정책을 다시 볼 것&quot; 경고 문구만 띄워줘.
+5. 결과를 다음 주 검토용 'weekly_policy_recommended.json' 파일로 저장해줘.
 
 [하지 말 것]
-- 국면 판정 기준(200일선 이격도, ATR, 환율 추세)의 임계값을 화면에 명시해. 기준 없이 '종합적으로 판단'이라고만 쓰지 마.
+- 국면 판정 기준을 새로 만들거나 임계값을 바꾸지 마. 클립 24 표의 기준만 써.
+- VKOSPI나 환율로 전략 비중을 조정하지 마. 그 둘은 경고만 띄우는 보조 지표야.
+- '위기' 국면을 만들지 마. 블랙스완 대응은 킬 스위치(클립 33)의 일이고, 이 스크립트는 비중만 제안해.
 - 추천 파일은 'weekly_policy_recommended.json'으로만 저장해. 실행 중인 weekly_policy.json을 덮어쓰거나 상태를 ACTIVE로 만들지 마. 승인은 내가 한다.
 - 데이터 조회에 실패하면 국면을 임의로 정하지 말고 멈춰.
 
-[확인] 대화창에 현재 시장 상태 진단서(판정 근거 수치 포함)와 추천 전략 비중 카드가 출력되었는지, 그리고 'weekly_policy_recommended.json' 파일이 저장되었는지 확인해줘.
+[확인] 대화창에 판정 근거 수치가 붙은 국면 진단서, 클립 24 기준표에서 가져온 비중 카드, 그리고 경보 지표 상태가 각각 구분되어 출력되었는지, 그리고 'weekly_policy_recommended.json' 파일이 저장되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> KOSPI 200일선 및 환율 데이터를 기반으로 현재 시장 국면이 객관적으로 진단되었다.</li>
-<li class="check-item"><input type="checkbox"> 현재 시장에 최적화된 4대 전략 가중치와 현금 비중이 도출되었다.</li>
-<li class="check-item"><input type="checkbox"> 다음 주 주간 거버넌스 승인에 바로 활용할 수 있는 추천 정책 파일이 생성되었다.</li>
+<li class="check-item"><input type="checkbox"> 화면에 출력된 판정 근거 수치(200일선 대비 위치, 20일선 기울기, ADX)를 클립 24 표의 기준과 직접 대조해, 판정이 맞는지 내 눈으로 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 제안된 비중이 클립 24 기준표의 해당 국면 행과 <strong>한 칸도 다르지 않은지</strong> 대조했다. AI가 임의로 조정한 칸이 있다면 되돌렸다.</li>
+<li class="check-item"><input type="checkbox"> 경보 지표(VKOSPI·환율)가 비중을 바꾸지 않고 경고만 띄웠는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 다음 주 주간 거버넌스 승인에 바로 활용할 수 있는 추천 정책 파일이 생성되었고, 실행 중인 <code>weekly_policy.json</code>은 그대로인지 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>

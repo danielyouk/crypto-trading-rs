@@ -1790,7 +1790,9 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-실시간-시그널-판정-및-주문-수량-계산-공식">1. 실시간 시그널 판정 및 주문 수량 계산 공식</a>
+            <a class="nav-heading level-3" href="#1-장중에-다시-볼-전략은-하나뿐입니다">1. 장중에 다시 볼 전략은 하나뿐입니다</a>
+            
+            <a class="nav-heading level-3" href="#2-실시간-시그널-판정-및-주문-수량-계산-공식">2. 실시간 시그널 판정 및 주문 수량 계산 공식</a>
             
             <a class="nav-heading level-2" href="#실습-실습-17-실시간-매매-시그널-엔진-구동">실습 — 실습 17: 실시간 매매 시그널 엔진 구동</a>
             
@@ -1990,7 +1992,7 @@ window.MathJax = {
           <div class="metadata-item">
             <span class="label">강의 유형:</span>
             
-            <span class="badge practice">실습 14 (실습 중심)</span>
+            <span class="badge practice">실습 17 (실습 중심)</span>
             
           </div>
         </div>
@@ -2008,14 +2010,40 @@ window.MathJax = {
 <p>💡 <strong>수강생 안심 안내</strong>: 복잡한 주문 수량 계산(내 계좌의 가용 예수금 대비 20% 비중 산정, 호가 단위 반올림 등)을 사람이 손으로 계산할 필요가 없습니다. 알고리즘이 내 계좌 잔고를 실시간으로 조회하여 정확한 '목표 주문 주수'까지 완벽하게 계산해 냅니다.</p>
 </blockquote>
 <ul>
-<li>실시간 시세 ➔ 기술적 지표 갱신 ➔ 조건문 판정 ➔ 목표 수량 산출의 4단계 실시간 시그널 파이프라인</li>
+<li><strong>장중에 다시 판정하는 전략과, 아침에 이미 끝난 전략의 구분</strong> — 4대 전략 중 장중 판정이 필요한 것은 변동성 돌파 하나뿐</li>
+<li>실시간 시세 ➔ 목표가 대조 ➔ 목표 수량 산출의 실시간 시그널 파이프라인</li>
 <li><strong>포지션 사이징(Position Sizing)</strong>: 계좌 총 예수금 대비 종목별 자산 배분 비중(%)을 실제 주문 주수(Shares)로 환산하는 공식</li>
 <li>매수 신호(BUY), 매도 신호(SELL), 관망(HOLD) 상태 머신 관리</li>
 <li><strong>실습 17</strong>: 실시간 시그널 엔진 구동 및 <code>signals.json</code> 실시간 갱신 테스트</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-실시간-시그널-판정-및-주문-수량-계산-공식">1. 실시간 시그널 판정 및 주문 수량 계산 공식</h3>
+<h3 id="1-장중에-다시-볼-전략은-하나뿐입니다">1. 장중에 다시 볼 전략은 하나뿐입니다</h3>
+<p>Part 2에서 네 전략 모두 <strong>"당일 종가로 판정하고 다음 날 시가에 체결한다"</strong>는 규약을 지켰습니다. 이 규약은 실전에서도 그대로입니다. 그러므로 장중에 현재가를 보며 판정을 다시 하면 안 됩니다. 이미 끝난 판정을 덮어쓰는 셈이기 때문입니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>전략</th>
+<th>판정 시점</th>
+<th>장중에 하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>추세추종 · 듀얼 모멘텀 · 페어트레이딩</td>
+<td><strong>전일 종가</strong> (아침 08:30 <code>generate_signals.py</code>)</td>
+<td>없음. <code>signals.json</code>의 결정을 그대로 실행</td>
+</tr>
+<tr>
+<td><strong>변동성 돌파</strong></td>
+<td><strong>장중 실시간</strong></td>
+<td>현재가가 당일 목표가를 뚫는지 감시</td>
+</tr>
+</tbody>
+</table></div>
+<p>변동성 돌파만 예외인 이유는 규칙 자체가 "오늘 장중에 목표가를 넘으면 산다"이기 때문입니다. 이 전략은 종가를 기다릴 수가 없습니다. 그래서 <code>realtime_signals.py</code>가 장중에 하는 일은 사실상 <strong>변동성 돌파 감시와, 실시간 잔고에 맞춘 수량 재계산</strong> 두 가지입니다.</p>
+<hr />
+<h3 id="2-실시간-시그널-판정-및-주문-수량-계산-공식">2. 실시간 시그널 판정 및 주문 수량 계산 공식</h3>
 <div class="math-block">$$
 \text{Target Capital} = \text{Total Equity} \times \text{Allocation Weight} \quad (\text{예: 1억 원 } \times 20\% = 2,000\text{만 원})
 $$</div>
@@ -2036,15 +2064,17 @@ $$</div>
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'realtime_signals.py'를 작성하고 실행해줘:
 1. kis_auth.py를 통해 모의투자 계좌의 현재 주문 가능 예수금을 실시간 조회해줘.
-2. 4대 전략 대상 종목들의 실시간 현재가를 market_data.py로 조회해줘.
-3. 다음 조건에 따라 종목별 신호를 판정해줘:
-   - 추세추종 (KODEX 200): 현재가가 200일선 상단이면 BUY, 하단이면 SELL/HOLD
-   - 변동성 돌파 (KODEX 레버리지): 현재가가 당일 목표가(<span class="math-inline">$\text{Open} + \text{Range} \times 0.5$</span>) 이상이면 BUY
-4. BUY 신호가 뜬 종목에 대해 할당 비중(예: 예수금의 25%)에 맞춰 '정확한 매수 주문 수량(주수)'과 '하드 손절가(-3%)'를 계산해줘.
+2. 변동성 돌파 대상 종목(KODEX 레버리지 122630)의 실시간 현재가와 당일 시가를 market_data.py로 조회해줘.
+3. 신호를 두 갈래로 나눠 처리해줘:
+   - 추세추종·듀얼 모멘텀·페어트레이딩: 전일 종가로 이미 판정이 끝난 전략이야. generate_signals.py(클립 25)가 아침에 만들어 둔 signals.json을 읽어서 그대로 써. 현재가로 다시 판정하지 마.
+   - 변동성 돌파: 장중에만 판정할 수 있는 유일한 전략이야. 현재가가 당일 목표가(<span class="math-inline">$\text{당일 시가} + \text{전일 변동폭} \times 0.5$</span>) 이상이고 200일선 필터를 통과하면 BUY.
+4. BUY 신호가 뜬 종목에 대해 weekly_policy.json에 승인된 **그 전략의 배정 비중**에 맞춰 '정확한 매수 주문 수량(주수)'과 '하드 손절가(-3%)'를 계산해줘.
 5. 산출된 결과를 'signals.json' 파일로 저장하고, 대화창에 깔끔한 시그널 대시보드 표를 출력해줘.
 
 [하지 말 것]
 - 이 모듈은 신호와 수량을 계산하기만 해. 주문 API(매수·매도)를 호출하는 코드를 넣지 마. 주문은 클립 31에서 따로 만들어.
+- 전일 종가로 판정하는 전략(추세·듀얼·페어)을 장중 현재가로 다시 판정하지 마. Part 2에서 정한 &quot;당일 종가 판정 ➔ 익일 시가 체결&quot; 규약이 깨져.
+- 비중을 코드에 직접 적지 마. weekly_policy.json에서 읽어.
 - 예수금이나 현재가 조회에 실패하면 수량을 지어내지 말고, 실패한 항목을 표시하고 멈춰.
 - 기존 kis_auth.py, market_data.py를 수정하지 마.
 
@@ -2053,8 +2083,9 @@ $$</div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 계좌 예수금을 기반으로 종목별 정확한 매수 목표 수량(주수)이 계산되었다.</li>
-<li class="check-item"><input type="checkbox"> 현재가와 지표를 비교하여 BUY / SELL / HOLD 상태가 명확히 판정되었다.</li>
+<li class="check-item"><input type="checkbox"> 계좌 예수금과 정책 비중을 기반으로 종목별 정확한 매수 목표 수량(주수)이 계산되었다.</li>
+<li class="check-item"><input type="checkbox"> 추세·듀얼·페어의 신호가 <code>signals.json</code>에서 그대로 읽혀 왔고, 장중 현재가로 다시 판정되지 <strong>않았는지</strong> 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 변동성 돌파만 현재가와 목표가를 비교해 BUY / HOLD가 판정되었다.</li>
 <li class="check-item"><input type="checkbox"> 진입 즉시 발동될 -3% 하드 손절가가 정확히 기록된 <code>signals.json</code> 파일이 갱신되었다.</li>
 </ul>
 <hr />
