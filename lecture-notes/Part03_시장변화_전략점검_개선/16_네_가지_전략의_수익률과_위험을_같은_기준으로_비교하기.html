@@ -2102,7 +2102,10 @@ window.MathJax = {
 3. 2개의 서브플롯 차트를 생성해줘:
    - 상단: 4대 전략 및 앙상블의 정규화 누적 자산 성장 곡선 (기준점=100)
    - 하단: 전략 간 일간 수익률 상관계수(Correlation Matrix) 히트맵
-4. 차트 이미지 파일은 'four_strategies_integrated_dashboard.png'로 저장해줘.
+4. 마우스 호버로 수치 확인과 줌/패닝이 가능한 대화형 Plotly 차트를 'four_strategies_integrated_dashboard.html' 파일로 저장해줘.
+
+[하지 말 것]
+- 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
 실행 완료 후 화면에 종합 성과표를 출력하고 차트 저장 경로를 알려줘. (Verification)
 </code></pre></div>
@@ -2112,6 +2115,7 @@ window.MathJax = {
 <li class="check-item"><input type="checkbox"> 동일한 조건(2018~2026년, 왕복 0.25% 비용)에서 4대 전략의 수익률과 위험(MDD, 샤프, 칼마)을 공정하게 비교했다.</li>
 <li class="check-item"><input type="checkbox"> 단일 전략 중 수익률 1위 전략과 MDD 방어 1위 전략이 서로 다름을 확인하고, 모든 시장에서 완벽한 단일 전략은 없음을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> 4개 전략을 균등 결합한 <strong>앙상블(Ensemble) 포트폴리오가 개별 전략보다 낮은 MDD와 높은 샤프 지수 및 칼마 비율</strong>을 기록함을 목격했다.</li>
+<li class="check-item"><input type="checkbox"> 생성된 <code>four_strategies_integrated_dashboard.html</code>을 브라우저로 열어, 상단 곡선에서 앙상블이 개별 전략보다 매끄러운지, 하단 히트맵에서 상관계수를 마우스 호버로 확인했다.</li>
 <li class="check-item"><input type="checkbox"> 히트맵에서 추세추종, 페어트레이딩, 듀얼 모멘텀 간의 상관계수가 낮게(0.3 이하) 나타나는 다각화 효과를 확인했다.</li>
 </ul>
 <hr />

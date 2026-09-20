@@ -2088,8 +2088,11 @@ $$</div>
    - 전략 C (완충 밴드 + 위험관리): 전략 B에 AI 보고서의 위험관리 규칙 두 가지를 얹어줘. 고점 대비 -10% 손절(손절 후 다음 월말 점검일까지 현금, 월말에 신호가 보유면 익월 첫 거래일 시가 재진입), 변동성 목표 15%(20일 실현 변동성 기준, 비중 변화 10%p 이상일 때만 매매)
 2. 세 전략의 누적 수익률, CAGR, MDD, 샤프 지수, 칼마 비율, 총 거래 횟수, 총 거래비용 누적액을 나란히 비교하는 표를 대화창에 출력해줘.
 3. 클립 20에서 찾은 Top-3 손실 구간 각각에서 세 전략의 최대 낙폭을 비교하는 표를 따로 출력해줘.
-4. 상단에는 세 전략의 누적 수익률 곡선, 하단에는 언더워터 플롯(MDD)을 겹쳐 비교한 차트를 'strategy_ab_improvement_result.png'로 저장해줘.
+4. 상단에는 세 전략의 누적 수익률 곡선, 하단에는 언더워터 플롯(MDD)을 겹쳐 비교한 대화형 Plotly 차트를 'strategy_ab_improvement_result.html' 파일로 저장해줘. 마우스 호버로 수치 확인과 줌/패닝이 가능하게 해줘.
 5. 전략 C의 손절폭을 -8%, -10%, -15%로, 목표 변동성을 12%, 15%, 20%로 바꿔가며 CAGR·MDD·칼마가 어떻게 움직이는지 작은 표로 보여줘. 어느 값이 최고인지 고르지 말고, 값에 따라 결과가 얼마나 민감한지만 보고해.
+
+[하지 말 것]
+- 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
 실행 완료 후 화면에 A/B/C 성과 비교표와 손실 구간별 비교표를 출력하고 차트 저장 경로를 알려줘. (Verification)
 </code></pre></div>
@@ -2100,7 +2103,7 @@ $$</div>
 <li class="check-item"><input type="checkbox"> 손실 구간별 표에서 톱니 횡보 구간은 B가, 급락 구간은 C만 낙폭을 줄였는지 확인했다. 줄지 않았다면 그것도 그대로 기록했다.</li>
 <li class="check-item"><input type="checkbox"> C의 CAGR이 A보다 낮다면, 그 대가가 MDD 축소에 비해 합당한지 칼마 비율로 판단했다.</li>
 <li class="check-item"><input type="checkbox"> 손절폭·목표 변동성 민감도 표에서 결과가 특정 값에서만 튀는지(과최적화 신호) 확인했다.</li>
-<li class="check-item"><input type="checkbox"> <code>strategy_ab_improvement_result.png</code> 차트에서 세 전략의 선이 어느 구간에서 갈라지는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <code>strategy_ab_improvement_result.html</code>을 브라우저로 열어, 세 전략의 선이 어느 구간에서 갈라지는지 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>

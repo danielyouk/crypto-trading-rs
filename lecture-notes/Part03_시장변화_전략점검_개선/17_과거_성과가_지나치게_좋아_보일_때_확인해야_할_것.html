@@ -2079,7 +2079,10 @@ window.MathJax = {
 2. In-Sample 구간에서 이동평균선(5일~200일)과 RSI 필터(10~90)를 무차별 조합(Grid Search)하여 가장 수익률이 높게 나온 '극단적 과최적화 파라미터'를 찾아줘.
 3. 동시에 보편적인 기본 파라미터(200일 단순 이동평균선)를 준비해줘.
 4. 두 전략(과최적화 전략 vs 기본 견고한 전략)을 Out-of-Sample(2020~2026년 8월) 구간에 그대로 적용하여 실제 미래 성과를 비교해줘.
-5. In-Sample과 Out-of-Sample 구간이 나뉜 누적 수익률 비교 차트를 'overfitting_trap_demo.png'로 저장해줘.
+5. In-Sample과 Out-of-Sample 구간이 나뉜 누적 수익률 비교를, 마우스 호버로 수치 확인과 줌/패닝이 가능한 대화형 Plotly 차트로 'overfitting_trap_demo.html' 파일로 저장해줘.
+
+[하지 말 것]
+- 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
 실행 완료 후 두 전략의 In-Sample vs Out-of-Sample CAGR 및 MDD 변화를 표로 출력해줘. (Verification)
 </code></pre></div>
@@ -2089,6 +2092,7 @@ window.MathJax = {
 <li class="check-item"><input type="checkbox"> In-Sample 구간에서는 과최적화 전략이 연 40% 이상의 압도적인 수익률을 기록하는 것을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> Out-of-Sample(미래 데이터)로 넘어가자마자 과최적화 전략의 수익률이 마이너스로 곤두박질치며 붕괴하는 현상을 목격했다.</li>
 <li class="check-item"><input type="checkbox"> 반면 단순하고 견고한 200일 기본 전략은 미래 구간에서도 안정적인 우상향을 유지하는 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 생성된 <code>overfitting_trap_demo.html</code>을 브라우저로 열어, In-Sample과 Out-of-Sample이 나뉘는 지점에서 과최적화 전략이 꺾이는 모습을 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
