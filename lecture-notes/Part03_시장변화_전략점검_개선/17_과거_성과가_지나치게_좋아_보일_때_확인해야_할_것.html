@@ -1666,6 +1666,8 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#따라-해보기-실습">따라 해보기 — 실습</a>
             
+            <a class="nav-heading level-2" href="#따라-해보기-실습_1">따라 해보기 — 실습</a>
+            
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
@@ -2069,33 +2071,34 @@ window.MathJax = {
 </ol>
 <hr />
 <h2 id="따라-해보기-실습">따라 해보기 — 실습</h2>
-<p>Claude Code에게 과최적화된 파라미터 탐색 스크립트를 작성하게 하고, 학습 구간(In-Sample)에서 가장 좋아 보였던 전략이 미래 구간(Out-of-Sample)에서 어떻게 달라지는지 시뮬레이션해 보세요.</p>
-<p>이번에는 <strong>일부러 논리가 없는 파라미터</strong>를 고릅니다. 200일은 약 1년이라는 근거가 있지만, "몇 월에만 들고 있을지"에는 아무 근거가 없습니다. 근거 없는 조합을 4천 개 넘게 시험해 가장 좋은 것을 고르면 어떤 일이 생기는지 보는 것이 이 실습입니다.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 과최적화(Overfitting)가 실전 투자에서 왜 치명적인지 증명하는 시뮬레이션을 수행하고 싶어.
+<h2 id="따라-해보기-실습_1">따라 해보기 — 실습</h2>
+<p>Claude Code에게 과거 3년 데이터로 가장 수익률이 높았던 이동평균선 파라미터를 탐색하게 하고, 그 1등 파라미터가 다음 해 실전 구간에서 어떻게 무너지는지 시뮬레이션해 보세요.</p>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] KODEX 200 추세추종 전략에서 과거 데이터에 이동평균선 파라미터를 억지로 맞추는 '과최적화(Overfitting)'의 치명적 함정을 실측 비교하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'overfitting_trap_demo.py'를 작성하고 실행해줘:
-1. KODEX 200(069500)의 데이터를 두 구간으로 엄격히 분리해줘 (200일선 계산을 위한 워밍업 기간을 포함해 충분히 불러와줘):
-   - In-Sample (학습/최적화 구간): 2016-01-01 ~ 2019-12-31 (4년)
-   - Out-of-Sample (미래 검증 구간): 2020-01-01 ~ 2026-08-31 (약 6.7년)
-2. 기본 전략은 200일선 추세추종이야. 종가가 200일선 위면 다음 거래일 시가에 보유하고, 아래면 현금으로 있어. 매매마다 왕복 0.25% 거래비용을 차감해줘. 이 전략을 '필터 없는 200일선'이라고 부를게.
-3. 여기에 '보유할 달' 필터를 붙여줘. 1월~12월 중 고른 달에만 200일선 신호를 따르고, 나머지 달은 현금으로 있는 규칙이야. 12개 달로 만들 수 있는 모든 조합(4,095개)을 In-Sample 구간에서 무차별 조합(Grid Search)하고, In-Sample 수익률 1위 조합을 '과최적화 전략'으로 골라줘.
-4. 과최적화 전략과 필터 없는 200일선을 In-Sample과 Out-of-Sample에서 각각 비교해줘. 과최적화 전략이 Out-of-Sample에서 4,095개 조합 중 몇 위인지도 알려줘.
-5. In-Sample과 Out-of-Sample 구간이 나뉜 누적 수익률 비교를, 마우스 호버로 수치 확인과 줌/패닝이 가능한 대화형 Plotly 차트로 'overfitting_trap_demo.html' 파일로 저장해줘.
+1. KODEX 200(069500)의 일봉 데이터를 불러와 두 구간으로 분리해줘 (200일선 계산을 위한 워밍업 기간 포함):
+   - In-Sample (학습/최적화 구간): 2023-01-01 ~ 2025-12-31 (3년)
+   - Out-of-Sample (미래 실전 구간): 2026-01-01 ~ 2026-08-31 (약 8개월)
+2. In-Sample 구간에서 이동평균선 기간을 5일부터 250일까지 5일 간격(5, 10, 15, ..., 250일)으로 전수 백테스트(Grid Search)하여, In-Sample 샤프 지수 1위를 기록한 '최적 파라미터(단기 이평선)'를 찾아줘. (왕복 거래비용 0.25%, 당일 종가 신호 ➔ 익일 시가 체결)
+3. 1위로 선정된 최적화 전략과, 보편적 기준선인 200일 단순 이동평균선(SMA 200)을 준비해줘.
+4. 두 전략(과최적화 1위 전략 vs 기준 200일 전략)의 [In-Sample 성과]와 [Out-of-Sample 성과]를 누적 수익률(%), CAGR(%), MDD(%), 샤프 지수, 총 매매 횟수로 비교하는 표를 대화창에 출력해줘.
+5. 대화형 Plotly 차트 'overfitting_trap_demo.html'을 패널 2개로 저장해줘 (마우스 호버 및 줌/패닝 가능):
+   - 상단: In-Sample 구간(2023~2025)과 Out-of-Sample 구간(2026)이 시각적으로 구분된 두 전략의 자산 성장 곡선
+   - 하단: 5일~250일 이동평균선 기간별 In-Sample 샤프 지수 분포 곡선 (1위 지점과 200일선 지점 강조 마커 표시)
 
 [하지 말 것]
-- 보유할 달을 고를 때 Out-of-Sample 구간의 데이터를 한 줄도 들여다보지 마. 2020년 이후 데이터는 성과 측정에만 써.
-- Out-of-Sample 성과가 나쁘게 나왔다고 파라미터를 다시 고르거나 구간 경계를 옮기지 마. 나온 대로 보고해.
+- 파라미터를 고를 때 Out-of-Sample(2026년) 데이터를 단 하루도 참조하지 마.
 - 화면을 멈추게 만드는 대화형 창을 띄우지 말고 단독 실행 가능한 HTML 파일(fig.write_html)로 직접 저장해.
 
-[확인] 대화창에 두 전략의 In-Sample vs Out-of-Sample CAGR 및 MDD 변화 비교표와 과최적화 전략의 Out-of-Sample 순위가 출력되었는지, 그리고 대화형 차트 파일 'overfitting_trap_demo.html'이 정상 저장되었는지 확인해줘.
+[확인] 대화창에 In-Sample vs Out-of-Sample 성과 비교표가 출력되었는지, 그리고 대화형 차트 파일 'overfitting_trap_demo.html'이 정상 저장되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> In-Sample 구간에서 과최적화 전략이 필터 없는 200일선보다 얼마나 좋아 보였는지 확인했다.</li>
-<li class="check-item"><input type="checkbox"> Out-of-Sample로 넘어갔을 때 그 차이가 유지되는지, 줄어드는지, 뒤집히는지 확인했다.</li>
-<li class="check-item"><input type="checkbox"> In-Sample 1위 조합이 Out-of-Sample에서 4,095개 중 몇 위로 내려갔는지 확인했다.</li>
-<li class="check-item"><input type="checkbox"> 생성된 <code>overfitting_trap_demo.html</code>을 브라우저로 열어, In-Sample과 Out-of-Sample이 나뉘는 지점 전후로 두 곡선이 어떻게 갈라지는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> In-Sample 구간(2023~2025)에서는 최적화된 단기 이평선이 200일선보다 훨씬 높은 샤프 지수와 수익률을 기록하는 것을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> Out-of-Sample 구간(2026)으로 넘어가자마자, 과거 1등 전략의 성과가 기준선인 200일선에 크게 뒤처지는 현상을 목격했다.</li>
+<li class="check-item"><input type="checkbox"> 과거 데이터에만 맞춰진 파라미터는 미래 시장에서 전혀 힘을 쓰지 못한다는 과최적화의 본질을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 생성된 <code>overfitting_trap_demo.html</code> 차트에서 학습 구간과 실전 구간의 성과 역전 현상을 시각적으로 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
