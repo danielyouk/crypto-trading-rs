@@ -1,6 +1,6 @@
 """
 위험관리 규칙(오버레이)을 Part 2 전략 위에 얹었을 때 MDD가 어떻게 바뀌는지 확인하는 백테스트
-- 기간: 2018-01-01 ~ 2026-08-31 (2026년 7월 코스피 급락 포함)
+- 기간: 2016-01-01 ~ 2026-08-31 (Part 2와 같은 기간, 2026년 7월 코스피 급락 포함)
 - 기본 전략 (Part 2 그대로, 위험관리 없음):
     추세추종: KODEX 200(069500) 종가 > 200일선이면 보유, 아니면 현금. 신호 오늘 종가, 체결 내일 시가
     추세추종 + 완충 밴드 1%: 종가 > 200일선 x 1.01 이면 진입, 종가 < 200일선 이면 청산 (클립 22 전략 B)
@@ -22,7 +22,7 @@ import pandas as pd
 
 import dual_momentum_backtest as dm
 
-START, END = "2018-01-01", "2026-08-31"
+START, END = "2016-01-01", "2026-08-31"
 COST = 0.00125            # 편도 0.125% = 왕복 0.25%
 STOP = float(sys.argv[1]) if len(sys.argv) > 1 else 0.10      # 고점 대비 손절폭
 TARGET_VOL = float(sys.argv[2]) if len(sys.argv) > 2 else 0.15  # 변동성 목표(연율)
@@ -61,7 +61,7 @@ def base_holdings(closes: pd.DataFrame) -> dict[str, pd.Series]:
 def simulate(opens, closes, want: pd.Series, reentry_ok: pd.Series, use_stop: bool, use_vol: bool):
     """
     want: 일별 기본 전략의 목표 자산(None=현금). 오늘 시가부터 적용되는 상태.
-    반환: 일수익률, 거래 수(편도)
+    반환: 일수익률, 일별 거래 수(편도). 워밍업 구간 거래가 섞이지 않도록 호출하는 쪽에서 기간으로 자른다.
     """
     idx = closes.index
     vol = closes.pct_change().rolling(VOL_WIN).std() * np.sqrt(252)
@@ -70,7 +70,7 @@ def simulate(opens, closes, want: pd.Series, reentry_ok: pd.Series, use_stop: bo
         v = vol.at[day, asset]
         return 1.0 if (np.isnan(v) or v <= TARGET_VOL) else TARGET_VOL / v
 
-    daily = np.zeros(len(idx)); n_trades = 0
+    daily = np.zeros(len(idx)); trades = np.zeros(len(idx), dtype=int)
     asset, w = None, 0.0            # 어제 종가 시점의 보유 자산과 비중
     peak = None                     # 보유 기간 고점(종가)
     stopped = False                 # 손절 후 다음 월말 점검일까지 대기
@@ -99,10 +99,10 @@ def simulate(opens, closes, want: pd.Series, reentry_ok: pd.Series, use_stop: bo
         r_gap = opens.at[d, asset] / closes.at[prev, asset] - 1 if (asset is not None and prev is not None) else 0.0
         if new_asset != asset:
             turnover = w + new_w
-            n_trades += int(w > 0) + int(new_w > 0)
+            trades[i] = int(w > 0) + int(new_w > 0)
         else:
             turnover = abs(new_w - w)
-            n_trades += int(turnover > 1e-9)
+            trades[i] = int(turnover > 1e-9)
         r_day = closes.at[d, new_asset] / opens.at[d, new_asset] - 1 if new_asset is not None else 0.0
         daily[i] = (1 + w * r_gap) * (1 - COST * turnover) * (1 + new_w * r_day) - 1
 
@@ -121,7 +121,7 @@ def simulate(opens, closes, want: pd.Series, reentry_ok: pd.Series, use_stop: bo
             tw = vol_weight(asset, d)
             if abs(tw - w) >= REBAL_STEP or (tw >= 1.0 and w < 1.0 - 1e-9):
                 pending_w = tw
-    return pd.Series(daily, index=idx), n_trades
+    return pd.Series(daily, index=idx), pd.Series(trades, index=idx)
 
 
 def metrics(daily: pd.Series) -> dict:
@@ -152,8 +152,9 @@ def main():
                              f"R1 고점 대비 -{STOP:.0%} 손절": (True, False),
                              f"R2 변동성 목표 {TARGET_VOL:.0%}": (False, True),
                              "R1 + R2": (True, True)}.items():
-            daily, n = simulate(opens, closes, want, reentry_ok, s, v)
+            daily, trades = simulate(opens, closes, want, reentry_ok, s, v)
             daily = daily.loc[START:END]
+            n = int(trades.loc[START:END].sum())
             m = metrics(daily)
             rows.append({"전략": name, "규칙": rule, "CAGR": m["CAGR"], "MDD": m["MDD"], "MDD일": m["MDDDate"].date(),
                          "샤프": m["Sharpe"], "2026년 6~8월 낙폭": m["2026-07"], "누적": m["Total"], "거래(편도)": n})

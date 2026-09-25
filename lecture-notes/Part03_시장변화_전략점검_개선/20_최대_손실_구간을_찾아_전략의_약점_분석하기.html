@@ -2067,9 +2067,9 @@ window.MathJax = {
 <td><strong>2위</strong></td>
 <td>2018-01-29</td>
 <td>2020-03-10</td>
-<td>2021-01-25</td>
-<td><strong>-37.1%</strong></td>
-<td>1,092일 (약 36개월)</td>
+<td>2021-05-10</td>
+<td><strong>-38.0%</strong></td>
+<td>1,197일 (약 39개월)</td>
 <td>2018~2019년 200일선 근처 톱니 횡보에서 손실이 쌓인 위에 2020년 3월 코로나 급락이 겹침</td>
 </tr>
 <tr>
@@ -2077,7 +2077,7 @@ window.MathJax = {
 <td>2024-07-11</td>
 <td>2025-05-09</td>
 <td>2025-07-14</td>
-<td><strong>-20.8%</strong></td>
+<td><strong>-20.9%</strong></td>
 <td>368일 (약 12개월)</td>
 <td>2024년 하반기 하락과 2025년 4월 관세 충격</td>
 </tr>
@@ -2087,10 +2087,10 @@ window.MathJax = {
 <hr />
 <h2 id="실습-실습-09-top-3-최대-손실-구간-자동-탐색-및-시각화">실습 — 실습 09: Top-3 최대 손실 구간 자동 탐색 및 시각화</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하여 전략의 최악 구간들을 찾아내고 확대 차트를 생성하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 추세추종 전략의 2018년부터 2026년 8월 31일까지 백테스트에서 발생한 Top-3 최대 손실 구간을 정밀 분석하고 싶어.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 추세추종 전략의 2016년부터 2026년 8월 31일까지 백테스트에서 발생한 Top-3 최대 손실 구간을 정밀 분석하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'top3_drawdown_analysis.py'를 작성하고 실행해줘:
-1. KODEX 200(069500)의 2018-01-01부터 2026-08-31까지 200일 이평선 추세추종 일간 자산 가치 시계열을 생성해줘. Part 2와 같은 규칙으로, 위험관리 규칙은 얹지 말고.
+1. KODEX 200(069500)의 2016-01-01부터 2026-08-31까지 200일 이평선 추세추종 일간 자산 가치 시계열을 생성해줘. Part 2와 같은 규칙으로, 위험관리 규칙은 얹지 말고.
 2. 고점 대비 하락폭(Drawdown) 시계열을 계산하고, 역사상 가장 낙폭이 컸던 상위 3개 구간(Top-1, Top-2, Top-3 Drawdowns)을 자동으로 찾아줘.
 3. 각 구간별 [고점일, 저점일, 회복일, 낙폭 %, 하락 일수, 회복 일수, 총 소요 일수, 구간 중 보유/현금 비율]을 정리한 표를 대화창에 출력해줘.
 4. 전체 언더워터 플롯 위에 Top-3 손실 구간을 서로 다른 색상의 음영(빨간색, 주황색, 노란색 박스)으로 강조 표시한 대화형 Plotly 차트를 'top3_drawdown_analysis.html' 파일로 저장해줘. 마우스 호버로 일자와 낙폭을 확인하고 줌/패닝이 가능하게 해줘.
