@@ -2012,7 +2012,7 @@ window.MathJax = {
 <ul>
 <li>기존 100% 전자동 봇과 건별 메신저 승인 봇의 <strong>3대 치명적 실패 원인</strong></li>
 <li><strong>Tier 1 (주간 전략 거버넌스)</strong>: 주 1회 주말 30분, Claude Code와 함께 시장 국면을 진단하고 <code>weekly_policy.json</code> 최종 승인</li>
-<li><strong>Tier 2 (일간 무인 자동 실행 &amp; 하드 가드레일)</strong>: 평일 장중 사람 없이 자동으로 주문을 넣고(발주), 1초마다 가격을 확인하다 손절 기준에 닿으면 0.1초 안에 강제 손절 주문</li>
+<li><strong>Tier 2 (일간 무인 자동 실행 &amp; 하드 가드레일)</strong>: 평일 장중 사람 없이 자동으로 주문을 넣고(발주), 1~2초마다 가격을 확인하다 손절 기준에 닿으면 곧바로 강제 손절 주문</li>
 <li>전체 6대 핵심 서브시스템 파이프라인 조감도</li>
 </ul>
 <hr />
@@ -2065,7 +2065,7 @@ window.MathJax = {
 <tr>
 <td><strong>Tier 2: 하드 가드레일</strong></td>
 <td>기계적 코드 규칙</td>
-<td>상시 감시 (1초마다 가격 확인, 기준에 닿으면 0.1초 안에 주문)</td>
+<td>상시 감시 (1~2초마다 가격 확인, 기준에 닿으면 곧바로 주문)</td>
 <td>개별 종목 -3% 즉각 손절, 계좌 -2% 일일 서킷브레이커 강제 청산 (질문 없이 집행)</td>
 </tr>
 <tr>
@@ -2097,7 +2097,7 @@ window.MathJax = {
   </div>
   <div class="arch-card">
     <div class="card-title">⑤ 하드 안전 가드레일 (Safety)</div>
-    <div class="card-desc">1초마다 가격을 확인하다 기준에 닿으면 0.1초 안에 손절 주문, 일일 서킷브레이커, 킬 스위치(모든 주문을 즉시 멈추는 비상 정지 장치) (Clip 32~33)</div>
+    <div class="card-desc">1~2초마다 가격을 확인하다 기준에 닿으면 곧바로 손절 주문, 일일 서킷브레이커, 킬 스위치(모든 주문을 즉시 멈추는 비상 정지 장치) (Clip 32~33)</div>
   </div>
   <div class="arch-card">
     <div class="card-title">⑥ 일일 AI 저널링 (Journal)</div>

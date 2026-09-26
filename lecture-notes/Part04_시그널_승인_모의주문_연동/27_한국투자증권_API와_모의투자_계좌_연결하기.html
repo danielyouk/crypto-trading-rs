@@ -2064,6 +2064,7 @@ KIS_IS_PAPER=True
 2. 값을 채워 넣을 빈 칸만 있는 .env 파일 양식을 만들고, 내가 채워 넣은 KIS_APP_KEY, KIS_APP_SECRET, KIS_CANO, KIS_ACNT_PRDT_CD 값을 코드가 실행할 때 .env에서 읽어 오도록 구현해줘.
 3. KIS 모의투자 서버(https://openapivts.koreainvestment.com:29443)의 출입증 발급 창구 주소(/oauth2/tokenP)로 요청을 보내 접근 토큰(access_token, 로그인 뒤 증권사가 내주는 출입증)을 받아줘.
 4. 받은 접근 토큰으로 '주식 잔고조회' API(모의투자용 거래 코드 VTTC8434R)를 호출하여 내 계좌의 총 예수금(아직 주식을 사지 않은 현금), 총 평가금액, 총 손익률을 대화창에 요약 표로 출력해줘.
+5. 이 계좌로 보내는 모든 API 요청이 직전 요청과 최소 1초 간격을 두도록 기다려 주는 공용 요청 함수를 kis_auth.py에 만들어 두고, 4번 조회도 이 함수로 보내줘. 모의투자 서버는 계좌당 초당 1회만 요청을 받아.
 
 [하지 말 것]
 - App Key, App Secret, 계좌번호를 코드 안에 직접 적지 마. 반드시 .env에서만 읽어.

@@ -2019,7 +2019,7 @@ window.MathJax = {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-주식시장-타임테이블과-시스템-작업-맵핑">1. 주식시장 타임테이블과 시스템 작업 맵핑</h3>
-<p>아래 시간표의 <strong>상주 루프</strong>는 한 번 켜지면 장이 끝날 때까지 1초마다 같은 확인을 되풀이하는 프로그램입니다. 클립 01에서 "0.1초 감시"라고 했던 하드 가드레일도 이 방식으로, 가격은 1초마다 확인하고 기준에 닿으면 0.1초 안에 청산 주문을 냅니다.</p>
+<p>아래 시간표의 <strong>상주 루프</strong>는 한 번 켜지면 장이 끝날 때까지 쉬지 않고 같은 확인을 되풀이하는 부분입니다. 모의투자 서버는 계좌당 <strong>초당 1회</strong>만 요청을 받으므로(2026년 4월 기준), 오케스트레이터 안의 상주 루프 <strong>하나</strong>가 1초에 한 번씩 요청을 보내며 변동성 돌파 감시와 하드 가드레일 점검을 번갈아 합니다. 그래서 각 감시는 약 2초마다 돌고, 기준에 닿으면 다음 요청 차례에 바로 주문을 냅니다. 주문은 매수든 청산이든 모두 <code>execute_orders.py</code>의 주문 함수로만 나갑니다. 클립 01에서 "0.1초 감시"라고 소개한 것은 판정한 뒤 주문을 만드는 계산이 그만큼 빠르다는 뜻이고, 가격을 확인하는 간격은 증권사 호출 한도가 정합니다.</p>
 <pre><code class="language-text">[08:30] ──&gt; ① 사전 점검 &amp; 당일 시그널 생성 (generate_signals.py)
               • 토큰 갱신, 계좌 잔고 확인, 주간 정책(weekly_policy.json) 유효성 검사
               • 전일 종가로 판정이 끝난 추세추종·듀얼 모멘텀·페어 신호를 signals.json에 기록
@@ -2027,26 +2027,21 @@ window.MathJax = {
 [09:00] ──&gt; ② 개장 시가 주문 집행 (execute_orders.py)
               • signals.json에 적힌 추세추종/듀얼 모멘텀/페어 진입을 시가에 발주
 
-[09:00 ~ 15:20] ──&gt; ③ 변동성 돌파 장중 감시 (realtime_signals.py, 상주 루프)
-                      • 1초 주기로 현재가와 당일 목표가를 대조, 돌파하면 수량 산출 후 발주
+[09:00 ~ 15:20] ──&gt; ③·④ 장중 상주 루프 (orchestrator.py 안에서 1초에 요청 하나씩, 둘을 번갈아)
+                      ③ 변동성 돌파 감시: realtime_signals.py로 KODEX 레버리지 현재가와 당일 목표가를
+                         대조, 돌파하면 execute_orders.py로 매수
+                      ④ 하드 가드레일: risk_guard.py로 잔고를 조회해 개별 종목 -3% 또는 계좌 -2%에
+                         닿으면 사람에게 묻지 않고 execute_orders.py로 청산
 
-[09:00 ~ 15:20] ──&gt; ④ 상시 하드 가드레일 감시 (risk_guard.py, 상주 루프)
-                      • 1초 주기 폴링(증권사 API 한도), 개별 종목 -3% 또는 계좌 -2% 도달 시
-                        사람에게 묻지 않고 0.1초 안에 청산 주문 전송
-
-[15:20] ──&gt; ⑤ 변동성 돌파 당일 보유분 청산 (realtime_signals.py가 종료 직전에 시장가 전량 매도)
+[15:20] ──&gt; ⑤ 변동성 돌파 당일 보유분 청산 (orchestrator.py가 execute_orders.py로 시장가 전량 매도)
               • 15:20~15:30은 주문을 모았다가 한 가격(종가)으로 체결하는 시간이라, 이때 낸 시장가 매도는 종가에 체결됨
 [15:40] ──&gt; ⑥ 장 마감 후 일일 AI 매매 일지 작성 (daily_journal.py)
 </code></pre>
 <hr />
 <h3 id="2-크론탭crontab-설정-예시">2. 크론탭(Crontab) 설정 예시</h3>
-<pre><code class="language-bash"># 월~금(1-5) 평일 자동 실행 스케줄
-30 8 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/generate_signals.py  &gt;&gt; /path/to/ai-trading/logs/signals.log  2&gt;&amp;1
-0 9 * * 1-5  /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/execute_orders.py    &gt;&gt; /path/to/ai-trading/logs/orders.log   2&gt;&amp;1
-# 아래 두 줄은 09:00에 떠서 15:20까지 스스로 도는 상주 루프입니다 (빠뜨리면 장중 감시가 아예 없습니다)
-0 9 * * 1-5  /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/realtime_signals.py  &gt;&gt; /path/to/ai-trading/logs/realtime.log 2&gt;&amp;1
-0 9 * * 1-5  /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/risk_guard.py        &gt;&gt; /path/to/ai-trading/logs/risk.log     2&gt;&amp;1
-40 15 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/daily_journal.py    &gt;&gt; /path/to/ai-trading/logs/journal.log  2&gt;&amp;1
+<pre><code class="language-bash"># 월~금(1-5) 08:25에 오케스트레이터 하나만 띄웁니다.
+# 08:30 시그널부터 15:40 일지까지 시각별 작업과 장중 상주 루프는 오케스트레이터가 스스로 챙깁니다.
+25 8 * * 1-5 /path/to/ai-trading/.venv/bin/python /path/to/ai-trading/orchestrator.py &gt;&gt; /path/to/ai-trading/logs/cron.log 2&gt;&amp;1
 </code></pre>
 <p><strong>한 줄 읽는 법</strong>: 앞의 다섯 칸이 예약 시각(크론 표현식)이고, 그 뒤가 실행할 명령입니다.</p>
 <div class="table-wrapper"><table>
@@ -2070,8 +2065,8 @@ window.MathJax = {
 <td>요일 (1=월 … 5=금)</td>
 </tr>
 <tr>
-<td><code>30 8 * * 1-5</code></td>
-<td>30분</td>
+<td><code>25 8 * * 1-5</code></td>
+<td>25분</td>
 <td>8시</td>
 <td>상관없음(<code>*</code>)</td>
 <td>상관없음(<code>*</code>)</td>
@@ -2080,7 +2075,7 @@ window.MathJax = {
 </tbody>
 </table></div>
 <ul>
-<li>줄 끝의 <code>&gt;&gt; .../signals.log</code>는 프로그램이 화면에 찍는 내용을 그 파일 끝에 이어 적으라는 뜻이고, <code>2&gt;&amp;1</code>은 에러 메시지도 같은 파일에 함께 적으라는 뜻입니다. 예약 실행은 화면이 없으니 이렇게 남겨야 나중에 무슨 일이 있었는지 볼 수 있습니다.</li>
+<li>줄 끝의 <code>&gt;&gt; .../cron.log</code>는 프로그램이 화면에 찍는 내용을 그 파일 끝에 이어 적으라는 뜻이고, <code>2&gt;&amp;1</code>은 에러 메시지도 같은 파일에 함께 적으라는 뜻입니다. 예약 실행은 화면이 없으니 이렇게 남겨야 나중에 무슨 일이 있었는지 볼 수 있습니다.</li>
 <li>파이썬을 <code>.venv/bin/python</code>으로 직접 적는 이유는, 예약 실행은 터미널에서처럼 가상환경을 켜 주지 않기 때문입니다. 이렇게 적어야 라이브러리를 설치해 둔 작업 폴더의 파이썬으로 실행됩니다.</li>
 </ul>
 <hr />
@@ -2089,8 +2084,8 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 시장 운영 시간에 맞춰 전체 퀀트 시스템을 자동으로 스케줄링하는 마스터 오케스트레이터를 완성하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 스크립트와 가이드를 작성하고 실행해줘:
-1. 아침 시그널 생성(08:30, generate_signals.py) ➔ 개장 발주(09:00, execute_orders.py) ➔ 장중 상주 루프 2개(변동성 돌파 감시 realtime_signals.py + 하드 가드레일 risk_guard.py, 09:00~15:20) ➔ 15:20 변동성 돌파 청산 ➔ 장 마감 일지(15:40, daily_journal.py)를 제어하는 마스터 파이썬 스크립트 'orchestrator.py'를 작성해줘. 상주 루프는 한 번 켜지면 15:20까지 1초마다 같은 확인을 되풀이하는 프로그램이야. 둘은 각각 1초 주기로 돌고 15:20에 스스로 종료되게 해줘. 변동성 돌파는 산 날 종가에 전량 파는 전략이라, 변동성 돌파 감시 루프는 15:20에 종료하기 직전 오늘 변동성 돌파로 산 KODEX 레버리지(122630) 보유분을 시장가로 전량 매도해야 해.
-2. 내 컴퓨터 종류에 맞는 예약 실행 등록 가이드(Mac/Linux의 경우 crontab 파일, Windows의 경우 schtasks 스크립트)를 'docs/scheduler_setup.md'로 작성해줘.
+1. 아침 시그널 생성(08:30, generate_signals.py) ➔ 개장 발주(09:00, execute_orders.py) ➔ 장중 상주 루프(09:00~15:20) ➔ 15:20 변동성 돌파 청산 ➔ 장 마감 일지(15:40, daily_journal.py)를 시각에 맞춰 차례로 실행하는 마스터 파이썬 스크립트 'orchestrator.py'를 작성해줘. 모의투자 서버는 계좌당 초당 1회만 요청을 받으니, 상주 루프는 하나만 두고 1초에 한 번씩 요청을 보내며 변동성 돌파 감시(realtime_signals.py)와 하드 가드레일 점검(risk_guard.py)을 번갈아 해줘. 매수든 청산이든 주문은 모두 execute_orders.py의 주문 함수로만 보내고, 15:20에는 변동성 돌파 당일 보유분을 execute_orders.py로 시장가 전량 매도한 뒤 상주 루프를 끝내.
+2. 내 컴퓨터 종류에 맞는 예약 실행 등록 가이드(Mac/Linux의 경우 crontab 파일, Windows의 경우 schtasks 스크립트)를 'docs/scheduler_setup.md'로 작성해줘. 예약은 orchestrator.py 하나를 평일 08:25에 실행하는 것 한 줄이면 돼.
 3. 모든 실행 출력과 에러 내용이 날짜별 로그 파일('logs/system_YYYYMMDD.log')로 안전하게 자동 저장되도록 로깅 시스템을 구성해줘.
 4. 전체 파이프라인을 처음부터 끝까지 한 번 도는 드라이런(실제 주문은 보내지 않고 흐름만 끝까지 돌려 보는 시험 실행)을 실행하여 정상 작동을 증명해줘. 드라이런에서는 상주 루프를 한 바퀴만 돌리고 다음 단계로 넘어가.
 
@@ -2106,7 +2101,7 @@ window.MathJax = {
 <ul>
 <li class="check-item"><input type="checkbox"> 마스터 오케스트레이터(<code>orchestrator.py</code>)가 전체 모듈을 순서대로 에러 없이 호출했다.</li>
 <li class="check-item"><input type="checkbox"> 드라이런 로그에 15:20 변동성 돌파 청산 단계가 빠지지 않았다.</li>
-<li class="check-item"><input type="checkbox"> 스케줄러 가이드에 <strong>상주 루프 2개(<code>realtime_signals.py</code>, <code>risk_guard.py</code>)가 빠지지 않았는지</strong> 확인했다. 이 둘이 없으면 장중 감시가 아예 돌지 않는다.</li>
+<li class="check-item"><input type="checkbox"> 스케줄러 가이드가 <code>orchestrator.py</code> 하나를 평일 08:25에 실행하도록 되어 있고, 장중 상주 루프(변동성 돌파 감시와 하드 가드레일을 1초씩 번갈아)가 오케스트레이터 안에 들어 있는지 확인했다. 이게 없으면 장중 감시가 아예 돌지 않는다.</li>
 <li class="check-item"><input type="checkbox"> <code>logs/</code> 폴더에 날짜별 통합 시스템 로그가 기록되는 것을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> 평일 아침부터 장 마감까지 컴퓨터가 스스로 시스템을 안전하게 운용할 준비를 마쳤다.</li>
 </ul>
