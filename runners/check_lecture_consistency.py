@@ -6,6 +6,8 @@
 검사 항목
     P1  프롬프트 4칸 골격      ```prompt 블록에 [맥락] / [만들 것]|[수정할 것] / [하지 말 것] / [확인]이 모두 있는가
     P2  구형 표기 잔존         (Context) (Deliverable) (Verification) 같은 영문 괄호 표기가 남아 있는가
+    P3  프롬프트 독립성        프롬프트가 규칙·값을 다른 클립에 떠넘기는가 ("Part 2와 같은 규칙", "클립 24 기준표 그대로")
+                              AI는 교재를 볼 수 없으므로 규칙은 프롬프트에 직접 쓰고, 공유가 필요하면 파일 이름으로 넘긴다
     C1  차트 형식              Plotly를 배운 클립 09 이후의 프롬프트가 .png 차트를 요구하는가 (→ .html이어야 함)
     H1  HTML 재빌드 누락        .md의 프롬프트 첫 줄이 같은 이름의 .html에 없으면 빌드를 빠뜨린 것
     S1  대본↔교재 파일명 불일치  instructor-scripts가 언급한 차트 파일(.html/.png)이 교재 어디에도 없는가
@@ -135,6 +137,16 @@ def comparable_lines(body: str) -> list[str]:
     return [ln.strip() for ln in body.splitlines() if ln.strip() and "$" not in ln]
 
 
+# 규칙을 다른 클립에 떠넘기는 표현. 파일 이름이 들어간 줄(예: "클립 27에서 만든 kis_auth.py")은
+# 파일로 넘기는 정상적인 공유이므로 제외한다.
+DELEGATION_RE = re.compile(
+    r"(?:Part|파트)\s*\d[^\n]{0,12}?(?:같은|그대로|검증된|규칙)"
+    r"|클립\s*\d+[^\n]{0,20}?(?:같은|그대로|방식|규칙|기준표|판정|보고서|에서 찾은|부터 쓰는)"
+    r"|기준표"
+)
+FILENAME_RE = re.compile(r"[\w/.-]+\.(?:py|json|csv|md|html|flag)(?![A-Za-z0-9_])")
+
+
 def check_prompts(md: Path, text: str, findings: list[Finding]) -> None:
     clip = clip_number(md)
     for start, body, skipped in iter_prompt_blocks(text):
@@ -145,6 +157,15 @@ def check_prompts(md: Path, text: str, findings: list[Finding]) -> None:
             legacy = [t for t in LEGACY_TAGS if t in body]
             if legacy:
                 findings.append(Finding("P2 구형 표기", "FAIL", md, start, f"영문 괄호 표기 잔존: {', '.join(legacy)}"))
+        for offset, line in enumerate(body.splitlines(), start=1):
+            if FILENAME_RE.search(line):
+                continue
+            m = DELEGATION_RE.search(line)
+            if m:
+                findings.append(
+                    Finding("P3 프롬프트 독립성", "FAIL", md, start + offset,
+                            f"규칙을 다른 클립에 떠넘김: \"{m.group(0)}\" → 규칙·값을 프롬프트에 직접 쓰거나 파일로 넘길 것")
+                )
         if clip >= PLOTLY_INTRO_CLIP and PNG_IN_PROMPT_RE.search(body):
             findings.append(
                 Finding("C1 차트 형식", "FAIL", md, start, "클립 09 이후 프롬프트가 .png 차트를 요구함 → 대화형 Plotly .html로")
