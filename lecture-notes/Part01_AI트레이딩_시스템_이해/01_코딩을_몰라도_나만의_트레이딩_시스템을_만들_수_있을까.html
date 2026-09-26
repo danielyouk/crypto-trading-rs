@@ -2013,12 +2013,13 @@ window.MathJax = {
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
 <p>이 클립이 끝나면, 우리가 이 강의 5개 파트를 거치며 완성할 <strong>인간 개입형 AI 트레이딩 시스템의 전체 설계도와 작동 메커니즘</strong>이 명확하게 머릿속에 정리됩니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 사전 안내</strong>: 지금 당장 증권사 계좌를 개설하거나 복잡한 환경을 준비할 필요는 전혀 없습니다. Part 1~3에서는 순수하게 주식 데이터 분석과 전략 검증에 집중하고, 증권사 API 모의투자 연동은 <strong>Part 4에서 단계별로 함께 구축</strong>합니다. 오늘은 우리가 완성할 시스템의 <strong>'3D 조감도(시뮬레이션 데모)'</strong>를 먼저 확인하는 시간입니다.</p>
+<p>💡 <strong>수강생 사전 안내</strong>: 지금 당장 증권사 계좌를 개설하거나 복잡한 환경을 준비할 필요는 전혀 없습니다. Part 1~3에서는 순수하게 주식 데이터 분석과 전략 검증에 집중하고, 증권사 API(내 프로그램이 증권사 시스템에 요청을 보내고 답을 받는 통로)와 모의투자(실제 돈 대신 연습용 돈으로 주문해 보는 계좌) 연동은 <strong>Part 4에서 단계별로 함께 구축</strong>합니다. 오늘은 우리가 완성할 시스템의 <strong>'3D 조감도(시뮬레이션 데모)'</strong>를 먼저 확인하는 시간입니다.</p>
+<p>⚠️ <strong>정정</strong>: 영상 이후, 처음 나오는 용어에 쉬운 설명을 덧붙였습니다.</p>
 </blockquote>
 <ul>
 <li><strong>완성 시스템의 5대 핵심 서브시스템</strong> 아키텍처 이해</li>
 <li>단순계 vs 복잡계의 차이를 통해 본 <strong>'인간 개입형 하이브리드'</strong>가 유일한 생존 방식인 이유</li>
-<li>코딩 문법 암기가 아닌 <strong>'시스템 아키텍트이자 감독관'</strong>으로서 AI 에이전트와 일하는 4단계 루프 정립</li>
+<li>코딩 문법 암기가 아닌 <strong>'시스템 아키텍트이자 감독관'</strong>으로서 AI 에이전트(시키면 스스로 코드를 쓰고 실행까지 하는 AI)와 일하는 4단계 루프 정립</li>
 </ul>
 <figure class="visual-figure">  <img src="../_core/assets/03_paper_approval.gif" alt="2-Tier 주간 정책 합의 & 무인 자동 모의매매 흐름 (시스템 조감도)">  <figcaption><strong>[시스템 조감도]</strong> 2-Tier 주간 정책 합의 & 무인 자동 모의매매 흐름 (시스템 조감도)</figcaption></figure>
 
@@ -2057,14 +2058,14 @@ window.MathJax = {
 <p>금융시장은 지구상에 존재하는 가장 극단적인 복잡계입니다. 금융시장이 단순한 수학 공식이나 100% 자동 봇으로 정복될 수 없는 5가지 이유가 있습니다.</p>
 <ol>
 <li><strong>비선형적 인과관계 (Non-linear Causality)</strong>: 원인(A)이 발생했을 때 결과(B)가 정비례하게 나타나지 않으며, 작은 나비의 날갯짓이 거대한 폭락으로 이어집니다.</li>
-<li><strong>다중 인과관계의 얽힘 (Intertwined Networks)</strong>: 금리, 환율, 기업 실적, 기관 수급, 투자자 심리, 알고리즘 매매가 서로 얽혀 상호 피드백을 주고받습니다.</li>
-<li><strong>인과관계 규칙 자체의 진화 (Non-stationarity)</strong>: 시장 참여자들이 과거의 성공 패턴을 학습하는 순간, 시장의 규칙 자체가 변해버려 <strong>과거 최적 모델이 필연적으로 붕괴(과최적화의 함정)</strong>합니다.</li>
-<li><strong>보이지 않는 숨겨진 인과관계 (Latent Factors)</strong>: 표면적인 캔들스틱 차트 뒤에 숨겨진 유동성 변화와 매크로 역학이 가격을 움직입니다.</li>
+<li><strong>다중 인과관계의 얽힘 (Intertwined Networks)</strong>: 금리, 환율, 기업 실적, 기관 수급(연기금·증권사 같은 큰손들이 사고파는 흐름), 투자자 심리, 알고리즘 매매가 서로 얽혀 상호 피드백을 주고받습니다.</li>
+<li><strong>인과관계 규칙 자체의 진화 (Non-stationarity)</strong>: 시장 참여자들이 과거의 성공 패턴을 학습하는 순간, 시장의 규칙 자체가 변해버려 <strong>과거 최적 모델이 필연적으로 붕괴(과최적화의 함정)</strong>합니다. 과최적화란 규칙을 과거 데이터에만 딱 맞게 다듬어서, 앞으로 올 시장에서는 통하지 않게 되는 것입니다.</li>
+<li><strong>보이지 않는 숨겨진 인과관계 (Latent Factors)</strong>: 표면적인 캔들스틱 차트 뒤에 숨겨진 시장에 도는 돈의 양 변화(유동성)와 금리·환율·경기 같은 큰 흐름(매크로)이 가격을 움직입니다.</li>
 <li><strong>예외 사항과 블랙스완의 지속적 발생 (Continuous Exceptions)</strong>: 과거 데이터에 한 번도 없었던 돌발 사태가 일상적으로 발생합니다.</li>
 </ol>
 <blockquote>
-<p><strong>💡 핵심 결론: 2-Tier 하이브리드(Weekly Governance + Daily Autonomous Execution) 모델의 필연성</strong><br />
-24시간 데이터 감시와 정형화된 수치 계산은 <strong>AI 시스템</strong>에 맡기고, 거시적 시장 국면 판단과 주간 매매 정책(<code>weekly_policy.json</code>) 승인은 <strong>사람(나 / 최고투자책임자 CIO)</strong>이 결정하며, 장중 급변에 대한 손절은 <strong>코드 레벨의 무인 하드 가드레일</strong>이 0.1초 만에 즉각 집행해야만 살아남을 수 있습니다.</p>
+<p><strong>💡 핵심 결론: 2-Tier 하이브리드(사람이 정하는 주간 정책과 기계가 도는 매일 실행, 두 층으로 나눈 구조) 모델의 필연성</strong><br />
+24시간 데이터 감시와 정형화된 수치 계산은 <strong>AI 시스템</strong>에 맡기고, 거시적 시장 국면 판단과 주간 매매 정책(<code>weekly_policy.json</code>) 승인은 <strong>사람(나 / 최고투자책임자 CIO)</strong>이 결정하며, 장중 급변에 대한 손절(손실이 정해진 선을 넘으면 팔아서 손실을 끊는 것)은 <strong>사람 확인 없이 코드가 자동으로 지키는 안전 규칙(하드 가드레일)</strong>이 0.1초 만에 즉각 집행해야만 살아남을 수 있습니다.</p>
 </blockquote>
 <div class="table-wrapper"><table>
 <thead>
@@ -2102,6 +2103,55 @@ window.MathJax = {
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p>📖 <strong>표에 나온 말 풀이</strong> — 지금 외우실 필요 없습니다. 나올 때마다 다시 설명합니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>말</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시장 국면</td>
+<td>지금 시장이 오르는 때인지, 내리는 때인지, 오르내리기만 하는 때인지 같은 큰 상태</td>
+</tr>
+<tr>
+<td>비중</td>
+<td>내 돈 중 몇 %를 어느 전략(종목)에 넣을지</td>
+</tr>
+<tr>
+<td>모의주문</td>
+<td>실제 돈 대신 연습용 돈으로 내는 주문</td>
+</tr>
+<tr>
+<td>포트폴리오</td>
+<td>내가 들고 있는 종목 전체 묶음</td>
+</tr>
+<tr>
+<td>서킷브레이커</td>
+<td>계좌 전체 손실이 하루에 정해진 선(여기서는 -2%)에 닿으면 모두 팔고 그날 매매를 멈추는 장치</td>
+</tr>
+<tr>
+<td>청산 / 강제 청산</td>
+<td>들고 있는 주식을 팔아 현금으로 돌리는 것 / 사람에게 묻지 않고 자동으로 파는 것</td>
+</tr>
+<tr>
+<td>체결</td>
+<td>낸 주문이 실제로 사고팔린 것</td>
+</tr>
+<tr>
+<td>손익</td>
+<td>번 돈 − 잃은 돈</td>
+</tr>
+<tr>
+<td>기준가</td>
+<td>다음 날 매매를 판단할 때 기준으로 삼는 가격</td>
+</tr>
+</tbody>
+</table></div>
+</blockquote>
 <hr />
 <h3 id="3-우리가-완성할-시스템의-5대-핵심-서브시스템">3. 우리가 완성할 시스템의 5대 핵심 서브시스템</h3>
 <p>5개 파트에 걸쳐 여러분 컴퓨터에 구축될 전체 시스템은 다음과 같이 유기적으로 연결된 5개의 독립 모듈로 구성됩니다.</p>
@@ -2198,13 +2248,16 @@ window.MathJax = {
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p>📖 표 속 <strong>일봉</strong>은 하루 동안의 시가·고가·저가·종가·거래량을 한 줄로 묶은 것, <strong>MDD(최대 낙폭)</strong>는 계좌가 가장 높았던 때에서 가장 많이 떨어졌던 폭, <strong>워크포워드 분석</strong>은 과거 한 구간으로 규칙을 정하고 바로 다음 구간에서 시험하기를 한 칸씩 옮겨 가며 되풀이하는 검증입니다. 지금 외우실 필요 없습니다. 해당 클립에서 다시 설명합니다.</p>
+</blockquote>
 <hr />
 <h2 id="실습-및-확인-관전-포인트">실습 및 확인 관전 포인트</h2>
 <p>이번 첫 클립은 시스템 전체가 동작하는 <strong>시뮬레이션 조감도(애니메이션 및 구조 다이어그램)</strong>를 관람하는 시간입니다. 화면을 보시면서 아래의 핵심 흐름 4가지를 눈여겨보세요.</p>
 <ul>
 <li class="check-item"><input type="checkbox"> <strong>1. 2-Tier 구조</strong>: 주말 정책 승인(Tier 1)과 주중 무인 자동 실행(Tier 2)의 분리 원리를 파악했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>2. 주간 정책 합의</strong>: AI가 시장 국면을 분석해 작성한 <code>weekly_policy.json</code>을 검토하고 승인하는 방식을 확인했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>3. 무인 하드 손절</strong>: 급락 시 사람의 확인을 묻지 않고 기계가 즉시 0.1초 만에 강제 청산하는 안전망을 이해했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>3. 무인 하드 손절</strong>: 급락 시 사람의 확인을 묻지 않고 기계가 즉시 0.1초 만에 강제 청산(사람에게 묻지 않고 자동으로 파는 것)하는 안전망을 이해했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>4. 일일 AI 저널링</strong>: 하루 매매가 끝난 뒤 AI가 체결 내역과 손익을 분석해 자동으로 리포트를 남기는 흐름을 확인했다.</li>
 </ul>
 <hr />

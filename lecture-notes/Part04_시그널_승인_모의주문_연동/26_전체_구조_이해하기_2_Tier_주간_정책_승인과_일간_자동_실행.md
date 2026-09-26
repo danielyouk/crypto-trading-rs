@@ -8,7 +8,7 @@
 
 - 기존 100% 전자동 봇과 건별 메신저 승인 봇의 **3대 치명적 실패 원인**
 - **Tier 1 (주간 전략 거버넌스)**: 주 1회 주말 30분, Claude Code와 함께 시장 국면을 진단하고 `weekly_policy.json` 최종 승인
-- **Tier 2 (일간 무인 자동 실행 & 하드 가드레일)**: 평일 장중 인간 개입 없는 무인 자동 발주 및 0.1초 즉시 강제 손절
+- **Tier 2 (일간 무인 자동 실행 & 하드 가드레일)**: 평일 장중 사람 없이 자동으로 주문을 넣고(발주), 1초마다 가격을 확인하다 손절 기준에 닿으면 0.1초 안에 강제 손절 주문
 - 전체 6대 핵심 서브시스템 파이프라인 조감도
 
 ---
@@ -45,9 +45,9 @@
 | 계층 (Tier) | 주체 | 실행 주기 | 구체적 담당 업무 |
 |---|---|---|---|
 | **Tier 1: 주간 거버넌스** | **사람 (CIO) + Claude Code** | **주 1회 (주말 30분)** | 거시 시장 국면 평가, 4대 전략 가중치 결정, 주간 정책(`weekly_policy.json`) 최종 승인 |
-| **Tier 2: 무인 자동 실행** | 시스템 (실행 엔진) | 평일 장중 (09:00~15:30) | 승인된 정책에 따라 KIS Open API로 모의주문 자동 발주 (사람 개입 없음) |
-| **Tier 2: 하드 가드레일** | 기계적 코드 규칙 | 상시 감시 (0.1초 주기) | 개별 종목 -3% 즉각 손절, 계좌 -2% 일일 서킷브레이커 강제 청산 (질문 없이 집행) |
-| **Post-Market: 일일 저널** | AI 리포터 | 장 마감 후 (15:40) | 오늘의 체결·손익 분석 및 일일 매매 일지(`daily_journal.md`) 자동 작성 |
+| **Tier 2: 무인 자동 실행** | 시스템 (실행 엔진) | 평일 장중 (09:00~15:30) | 승인된 정책에 따라 한국투자증권(KIS) Open API로 모의주문을 자동으로 넣음 (사람 개입 없음) |
+| **Tier 2: 하드 가드레일** | 기계적 코드 규칙 | 상시 감시 (1초마다 가격 확인, 기준에 닿으면 0.1초 안에 주문) | 개별 종목 -3% 즉각 손절, 계좌 -2% 일일 서킷브레이커 강제 청산 (질문 없이 집행) |
+| **장 마감 후: 일일 저널** | AI 리포터 | 장 마감 후 (15:40) | 오늘의 체결·손익 분석 및 일일 매매 일지(`daily_journal.md`) 자동 작성 |
 
 ---
 
@@ -56,7 +56,7 @@
 <div class="arch-grid">
   <div class="arch-card">
     <div class="card-title">① 계좌 인증 & 연결 (Auth)</div>
-    <div class="card-desc">한국투자증권 Open API 모의투자 계좌 인증 및 OAuth2 토큰 자동 갱신 (Clip 27)</div>
+    <div class="card-desc">한국투자증권 Open API 모의투자 계좌 인증 및 접근 토큰 자동 갱신. 접근 토큰은 로그인 뒤 증권사가 내주는 출입증(유효기간 약 24시간)이라, 만료되기 전에 새로 받아 둡니다 (Clip 27)</div>
   </div>
   <div class="arch-card">
     <div class="card-title">② 시장 데이터 & 시그널 (Data & Signal)</div>
@@ -67,12 +67,12 @@
     <div class="card-desc">Claude Code와 주간 국면 분석 후 <code>weekly_policy.json</code> 서명 승인 (Clip 30)</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">④ 무인 자동 발주 엔진 (Execution)</div>
+    <div class="card-title">④ 무인 자동 주문 엔진 (Execution)</div>
     <div class="card-desc">승인된 조건 만족 시 KIS API로 주문 전송 및 체결 확인 (Clip 31)</div>
   </div>
   <div class="arch-card">
     <div class="card-title">⑤ 하드 안전 가드레일 (Safety)</div>
-    <div class="card-desc">0.1초 즉시 손절 및 일일 서킷브레이커, 킬스위치 비상 정지 (Clip 32~33)</div>
+    <div class="card-desc">1초마다 가격을 확인하다 기준에 닿으면 0.1초 안에 손절 주문, 일일 서킷브레이커, 킬 스위치(모든 주문을 즉시 멈추는 비상 정지 장치) (Clip 32~33)</div>
   </div>
   <div class="arch-card">
     <div class="card-title">⑥ 일일 AI 저널링 (Journal)</div>

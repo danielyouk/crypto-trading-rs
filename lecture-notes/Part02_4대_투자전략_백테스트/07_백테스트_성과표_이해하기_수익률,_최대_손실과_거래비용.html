@@ -2023,8 +2023,11 @@ window.MathJax = {
 <li>위험 대비 초과수익을 측정하는 <strong>샤프 지수(Sharpe Ratio)</strong>의 계산 원리와 전략 비교 기준</li>
 <li><strong>승률(Win Rate)의 함정과 손익비(Payoff Ratio)</strong>의 수학적 관계</li>
 <li>백테스트의 가장 무서운 적: <strong>슬리피지(Slippage)와 거래세·수수료의 파괴력</strong></li>
-<li><strong>실습</strong>: Claude Code로 가상의 전략 시계열에 거래비용을 적용하고 4대 지표 비교표와 언더워터 플롯 차트 생성하기</li>
+<li><strong>실습</strong>: Claude Code로 가상의 전략 시계열에 거래비용을 적용하고 4대 지표 비교표와 언더워터 플롯(날마다 계좌가 최고점보다 몇 % 아래에 있는지를 0선 아래로 그린 그래프) 차트 생성하기</li>
 </ul>
+<blockquote>
+<p>⚠️ <strong>정정</strong>: 영상 이후, 처음 나오는 용어에 쉬운 설명을 덧붙였습니다.</p>
+</blockquote>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-백테스트-4대-핵심-지표-매트릭스와-실전-활용처">1. 백테스트 4대 핵심 지표 매트릭스와 실전 활용처</h3>
@@ -2065,6 +2068,12 @@ window.MathJax = {
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p>💡 <strong>표에 처음 나온 말</strong> — 지금 외우실 필요 없습니다. 나올 때마다 다시 설명합니다.
+- <strong>위험 예산</strong>: 이 전략에 "최악의 경우 여기까지는 잃어도 된다"고 미리 정해 두는 손실 한도
+- <strong>레버리지</strong>: 지수가 1% 움직일 때 2%처럼 몇 배로 움직이게 거는 것
+- <strong>변동성</strong>: 매일 수익률이 평균에서 보통 얼마나 벗어나 출렁이는지. 숫자로 잰 것을 <strong>표준편차</strong>(기호 <span class="math-inline">$\sigma$</span>)라고 부릅니다</p>
+</blockquote>
 <hr />
 <h3 id="2-cagr연평균-복리-수익률-수계산으로-이해하는-복리의-힘">2. CAGR(연평균 복리 수익률) — 수계산으로 이해하는 복리의 힘</h3>
 <p>단순 총수익률을 투자 기간으로 나누는 <strong>산술평균(단리)</strong>은 심각한 착시를 일으킵니다. 퀀트는 항상 복리 효과를 역산한 <strong>기하평균(CAGR, Compound Annual Growth Rate)</strong>을 사용합니다.</p>
@@ -2088,7 +2097,7 @@ $$</div>
 <hr />
 <h3 id="3-mdd최대-낙폭와-과거-전-기간-최고가high-water-mark">3. MDD(최대 낙폭)와 과거 전 기간 최고가(High-Water Mark)</h3>
 <p>초보 투자자는 "누적 수익률 500%"라는 광고 문구만 보고 뛰어듭니다. 하지만 중간에 <strong>MDD(Maximum Drawdown)가 -50%</strong>인 전략은 실제 계좌에서 결코 버틸 수 없습니다.</p>
-<h4 id="①-mdd-공식의-핵심-고점math_inline_16이란-무엇인가">① MDD 공식의 핵심: '고점(<span class="math-inline">$\text{Peak}_t$</span>)'이란 무엇인가?</h4>
+<h4 id="①-mdd-공식의-핵심-고점math_inline_17이란-무엇인가">① MDD 공식의 핵심: '고점(<span class="math-inline">$\text{Peak}_t$</span>)'이란 무엇인가?</h4>
 <div class="math-block">$$
 \text{Drawdown}_t = \frac{\text{Peak}_t - V_t}{\text{Peak}_t}, \quad \text{where } \text{Peak}_t = \max_{\tau \le t} V_\tau
 $$</div>
@@ -2161,10 +2170,11 @@ $$</div>
 <blockquote>
 <p>💡 <strong>왜 공식이 이렇게 생겼을까요? (데이터 비대칭성과 <span class="math-inline">$\sqrt{252}$</span>의 원리)</strong><br />
 • <strong>데이터 주기의 비대칭성</strong>: 주가 데이터와 거래는 <strong>매일(일 단위 <span class="math-inline">$r_{\text{일}}$</span>)</strong> 발생하지만, 은행/국채 무위험 금리는 항상 <strong>연 단위(<span class="math-inline">$R_{f,\text{연}} = 3\%$</span>)</strong>로 주어집니다. 따라서 기준을 연간으로 맞추기 위해 일간 수익에 <span class="math-inline">$\times 252$</span>를 합니다.<br />
-• <strong><span class="math-inline">$\sqrt{252}$</span>로 복구하는 이유</strong>: 변동성(표준편차 <span class="math-inline">$\sigma$</span>)은 본래 분산(<span class="math-inline">$\sigma^2$</span>)에 제곱근을 씌운 개념입니다. 252일 동안 더해지는 것은 분산(<span class="math-inline">$252 \times \sigma_{\text{일}}^2$</span>)이므로, 이를 다시 변동성으로 환산할 때는 <span class="math-inline">$\mathbf{\sqrt{252}}$</span>를 곱해 원상 복구합니다.<br />
+• <strong><span class="math-inline">$\sqrt{252}$</span>로 복구하는 이유</strong>: 변동성(표준편차 <span class="math-inline">$\sigma$</span>)은 '매일 수익률이 평균에서 벗어난 폭'을 제곱해 평균 낸 값에 다시 제곱근을 씌운 것입니다. 제곱근을 씌우기 전의 그 값(<span class="math-inline">$\sigma^2$</span>)을 이 강의에서는 <strong>흔들림의 제곱</strong>이라고 부릅니다(통계 용어로는 '분산'이지만, 여러 자산에 나눠 담는 분산투자와 헷갈리지 않게). 252일 동안 더해지는 것은 흔들림의 제곱(<span class="math-inline">$252 \times \sigma_{\text{일}}^2$</span>)이므로, 이를 다시 변동성으로 환산할 때는 <span class="math-inline">$\mathbf{\sqrt{252}}$</span>를 곱해 원상 복구합니다.<br />
 • <strong>약분의 결과</strong>: <span class="math-inline">$\frac{252}{\sqrt{252}} = \sqrt{252}$</span>이므로 결국 <strong>(일간 샤프 지수) <span class="math-inline">$\times \mathbf{\sqrt{252}}$</span></strong>로 아주 단순해집니다.</p>
+<p>⚠️ <strong>정정</strong>: 영상에서는 <span class="math-inline">$\sigma^2$</span>를 '분산'이라고 불렀지만, 분산투자와 헷갈리지 않도록 '흔들림의 제곱'으로 바꿨습니다.</p>
 </blockquote>
-<h4 id="②-세-변수math_inline_35-핵심-정리">② 세 변수(<span class="math-inline">$R, R_f, \sigma$</span>) 핵심 정리</h4>
+<h4 id="②-세-변수math_inline_37-핵심-정리">② 세 변수(<span class="math-inline">$R, R_f, \sigma$</span>) 핵심 정리</h4>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -2216,7 +2226,10 @@ $$</div>
 <li><strong>해석</strong>: "위험 1%를 감수할 때마다 은행 예금보다 1.2%의 순수 초과 수익을 안정적으로 얻는다."</li>
 </ul>
 <h4 id="⑤-샤프-지수-성적표-해석-기준-전략-유형별-현실적-기준">⑤ 샤프 지수 성적표 해석 기준: 전략 유형별 현실적 기준</h4>
-<p>초보자가 가장 많이 범하는 실수는 "모든 전략의 샤프 지수가 1.5 이상이어야 한다"고 오해하는 것입니다. 퀀트 금융의 기본 법칙(<span class="math-inline">$\text{IR} \approx \text{IC} \times \sqrt{N}$</span>)에 따르면, 샤프 지수는 <strong>(예측력) <span class="math-inline">$\times \sqrt{\text{독립 베팅 횟수 } N}$</span></strong>에 비례합니다.</p>
+<p>초보자가 가장 많이 범하는 실수는 "모든 전략의 샤프 지수가 1.5 이상이어야 한다"고 오해하는 것입니다. 퀀트 금융에서 널리 쓰는 경험 법칙에 따르면, 샤프 지수는 <strong>(한 번 베팅할 때 맞히는 힘, 즉 예측력) <span class="math-inline">$\times \sqrt{\text{서로 영향을 주지 않는 베팅의 횟수 } N}$</span></strong>에 비례합니다.</p>
+<blockquote>
+<p>⚠️ <strong>정정</strong>: 영상에서는 이 관계를 <span class="math-inline">$\text{IR} \approx \text{IC} \times \sqrt{N}$</span>이라는 약어 공식으로 보였지만, 약어를 빼고 뜻만 남겼습니다. (처음 보는 약어라 설명 없이는 읽기 어려워서)</p>
+</blockquote>
 <p>따라서 10년 동안 베팅 사이클이 몇 번 없는 단일 자산 전략과, 수백 번 분산 베팅하는 퀀트 포트폴리오의 샤프 기준은 완전히 달라야 합니다.</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -2228,7 +2241,7 @@ $$</div>
 </thead>
 <tbody>
 <tr>
-<td><strong>단일 지수 / 롱온리 벤치마크</strong><br>(S&amp;P 500, KOSPI 200 단순 보유)</td>
+<td><strong>단일 지수 / 롱 온리 벤치마크</strong><br>(S&amp;P 500, KOSPI 200 단순 보유)</td>
 <td><strong>0.3 ~ 0.5</strong></td>
 <td>시장 본연의 위험 보상 수준. 30년 장기 S&amp;P 500도 0.4~0.5 안팎에 불과함</td>
 </tr>
@@ -2266,6 +2279,15 @@ $$</div>
 </table></div>
 <blockquote>
 <p>⚠️ <strong>정정</strong>: 강의 영상 화면의 표에는 페어트레이딩이 "시장중립 / 페어트레이딩 1.0 ~ 1.5" 한 줄로 되어 있습니다. 클립 15의 실습(KB금융/하나금융 단일 페어 가상 롱숏)을 돌려 보니 샤프가 0.5 안팎으로 나와, 그 숫자가 <strong>단일 페어가 아니라 수십 페어를 묶은 기관 포트폴리오의 기준</strong>이었음을 확인하고 두 줄로 갈라 정정합니다.</p>
+<p>💡 <strong>표에 처음 나온 말</strong> — 지금 외우실 필요 없습니다. 클립 12~15에서 다시 설명합니다.
+- <strong>롱 온리</strong>: 사서 들고 있기만 하고 공매도(없는 주식을 빌려 먼저 팔고 나중에 사서 갚는 거래)는 하지 않는 방식
+- <strong>벤치마크</strong>: 전략과 나란히 놓고 비교하는 기준(보통 단순 보유)
+- <strong>멀티에셋</strong>: 주식·채권·금처럼 성격이 다른 여러 자산을 함께 담는 것
+- <strong>상관관계 / 상관계수(<span class="math-inline">$\rho$</span>)</strong>: 두 자산이 같은 날 같은 방향으로 움직이는 정도. 숫자로는 −1(항상 반대)~+1(항상 같이)로 나타내고, 이 숫자를 상관계수라고 부릅니다
+- <strong>시장중립 / 롱숏</strong>: 한 종목은 사고 비슷한 종목은 공매도해서, 시장 전체가 오르든 내리든 두 종목의 차이로만 버는 방식
+- <strong>시장 베타</strong>: 시장 전체가 오르내릴 때 내 계좌가 따라 움직이는 정도. 시장중립은 이것을 0 가까이 만듭니다
+- <strong>파라미터</strong>: 전략 안에서 조절할 수 있는 숫자 (예: 200일선의 200, k=0.5)
+- <strong>과최적화</strong>: 파라미터를 과거 데이터에만 딱 맞게 맞춰서, 새로운 기간에는 통하지 않게 된 상태</p>
 </blockquote>
 <p><strong>페어를 여러 개 묶으면 샤프가 얼마나 오르는가.</strong> 샤프가 <span class="math-inline">$S$</span>인 페어 <span class="math-inline">$N$</span>개를 같은 비중으로 묶고, 페어 수익률 간 평균 상관계수가 <span class="math-inline">$\rho$</span>일 때 포트폴리오 샤프는</p>
 <div class="math-block">$$
@@ -2347,19 +2369,20 @@ $$</div>
 <div class="arch-grid">
   <div class="arch-card">
     <div class="card-title">① 증권사 매매 수수료</div>
-    <div class="card-desc">국내 주식 기준 통상 편도 0.015% (매수/매도 합산 약 0.03%). 비대면 계좌 이벤트 등으로 절감 가능.</div>
+    <div class="card-desc">국내 주식 기준 통상 편도(한 번 사거나 한 번 팔 때) 0.015% (사고 나서 파는 한 바퀴, 즉 왕복 약 0.03%). 비대면 계좌 이벤트 등으로 절감 가능.</div>
   </div>
   <div class="arch-card">
-    <div class="card-title">② 증권거래세 (Tax)</div>
-    <div class="card-desc">국내 주식 매도 시 강제 징수 (코스피/코스닥 약 0.15~0.20%). 잦은 단타 매매 시 계좌를 녹이는 주원인.</div>
+    <div class="card-title">② 거래세 (Tax)</div>
+    <div class="card-desc">국내 주식을 팔 때 붙는 세금(코스피 종목은 이름이 농어촌특별세). 매도 시 강제 징수 (코스피/코스닥 약 0.15~0.20%). 잦은 단타 매매 시 계좌를 녹이는 주원인.</div>
   </div>
   <div class="arch-card">
     <div class="card-title">③ 슬리피지 (Slippage)</div>
-    <div class="card-desc">내가 주문한 가격과 실제 호가창에서 체결된 가격의 차이 (시장가 주문 시 편도 0.05~0.15% 이상 발생).</div>
+    <div class="card-desc">내가 주문한 가격과 실제로 체결된 가격의 차이. 호가창(사겠다·팔겠다고 걸어 둔 가격 목록)에 걸린 물량이 모자라면 더 불리한 가격까지 체결됩니다 (시장가 주문, 즉 가격을 정하지 않고 지금 나와 있는 가격에 바로 사고파는 주문이면 편도 0.05~0.15% 이상 발생).</div>
   </div>
 </div>
 
 <blockquote>
+<p>⚠️ <strong>정정</strong>: 영상에서는 두 번째 카드 이름이 '증권거래세'였지만, 과정 전체에서 같은 이름을 쓰려고 '거래세'로 바꿨습니다. (클립마다 증권거래세·매도세 등으로 이름이 흔들려서)</p>
 <p>⚠️ <strong>거래 횟수의 법칙</strong>: 연간 200회 거래하는 단기 전략은 왕복 비용 0.3%만 잡아도 <strong>연간 60%의 수익률이 마찰비용으로 증발</strong>합니다! 따라서 전략의 매매 빈도(회전율)와 거래비용 반영 여부는 백테스트의 필수 체크 항목입니다.</p>
 </blockquote>
 <hr />
@@ -2368,19 +2391,22 @@ $$</div>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 퀀트 전략의 백테스트 4대 핵심 지표(CAGR, MDD, Sharpe, Win/Payoff)와 거래비용(0.3%)의 영향을 시각적으로 분석하고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'backtest_metric_demo.py'를 작성하고 실행해줘:
-1. 2018-01-01부터 2026-08-31까지의 가상 일간 수익률 시계열(연간 거래 약 50회 발생하는 모멘텀 전략)을 생성해줘.
+1. 2018-01-01부터 2026-08-31까지, 1년에 50번쯤 사고파는 가상의 전략이 매일 낸 수익률을 날짜 순서대로 만들어줘.
 2. 다음 두 가지 경우를 계산해줘:
    - Case 1: 거래비용 미반영 (Gross Returns)
    - Case 2: 왕복 거래비용 0.3%(수수료+거래세+슬리피지) 반영 (Net Returns)
 3. 두 케이스의 최종 누적 수익률, CAGR, MDD(과거 최고가 HWM 기준), 샤프 지수(무위험이자율 3% 연율화), 승률 및 손익비를 비교하는 Markdown 표를 대화창에 출력해줘.
-4. 상단에는 누적 수익률 곡선(Gross vs Net), 하단에는 고점 대비 낙폭(Drawdown Underwater Plot)을 표시한 2-패널 차트를 'backtest_metric_demo.png'로 저장해줘.
+4. 상단에는 누적 수익률 곡선(Gross vs Net), 하단에는 날마다 계좌가 그때까지의 최고점보다 몇 % 아래에 있는지(언더워터 플롯)를 표시한 2-패널 차트를 'backtest_metric_demo.png'로 저장해줘.
 
 [하지 말 것]
-- 복잡한 외부 유료 데이터 API를 호출하지 말고 합성 데이터(numpy/pandas)로 자체 완결형 코드를 작성해.
-- GUI 팝업 창(plt.show)을 띄우지 말고 이미지 파일로 직접 저장해.
+- 실제 주가나 외부 데이터를 받아 오지 말고, 코드 안에서 만든 가짜 숫자만 써서 이 파일 하나로 실행되게 해.
+- 화면을 멈추게 만드는 대화형 창(plt.show())을 띄우지 말고 바로 이미지 파일로 저장해.
 
 [확인] 대화창에 두 케이스의 4대 지표 비교표가 출력되었는지, 그리고 차트 파일 'backtest_metric_demo.png'가 정상 저장되었는지 확인해줘.
 </code></pre></div>
+<blockquote>
+<p>⚠️ <strong>정정</strong>: 영상 이후 프롬프트의 전문 용어를 쉬운 말로 풀었습니다. 결과는 같습니다.</p>
+</blockquote>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>

@@ -2016,12 +2016,15 @@ window.MathJax = {
 <p>💡 <strong>폴 튜더 존스의 명언</strong>: <em>"나의 가장 중요한 원칙은 200일 이동평균선 아래에 있는 자산은 절대로 매수하지 않는 것이다. 이것 하나만으로도 1987년 블랙 먼데이와 2008년 금융위기에서 살아남을 수 있었다."</em></p>
 </blockquote>
 <ul>
-<li>200일 이동평균선(약 10개월)의 <strong>수학적 공식(<span class="math-inline">$t-i$</span> 인덱스)과 기관 수급의 의미</strong></li>
-<li>골든크로스(Golden Cross)와 데드크로스(Death Cross)의 <strong>수학적 판정 알고리즘</strong></li>
+<li>200일 이동평균선(약 10개월)의 <strong>수학적 공식(<span class="math-inline">$t-i$</span> 인덱스)과 기관 수급(연기금·자산운용사 같은 큰손들이 사고파는 물량의 흐름)의 의미</strong></li>
+<li>골든크로스(Golden Cross: 이 강의에서는 종가가 200일선을 아래에서 위로 뚫는 날)와 데드크로스(Death Cross: 반대로 종가가 200일선을 위에서 아래로 뚫는 날)의 <strong>수학적 판정 알고리즘</strong></li>
 <li>추세추종의 역설: <strong>"낮은 승률(35~45%)로도 막대한 장기 복리 수익을 내는 손익비의 비밀"</strong></li>
-<li>횡보장에서 발생하는 <strong>휩소(Whipsaw)의 정체와 미국(SPY) vs 한국(KODEX 200) 시장 비교</strong></li>
+<li>횡보장에서 발생하는 <strong>휩소(Whipsaw: 가격이 기준선 근처를 오르내려 샀다 팔았다만 반복하며 조금씩 잃는 현상)의 정체와 미국(SPY) vs 한국(KODEX 200) 시장 비교</strong></li>
 <li><strong>다음 클립 연결</strong>: 클립 09에서 진행할 10년치 백테스트 실습(CAGR, MDD, Sharpe)의 이론적 토대 완성</li>
 </ul>
+<blockquote>
+<p>⚠️ <strong>정정</strong>: 영상 이후, 처음 나오는 용어에 쉬운 설명을 덧붙였습니다.</p>
+</blockquote>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-4단계-로드맵-아이디어에서-알고리즘-트레이딩까지">1. 4단계 로드맵: 아이디어에서 알고리즘 트레이딩까지</h3>
@@ -2063,7 +2066,7 @@ window.MathJax = {
 <tr>
 <td><strong>4단계: 알고리즘 트레이딩</strong></td>
 <td>검증 및 실전 집행</td>
-<td>10년 백테스트로 횡보장 휩소(Whipsaw) 약점 진단 ➔ Part 3 완충 밴드 필터로 개선 ➔ Part 4 KIS API 자동 주문 연동</td>
+<td>10년 백테스트로 횡보장 휩소(Whipsaw) 약점 진단 ➔ Part 3 완충 밴드(200일선을 살짝 넘었다고 바로 사지 않고 일정 폭 이상 넘을 때만 사는 규칙) 필터로 개선 ➔ Part 4 KIS API 자동 주문 연동</td>
 </tr>
 </tbody>
 </table></div>
@@ -2090,7 +2093,7 @@ $$</div>
     <div class="steps">
       • 최근 10개월 동안 매수한 대다수 투자자가 수익 상태.<br>
       • 시장에 매도 압력이 적고 신규 매수세가 유입되는 심리적 안정 구간.<br>
-      • <strong>시스템 행동</strong>: 적극적 포지션 보유 (Long Position).
+      • <strong>시스템 행동</strong>: 적극적 포지션(지금 사서 들고 있는 상태) 보유 (Long Position).
     </div>
   </div>
   <div class="compare-card bad">
@@ -2098,7 +2101,7 @@ $$</div>
     <div class="steps">
       • 최근 10개월간 매수한 대다수 투자자가 물려 있는 손실 상태.<br>
       • 주가가 조금만 반등해도 본전 매도 물량이 쏟아지는 악성 매물대.<br>
-      • <strong>시스템 행동</strong>: 전량 현금화 또는 공매도 (Cash / Flat).
+      • <strong>시스템 행동</strong>: 전량 현금화 또는 공매도(없는 주식을 빌려 먼저 팔고 나중에 사서 갚는 거래, 내리면 이익) (Cash / Flat).
     </div>
   </div>
 </div>
@@ -2147,7 +2150,8 @@ $$</div>
 <p>⚠️ <strong>토이 모델 vs 실전 200일선의 차이 (왜 실제로는 다를까?)</strong>:<br />
 위 10회 시뮬레이션은 손익비의 수학적 원리를 설명하기 위한 <strong>개념적 모델(Toy Model)</strong>입니다.<br />
 실제 단일 200일선 백테스트(KODEX 200 12년 등)에서는 <strong>60회 이상의 거래 중 상위 1~3회의 초대형 대세 상승(+40% ~ +200%)이 전체 수익의 대부분을 견인</strong>하고, 나머지 수십 회는 0% 근처에서 잦은 휩소 손절이 반복되는 극단적인 비대칭 분포를 보입니다.<br />
-여기에 매 거래마다 0.25%의 마찰 비용(증권거래세+수수료)이 누적되면 수익이 깎이게 됩니다. 이것이 바로 우리가 단순 200일선에 만족하지 않고, Part 3의 <strong>완충 밴드 필터(히스테리시스)</strong>와 <strong>4대 전략 분산</strong>을 배우는 진짜 이유입니다.</p>
+여기에 매 거래마다 0.25%의 마찰 비용(거래세+수수료)이 누적되면 수익이 깎이게 됩니다. 이것이 바로 우리가 단순 200일선에 만족하지 않고, Part 3의 <strong>완충 밴드 필터</strong>와 <strong>4대 전략 분산</strong>을 배우는 진짜 이유입니다.</p>
+<p>⚠️ <strong>정정</strong>: 영상에서는 '완충 밴드 필터(히스테리시스)', '증권거래세'라고 불렀지만, 과정 전체에서 같은 이름을 쓰려고 '완충 밴드', '거래세'로 바꿨습니다. (이 클립의 아래 표와 체크리스트도 같습니다)</p>
 </blockquote>
 <hr />
 <h3 id="4-휩소whipsaw의-정체와-한국-시장kodex-200의-특성">4. 휩소(Whipsaw)의 정체와 한국 시장(KODEX 200)의 특성</h3>
@@ -2176,7 +2180,7 @@ $$</div>
 </tr>
 <tr>
 <td><strong>거래비용과 세금</strong></td>
-<td><strong>증권거래세 부담 (매도 시 약 0.15%)</strong><br>잦은 휩소 매매 시 거래세와 슬리피지로 마찰 비용 누적</td>
+<td><strong>거래세 부담 (팔 때 붙는 세금, 약 0.15%)</strong><br>잦은 휩소 매매 시 거래세와 슬리피지로 마찰 비용 누적</td>
 </tr>
 <tr>
 <td><strong>200일선 단독 성과</strong></td>
@@ -2191,6 +2195,9 @@ $$</div>
 <hr />
 <h3 id="5-매매-신호-알고리즘-골든크로스와-데드크로스의-판정-로직">5. 매매 신호 알고리즘: 골든크로스와 데드크로스의 판정 로직</h3>
 <p>추세추종 규칙을 컴퓨터가 오차 없이 실행하려면 신호 발생 조건을 수학적 논리식으로 정의해야 합니다.</p>
+<blockquote>
+<p>💡 <strong>이 강의에서 쓰는 뜻</strong>: 흔히 골든크로스는 '짧은 이평선이 긴 이평선을 위로 뚫는 것'을 가리킵니다. 이 강의에서는 <strong>종가가 200일선을 아래에서 위로 뚫는 날</strong>을 골든크로스(매수), <strong>종가가 200일선을 위에서 아래로 뚫는 날</strong>을 데드크로스(매도)라고 부릅니다.</p>
+</blockquote>
 <div class="math-block">$$
 \text{골든크로스 (Golden Cross, 매수)}: \text{Close}_{t-1} \le \text{SMA}_{200}(t-1) \quad \text{AND} \quad \text{Close}_t > \text{SMA}_{200}(t)
 $$</div>
@@ -2339,7 +2346,7 @@ $$</div>
 </tr>
 <tr>
 <td><strong>비용 분석</strong></td>
-<td>한국 시장 증권거래세와 마찰 비용 원리 파악</td>
+<td>한국 시장 거래세와 마찰 비용 원리 파악</td>
 <td><strong>왕복 0.25%</strong>를 차감해 Gross vs Net 실측</td>
 </tr>
 <tr>
@@ -2357,7 +2364,7 @@ $$</div>
 <ul>
 <li class="check-item"><input type="checkbox"> 200일 이동평균선의 수식 의미(<span class="math-inline">$\text{Close}(t-i)$</span>를 통해 과거 200영업일 종가를 평균 낸 것)를 정확히 이해했다.</li>
 <li class="check-item"><input type="checkbox"> 추세추종이 낮은 승률(35~45%)에도 불구하고 높은 손익비(3:1)로 계좌를 우상향시키는 비대칭 수익 구조를 파악했다.</li>
-<li class="check-item"><input type="checkbox"> 횡보장에서 잦은 손절을 일으키는 휩소(Whipsaw)와 한국 시장(증권거래세 마찰)의 특성을 이해했다.</li>
+<li class="check-item"><input type="checkbox"> 횡보장에서 잦은 손절을 일으키는 휩소(Whipsaw)와 한국 시장(거래세 마찰)의 특성을 이해했다.</li>
 <li class="check-item"><input type="checkbox"> 다음 클립(09)에서 KODEX 200 10년 백테스트를 통해 CAGR, MDD, 샤프 지수를 직접 산출할 준비를 마쳤다.</li>
 </ul>
 <hr />

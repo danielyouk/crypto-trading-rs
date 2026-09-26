@@ -1815,7 +1815,9 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-무인-자동-발주-파이프라인-execution-flow">1. 무인 자동 발주 파이프라인 (Execution Flow)</a>
             
-            <a class="nav-heading level-3" href="#2-kis-주식-주문-api-필수-파라미터">2. KIS 주식 주문 API 필수 파라미터</a>
+            <a class="nav-heading level-3" href="#2-kis-주식-주문-요청에-꼭-넣는-항목">2. KIS 주식 주문 요청에 꼭 넣는 항목</a>
+            
+            <a class="nav-heading level-3" href="#3-시장가-vs-지정가-무엇을-언제-쓰나">3. 시장가 vs 지정가: 무엇을 언제 쓰나</a>
             
             <a class="nav-heading level-2" href="#실습-실습-19-무인-자동-주문-발주-모듈-실행">실습 — 실습 19: 무인 자동 주문 발주 모듈 실행</a>
             
@@ -2007,14 +2009,17 @@ window.MathJax = {
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
 <p>이 클립이 끝나면, 여러분은 승인된 주간 정책(<code>weekly_policy.json</code>)과 실시간 시그널(<code>signals.json</code>)을 읽어들여, 조건이 충족되었을 때 <strong>한국투자증권 모의투자 API를 통해 실제 주식 매수/매도 주문을 자동으로 전송하고, 체결 영수증(주문번호, 체결가, 체결수량)을 받아 기록하는 '무인 자동 발주 엔진(<code>execute_orders.py</code>)'</strong>을 완성하게 됩니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>: 승인되지 않은 정책(<code>status != "ACTIVE"</code>)이거나 유효기간이 지난 정책인 경우, 발주 엔진은 스스로 안전하게 멈추며 절대로 임의로 주문을 넣지 않습니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 승인되지 않은 정책(상태가 <code>ACTIVE</code>가 아닌 정책)이거나 유효기간이 지난 정책인 경우, 발주 엔진은 스스로 안전하게 멈추며 절대로 임의로 주문을 넣지 않습니다.</p>
 </blockquote>
 <ul>
-<li>KIS 국내주식 주문(현금매수 <code>TTTC0802U</code> / 현금매도 <code>TTTC0801U</code>) API 규격 이해</li>
-<li>주문 유형: 시장가(01) 주문 vs 지정가(00) 주문의 장단점 및 알고리즘 적용 기준</li>
-<li>중복 주문 방지(Idempotency / Order Deduplication)를 위한 주문 상태 저장소(<code>orders_history.json</code>) 설계</li>
-<li><strong>실습 19</strong>: <code>execute_orders.py</code> 실행을 통한 KIS 모의투자 계좌 실제 1주 매수/매도 체결 테스트</li>
+<li>KIS 국내주식 주문(모의투자 현금매수 <code>VTTC0012U</code> / 현금매도 <code>VTTC0011U</code>) API 규격 이해</li>
 </ul>
+<blockquote>
+<p>💡 <strong>거래 코드는 계좌 종류와 시기에 따라 다릅니다.</strong> 모의투자 코드는 <code>V</code>로, 실전 계좌 코드는 <code>T</code>로 시작합니다(예: 매수 <code>VTTC0012U</code> / <code>TTTC0012U</code>). 주문 코드는 2025년에 바뀌었고, 예전 코드(<code>…0802U</code>/<code>…0801U</code>)는 한국투자증권이 "사전 고지 없이 막힐 수 있다"고 안내하고 있습니다. 인터넷 예제에서 예전 코드를 보더라도 이 강의의 코드를 쓰세요.
+- 주문 유형: 시장가(01) 주문 vs 지정가(00) 주문의 장단점과, 이 시스템에서 어느 쪽을 쓰는지
+- 같은 신호로 주문이 두 번 나가지 않게 막는 주문 기록 파일(<code>orders_history.json</code>) 설계
+- <strong>실습 19</strong>: <code>execute_orders.py</code> 실행을 통한 KIS 모의투자 계좌 실제 1주 매수/매도 체결 테스트</p>
+</blockquote>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-무인-자동-발주-파이프라인-execution-flow">1. 무인 자동 발주 파이프라인 (Execution Flow)</h3>
@@ -2024,16 +2029,16 @@ window.MathJax = {
          ↓
 [3. 중복 주문 검사] ──&gt; 이미 오늘 동일 종목으로 발주된 이력이 있는지 orders_history.json 대조
          ↓
-[4. KIS API 주문]  ──&gt; POST /uapi/domestic-stock/v1/trading/order-cash 전송
+[4. KIS API 주문]  ──&gt; 현금 주문 주소(/uapi/domestic-stock/v1/trading/order-cash)로 주문 전송(POST)
          ↓
 [5. 체결 확인 &amp; 로깅]──&gt; 주문번호(ODNO) 수신, 체결 결과 저장 및 일일 매매 저널 기록
 </code></pre>
 <hr />
-<h3 id="2-kis-주식-주문-api-필수-파라미터">2. KIS 주식 주문 API 필수 파라미터</h3>
+<h3 id="2-kis-주식-주문-요청에-꼭-넣는-항목">2. KIS 주식 주문 요청에 꼭 넣는 항목</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
-<th>파라미터명</th>
+<th>항목 이름</th>
 <th>의미</th>
 <th>예시값</th>
 <th>설명</th>
@@ -2079,13 +2084,40 @@ window.MathJax = {
 </tbody>
 </table></div>
 <hr />
+<h3 id="3-시장가-vs-지정가-무엇을-언제-쓰나">3. 시장가 vs 지정가: 무엇을 언제 쓰나</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>주문</th>
+<th>뜻</th>
+<th>장점</th>
+<th>단점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>시장가 (01)</strong></td>
+<td>가격을 정하지 않고 지금 나와 있는 가격에 바로 사고파는 주문</td>
+<td>거의 확실하게 바로 체결됨</td>
+<td>가격이 급하게 움직이거나 호가 간격이 벌어져 있으면 생각보다 불리한 가격에 체결됨(슬리피지: 주문한 가격과 실제 체결 가격의 차이)</td>
+</tr>
+<tr>
+<td><strong>지정가 (00)</strong></td>
+<td>정한 가격에만 사고파는 주문</td>
+<td>정한 가격보다 불리하게 체결되지 않음</td>
+<td>가격이 안 맞으면 체결되지 않고, 넣었지만 아직 사고팔리지 않은 주문(미체결)으로 남음</td>
+</tr>
+</tbody>
+</table></div>
+<p>이 시스템은 <strong>시장가를 기본으로 씁니다.</strong> 사람이 지켜보지 않는 무인 실행에서는 "주문이 걸린 채 안 팔렸다"가 "조금 불리하게 팔렸다"보다 훨씬 위험하기 때문입니다. 특히 다음 클립의 손절 청산은 반드시 시장가입니다.</p>
+<hr />
 <h2 id="실습-실습-19-무인-자동-주문-발주-모듈-실행">실습 — 실습 19: 무인 자동 주문 발주 모듈 실행</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 승인된 weekly_policy.json을 준수하여 KIS 모의투자 계좌로 자동 주문을 전송하는 발주 모듈을 완성하고 싶어. 클립 27~29에서 만든 kis_auth.py, market_data.py, realtime_signals.py와 signals.json을 그대로 쓴다.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'execute_orders.py'를 작성하고 실행해줘:
 1. weekly_policy.json의 정책 상태가 'ACTIVE'이고 오늘 날짜가 유효기간 내인지 먼저 검증해줘. (비정상 시 즉각 중단)
-2. signals.json을 읽고, BUY 신호가 발생한 첫 번째 종목(또는 테스트용 1주)에 대해 KIS 주식 현금매수(TTTC0802U) API를 호출해줘.
+2. signals.json을 읽고, BUY 신호가 발생한 첫 번째 종목(또는 테스트용 1주)에 대해 KIS 주식 현금매수 API(모의투자용 거래 코드 VTTC0012U)를 호출해줘. 주문은 시장가(가격을 정하지 않고 지금 나와 있는 가격에 바로 사는 주문)로 넣어줘.
 3. 주문 성공 시 반환되는 주문번호(ODNO)와 체결 메시지를 확인하고, 'orders_history.json'에 [주문시간, 종목코드, 주문유형, 주문수량, 주문번호]를 기록해줘.
 4. 중복 발주를 방지하기 위해 이미 발주 완료된 신호는 재주문되지 않도록 필터링해줘.
 5. 대화창에 체결 영수증 요약표를 출력해줘.
@@ -2102,7 +2134,7 @@ window.MathJax = {
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> <code>weekly_policy.json</code>의 승인 상태를 검증한 뒤 발주 프로세스가 안전하게 시작되었다.</li>
-<li class="check-item"><input type="checkbox"> KIS 모의투자 API로부터 정상 응답(<code>rt_cd == "0"</code>, 주문번호 발급)을 받았다.</li>
+<li class="check-item"><input type="checkbox"> 증권사가 주문을 정상 접수했다고 답했고(응답의 성공 여부 칸 <code>rt_cd</code>가 "0"), 주문번호가 발급되었다.</li>
 <li class="check-item"><input type="checkbox"> <code>orders_history.json</code>에 오늘의 주문 이력이 정확하게 기록되었다.</li>
 <li class="check-item"><input type="checkbox"> 한국투자증권 MTS/HTS 모의투자 화면에서 해당 종목의 체결 내역을 눈으로 확인했다.</li>
 </ul>
@@ -2110,7 +2142,7 @@ window.MathJax = {
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
 <p>내 코드가 증권사 서버로 주문을 전송하여 실제 주식을 체결시켰습니다!<br />
 하지만 주가가 예상과 달리 갑자기 급락한다면 어떻게 해야 할까요? 사람이 직접 HTS를 켜서 손절 버튼을 누를 시간이 없습니다.<br />
-다음 클립에서는 <strong>사람의 확인을 묻지 않고 0.1초 만에 즉각 발동하는 '자동 하드 손절과 서킷브레이커'</strong>를 구축해 보겠습니다.</p>
+다음 클립에서는 <strong>사람의 확인을 묻지 않고, 1초마다 가격을 확인하다 기준에 닿으면 0.1초 안에 발동하는 '자동 하드 손절과 서킷브레이커'</strong>를 구축해 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">

@@ -1784,7 +1784,9 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-실시간-주식-시세-데이터의-구조">1. 실시간 주식 시세 데이터의 구조</a>
             
-            <a class="nav-heading level-3" href="#2-증권사-api-호출-한도rate-limiting의-법칙">2. 증권사 API 호출 한도(Rate Limiting)의 법칙</a>
+            <a class="nav-heading level-3" href="#2-가격을-받는-두-가지-방식-폴링-vs-웹소켓">2. 가격을 받는 두 가지 방식: 폴링 vs 웹소켓</a>
+            
+            <a class="nav-heading level-3" href="#3-증권사-api-호출-한도rate-limiting의-법칙">3. 증권사 API 호출 한도(Rate Limiting)의 법칙</a>
             
             <a class="nav-heading level-2" href="#실습-실습-16-실시간-시세-수집기-구현">실습 — 실습 16: 실시간 시세 수집기 구현</a>
             
@@ -2005,14 +2007,14 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 한국투자증권 Open API를 통해 <strong>관심 유니버스 종목들의 실시간 현재가, 체결 거래량, 매수/매도 10호가(Order Book) 데이터를 지연 없이 수신</strong>하고, 증권사 API의 초당 호출 제한(Rate Limit / TPS)을 안전하게 관리하는 <strong>'실시간 시세 수집기(<code>market_data.py</code>)'</strong>를 완성하게 됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 한국투자증권 Open API를 통해 <strong>관심 유니버스 종목들의 실시간 현재가, 체결 거래량, 사겠다·팔겠다고 걸어 둔 가격 목록(호가창) 위아래 10단계 데이터를 지연 없이 수신</strong>하고, 증권사 API의 초당 호출 제한(1초에 보낼 수 있는 요청 횟수의 상한)을 안전하게 관리하는 <strong>'실시간 시세 수집기(<code>market_data.py</code>)'</strong>를 완성하게 됩니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>: 증권사 HTS를 켜두지 않아도 파이썬 코드가 백그라운드에서 증권사 서버와 통신하여 필요한 종목의 실시간 시세를 0.1초 만에 가져옵니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 증권사 HTS를 켜두지 않아도 파이썬 코드가 백그라운드에서 증권사 서버에 1초마다 필요한 종목의 시세를 물어 가져옵니다.</p>
 </blockquote>
 <ul>
-<li>KIS REST API의 <strong>국내주식 현재가 시세 조회 엔드포인트(<code>FHKST01010100</code>)</strong> 구조</li>
+<li>KIS의 <strong>국내주식 현재가 시세 조회 요청(거래 코드 <code>FHKST01010100</code>)</strong> 구조</li>
 <li>REST API 폴링(Polling) 방식 vs 웹소켓(WebSocket) 스트리밍의 차이점과 장단점</li>
-<li>증권사 API의 초당 호출 제한(초당 20건 미만)과 <strong>호출 간격 쓰로틀링(Throttling / <code>time.sleep</code>) 설계</strong></li>
+<li>증권사 API의 초당 호출 제한(초당 20건 미만)과 <strong>호출 사이에 일부러 잠깐 쉬어 한도를 넘지 않게 하는 설계(쓰로틀링, <code>time.sleep</code>)</strong></li>
 <li><strong>실습 16</strong>: 4대 전략 유니버스 7종목의 실시간 시세 및 당일 변동폭(Range) 수집 모듈 실행</li>
 </ul>
 <hr />
@@ -2032,14 +2034,44 @@ window.MathJax = {
 }
 </code></pre>
 <hr />
-<h3 id="2-증권사-api-호출-한도rate-limiting의-법칙">2. 증권사 API 호출 한도(Rate Limiting)의 법칙</h3>
-<p>증권사 서버는 특정 프로그램이 1초에 수백 번씩 시세를 요청하면 IP를 차단(HTTP 429 Too Many Requests)합니다.</p>
+<h3 id="2-가격을-받는-두-가지-방식-폴링-vs-웹소켓">2. 가격을 받는 두 가지 방식: 폴링 vs 웹소켓</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>방식</th>
+<th>어떻게 받나</th>
+<th>장점</th>
+<th>단점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>폴링(Polling)</strong></td>
+<td>내가 1초마다 "지금 얼마야?" 하고 물어보는 방식</td>
+<td>코드가 단순하고, 한 번 실패해도 다음 질문에서 바로 회복</td>
+<td>1초에 물을 수 있는 횟수에 한도가 있고, 물어보는 사이의 움직임은 못 봄</td>
+</tr>
+<tr>
+<td><strong>웹소켓(WebSocket)</strong></td>
+<td>연결을 켜 두면 가격이 바뀔 때마다 증권사가 알려주는 방식</td>
+<td>빠르고, 매번 묻지 않으니 호출 한도 부담이 적음</td>
+<td>연결이 끊겼는지 감시하고 다시 잇는 코드가 따로 필요해 복잡함</td>
+</tr>
+</tbody>
+</table></div>
+<p>이 강의는 <strong>폴링</strong>을 씁니다. 우리 네 전략은 1초 간격이면 충분히 빠르고, 초보자가 끊김 처리까지 챙기기에는 웹소켓이 부담이 크기 때문입니다.</p>
+<blockquote>
+<p>💡 클립 01에서 하드 가드레일을 "0.1초 감시"라고 소개했습니다. 정확히 나누면, <strong>가격 확인은 증권사 호출 한도 때문에 1초마다</strong>, <strong>기준에 닿았다고 판정한 뒤 청산 주문을 내기까지가 0.1초 안</strong>입니다. Part 4의 감시 코드는 모두 이 기준으로 만듭니다.</p>
+</blockquote>
+<hr />
+<h3 id="3-증권사-api-호출-한도rate-limiting의-법칙">3. 증권사 API 호출 한도(Rate Limiting)의 법칙</h3>
+<p>증권사 서버는 특정 프로그램이 1초에 수백 번씩 시세를 요청하면, 그 컴퓨터의 인터넷 주소(IP)에서 오는 요청을 막아 버립니다. 이때 돌아오는 오류 번호가 429(요청이 너무 많음)입니다.</p>
 <div class="compare-box">
   <div class="compare-card bad">
-    <div class="tag">❌ 무분별한 무한 루프 호출</div>
+    <div class="tag">❌ 쉬지 않고 끝없이 되풀이하는 호출(무한 루프)</div>
     <div class="steps">
       • <code>while True: get_price()</code><br>
-      • 1초에 수백 회 호출 발생 ➔ <strong>증권사 서버에서 계좌 일시 차단</strong>.
+      • 1초에 수백 회 호출 발생 ➔ <strong>증권사 서버에서 일시 차단</strong>.
     </div>
   </div>
   <div class="compare-card good">
@@ -2057,7 +2089,7 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국투자증권 API를 활용해 전략 대상 종목들의 실시간 시세를 조회하는 시세 수집 모듈을 만들고 싶어. 인증은 클립 27에서 만든 kis_auth.py를 그대로 쓴다.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'market_data.py'를 작성하고 실행해줘:
-1. .env에 저장된 인증 토큰을 활용해 KIS 국내주식 현재가 시세조회(FHKST01010100) API를 호출하는 함수 'get_current_price(ticker)'를 구현해줘.
+1. kis_auth.py가 발급하는 접근 토큰(증권사가 내주는 출입증. App Key·App Secret은 .env에 있음)을 받아 KIS 국내주식 현재가 시세조회(FHKST01010100) API를 호출하는 함수 'get_current_price(ticker)'를 구현해줘.
 2. 4대 전략이 실제로 쓰는 7개 종목의 실시간 시세(현재가, 시가, 고가, 저가, 전일비 등락률, 거래량)를 수집해줘:
    - KODEX 200 (069500) — 추세추종
    - KODEX 레버리지 (122630) — 변동성 돌파
@@ -2081,7 +2113,7 @@ window.MathJax = {
 <ul>
 <li class="check-item"><input type="checkbox"> 7개 종목의 현재가, 시가, 고가, 저가, 거래량이 에러 없이 수신되었다. 표의 종목이 Part 2·3에서 백테스트한 종목과 정확히 같은지 대조했다.</li>
 <li class="check-item"><input type="checkbox"> 출력된 현재가가 실제 증권사 앱(MTS)의 실시간 가격과 정확히 일치한다.</li>
-<li class="check-item"><input type="checkbox"> API 호출 시 429 에러나 끊김 없이 부드럽게 데이터가 로드되었다.</li>
+<li class="check-item"><input type="checkbox"> API 호출 시 호출 한도 초과 오류(429)나 끊김 없이 부드럽게 데이터가 로드되었다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>

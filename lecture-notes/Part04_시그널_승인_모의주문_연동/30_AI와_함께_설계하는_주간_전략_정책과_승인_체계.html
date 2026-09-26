@@ -2005,15 +2005,15 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 주말 30분 동안 Claude Code와 함께 지난주 시장 성과와 다음 주 거시 환경을 브리핑받고, 한 주 동안 무인 실행 엔진이 엄격히 준수해야 할 <strong>'주간 매매 정책 파일(<code>weekly_policy.json</code>)'</strong>을 생성한 뒤, <strong>인간 최고투자책임자(CIO)로서 최종 서명(Approval)하여 시스템에 배포하는 거버넌스 워크플로우</strong>를 완성하게 됩니다.</p>
+<p>이 클립이 끝나면, 여러분은 주말 30분 동안 Claude Code와 함께 지난주 시장 성과와 다음 주 거시 환경을 브리핑받고, 한 주 동안 무인 실행 엔진이 엄격히 준수해야 할 <strong>'주간 매매 정책 파일(<code>weekly_policy.json</code>)'</strong>을 생성한 뒤, <strong>최고투자책임자(CIO)인 내가 파일을 직접 검토한 뒤 상태를 <code>ACTIVE</code>(이번 주 적용)로 바꿔 최종 승인하는 절차</strong>를 완성하게 됩니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 설정 파일을 직접 코딩할 필요가 없습니다. Claude Code와 자연어로 대화하며 <em>"다음 주는 변동성이 클 것 같으니 현금 비중 20%를 두고 추세추종만 돌리자"</em>라고 말하면, AI가 유효성이 검증된 JSON 규격으로 정책을 자동 컴파일해 줍니다.</p>
+<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 설정 파일을 직접 코딩할 필요가 없습니다. Claude Code와 자연어로 대화하며 <em>"다음 주는 변동성이 클 것 같으니 현금 비중 20%를 두고 추세추종만 돌리자"</em>라고 말하면, AI가 정책을 JSON(프로그램끼리 주고받는 정해진 형식의 텍스트 파일)으로 정리하고, 형식이 맞는지 검사까지 해 줍니다.</p>
 </blockquote>
 <ul>
 <li><strong>Tier 1 주간 거버넌스 세션(Weekly Governance Session)</strong>의 표준 진행 절차</li>
-<li>주간 정책 파일(<code>weekly_policy.json</code>)의 필수 5대 스키마 (적용 기간, 전략별 가중치, 유니버스, 위험 한도, 승인자 서명)</li>
+<li>주간 정책 파일(<code>weekly_policy.json</code>)에 반드시 있어야 할 5가지 칸(적용 기간, 전략별 가중치, 유니버스, 위험 한도, 승인자 서명). 이렇게 파일에 반드시 있어야 할 칸과 칸마다 값의 형식을 정해 둔 것을 스키마라고 부릅니다</li>
 <li>클립 24 운영 기준표의 1층·2층 값이 이 파일의 <code>risk_limits</code>로 그대로 옮겨오는 경로</li>
-<li>정책 파일 변조 및 오류를 방지하는 <strong>JSON 스키마 유효성 검증(Schema Validation)</strong></li>
+<li>정책 파일이 잘못 적히거나 몰래 바뀌는 것을 막는 <strong>형식 검사</strong>: 칸이 빠짐없이 있는지, 값의 형식과 비중 합계가 맞는지 확인(스키마 유효성 검증)</li>
 <li><strong>실습 18</strong>: Claude Code와의 주간 전략 회의 대화 및 <code>weekly_policy.json</code> 생성·승인 실습</li>
 </ul>
 <hr />
@@ -2025,7 +2025,7 @@ window.MathJax = {
           ↓
 [Step 3: 정책 조율 및 합의]──&gt; 운영자(나)가 검토 후 최종 비중 결정 (&quot;페어트레이딩 비중 10% 추가해줘&quot;)
           ↓
-[Step 4: 정책 승인 및 서명]──&gt; AI가 `weekly_policy.json` 생성 ➔ 사람이 파일 검토 후 'APPROVED' 서명
+[Step 4: 정책 승인 및 서명]──&gt; AI가 `weekly_policy.json`을 상태 'DRAFT'(초안)로 생성 ➔ 사람이 파일 검토 후 상태를 'ACTIVE'로 바꿈
 </code></pre>
 <hr />
 <h3 id="2-표준-주간-정책-스키마-weekly_policyjson">2. 표준 주간 정책 스키마 (<code>weekly_policy.json</code>)</h3>
@@ -2057,6 +2057,7 @@ window.MathJax = {
   }
 }
 </code></pre>
+<p>위 예시는 <strong>승인이 끝난 뒤의 모습</strong>입니다. <code>status</code>는 AI가 처음 저장할 때 <code>DRAFT</code>(초안)이고, 사람이 내용을 검토한 뒤 직접 <code>ACTIVE</code>로 바꿉니다. 실행 엔진은 <code>ACTIVE</code>인 정책만 따릅니다.</p>
 <hr />
 <h2 id="실습-실습-18-주간-정책-파일-생성-및-승인">실습 — 실습 18: 주간 정책 파일 생성 및 승인</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하여 주간 정책 합의를 진행해 보세요.</p>
@@ -2072,23 +2073,23 @@ window.MathJax = {
    - 전략 가중치: 추세추종 40%, 변동성 돌파 30%, 듀얼 모멘텀 20%, 페어 10% (operating_rules.json의 상승 국면 값)
    - 1층 전략 위험관리: 고점 대비 손절 -10%, 목표 변동성 15%, 전략당 최대 비중 60%
    - 2층 하드 가드레일: 개별 종목 -3% 손절, 일일 계좌 -2% 서킷브레이커
-   - 승인자: 'AinX (CIO)', 상태: 'ACTIVE'
+   - 승인자: 'AinX (CIO)', 상태: 'DRAFT'. 승인 시각(approval_timestamp)은 비워 둬. 내가 파일을 검토한 뒤 직접 상태를 'ACTIVE'로 바꾸고 승인 시각을 적는다.
 3. 정책 요약표를 대화창에 브리핑 형태로 출력해줘.
 
 [하지 말 것]
 - 정책 파일을 만드는 것까지만 해. 이 정책으로 주문을 보내거나 실행 스크립트를 돌리지 마.
-- 승인 상태를 자동으로 판정하거나 바꾸는 로직을 넣지 마. 상태 값은 사람이 이 파일을 직접 고쳐서 정한다.
+- 상태를 'DRAFT' 말고 다른 값으로 저장하거나, 상태를 자동으로 판정해 'ACTIVE'로 바꾸는 로직을 넣지 마. 'ACTIVE'로 바꾸는 것은 내가 검토 후 직접 한다.
 - 전략 가중치 합계가 100%가 아니거나 한 전략이 60%를 넘으면 파일을 저장하지 말고 오류로 보고해.
 - 위험 한도 값을 네가 판단해서 바꾸지 마. 위 값은 'operating_rules.json'에서 온 것이고, 2층 값(-3%, -2%)은 어떤 경우에도 고정이야. 1번 대조에서 파일과 다른 값이 있으면 파일을 저장하지 말고 차이를 보고해.
 
-[확인] 대화창에 주간 정책 요약표가 출력되었는지, 그리고 'weekly_policy.json' 파일이 저장되어 경로가 표시되었는지 확인해줘.
+[확인] 대화창에 주간 정책 요약표가 출력되었는지, 'weekly_policy.json' 파일이 상태 'DRAFT'로 저장되어 경로가 표시되었는지 확인해줘.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> <code>weekly_policy.json</code> 파일이 루트 폴더에 정상 생성되었다.</li>
 <li class="check-item"><input type="checkbox"> 적용 기간(월~금), 전략별 비중 합계(100%), 1층 값(-10% / 15% / 60%)과 2층 값(-3% / -2%)이 클립 24 기준표와 같은지 한 칸씩 대조했다.</li>
-<li class="check-item"><input type="checkbox"> 승인자 서명과 ACTIVE 상태가 명시되어 무인 실행 엔진이 읽을 준비가 되었음을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 위 대조를 마친 뒤 내가 직접 상태를 <code>DRAFT</code>에서 <code>ACTIVE</code>로 바꾸고 승인 시각을 적어, 무인 실행 엔진이 읽을 준비가 되었음을 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
