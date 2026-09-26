@@ -11,7 +11,7 @@
     R2 변동성 목표 비중: 최근 20일 실현 변동성(연율)이 목표(예: 15%)보다 크면 비중 = 목표/실현변동성 (최대 100%).
        오늘 종가로 계산, 내일 시가에 조정. 비중 변화가 10%p 이상일 때만 실제 매매(잔거래 방지)
     조합: R1만 / R2만 / R1+R2
-- 비용: 편도 0.125% (왕복 0.25%, 강의 기준) x 거래 비중
+- 비용: 편도 0.025% (왕복 0.05%, 클립 16부터 쓰는 ETF 기준 — 국내 ETF는 매도 거래세 없음) x 거래 비중
 - 산출: 전략별 x 규칙별 CAGR / MDD / 샤프 / 2026년 7월 낙폭 / 거래 수 표 (Markdown)
 """
 
@@ -23,7 +23,7 @@ import pandas as pd
 import dual_momentum_backtest as dm
 
 START, END = "2016-01-01", "2026-08-31"
-COST = 0.00125            # 편도 0.125% = 왕복 0.25%
+COST = 0.00025            # 편도 0.025% = 왕복 0.05% (ETF, 거래세 없음)
 STOP = float(sys.argv[1]) if len(sys.argv) > 1 else 0.10      # 고점 대비 손절폭
 TARGET_VOL = float(sys.argv[2]) if len(sys.argv) > 2 else 0.15  # 변동성 목표(연율)
 VOL_WIN, REBAL_STEP = 20, 0.10
