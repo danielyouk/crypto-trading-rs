@@ -2053,8 +2053,8 @@ window.MathJax = {
 <h3 id="2-결과를-믿되-맹신하지-않기">2. 결과를 믿되 맹신하지 않기</h3>
 <ul>
 <li><strong>결과를 보고 값을 다시 고르지 않습니다.</strong> 보고서의 값으로 먼저 돌리고, 민감도 표는 "얼마나 흔들리는가"를 보는 데만 씁니다. 가장 좋은 값을 골라 다시 넣는 순간 클립 17의 과최적화가 됩니다.</li>
-<li><strong>값을 바꿔 볼 범위는 미리 정합니다.</strong> 채택한 규칙의 값과 허용 범위는 클립 24의 운영 기준표에 적고, 범위를 벗어나는 변경은 다시 검증합니다.</li>
-<li><strong>채택한 뒤에도 계속 확인합니다.</strong> 실전에서 새로 쌓이는 결과로 이 판단이 맞았는지 다시 봅니다(Part 5).</li>
+<li><strong>값을 바꿔 볼 범위는 미리 정합니다.</strong> 채택한 규칙은 값과 함께 "어디까지는 바꿔도 되는지"를 적어 두고, 그 범위를 벗어나는 변경은 다시 검증합니다.</li>
+<li><strong>채택한 뒤에도 계속 확인합니다.</strong> 새로 쌓이는 결과로 이 판단이 맞았는지 다시 봅니다.</li>
 </ul>
 <hr />
 <h2 id="실습-실습-11-개선안-반영-전후-abc-재검증">실습 — 실습 11: 개선안 반영 전후 A/B/C 재검증</h2>
@@ -2089,7 +2089,7 @@ window.MathJax = {
 <li class="check-item"><input type="checkbox"> 근거 점검표에서 각 안이 겨냥한 구간에서 실제로 효과가 났는지, 이유와 결과가 맞아떨어졌는지 확인했다. 맞지 않았다면 그것도 그대로 기록했다.</li>
 <li class="check-item"><input type="checkbox"> 겨냥하지 않은 구간이나 전체 CAGR에서 치른 대가가 합당한지 칼마 비율로 판단했다.</li>
 <li class="check-item"><input type="checkbox"> 민감도 표에서 결과가 특정 값에서만 좋은지(과최적화 신호) 확인했다.</li>
-<li class="check-item"><input type="checkbox"> 숫자가 좋아졌다는 이유만으로 채택하지 않고, 이유가 합리적이라고 판단한 안만 운영 기준(클립 24)에 올릴 후보로 정했다.</li>
+<li class="check-item"><input type="checkbox"> 숫자가 좋아졌다는 이유만으로 채택하지 않고, 이유가 합리적이라고 판단한 안만 채택 후보로 정했다.</li>
 <li class="check-item"><input type="checkbox"> <code>strategy_ab_improvement_result.html</code>을 브라우저로 열어, 세 전략의 선이 어느 구간에서 갈라지는지 확인했다.</li>
 </ul>
 <hr />
