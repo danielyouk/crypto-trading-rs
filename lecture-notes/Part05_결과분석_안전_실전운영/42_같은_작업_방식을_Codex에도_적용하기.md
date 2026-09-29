@@ -1,14 +1,14 @@
-# 같은 작업 방식을 Codex/다른 도구에도 적용하기
+# 같은 작업 방식을 Codex에도 적용하기
 
 ## 이번 클립에서 만들 것
 
 이 클립이 끝나면, 여러분은 지금까지 익힌 **'생각 ➔ 네 칸 요청([맥락]·[만들 것]·[하지 말 것]·[확인]) ➔ 화면 확인 ➔ 피드백 개선'**이라는 제로코드 퀀트 아키텍트의 작업 루프가 **Codex(OpenAI가 만든 코딩용 AI 도구로, Claude Code와 비슷한 역할), Cursor(AI 기능이 들어간 코드 편집기) 등 지금과 앞으로의 어떤 AI 도구에서도 똑같이 통한다**는 것을 확인하고, 도구의 변화에 흔들리지 않는 영구적인 시스템 구축 역량을 완성하게 됩니다.
 
-> 💡 **아키텍트의 궁극적 무기**: AI 모델과 도구는 6개월마다 새로운 이름으로 쏟아져 나옵니다. 하지만 **"정해진 형식의 데이터 파일(JSON), 엄격한 하드 안전망, 사람이 정책을 승인하는 절차"**라는 퀀트 시스템의 본질적 설계도는 도구가 무엇으로 바뀌든 영원히 동일합니다.
+> 💡 **아키텍트의 궁극적 무기**: AI 모델과 도구는 6개월마다 새로운 이름으로 쏟아져 나옵니다. 하지만 **"정해진 형식의 데이터 파일(JSON), 엄격한 안전장치, 사람이 매수를 승인하는 절차"**라는 퀀트 시스템의 본질적 설계도는 도구가 무엇으로 바뀌든 영원히 동일합니다.
 
 - **어떤 도구에서도 통하는 작업 방식**: 도구는 껍데기일 뿐이며, 아키텍트의 논리적 사고와 목표 선언이 본질이다
 - Claude Code에서 만든 코드와 프롬프트를 **Codex나 다른 AI 도구로 옮겨 쓰는 3단계 규칙**
-- 프로그램끼리 정해진 형식의 파일(`signals.json`, `weekly_policy.json`)로만 주고받기 때문에, 어떤 AI 도구로 만들었든 시스템이 그대로 돌아가는 이유
+- 프로그램끼리 정해진 형식의 파일(`signals.json`, `orders.json`)로만 주고받기 때문에, 어떤 AI 도구로 만들었든 시스템이 그대로 돌아가는 이유
 - 미래에 어떤 초지능 AI가 등장하더라도 변하지 않는 **'사람이 마지막에 확인하고 승인하는 역할'의 가치**
 
 ---
@@ -45,14 +45,14 @@
     <span class="step-num">Step 1</span>
     <div class="step-body">
       <div class="step-title">[맥락] 그대로 전달</div>
-      <div class="step-desc">"우리는 2-Tier 하이브리드 주식 트레이딩 시스템을 구축하고 있어. weekly_policy.json과 signals.json을 기반으로 동작해."</div>
+      <div class="step-desc">"우리는 신호를 만들고, 매수는 사람이 승인하고, 주문과 손절은 프로그램이 실행하는 주식 트레이딩 시스템을 만들고 있어. signals.json과 orders.json을 기반으로 동작해."</div>
     </div>
   </div>
   <div class="step-card ai">
     <span class="step-num">Step 2</span>
     <div class="step-body">
       <div class="step-title">[만들 것]·[하지 말 것] 그대로 선언</div>
-      <div class="step-desc">"weekly_policy.json의 목표 변동성을 허용 범위(12~20%) 안에서 15%에서 12%로 낮추고, 바뀐 값이 realtime_signals.py의 주문 수량에 어떻게 반영되는지 표로 보여줘. 허용 범위 밖의 값은 쓰지 말고, 다른 파일은 고치지 마."</div>
+      <div class="step-desc">"generate_signals.py의 목표 변동성을 허용 범위(12~20%) 안에서 15%에서 12%로 낮추고, 바뀐 값이 목표 수량에 어떻게 반영되는지 표로 보여줘. 허용 범위 밖의 값은 쓰지 말고, 다른 파일은 고치지 마."</div>
     </div>
   </div>
   <div class="step-card verify">
@@ -71,11 +71,11 @@
 Claude Code 대화창에 아래 프롬프트를 입력하여, 우리 시스템이 특정 AI 도구 없이도 파이썬과 JSON 파일만으로 돌아가는지 최종 확인해 보세요.
 
 ```prompt
-[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, realtime_signals, execute_orders, risk_guard)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
+[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, execute_orders, risk_guard)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
 
 [만들 것] 다음 작업을 수행해줘:
 1. 이 시스템이 따로 설치해서 쓰는 라이브러리 목록을 정리해줘. 목록 파일(requirements.txt)이 있으면 그것을 보고, 없으면 없다고 보고한 뒤 코드에서 실제로 불러 쓰는 라이브러리를 찾아 정리해. 그리고 전부 누구나 무료로 설치할 수 있는 공개 라이브러리인지, 특정 AI 도구에서만 쓸 수 있는 것은 없는지 점검해줘.
-2. weekly_policy.json과 signals.json 두 파일에, 그 파일을 읽는 코드가 필요로 하는 항목이 빠짐없이 있고 값 형식(날짜·숫자·비중 합계)이 맞는지 검사해줘.
+2. signals.json과 orders.json 두 파일에, 그 파일을 읽는 코드가 필요로 하는 항목이 빠짐없이 있고 값 형식(날짜·숫자·비중 합계)이 맞는지 검사해줘.
 3. 다른 AI 도구(Codex 등)를 처음 사용하는 사람이 이 프로젝트를 인계받았을 때 1분 만에 실행할 수 있도록 작성된 'docs/universal_tool_guide.md' 매뉴얼을 생성해줘.
 
 [하지 말 것]
@@ -90,7 +90,7 @@ Claude Code 대화창에 아래 프롬프트를 입력하여, 우리 시스템�
 
 ### 내 눈으로 확인할 체크리스트
 
-- [ ] 시스템이 쓰는 라이브러리 목록과 두 JSON 파일(`weekly_policy.json`, `signals.json`)의 점검 결과가 항목별 통과/미통과로 나왔다.
+- [ ] 시스템이 쓰는 라이브러리 목록과 두 JSON 파일(`signals.json`, `orders.json`)의 점검 결과가 항목별 통과/미통과로 나왔다.
 - [ ] `docs/universal_tool_guide.md`만 보고 다른 도구나 터미널에서 실행할 수 있는지 확인했다.
 
 ---

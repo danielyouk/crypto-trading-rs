@@ -1781,9 +1781,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_2_Tier_주간_정책_승인과_일간_자동_실행.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_매매_신호부터_승인과_주문까지.html">
             <span class="nav-num">26</span>
-            <span class="nav-label">전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</span>
+            <span class="nav-label">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
           </a>
           
         </div>
@@ -1816,45 +1816,45 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 주간 전략 정책 승인과 일간 자동 실행 시스템
+          4.2 알림과 승인을 거쳐 모의주문 실행하기
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
             <span class="nav-num">30</span>
-            <span class="nav-label">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
+            <span class="nav-label">매매 알림과 승인·거절 절차 만들기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
             <span class="nav-num">31</span>
-            <span class="nav-label">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
+            <span class="nav-label">이메일로 매매 알림 받아보기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
             <span class="nav-num">32</span>
-            <span class="nav-label">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
+            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_손절_알림에_응답하지_않았을_때_자동으로_위험_관리하기.html">
             <span class="nav-num">33</span>
-            <span class="nav-label">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
+            <span class="nav-label">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_AI_일일_매매_일지_생성_및_다음_날_실행_점검.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_다음_거래일의_매매_조건_미리_확인하기.html">
             <span class="nav-num">34</span>
-            <span class="nav-label">장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검</span>
+            <span class="nav-label">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
           </a>
           
         </div>
@@ -2172,7 +2172,7 @@ window.MathJax = {
 2. FinanceDataReader로 세 전략 대상 종목과 KOSPI 지수(^KS11)의 기준일까지 2년 일봉을 불러와, 기준일 종가로 국면(판정에 쓴 200일선 대비 %, 20일선 기울기, ADX 포함)과 세 전략의 다음 거래일 신호(매수 / 매도 / 유지 / 관망)를 판정해줘. 받은 가격 데이터는 작업 폴더의 'price_cache' 폴더에 종목별 CSV로 저장해 두고 파일이 있으면 그 파일을 읽되, 기준일이 파일의 마지막 날짜보다 뒤면 그 종목만 새로 받아 파일을 갱신해. 새로 받을 때는 종목 사이에 1초씩 쉬고, 요청마다 30초 제한 시간을 두어 응답이 없으면 끊고 몇 번 다시 시도해.
 3. 전략마다 목표 보유 수량 = 투입 금액(1번의 6)) ÷ 기준일 종가(소수점 버림). 조정 비중을 문턱 때문에 직전 값으로 유지한 날은 목표 수량도 직전 값을 그대로 쓰고, 종가가 바뀌었다고 다시 계산하지 마. 문턱 없이 다시 계산한 날은 그 이유(국면 변경, 입력값 변경, 신호 변경, 합계 초과)를 적어. '직전에 쓴 값'은 작업 폴더에 기준일 직전 거래일의 'signals_날짜.json'이 있으면 거기서 가져오고, 없으면 오늘 계산한 값을 그대로 써.
 4. 종목별로 합쳐서 순주문을 내줘: 같은 종목을 쓰는 전략들의 목표 수량을 더한 것이 종목 목표 수량이고, 순주문 = 종목 목표 수량 − 직전 거래일 파일의 종목 목표 수량(직전 파일이 없으면 보유 0).
-5. 결과를 'signals_기준일.json'(예: signals_2026-08-24.json)으로 저장하고, 가장 최근 기준일 결과는 'signals.json'으로도 한 부 저장해줘. 전략마다 [종목코드, 종목명, 전략, 신호, 기본 비중, 조정 계수, 오늘 계산한 조정 비중, 실제로 쓴 조정 비중, 투입 금액, 목표 수량]을, 종목마다 [종목코드, 종목 목표 수량, 순주문]을 담고, 맨 위에 기준일, 국면, 그리고 그날 쓴 입력값(1번 전체)을 적어. 이 파일 하나로 그날 어떤 입력값으로 무엇을 주문하려 했는지 알 수 있어야 해.
+5. 결과를 'signals_기준일.json'(예: signals_2026-08-24.json)으로 저장하고, 가장 최근 기준일 결과는 'signals.json'으로도 한 부 저장해줘. 전략마다 [종목코드, 종목명, 전략, 신호, 기본 비중, 조정 계수, 오늘 계산한 조정 비중, 실제로 쓴 조정 비중, 투입 금액, 목표 수량, 직전 대비 바뀐 이유(신호 변경 / 국면 변경 / 조정 비중 변경 / 입력값 변경 / 변화 없음)]를, 종목마다 [종목코드, 종목 목표 수량, 순주문]을 담고, 맨 위에 기준일, 국면, 그리고 그날 쓴 입력값(1번 전체)을 적어. 이 파일 하나로 그날 어떤 입력값으로 무엇을 주문하려 했는지 알 수 있어야 해.
 6. 기준일을 2026-08-24부터 08-28까지 하나씩 넣어 차례로 실행하고, 5일을 [기준일 / 국면 / 전략별 신호 / 조정 비중(문턱으로 유지했는지) / 전략별 목표 수량 / 종목별 순주문] 한 표로 보여줘. 마지막 날은 총 투입 금액과 남는 현금도 적어줘.
 
 [하지 말 것]
@@ -2290,9 +2290,9 @@ window.MathJax = {
         </a>
         
         
-        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_2_Tier_주간_정책_승인과_일간_자동_실행.html">
+        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_매매_신호부터_승인과_주문까지.html">
           <span class="direction">다음 클립 →</span>
-          <span class="title">전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</span>
+          <span class="title">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
         </a>
         
       </nav>

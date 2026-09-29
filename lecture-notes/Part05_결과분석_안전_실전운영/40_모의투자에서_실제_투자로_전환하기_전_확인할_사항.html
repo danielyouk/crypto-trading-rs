@@ -1755,9 +1755,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_2_Tier_주간_정책_승인과_일간_자동_실행.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_매매_신호부터_승인과_주문까지.html">
             <span class="nav-num">26</span>
-            <span class="nav-label">전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</span>
+            <span class="nav-label">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
           </a>
           
         </div>
@@ -1790,45 +1790,45 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 주간 전략 정책 승인과 일간 자동 실행 시스템
+          4.2 알림과 승인을 거쳐 모의주문 실행하기
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
             <span class="nav-num">30</span>
-            <span class="nav-label">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
+            <span class="nav-label">매매 알림과 승인·거절 절차 만들기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
             <span class="nav-num">31</span>
-            <span class="nav-label">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
+            <span class="nav-label">이메일로 매매 알림 받아보기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
             <span class="nav-num">32</span>
-            <span class="nav-label">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
+            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_손절_알림에_응답하지_않았을_때_자동으로_위험_관리하기.html">
             <span class="nav-num">33</span>
-            <span class="nav-label">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
+            <span class="nav-label">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_AI_일일_매매_일지_생성_및_다음_날_실행_점검.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_다음_거래일의_매매_조건_미리_확인하기.html">
             <span class="nav-num">34</span>
-            <span class="nav-label">장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검</span>
+            <span class="nav-label">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
           </a>
           
         </div>
@@ -2044,7 +2044,7 @@ window.MathJax = {
 <li><strong>[보안 격리]</strong> <code>.env</code> 파일에 실전 <code>APP_KEY</code>가 안전하게 보관되어 있고 <code>.gitignore</code>가 적용되었는가?</li>
 <li><strong>[하드 손절 가동]</strong> 개별 종목 -3% 도달 시 사람 승인 없이 즉시 시장가 청산되는가?</li>
 <li><strong>[서킷브레이커]</strong> 일일 계좌 -2% 도달 시 전 종목 비상 청산 및 당일 매매 잠금이 테스트되었는가?</li>
-<li><strong>[1회 주문 상한]</strong> 1회 주문 금액이 총자산 × 그 전략의 정책 비중(어떤 경우에도 60% 이하)을 넘으면 거부하는 검사가 <code>order_validator.py</code>에 걸려 있는가?</li>
+<li><strong>[1회 주문 상한]</strong> 1회 주문 금액이 총 투자금의 60%를 넘으면 거부하는 검사가 <code>order_validator.py</code>에 걸려 있는가?</li>
 <li><strong>[슬리피지 마진]</strong> 왕복 0.3% 이상의 거래비용 스트레스 테스트에서도 수익성이 유지되는가?</li>
 <li><strong>[킬 스위치]</strong> <code>kill_switch.flag</code> 생성 시 즉시 모든 발주가 중단되는 비상 탈출구가 있는가?</li>
 <li><strong>[일일 저널]</strong> 매일 장 마감 후 체결 내역과 손익이 파일로 자동 기록되는가?</li>
@@ -2058,9 +2058,9 @@ window.MathJax = {
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'system_audit.py'를 작성하고 실행해줘:
 1. .env 파일이 있는지, 그리고 Git을 쓴다면 .env가 코드와 함께 인터넷에 올라가지 않게 제외(.gitignore)돼 있는지 검사
-2. weekly_policy.json의 유효기간이 지나지 않았는지, 상태가 사람이 승인한 ACTIVE인지 검사
+2. 매수 주문이 승인 없이 나간 적이 없는지 검사 ('orders_history.json'의 매수 주문마다 'approvals_log.json'에 승인 기록이 있는지 대조. 시험 주문은 제외)
 3. risk_guard.py에 개별 종목 -3%면 즉시 청산(하드 손절), 계좌 전체 -2%면 전 종목 청산 후 당일 매매 중단(서킷브레이커)하는 코드가 있는지 검사
-4. order_validator.py가 1회 주문 금액이 총자산 × 그 전략의 정책 비중(어떤 경우에도 60% 이하)을 넘는 주문, 하루 15회를 넘는 주문, 현재가와 3% 이상 차이 나는 가격의 주문을 거부하는지 검사
+4. order_validator.py가 1회 주문 금액이 총 투자금의 60%를 넘는 주문, 하루 15회를 넘는 주문, 현재가와 3% 이상 차이 나는 가격의 주문을 거부하는지 검사
 5. 위 1~4번 검사 결과를 종합하여 실전 시작 가능(GO) / 아직 불가(NO-GO) 판정과 권장 시작 자금 가이드(총 투자 가능 금액의 10% 이하, 100~300만 원에서 시작)를 'docs/live_trading_readiness_audit.md' 파일로 저장해줘.
 
 [하지 말 것]

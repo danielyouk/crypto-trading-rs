@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기 — DATATRAIN AI 트레이딩</title>
+<title>전체 구조 이해하기: 매매 신호부터 승인과 주문까지 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../_core/assets/style.css">
 <style>
 /* ==========================================================================
@@ -1755,10 +1755,30 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_2_Tier_주간_정책_승인과_일간_자동_실행.html">
+          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_매매_신호부터_승인과_주문까지.html">
             <span class="nav-num">26</span>
-            <span class="nav-label">전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</span>
+            <span class="nav-label">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
           </a>
+          
+          <div class="nav-page-toc">
+            
+            <a class="nav-heading level-2" href="#이번-클립에서-만들-것">이번 클립에서 만들 것</a>
+            
+            <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
+            
+            <a class="nav-heading level-3" href="#1-매일-확인하지만-주문은-가끔-나갑니다">1. 매일 확인하지만, 주문은 가끔 나갑니다</a>
+            
+            <a class="nav-heading level-3" href="#2-하루의-흐름">2. 하루의 흐름</a>
+            
+            <a class="nav-heading level-3" href="#3-사람이-하는-일과-프로그램이-하는-일">3. 사람이 하는 일과 프로그램이 하는 일</a>
+            
+            <a class="nav-heading level-3" href="#4-part-4에서-만들-것">4. Part 4에서 만들 것</a>
+            
+            <a class="nav-heading level-2" href="#관전-포인트-및-체크리스트">관전 포인트 및 체크리스트</a>
+            
+            <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
+            
+          </div>
           
         </div>
         
@@ -1790,65 +1810,45 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 주간 전략 정책 승인과 일간 자동 실행 시스템
+          4.2 알림과 승인을 거쳐 모의주문 실행하기
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
             <span class="nav-num">30</span>
-            <span class="nav-label">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
+            <span class="nav-label">매매 알림과 승인·거절 절차 만들기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
             <span class="nav-num">31</span>
-            <span class="nav-label">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
+            <span class="nav-label">이메일로 매매 알림 받아보기</span>
           </a>
-          
-          <div class="nav-page-toc">
-            
-            <a class="nav-heading level-2" href="#이번-클립에서-만들-것">이번 클립에서 만들 것</a>
-            
-            <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
-            
-            <a class="nav-heading level-3" href="#1-무인-자동-발주-파이프라인-execution-flow">1. 무인 자동 발주 파이프라인 (Execution Flow)</a>
-            
-            <a class="nav-heading level-3" href="#2-kis-주식-주문-요청에-꼭-넣는-항목">2. KIS 주식 주문 요청에 꼭 넣는 항목</a>
-            
-            <a class="nav-heading level-3" href="#3-시장가-vs-지정가-무엇을-언제-쓰나">3. 시장가 vs 지정가: 무엇을 언제 쓰나</a>
-            
-            <a class="nav-heading level-2" href="#실습-실습-19-무인-자동-주문-발주-모듈-실행">실습 — 실습 19: 무인 자동 주문 발주 모듈 실행</a>
-            
-            <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
-            
-            <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
-            
-          </div>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
             <span class="nav-num">32</span>
-            <span class="nav-label">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
+            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_손절_알림에_응답하지_않았을_때_자동으로_위험_관리하기.html">
             <span class="nav-num">33</span>
-            <span class="nav-label">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
+            <span class="nav-label">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_AI_일일_매매_일지_생성_및_다음_날_실행_점검.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_다음_거래일의_매매_조건_미리_확인하기.html">
             <span class="nav-num">34</span>
-            <span class="nav-label">장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검</span>
+            <span class="nav-label">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
           </a>
           
         </div>
@@ -1972,7 +1972,7 @@ window.MathJax = {
     <header class="docs-topbar">
       <button class="sidebar-toggle" type="button" aria-label="목차 열기">☰</button>
       <div class="crumb">
-        Part 04 · CH02 · Clip 31
+        Part 04 · CH01 · Clip 26
       </div>
       <a class="topbar-link" href="../00_AI트레이딩_전체교재_목차.html">전체 목차 ↗</a>
     </header>
@@ -1980,12 +1980,12 @@ window.MathJax = {
     <div class="docs-content">
       <div class="note-header">
         <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-        <h1>승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</h1>
+        <h1>전체 구조 이해하기: 매매 신호부터 승인과 주문까지</h1>
 
         <div class="metadata-bar">
           <div class="metadata-item">
             <span class="label">Chapter:</span>
-            <span>CH02. 주간 전략 정책 승인과 일간 자동 실행 시스템</span>
+            <span>CH01. 증권사와 트레이딩 시스템 연결하기</span>
           </div>
           <div class="metadata-item">
             <span class="label">예상 소요 시간:</span>
@@ -1994,7 +1994,7 @@ window.MathJax = {
           <div class="metadata-item">
             <span class="label">강의 유형:</span>
             
-            <span class="badge practice">실습 19 (실습 중심)</span>
+            <span class="badge">이론 및 아키텍처 브리핑</span>
             
           </div>
         </div>
@@ -2007,154 +2007,191 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 승인된 주간 정책(<code>weekly_policy.json</code>)과 실시간 시그널(<code>signals.json</code>)을 읽어들여, 조건이 충족되었을 때 <strong>한국투자증권 모의투자 API를 통해 실제 주식 매수/매도 주문을 자동으로 전송하고, 체결 영수증(주문번호, 체결가, 체결수량)을 받아 기록하는 '무인 자동 발주 엔진(<code>execute_orders.py</code>)'</strong>을 완성하게 됩니다.</p>
+<p>이번 클립에서는 아무것도 만들지 않습니다. Part 4에서 만들 시스템이 <strong>신호 → 주문 목록 → 알림과 승인 → 주문 → 장중 안전장치 → 장 마감 후 확인</strong> 순서로 어떻게 이어지는지 지도를 먼저 봅니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>: 승인되지 않은 정책(상태가 <code>ACTIVE</code>가 아닌 정책)이거나 유효기간이 지난 정책인 경우, 발주 엔진은 스스로 안전하게 멈추며 절대로 임의로 주문을 넣지 않습니다.</p>
+<p>💡 지금 증권사 계좌를 켤 필요는 없습니다. 증권사 연결은 다음 클립에서 합니다.</p>
 </blockquote>
 <ul>
-<li>KIS 국내주식 주문(모의투자 현금매수 <code>VTTC0012U</code> / 현금매도 <code>VTTC0011U</code>) API 규격 이해</li>
+<li>하루가 어떤 순서로 돌아가는가</li>
+<li>사람이 하는 일과 프로그램이 하는 일의 구분</li>
+<li>Part 4에서 만들 프로그램과 파일</li>
 </ul>
-<blockquote>
-<p>💡 <strong>거래 코드는 계좌 종류와 시기에 따라 다릅니다.</strong> 모의투자 코드는 <code>V</code>로, 실전 계좌 코드는 <code>T</code>로 시작합니다(예: 매수 <code>VTTC0012U</code> / <code>TTTC0012U</code>). 주문 코드는 2025년에 바뀌었고, 예전 코드(<code>…0802U</code>/<code>…0801U</code>)는 한국투자증권이 "사전 고지 없이 막힐 수 있다"고 안내하고 있습니다. 인터넷 예제에서 예전 코드를 보더라도 이 강의의 코드를 쓰세요.
-- 주문 유형: 시장가(01) 주문 vs 지정가(00) 주문의 장단점과, 이 시스템에서 어느 쪽을 쓰는지
-- 같은 신호로 주문이 두 번 나가지 않게 막는 주문 기록 파일(<code>orders_history.json</code>) 설계
-- <strong>실습 19</strong>: <code>execute_orders.py</code> 실행을 통한 KIS 모의투자 계좌 실제 1주 매수/매도 체결 테스트</p>
-</blockquote>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-무인-자동-발주-파이프라인-execution-flow">1. 무인 자동 발주 파이프라인 (Execution Flow)</h3>
-<pre><code class="language-text">[1. 사전 정책 검증] ──&gt; weekly_policy.json이 ACTIVE 상태인지 &amp; 유효기간 내인지 확인
-         ↓
-[2. 시그널 읽기]    ──&gt; signals.json에서 BUY/SELL 신호 및 목표 수량 확인
-         ↓
-[3. 중복 주문 검사] ──&gt; 이미 오늘 동일 종목으로 발주된 이력이 있는지 orders_history.json 대조
-         ↓
-[4. KIS API 주문]  ──&gt; 현금 주문 주소(/uapi/domestic-stock/v1/trading/order-cash)로 주문 전송(POST)
-         ↓
-[5. 체결 확인 &amp; 로깅]──&gt; 주문번호(ODNO) 수신, 체결 결과 저장 및 일일 매매 저널 기록
+<h3 id="1-매일-확인하지만-주문은-가끔-나갑니다">1. 매일 확인하지만, 주문은 가끔 나갑니다</h3>
+<p>우리가 운용하는 세 전략(추세추종, 듀얼 모멘텀, 페어 스위칭)은 모두 <strong>전날 종가로 판정이 끝납니다.</strong> 그래서 장이 열리기 전에 무엇을 몇 주 사고팔지가 모두 정해지고, 신호가 실제로 바뀌는 날은 드뭅니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>주기</th>
+<th>무엇</th>
+<th>실제로 바뀌는 빈도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>월말</td>
+<td>시장 국면 판정</td>
+<td>1년에 몇 번</td>
+</tr>
+<tr>
+<td>매일 (장 마감 후)</td>
+<td>신호 계산, 다음 날 낼 주문 목록 만들기</td>
+<td>주문이 생기는 날은 한 달에 몇 번</td>
+</tr>
+<tr>
+<td>장중</td>
+<td>급락을 막는 안전장치</td>
+<td>기준에 닿는 날만</td>
+</tr>
+</tbody>
+</table></div>
+<p>주문이 나갈 날이 언제일지는 미리 알 수 없습니다. 그래서 <strong>확인은 프로그램이 매일</strong> 하고, 사람은 주문이 생긴 날에만 관여합니다.</p>
+<hr />
+<h3 id="2-하루의-흐름">2. 하루의 흐름</h3>
+<pre><code class="language-text">[장 마감 후]
+  ① 신호 계산            세 전략의 신호와 목표 수량 (전날 종가 기준)
+  ② 주문 목록 만들기      목표 수량을 계좌의 실제 보유 수량과 비교
+  ③ 확인과 알림           오늘 체결 확인, 내일 낼 주문과 신호가 바뀌는 조건을 정리해 이메일로 보냄
+        ↓
+[저녁 ~ 다음 날 개장 전]
+  ④ 승인                 사람이 매수 주문을 확인하고 승인하거나 거절
+        ↓
+[개장]
+  ⑤ 주문                 매도 주문과 승인된 매수 주문을 증권사로 보냄
+        ↓
+[장중]
+  ⑥ 안전장치             손절 기준에 닿으면 사람에게 묻지 않고 청산
 </code></pre>
+<p>주문 목록이 비어 있는 날은 ④와 ⑤에서 아무 일도 일어나지 않습니다. 대부분의 날이 그렇습니다.</p>
 <hr />
-<h3 id="2-kis-주식-주문-요청에-꼭-넣는-항목">2. KIS 주식 주문 요청에 꼭 넣는 항목</h3>
+<h3 id="3-사람이-하는-일과-프로그램이-하는-일">3. 사람이 하는 일과 프로그램이 하는 일</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
-<th>항목 이름</th>
-<th>의미</th>
-<th>예시값</th>
-<th>설명</th>
+<th>일</th>
+<th>누가</th>
+<th>이유</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>CANO</code></td>
-<td>종합계좌번호 8자리</td>
-<td><code>"50123456"</code></td>
-<td><code>.env</code>에서 로드</td>
+<td>신호 계산, 주문 목록 만들기</td>
+<td>프로그램</td>
+<td>규칙대로 계산하면 되는 일</td>
 </tr>
 <tr>
-<td><code>ACNT_PRDT_CD</code></td>
-<td>계좌상품코드 2자리</td>
-<td><code>"01"</code></td>
-<td>보통 주식 계좌 01</td>
+<td><strong>매수 주문</strong></td>
+<td><strong>사람이 승인한 뒤</strong> 프로그램이 주문</td>
+<td>위험을 늘리는 주문. 승인이 없으면 그날은 사지 않음</td>
 </tr>
 <tr>
-<td><code>PDNO</code></td>
-<td>종목코드 6자리</td>
-<td><code>"069500"</code></td>
-<td>KODEX 200 등</td>
+<td>매도 주문</td>
+<td>프로그램 (승인 없이)</td>
+<td>위험을 줄이는 주문</td>
 </tr>
 <tr>
-<td><code>ORD_DVSN</code></td>
-<td>주문구분</td>
-<td><code>"01"</code></td>
-<td><strong>"01": 시장가 (즉시 체결)</strong>, "00": 지정가</td>
-</tr>
-<tr>
-<td><code>ORD_QTY</code></td>
-<td>주문 수량</td>
-<td><code>"10"</code></td>
-<td>문자열 형태의 정수 주수</td>
-</tr>
-<tr>
-<td><code>ORD_UNPR</code></td>
-<td>주문 단가</td>
-<td><code>"0"</code></td>
-<td>시장가 주문 시에는 "0" 전달</td>
+<td>손절, 하루 손실 한도</td>
+<td>프로그램 (승인 없이)</td>
+<td>급락 때 사람의 답을 기다리면 늦음</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>위험을 늘리는 일은 사람이 확인하고, 위험을 줄이는 일은 기계가 바로 합니다.</strong> 매수 신호에 응답하지 않으면 거래가 일어나지 않으므로, 응답하지 않는 쪽이 늘 안전한 쪽입니다.</p>
+<p>매수 주문은 전날 저녁에 정해지므로 승인에 쫓길 일이 없습니다. 개장 전까지만 하면 됩니다. 시스템에 익숙해진 뒤에는 매수도 묻지 않고 실행하는 <strong>자동 방식</strong>으로 바꿀 수 있습니다.</p>
 <hr />
-<h3 id="3-시장가-vs-지정가-무엇을-언제-쓰나">3. 시장가 vs 지정가: 무엇을 언제 쓰나</h3>
+<h3 id="4-part-4에서-만들-것">4. Part 4에서 만들 것</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
-<th>주문</th>
-<th>뜻</th>
-<th>장점</th>
-<th>단점</th>
+<th>순서</th>
+<th>프로그램</th>
+<th>하는 일</th>
+<th>읽는 파일 → 쓰는 파일</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>시장가 (01)</strong></td>
-<td>가격을 정하지 않고 지금 나와 있는 가격에 바로 사고파는 주문</td>
-<td>거의 확실하게 바로 체결됨</td>
-<td>가격이 급하게 움직이거나 호가 간격이 벌어져 있으면 생각보다 불리한 가격에 체결됨(슬리피지: 주문한 가격과 실제 체결 가격의 차이)</td>
+<td>1</td>
+<td><code>kis_auth.py</code></td>
+<td>증권사 인증, 잔고 조회</td>
+<td><code>.env</code></td>
 </tr>
 <tr>
-<td><strong>지정가 (00)</strong></td>
-<td>정한 가격에만 사고파는 주문</td>
-<td>정한 가격보다 불리하게 체결되지 않음</td>
-<td>가격이 안 맞으면 체결되지 않고, 넣었지만 아직 사고팔리지 않은 주문(미체결)으로 남음</td>
+<td>2</td>
+<td><code>market_data.py</code></td>
+<td>현재가 조회</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>prepare_orders.py</code></td>
+<td>신호를 계좌와 비교해 주문 목록 만들기</td>
+<td><code>signals.json</code> → <code>orders.json</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>approve_orders.py</code></td>
+<td>주문 목록을 보여 주고 승인·거절 기록</td>
+<td><code>orders.json</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>notifier.py</code></td>
+<td>이메일 알림</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>execute_orders.py</code></td>
+<td>매도와 승인된 매수를 증권사로 보내기</td>
+<td><code>orders.json</code> → <code>orders_history.json</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>risk_guard.py</code></td>
+<td>장중 안전장치</td>
+<td>계좌 잔고</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>daily_journal.py</code></td>
+<td>체결 확인, 신호가 바뀌는 조건 미리 보기</td>
+<td>→ <code>docs/daily_journal_날짜.md</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>orchestrator.py</code></td>
+<td>위 프로그램을 시간표대로 실행</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
-<p>이 시스템은 <strong>시장가를 기본으로 씁니다.</strong> 사람이 지켜보지 않는 무인 실행에서는 "주문이 걸린 채 안 팔렸다"가 "조금 불리하게 팔렸다"보다 훨씬 위험하기 때문입니다. 특히 다음 클립의 손절 청산은 반드시 시장가입니다.</p>
+<p>신호를 만드는 <code>generate_signals.py</code>와 <code>signals.json</code>은 앞에서 이미 만들었습니다. 프로그램끼리는 파일로만 주고받으므로, 한 단계씩 따로 만들고 따로 확인할 수 있습니다.</p>
 <hr />
-<h2 id="실습-실습-19-무인-자동-주문-발주-모듈-실행">실습 — 실습 19: 무인 자동 주문 발주 모듈 실행</h2>
-<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 승인된 weekly_policy.json을 준수하여 KIS 모의투자 계좌로 자동 주문을 전송하는 발주 모듈을 완성하고 싶어. 클립 27~29에서 만든 kis_auth.py, market_data.py, realtime_signals.py와 signals.json을 그대로 쓴다.
-
-[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'execute_orders.py'를 작성하고 실행해줘:
-1. weekly_policy.json의 정책 상태가 'ACTIVE'이고 오늘 날짜가 유효기간 내인지 먼저 검증해줘. (비정상 시 즉각 중단)
-2. signals.json을 읽고, BUY 신호가 발생한 첫 번째 종목(또는 테스트용 1주)에 대해 KIS 주식 현금매수 API(모의투자용 거래 코드 VTTC0012U)를 호출해줘. 주문은 시장가(가격을 정하지 않고 지금 나와 있는 가격에 바로 사는 주문)로 넣어줘.
-3. 주문 성공 시 반환되는 주문번호(ODNO)와 체결 메시지를 확인하고, 'orders_history.json'에 [주문시간, 종목코드, 주문유형, 주문수량, 주문번호]를 기록해줘.
-4. 중복 발주를 방지하기 위해 이미 발주 완료된 신호는 재주문되지 않도록 필터링해줘.
-5. 대화창에 체결 영수증 요약표를 출력해줘.
-
-[하지 말 것]
-- 주문은 반드시 모의투자 서버(openapivts)로만 보내. 실전투자 서버 주소나 실전 계좌번호가 코드에 들어가면 실행하지 말고 멈춰.
-- weekly_policy.json 검증(ACTIVE·유효기간)을 건너뛰거나, 검증 실패 시 '일단 주문'하지 마. 실패하면 주문 없이 종료해.
-- 주문 API 호출이 실패하거나 응답이 불확실하면 재시도로 중복 주문을 내지 마. 실패를 기록하고 멈춰.
-- 오늘 이 실습에서는 테스트용 1주(또는 첫 종목 1건)만 주문해. signals.json의 모든 신호를 한 번에 발주하지 마.
-
-[확인] 대화창에 모의투자 주문 체결 영수증(주문번호 ODNO, 종목, 수량)이 출력되었는지, 'orders_history.json'에 기록되었는지, 그리고 내가 증권사 모의투자 화면에서 같은 주문을 확인할 수 있는지 알려줘.
-</code></pre></div>
-<hr />
-<h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
+<h2 id="관전-포인트-및-체크리스트">관전 포인트 및 체크리스트</h2>
 <ul>
-<li class="check-item"><input type="checkbox"> 정책 상태가 <code>ACTIVE</code>인지 확인한 뒤에만 주문이 나갔다.</li>
-<li class="check-item"><input type="checkbox"> 증권사 응답의 성공 여부 칸(<code>rt_cd</code>)이 "0"이고 주문번호가 발급되었다.</li>
-<li class="check-item"><input type="checkbox"> <code>orders_history.json</code>과 한국투자증권 모의투자 화면에서 같은 주문·체결 내역을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> 매일 하는 일은 확인이고 주문은 바뀐 날에만 나간다는 점을 설명할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 매수는 승인이 필요하고 매도와 손절은 자동인 이유를 설명할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 신호에서 주문까지 어떤 파일이 어떤 순서로 만들어지는지 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>내 코드가 증권사 서버로 주문을 전송하여 실제 주식을 체결시켰습니다!<br />
-하지만 주가가 예상과 달리 갑자기 급락한다면 어떻게 해야 할까요? 사람이 직접 HTS를 켜서 손절 버튼을 누를 시간이 없습니다.<br />
-다음 클립에서는 <strong>사람의 확인을 묻지 않고, 1~2초마다 가격을 확인하다 기준에 닿으면 곧바로 발동하는 '자동 하드 손절과 서킷브레이커'</strong>를 구축해 보겠습니다.</p>
+<p>전체 흐름을 확인했습니다.<br />
+이제 첫 단계로, <strong>한국투자증권 Open API에 접속해 모의투자 계좌를 연결하고 내 계좌의 잔고를 조회</strong>해 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">
         
-        <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
+        <a class="pager-btn prev" href="../Part03_시장변화_전략점검_개선/25_검증을_마친_전략을_매매_신호와_알림으로_연결하기.html">
           <span class="direction">← 이전 클립</span>
-          <span class="title">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
+          <span class="title">검증을 마친 전략을 매매 신호와 알림으로 연결하기</span>
         </a>
         
         
-        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
+        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/27_한국투자증권_API와_모의투자_계좌_연결하기.html">
           <span class="direction">다음 클립 →</span>
-          <span class="title">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
+          <span class="title">한국투자증권 API와 모의투자 계좌 연결하기</span>
         </a>
         
       </nav>

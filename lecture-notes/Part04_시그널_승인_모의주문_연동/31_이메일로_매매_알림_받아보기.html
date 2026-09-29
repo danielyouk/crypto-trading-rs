@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계 — DATATRAIN AI 트레이딩</title>
+<title>이메일로 매매 알림 받아보기 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../_core/assets/style.css">
 <style>
 /* ==========================================================================
@@ -1755,9 +1755,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_2_Tier_주간_정책_승인과_일간_자동_실행.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_매매_신호부터_승인과_주문까지.html">
             <span class="nav-num">26</span>
-            <span class="nav-label">전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</span>
+            <span class="nav-label">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
           </a>
           
         </div>
@@ -1790,13 +1790,21 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 주간 전략 정책 승인과 일간 자동 실행 시스템
+          4.2 알림과 승인을 거쳐 모의주문 실행하기
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
             <span class="nav-num">30</span>
-            <span class="nav-label">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
+            <span class="nav-label">매매 알림과 승인·거절 절차 만들기</span>
+          </a>
+          
+        </div>
+        
+        <div class="nav-clip-group">
+          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
+            <span class="nav-num">31</span>
+            <span class="nav-label">이메일로 매매 알림 받아보기</span>
           </a>
           
           <div class="nav-page-toc">
@@ -1805,11 +1813,13 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-주간-거버넌스-4단계-프로세스">1. 주간 거버넌스 4단계 프로세스</a>
+            <a class="nav-heading level-3" href="#1-언제-알림을-보내나">1. 언제 알림을 보내나</a>
             
-            <a class="nav-heading level-3" href="#2-표준-주간-정책-스키마-weekly_policyjson">2. 표준 주간 정책 스키마 (weekly_policy.json)</a>
+            <a class="nav-heading level-3" href="#2-프로그램이-이메일을-보내는-방법">2. 프로그램이 이메일을 보내는 방법</a>
             
-            <a class="nav-heading level-2" href="#실습-실습-18-주간-정책-파일-생성-및-승인">실습 — 실습 18: 주간 정책 파일 생성 및 승인</a>
+            <a class="nav-heading level-3" href="#3-알림이-실패해도-매매는-멈추지-않습니다">3. 알림이 실패해도 매매는 멈추지 않습니다</a>
+            
+            <a class="nav-heading level-2" href="#실습-실습-19-이메일-알림-모듈-만들기">실습 — 실습 19: 이메일 알림 모듈 만들기</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -1820,33 +1830,25 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
-            <span class="nav-num">31</span>
-            <span class="nav-label">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
-          </a>
-          
-        </div>
-        
-        <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
             <span class="nav-num">32</span>
-            <span class="nav-label">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
+            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_손절_알림에_응답하지_않았을_때_자동으로_위험_관리하기.html">
             <span class="nav-num">33</span>
-            <span class="nav-label">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
+            <span class="nav-label">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_AI_일일_매매_일지_생성_및_다음_날_실행_점검.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_다음_거래일의_매매_조건_미리_확인하기.html">
             <span class="nav-num">34</span>
-            <span class="nav-label">장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검</span>
+            <span class="nav-label">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
           </a>
           
         </div>
@@ -1970,7 +1972,7 @@ window.MathJax = {
     <header class="docs-topbar">
       <button class="sidebar-toggle" type="button" aria-label="목차 열기">☰</button>
       <div class="crumb">
-        Part 04 · CH02 · Clip 30
+        Part 04 · CH02 · Clip 31
       </div>
       <a class="topbar-link" href="../00_AI트레이딩_전체교재_목차.html">전체 목차 ↗</a>
     </header>
@@ -1978,21 +1980,21 @@ window.MathJax = {
     <div class="docs-content">
       <div class="note-header">
         <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-        <h1>AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</h1>
+        <h1>이메일로 매매 알림 받아보기</h1>
 
         <div class="metadata-bar">
           <div class="metadata-item">
             <span class="label">Chapter:</span>
-            <span>CH02. 주간 전략 정책 승인과 일간 자동 실행 시스템</span>
+            <span>CH02. 알림과 승인을 거쳐 모의주문 실행하기</span>
           </div>
           <div class="metadata-item">
             <span class="label">예상 소요 시간:</span>
-            <span class="badge time">약 22분</span>
+            <span class="badge time">약 18분</span>
           </div>
           <div class="metadata-item">
             <span class="label">강의 유형:</span>
             
-            <span class="badge practice">실습 18 (실습 중심)</span>
+            <span class="badge practice">실습 19 (실습 중심)</span>
             
           </div>
         </div>
@@ -2005,109 +2007,148 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이 클립이 끝나면, 여러분은 주말 30분 동안 Claude Code와 함께 지난주 시장 성과와 다음 주 거시 환경을 브리핑받고, 한 주 동안 무인 실행 엔진이 엄격히 준수해야 할 <strong>'주간 매매 정책 파일(<code>weekly_policy.json</code>)'</strong>을 생성한 뒤, <strong>최고투자책임자(CIO)인 내가 파일을 직접 검토한 뒤 상태를 <code>ACTIVE</code>(이번 주 적용)로 바꿔 최종 승인하는 절차</strong>를 완성하게 됩니다.</p>
+<p>주문이 생긴 날, 주문이 체결된 뒤, 안전장치가 움직였을 때 <strong>이메일로 알림을 받도록</strong> 만듭니다. 매일 컴퓨터를 열어 보지 않아도, 내가 확인해야 할 날을 알 수 있게 됩니다.</p>
 <blockquote>
-<p>💡 <strong>수강생 안심 안내</strong>: 복잡한 설정 파일을 직접 코딩할 필요가 없습니다. Claude Code와 자연어로 대화하며 <em>"다음 주는 변동성이 클 것 같으니 현금 비중 20%를 두고 추세추종만 돌리자"</em>라고 말하면, AI가 정책을 JSON(프로그램끼리 주고받는 정해진 형식의 텍스트 파일)으로 정리하고, 형식이 맞는지 검사까지 해 줍니다.</p>
+<p>💡 알림은 <strong>알려 주는 것</strong>이지 물어보는 것이 아닙니다. 이메일에 답장한다고 주문이 승인되지는 않습니다. 매수 승인은 <code>approve_orders.py</code>로 합니다.</p>
 </blockquote>
 <ul>
-<li><strong>Tier 1 주간 거버넌스 세션(Weekly Governance Session)</strong>의 표준 진행 절차</li>
-<li>주간 정책 파일(<code>weekly_policy.json</code>)에 반드시 있어야 할 5가지 칸(적용 기간, 전략별 가중치, 유니버스, 위험 한도, 승인자 서명). 이렇게 파일에 반드시 있어야 할 칸과 칸마다 값의 형식을 정해 둔 것을 스키마라고 부릅니다</li>
-<li><code>operating_rules.json</code>의 1층·2층 값이 이 파일의 <code>risk_limits</code>로 그대로 옮겨오는 경로</li>
-<li>정책 파일이 잘못 적히거나 몰래 바뀌는 것을 막는 <strong>형식 검사</strong>: 칸이 빠짐없이 있는지, 값의 형식과 비중 합계가 맞는지 확인(스키마 유효성 검증)</li>
-<li><strong>실습 18</strong>: Claude Code와의 주간 전략 회의 대화 및 <code>weekly_policy.json</code> 생성·승인 실습</li>
+<li>알림을 보내는 네 가지 경우</li>
+<li>프로그램이 이메일을 보내는 방법과 필요한 설정</li>
+<li><strong>실습 19</strong>: <code>notifier.py</code> 작성 및 시험 메일 보내기</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-주간-거버넌스-4단계-프로세스">1. 주간 거버넌스 4단계 프로세스</h3>
-<pre><code class="language-text">[Step 1: 주말 브리핑 요청] ──&gt; Claude Code에게 &quot;지난주 시장 리뷰 및 다음 주 전략 추천 브리핑해줘&quot; 입력
-          ↓
-[Step 2: AI 시장 분석]    ──&gt; KOSPI 200일선 위치, 변동성 지표, 환율/금리 점검 후 전략 가중치 제안
-          ↓
-[Step 3: 정책 조율 및 합의]──&gt; 운영자(나)가 검토 후 최종 비중 결정 (&quot;페어트레이딩 비중 10% 추가해줘&quot;)
-          ↓
-[Step 4: 정책 승인 및 서명]──&gt; AI가 `weekly_policy.json`을 상태 'DRAFT'(초안)로 생성 ➔ 사람이 파일 검토 후 상태를 'ACTIVE'로 바꿈
-</code></pre>
+<h3 id="1-언제-알림을-보내나">1. 언제 알림을 보내나</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>알림</th>
+<th>보내는 때</th>
+<th>담는 내용</th>
+<th>내가 할 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>주문 예정</strong></td>
+<td>장 마감 후 만든 주문 목록에 주문이 있을 때</td>
+<td>주문일, 주문 목록, 승인 대기 건수</td>
+<td>매수를 승인하거나 거절</td>
+</tr>
+<tr>
+<td><strong>체결 결과</strong></td>
+<td>개장 주문을 보낸 뒤</td>
+<td>예상 금액과 실제 체결 금액, 그 차이</td>
+<td>확인</td>
+</tr>
+<tr>
+<td><strong>안전장치</strong></td>
+<td>장중 손절이나 하루 손실 한도가 발동했을 때</td>
+<td>무엇을 얼마에 팔았는지</td>
+<td>확인 (이미 실행됨)</td>
+</tr>
+<tr>
+<td><strong>오류</strong></td>
+<td>조회 실패, 오래된 신호 등으로 프로그램이 멈췄을 때</td>
+<td>어느 단계에서 왜 멈췄는지</td>
+<td>원인 확인</td>
+</tr>
+</tbody>
+</table></div>
+<p>주문이 없는 날에는 알림을 보내지 않습니다. 매일 오는 알림은 곧 읽지 않게 되기 때문입니다.</p>
 <hr />
-<h3 id="2-표준-주간-정책-스키마-weekly_policyjson">2. 표준 주간 정책 스키마 (<code>weekly_policy.json</code>)</h3>
-<pre><code class="language-json">{
-  &quot;policy_version&quot;: &quot;1.0&quot;,
-  &quot;effective_period&quot;: {
-    &quot;start_date&quot;: &quot;2026-08-24&quot;,
-    &quot;end_date&quot;: &quot;2026-08-28&quot;
-  },
-  &quot;market_regime&quot;: &quot;BULL&quot;,
-  &quot;strategy_weights&quot;: {
-    &quot;trend_following&quot;: 0.40,
-    &quot;volatility_breakout&quot;: 0.30,
-    &quot;dual_momentum&quot;: 0.20,
-    &quot;pairs_trading&quot;: 0.10,
-    &quot;cash_reserve&quot;: 0.00
-  },
-  &quot;risk_limits&quot;: {
-    &quot;max_strategy_pct&quot;: 0.60,
-    &quot;trailing_stop_pct&quot;: -0.10,
-    &quot;vol_target&quot;: 0.15,
-    &quot;hard_stop_loss_pct&quot;: -0.03,
-    &quot;daily_portfolio_circuit_breaker_pct&quot;: -0.02
-  },
-  &quot;governance&quot;: {
-    &quot;approved_by&quot;: &quot;AinX (CIO)&quot;,
-    &quot;approval_timestamp&quot;: &quot;2026-08-23T15:00:00&quot;,
-    &quot;status&quot;: &quot;ACTIVE&quot;
-  }
-}
-</code></pre>
-<p>위 예시는 <strong>승인이 끝난 뒤의 모습</strong>입니다. <code>status</code>는 AI가 처음 저장할 때 <code>DRAFT</code>(초안)이고, 사람이 내용을 검토한 뒤 직접 <code>ACTIVE</code>로 바꿉니다. 실행 엔진은 <code>ACTIVE</code>인 정책만 따릅니다.</p>
-<hr />
-<h2 id="실습-실습-18-주간-정책-파일-생성-및-승인">실습 — 실습 18: 주간 정책 파일 생성 및 승인</h2>
-<p>Claude Code 대화창에 아래 프롬프트를 입력하여 주간 정책 합의를 진행해 보세요.</p>
+<h3 id="2-프로그램이-이메일을-보내는-방법">2. 프로그램이 이메일을 보내는 방법</h3>
+<p>프로그램은 <strong>SMTP</strong>(메일을 보낼 때 쓰는 표준 통신 규칙)로 메일 서비스에 접속해 메일을 보냅니다. 필요한 값은 다섯 가지이고, 모두 <code>.env</code>(비밀번호 같은 값을 코드와 떼어 따로 적어 두는 파일)에 적습니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>값</th>
+<th>뜻</th>
+<th>예 (Gmail)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SMTP_HOST</code></td>
+<td>메일을 보내 주는 서버 주소</td>
+<td><code>smtp.gmail.com</code></td>
+</tr>
+<tr>
+<td><code>SMTP_PORT</code></td>
+<td>접속 번호</td>
+<td><code>587</code></td>
+</tr>
+<tr>
+<td><code>SMTP_USER</code></td>
+<td>보내는 메일 주소</td>
+<td>내 Gmail 주소</td>
+</tr>
+<tr>
+<td><code>SMTP_PASSWORD</code></td>
+<td><strong>앱 비밀번호</strong></td>
+<td>16자리</td>
+</tr>
+<tr>
+<td><code>ALERT_TO</code></td>
+<td>알림을 받을 주소</td>
+<td>내가 자주 보는 메일 주소</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>앱 비밀번호</strong>는 메일 서비스가 프로그램용으로 따로 내주는 비밀번호입니다. 평소 로그인할 때 쓰는 비밀번호와 다르고, 언제든 없앨 수 있습니다. Gmail은 Google 계정의 보안 설정에서 2단계 인증을 켠 뒤 발급받고, 네이버 메일은 메일 환경설정에서 SMTP 사용을 켠 뒤 발급받습니다. 메뉴 위치는 바뀔 수 있으니, 찾기 어려우면 Claude Code에게 "Gmail 앱 비밀번호 발급 방법을 알려줘"라고 물어보세요.</p>
 <blockquote>
-<p>📁 <strong>공유 파일</strong>: 이 프롬프트는 클립 25에서 저장한 <code>operating_rules.json</code>(네 전략의 규칙, 국면 판정 기준, 국면별 비중, 위험관리 값)을 읽습니다. 같은 작업 폴더에 이 파일이 없으면 클립 25 실습을 먼저 실행하세요. 파일이 없거나 항목이 빠져 있으면 AI가 값을 지어내지 않고 멈추도록 해 두었습니다.</p>
+<p>⚠️ 평소 로그인 비밀번호를 <code>.env</code>에 적지 마세요. 반드시 앱 비밀번호를 씁니다.</p>
 </blockquote>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 다음 주(2026-08-24 ~ 2026-08-28) 실행할 주간 트레이딩 정책을 함께 수립하고, 무인 실행 엔진이 읽을 정책 파일을 만들고 싶어.
+<hr />
+<h3 id="3-알림이-실패해도-매매는-멈추지-않습니다">3. 알림이 실패해도 매매는 멈추지 않습니다</h3>
+<p>메일 서버가 잠시 응답하지 않을 수 있습니다. 알림을 못 보냈다고 매도나 손절까지 멈추면 안 되므로, 알림 전송 실패는 기록만 남기고 넘어갑니다.</p>
+<hr />
+<h2 id="실습-실습-19-이메일-알림-모듈-만들기">실습 — 실습 19: 이메일 알림 모듈 만들기</h2>
+<p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
+<blockquote>
+<p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>.env</code>에서 메일 설정을 읽고, 주문 목록(<code>orders.json</code>, 없으면 시험용 <code>orders_test.json</code>)을 읽어 알림 본문을 만듭니다. 보낸 알림은 <code>logs/alerts.log</code>에 기록됩니다. 실습 전에 앱 비밀번호를 발급받아 <code>.env</code>에 위 다섯 값을 적어 두세요.</p>
+</blockquote>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 매매 시스템이 주문 예정, 체결 결과, 안전장치 발동, 오류를 이메일로 알려 주는 알림 모듈을 만들고 싶어. 메일 설정은 작업 폴더의 .env에서 읽는다.
 
-[만들 것] 다음 조건에 맞춰 'weekly_policy.json' 파일을 작성해줘:
-1. 'operating_rules.json'을 읽어, 그 파일의 판정 기준으로 현재 KOSPI 시장 국면을 진단해줘. 아래 2번의 값이 파일의 상승 국면 비중, 1층 위험관리 기본값, 2층 값과 같은지도 대조해줘.
-2. 정책 내용:
-   - 적용 기간: 2026-08-24 ~ 2026-08-28
-   - 전략 가중치: 추세추종 40%, 변동성 돌파 30%, 듀얼 모멘텀 20%, 페어 10% (operating_rules.json의 상승 국면 값)
-   - 1층 전략 위험관리: 고점 대비 손절 -10%, 목표 변동성 15%, 전략당 최대 비중 60%
-   - 2층 하드 가드레일: 개별 종목 -3% 손절, 일일 계좌 -2% 서킷브레이커
-   - 승인자: 'AinX (CIO)', 상태: 'DRAFT'. 승인 시각(approval_timestamp)은 비워 둬. 내가 파일을 검토한 뒤 직접 상태를 'ACTIVE'로 바꾸고 승인 시각을 적는다.
-3. 정책 요약표를 대화창에 브리핑 형태로 출력해줘.
+[만들 것] 다음 조건에 맞춰 파이썬 스크립트 'notifier.py'를 작성하고 실행해줘:
+1. .env에서 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD(앱 비밀번호), ALERT_TO를 읽어 이메일을 보내는 함수 'send_alert(kind, subject, body)'를 만들어줘. kind는 '주문 예정', '체결 결과', '안전장치', '오류' 중 하나이고, 메일 제목 맨 앞에 [kind]를 붙여줘. 보내는 데 성공하면 True, 실패하면 False를 돌려줘.
+2. 주문 목록 파일을 읽어 '주문 예정' 알림 본문을 만드는 함수를 만들어줘. 본문에는 주문일, 주문마다 [매수/매도, 종목, 수량, 예상 금액, 이유, 승인 상태], 승인 대기 건수, 승인하는 방법(&quot;approve_orders.py를 실행&quot;)을 담아. 주문이 하나도 없으면 알림을 보내지 않아.
+3. 보낸 알림마다 'logs/alerts.log'에 [시각, 종류, 제목, 성공/실패]를 한 줄씩 기록해줘.
+4. .env에 위 다섯 항목 중 빠진 것이 있으면 메일을 보내지 말고 어떤 항목이 빠졌는지 알려줘.
+5. 시험으로 메일 2통을 보내줘. 첫째는 '오류' 종류의 시험 메일(&quot;알림 시험입니다&quot;), 둘째는 'orders.json'(없으면 'orders_test.json')으로 만든 '주문 예정' 메일이야.
 
 [하지 말 것]
-- 정책 파일을 만드는 것까지만 해. 이 정책으로 주문을 보내거나 실행 스크립트를 돌리지 마.
-- 상태를 'DRAFT' 말고 다른 값으로 저장하거나, 상태를 자동으로 판정해 'ACTIVE'로 바꾸는 로직을 넣지 마. 'ACTIVE'로 바꾸는 것은 내가 검토 후 직접 한다.
-- 전략 가중치 합계가 100%가 아니거나 한 전략이 60%를 넘으면 파일을 저장하지 말고 오류로 보고해.
-- 위험 한도 값을 네가 판단해서 바꾸지 마. 위 값은 'operating_rules.json'에서 온 것이고, 2층 값(-3%, -2%)은 어떤 경우에도 고정이야. 1번 대조에서 파일과 다른 값이 있으면 파일을 저장하지 말고 차이를 보고해.
+- 비밀번호와 .env의 값을 화면, 로그, 메일 본문에 출력하지 마.
+- 메일 전송에 실패해도 프로그램을 오류로 끝내지 마. 최대 2번 다시 시도한 뒤 실패를 로그에 남기고 False를 돌려줘.
+- 주문 목록 파일이나 승인 상태를 바꾸지 마. 알림 모듈은 읽기만 해.
+- .env 파일을 덮어쓰거나 값을 채워 넣지 마.
 
-[확인] 대화창에 주간 정책 요약표가 출력되었는지, 'weekly_policy.json' 파일이 상태 'DRAFT'로 저장되어 경로가 표시되었는지 확인해줘.
+[확인] 시험 메일 2통이 전송되었는지(성공/실패), 'logs/alerts.log'에 기록되었는지 대화창에 표시해줘. 메일이 받은편지함에 왔는지는 내가 직접 확인한다.
 </code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> <code>weekly_policy.json</code>이 상태 <code>DRAFT</code>로 생성되었다.</li>
-<li class="check-item"><input type="checkbox"> 비중 합계 100%, 1층 값(-10% / 15% / 60%), 2층 값(-3% / -2%)이 <code>operating_rules.json</code>과 같은지 대조했다.</li>
-<li class="check-item"><input type="checkbox"> 대조를 마친 뒤 내가 직접 상태를 <code>ACTIVE</code>로 바꾸고 승인 시각을 적었다.</li>
+<li class="check-item"><input type="checkbox"> 받은편지함(또는 스팸함)에 시험 메일 2통이 도착했다.</li>
+<li class="check-item"><input type="checkbox"> '주문 예정' 메일에 주문 목록과 승인 대기 건수, 승인하는 방법이 들어 있다.</li>
+<li class="check-item"><input type="checkbox"> <code>logs/alerts.log</code>에 전송 기록이 남았고, 비밀번호는 어디에도 출력되지 않았다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>주간 매매 정책이 승인되었습니다!<br />
-이제 무인 실행 엔진이 이 승인된 정책 파일을 읽고, 조건이 맞을 때 <strong>한국투자증권 API로 실제 모의투자 주문을 전송하여 체결시키는 '무인 자동 발주 엔진'</strong>을 가동해 보겠습니다.</p>
+<p>주문이 생긴 날을 이메일로 알 수 있게 되었습니다.<br />
+다음 클립에서는 <strong>승인된 주문을 한국투자증권 모의투자 계좌로 실제로 보내고, 체결 결과를 확인</strong>해 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">
         
-        <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/29_설정한_조건에_따라_매매_신호_만들기.html">
+        <a class="pager-btn prev" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
           <span class="direction">← 이전 클립</span>
-          <span class="title">설정한 조건에 따라 매매 신호 만들기</span>
+          <span class="title">매매 알림과 승인·거절 절차 만들기</span>
         </a>
         
         
-        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
+        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
           <span class="direction">다음 클립 →</span>
-          <span class="title">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
+          <span class="title">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
         </a>
         
       </nav>

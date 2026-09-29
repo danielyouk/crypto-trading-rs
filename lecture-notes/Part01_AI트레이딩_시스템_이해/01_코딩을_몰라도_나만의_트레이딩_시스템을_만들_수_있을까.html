@@ -1779,9 +1779,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_2_Tier_주간_정책_승인과_일간_자동_실행.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/26_전체_구조_이해하기_매매_신호부터_승인과_주문까지.html">
             <span class="nav-num">26</span>
-            <span class="nav-label">전체 구조 이해하기: 2-Tier 주간 정책 승인과 일간 자동 실행</span>
+            <span class="nav-label">전체 구조 이해하기: 매매 신호부터 승인과 주문까지</span>
           </a>
           
         </div>
@@ -1814,45 +1814,45 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 주간 전략 정책 승인과 일간 자동 실행 시스템
+          4.2 알림과 승인을 거쳐 모의주문 실행하기
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_AI와_함께_설계하는_주간_전략_정책과_승인_체계.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
             <span class="nav-num">30</span>
-            <span class="nav-label">AI와 함께 설계하는 주간 전략 정책(Rulebook)과 승인 체계</span>
+            <span class="nav-label">매매 알림과 승인·거절 절차 만들기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_승인된_정책에_따라_증권사_API로_자동_모의주문_실행하기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
             <span class="nav-num">31</span>
-            <span class="nav-label">승인된 정책에 따라 증권사 API로 자동 모의주문 실행하기</span>
+            <span class="nav-label">이메일로 매매 알림 받아보기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_사람_개입_없는_자동_하드_손절과_서킷브레이커_구현.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
             <span class="nav-num">32</span>
-            <span class="nav-label">사람 개입 없는 자동 하드 손절(Stop-Loss)과 서킷브레이커 구현</span>
+            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_시장_이상_징후_감지와_비상_정지_안전_가드레일.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/33_손절_알림에_응답하지_않았을_때_자동으로_위험_관리하기.html">
             <span class="nav-num">33</span>
-            <span class="nav-label">시장 이상 징후 감지와 비상 정지(Kill-Switch) 안전 가드레일</span>
+            <span class="nav-label">손절 알림에 응답하지 않았을 때 자동으로 위험 관리하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_AI_일일_매매_일지_생성_및_다음_날_실행_점검.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/34_장_마감_후_다음_거래일의_매매_조건_미리_확인하기.html">
             <span class="nav-num">34</span>
-            <span class="nav-label">장 마감 후 AI 일일 매매 일지 생성 및 다음 날 실행 점검</span>
+            <span class="nav-label">장 마감 후 다음 거래일의 매매 조건 미리 확인하기</span>
           </a>
           
         </div>
@@ -2104,6 +2104,7 @@ window.MathJax = {
 </tbody>
 </table></div>
 <blockquote>
+<p>⚠️ <strong>정정</strong>: 영상에서는 사람이 주 1회 주간 정책(<code>weekly_policy.json</code>)을 승인하고 주문은 사람 개입 없이 나간다고 했지만, 이후 설계를 단순하게 바꿨습니다. 실제 운용은 추세추종·듀얼 모멘텀·페어 스위칭 세 전략으로 하고, 사람은 <strong>매수 주문이 생긴 날 그 주문을 승인</strong>합니다. 매도와 손절은 프로그램이 자동으로 실행하며, 주간 정책 파일은 쓰지 않습니다. 사람이 확인하고 프로그램이 실행한다는 두 층 구조는 같습니다. (세 전략은 주문이 한 달에 몇 번뿐이라 주 단위 승인이 필요 없어졌습니다)</p>
 <p>📖 <strong>표에 나온 말 풀이</strong> — 지금 외우실 필요 없습니다. 나올 때마다 다시 설명합니다.</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -2249,6 +2250,7 @@ window.MathJax = {
 </tbody>
 </table></div>
 <blockquote>
+<p>⚠️ <strong>정정</strong>: 영상 이후 Part 04의 핵심 결과물이 "한투 API 모의계좌 연동, 매수 승인 절차와 이메일 알림, 자동 주문과 장중 안전장치"로 바뀌었습니다. 주간 정책 승인 체계는 쓰지 않습니다.</p>
 <p>📖 표 속 <strong>일봉</strong>은 하루 동안의 시가·고가·저가·종가·거래량을 한 줄로 묶은 것, <strong>MDD(최대 낙폭)</strong>는 계좌가 가장 높았던 때에서 가장 많이 떨어졌던 폭, <strong>워크포워드 분석</strong>은 과거 한 구간으로 규칙을 정하고 바로 다음 구간에서 시험하기를 한 칸씩 옮겨 가며 되풀이하는 검증입니다. 지금 외우실 필요 없습니다. 해당 클립에서 다시 설명합니다.</p>
 </blockquote>
 <hr />
