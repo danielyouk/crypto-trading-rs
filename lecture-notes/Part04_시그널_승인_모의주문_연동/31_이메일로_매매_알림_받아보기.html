@@ -1790,7 +1790,7 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 알림과 승인을 거쳐 모의주문 실행하기
+          4.2 알림을 확인하고 직접 승인하는 매매 시스템
         </div>
         
         <div class="nav-clip-group">
@@ -1985,7 +1985,7 @@ window.MathJax = {
         <div class="metadata-bar">
           <div class="metadata-item">
             <span class="label">Chapter:</span>
-            <span>CH02. 알림과 승인을 거쳐 모의주문 실행하기</span>
+            <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
           </div>
           <div class="metadata-item">
             <span class="label">예상 소요 시간:</span>
@@ -2032,7 +2032,7 @@ window.MathJax = {
 <tr>
 <td><strong>주문 예정</strong></td>
 <td>장 마감 후 만든 주문 목록에 주문이 있을 때</td>
-<td>주문일, 주문 목록, 승인 대기 건수</td>
+<td>신호 기준일, 주문 목록, 승인 대기 건수</td>
 <td>매수를 승인하거나 거절</td>
 </tr>
 <tr>
@@ -2111,8 +2111,8 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 매매 시스템이 주문 예정, 체결 결과, 안전장치 발동, 오류를 이메일로 알려 주는 알림 모듈을 만들고 싶어. 메일 설정은 작업 폴더의 .env에서 읽는다.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'notifier.py'를 작성하고 실행해줘:
-1. .env에서 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD(앱 비밀번호), ALERT_TO를 읽어 이메일을 보내는 함수 'send_alert(kind, subject, body)'를 만들어줘. kind는 '주문 예정', '체결 결과', '안전장치', '오류' 중 하나이고, 메일 제목 맨 앞에 [kind]를 붙여줘. 보내는 데 성공하면 True, 실패하면 False를 돌려줘.
-2. 주문 목록 파일을 읽어 '주문 예정' 알림 본문을 만드는 함수를 만들어줘. 본문에는 주문일, 주문마다 [매수/매도, 종목, 수량, 예상 금액, 이유, 승인 상태], 승인 대기 건수, 승인하는 방법(&quot;approve_orders.py를 실행&quot;)을 담아. 주문이 하나도 없으면 알림을 보내지 않아.
+1. .env에서 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD(앱 비밀번호), ALERT_TO를 읽어 이메일을 보내는 함수 'send_alert(kind, subject, body)'를 만들어줘. SMTP_PORT가 465면 처음부터 암호화된 연결(SSL)로, 그 밖에는 연결한 뒤 암호화를 켜는 방식(STARTTLS)으로 접속해. 접속에는 30초 제한 시간을 둬. kind는 '주문 예정', '체결 결과', '안전장치', '오류' 중 하나이고, 메일 제목 맨 앞에 [kind]를 붙여줘. 보내는 데 성공하면 True, 실패하면 False를 돌려줘.
+2. 주문 목록 파일을 읽어 '주문 예정' 알림 본문을 만드는 함수를 만들어줘. 본문에는 신호 기준일, 주문마다 [매수/매도, 종목, 수량, 예상 금액, 이유, 승인 상태], 승인 대기 건수, 승인하는 방법(&quot;approve_orders.py를 실행&quot;)을 담아. 주문이 하나도 없으면 알림을 보내지 않아.
 3. 보낸 알림마다 'logs/alerts.log'에 [시각, 종류, 제목, 성공/실패]를 한 줄씩 기록해줘.
 4. .env에 위 다섯 항목 중 빠진 것이 있으면 메일을 보내지 말고 어떤 항목이 빠졌는지 알려줘.
 5. 시험으로 메일 2통을 보내줘. 첫째는 '오류' 종류의 시험 메일(&quot;알림 시험입니다&quot;), 둘째는 'orders.json'(없으면 'orders_test.json')으로 만든 '주문 예정' 메일이야.

@@ -1790,7 +1790,7 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 알림과 승인을 거쳐 모의주문 실행하기
+          4.2 알림을 확인하고 직접 승인하는 매매 시스템
         </div>
         
         <div class="nav-clip-group">
@@ -2019,7 +2019,7 @@ window.MathJax = {
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-하루-시간표">1. 하루 시간표</h3>
 <pre><code class="language-text">[08:50] ① 개장 전 점검
-          • 접근 토큰 갱신, orders.json의 주문일이 오늘인지 확인
+          • 접근 토큰 갱신, orders.json이 가장 최근 종가로 만든 것인지 확인
           • 자동 방식이면 매수 주문을 승인 처리 (approve_orders.py --auto)
           • 승인 방식이면 아무것도 하지 않음. 승인은 사람이 전날 저녁~개장 전에 해 둠
 
@@ -2076,22 +2076,23 @@ window.MathJax = {
 <ul>
 <li>줄 끝의 <code>&gt;&gt; .../cron.log</code>는 프로그램이 화면에 찍는 내용을 그 파일 끝에 이어 적으라는 뜻이고, <code>2&gt;&amp;1</code>은 에러 메시지도 같은 파일에 함께 적으라는 뜻입니다. 예약 실행은 화면이 없으니 이렇게 남겨 둡니다.</li>
 <li>파이썬을 <code>.venv/bin/python</code>으로 직접 적는 이유는, 예약 실행은 터미널에서처럼 가상환경을 켜 주지 않기 때문입니다. 이렇게 적어야 라이브러리를 설치해 둔 작업 폴더의 파이썬으로 실행됩니다.</li>
-<li>공휴일에는 장이 열리지 않습니다. 오케스트레이터는 주문 목록의 주문일이 오늘이 아니면 주문을 보내지 않으므로, 쉬는 날에 켜져도 주문은 나가지 않습니다.</li>
+<li>공휴일에는 장이 열리지 않습니다. 쉬는 날에 켜져 주문을 보내더라도 증권사가 받지 않으며, 그 실패는 기록과 알림으로 남습니다.</li>
 </ul>
 <hr />
 <h2 id="실습-실습-23-시간표대로-실행하는-프로그램-만들기">실습 — 실습 23: 시간표대로 실행하는 프로그램 만들기</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 시장 운영 시간에 맞춰, 작업 폴더에 있는 프로그램들(generate_signals.py, prepare_orders.py, approve_orders.py, notifier.py, execute_orders.py, risk_guard.py, daily_journal.py)을 차례로 실행하는 프로그램을 만들고 싶어.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 한국 주식 시장 운영 시간에 맞춰, 작업 폴더에 있는 프로그램들(generate_signals.py, prepare_orders.py, approve_orders.py, notifier.py, execute_orders.py, risk_guard.py, daily_journal.py)을 차례로 실행하는 프로그램을 만들고 싶어. 먼저 이 파일들을 읽어 각각 어떤 함수와 실행 옵션이 있는지 확인하고 시작해줘.
 
 [만들 것] 다음 조건에 맞춰 스크립트와 가이드를 작성하고 실행해줘:
 1. 파이썬 스크립트 'orchestrator.py'를 작성해줘. 맨 위에 실행 방식('승인' 또는 '자동', 기본값 '승인')을 두고, 아래 시간표대로 실행해:
-   - 08:50 개장 전 점검: 접근 토큰 갱신, orders.json의 주문일이 오늘인지 확인. 실행 방식이 '자동'일 때만 approve_orders.py를 '--auto'로 실행
-   - 09:00 개장 주문: execute_orders.py로 매도와 승인된 매수를 보냄. 보낼 주문이 없으면 건너뜀
-   - 09:00 ~ 15:30 장중 상주 루프: risk_guard.py의 점검 함수를 되풀이 호출. 모의투자 서버는 계좌당 초당 1회만 요청을 받으니 루프는 하나만 두고 요청 사이에 최소 1초를 둬
+   - 08:50 개장 전 점검: 접근 토큰 갱신, orders.json이 있는지 확인. 실행 방식이 '자동'일 때만 approve_orders.py를 '--auto'로 실행
+   - 09:00 개장 주문: execute_orders.py를 옵션 없이 실행한 것과 같게 매도와 승인된 매수를 보냄. 보낼 주문이 없으면 건너뜀
+   - 09:00 ~ 15:30 장중 상주 루프: risk_guard.py의 점검 함수를 '--live'로 실행한 것과 같게 되풀이 호출. 모의투자 서버는 계좌당 초당 1회만 요청을 받으니 루프는 하나만 두고 요청 사이에 최소 1초를 둬
    - 15:40 장 마감 후: generate_signals.py ➔ prepare_orders.py ➔ daily_journal.py 순서로 실행하고, 다음 거래일 주문이 있으면 notifier.py로 '주문 예정' 알림을 보냄
 2. 내 컴퓨터 종류에 맞는 예약 실행 등록 가이드(Mac/Linux는 crontab, Windows는 schtasks)를 'docs/scheduler_setup.md'로 작성해줘. 예약은 orchestrator.py 하나를 평일 08:45에 실행하는 것 한 줄이면 돼.
 3. 모든 실행 출력과 에러 내용이 날짜별 로그 파일('logs/system_YYYYMMDD.log')에 저장되게 해줘.
-4. 전체 흐름을 처음부터 끝까지 한 번 도는 드라이런(실제 주문은 보내지 않고 흐름만 끝까지 돌려 보는 시험 실행)을 실행해줘. 드라이런에서는 시각을 기다리지 말고 바로 다음 단계로 넘어가고, 상주 루프는 한 바퀴만 돌려.
+4. 'orchestrator.py'를 '--dry-run'으로 실행하면 전체 흐름을 처음부터 끝까지 한 번 도는 드라이런(실제 주문은 보내지 않고 흐름만 끝까지 돌려 보는 시험 실행)이 되게 해줘. 드라이런에서는 시각을 기다리지 말고 바로 다음 단계로 넘어가고, 상주 루프는 한 바퀴만 돌리고, 주문 단계는 execute_orders.py의 '--dry-run'과 risk_guard.py의 옵션 없는 실행(주문 없이 점검만)을 써. 이 실습에서는 '--dry-run'으로만 실행해줘.
+5. 옵션 없이 실행했을 때 이미 지난 시각의 단계는 건너뛰고 그 사실을 로그에 남겨. 단, 장중(09:00 ~ 15:30)에 시작했으면 상주 루프는 바로 시작해.
 
 [하지 말 것]
 - 드라이런에서는 실제 주문 API를 호출하지 마. 각 단계가 순서대로 호출되고 로그가 남는지만 확인해.

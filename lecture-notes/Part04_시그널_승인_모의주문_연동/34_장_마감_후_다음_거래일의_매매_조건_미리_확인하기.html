@@ -1790,7 +1790,7 @@ window.MathJax = {
       
       <div class="nav-chapter">
         <div class="nav-chapter-title">
-          4.2 알림과 승인을 거쳐 모의주문 실행하기
+          4.2 알림을 확인하고 직접 승인하는 매매 시스템
         </div>
         
         <div class="nav-clip-group">
@@ -1985,7 +1985,7 @@ window.MathJax = {
         <div class="metadata-bar">
           <div class="metadata-item">
             <span class="label">Chapter:</span>
-            <span>CH02. 알림과 승인을 거쳐 모의주문 실행하기</span>
+            <span>CH02. 알림을 확인하고 직접 승인하는 매매 시스템</span>
           </div>
           <div class="metadata-item">
             <span class="label">예상 소요 시간:</span>
@@ -2105,20 +2105,21 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 장 마감 후에 오늘 주문이 제대로 체결됐는지 확인하고, 다음 거래일에 낼 주문과 신호가 바뀌는 조건을 미리 정리한 일지를 만들고 싶어. 작업 폴더의 kis_auth.py(인증, 요청, 잔고 조회), generate_signals.py(전략 규칙과 지표 계산), signals.json, orders.json, orders_history.json을 쓴다.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'daily_journal.py'를 작성하고 실행해줘:
-1. 오늘 체결 확인: kis_auth.py의 요청 함수로 KIS 일별 주문체결 조회 API(모의투자용 거래 코드 VTTC0081R)를 호출해 오늘 체결 내역을 받고, 'orders_history.json'의 오늘 주문과 대조해서 [종목 / 매수·매도 / 주문 수량 / 체결 수량 / 예상 가격 / 체결 가격 / 차이(%)] 표를 만들어줘. 오늘 주문이 없었으면 &quot;오늘 주문 없음&quot;이라고 적어.
-2. 잔고 대조: 장 마감 기준 계좌의 종목별 보유 수량을 'signals.json'의 종목 목표 수량과 비교해줘. 다른 종목은 'orders.json'(승인 대기·거절)이나 'stopped_positions.json'(손절)에 기록된 이유가 있으면 그 이유를 적고, 기록이 없으면 '이유 기록 없음'이라고 적어.
-3. 다음 거래일 주문: 'orders.json'의 주문일이 다음 거래일이면 그 주문 목록과 승인 상태를 옮겨 적어줘. 아니면 &quot;다음 거래일 주문 목록이 아직 없음&quot;이라고 적어.
-4. 신호가 바뀌는 조건: generate_signals.py의 규칙과 계산 함수를 불러와서(import) 아래를 계산해줘.
+1. 먼저 작업 폴더의 'kis_auth.py', 'generate_signals.py', 'signals.json', 'orders.json', 'orders_history.json'을 읽어 항목 이름과 쓸 수 있는 함수를 확인해줘.
+2. 오늘 체결 확인: kis_auth.py의 요청 함수로 KIS 일별 주문체결 조회 API(모의투자용 거래 코드 VTTC0081R)를 호출해 오늘 체결 내역을 받고, 'orders_history.json'의 오늘 주문과 대조해서 [종목 / 매수·매도 / 주문 수량 / 체결 수량 / 예상 가격 / 체결 가격 / 차이(%)] 표를 만들어줘. 오늘 주문이 없었으면 &quot;오늘 주문 없음&quot;이라고 적어.
+3. 잔고 대조: 장 마감 기준 계좌의 종목별 보유 수량을 'signals.json'의 종목 목표 수량과 비교해줘. 다른 종목은 'orders.json'(승인 대기·거절)이나 'stopped_positions.json'(손절)에 기록된 이유가 있으면 그 이유를 적고, 기록이 없으면 '이유 기록 없음'이라고 적어.
+4. 다음 거래일 주문: 'orders.json'의 신호 기준일이 'signals.json'의 기준일과 같으면 그 주문 목록과 승인 상태를 옮겨 적어줘. 다르면 &quot;다음 거래일 주문 목록이 아직 없음 (prepare_orders.py를 먼저 실행)&quot;이라고 적어.
+5. 신호가 바뀌는 조건: generate_signals.py에 있는 규칙과 계산 방식을 그대로 써서(불러올 수 있으면 불러와서) 'signals.json'의 기준일 종가 기준으로 아래를 계산해줘. 가격 데이터는 'price_cache' 폴더의 파일을 읽어.
    - 추세추종: 지금 신호, 200일 단순이동평균선 값, 종가가 그 값을 넘거나 내려가려면 지금 종가에서 몇 % 움직여야 하는지
    - 페어 스위칭: 지금 들고 있는 종목, 지금 Z, Z가 -1.5나 +1.5에 닿으려면 얼마나 남았는지
    - 듀얼 모멘텀: 다음 판정일(이번 달 마지막 거래일)과 남은 거래일 수, 지금 120거래일 수익률 순위
    - 시장 국면: 다음 판정일, 지금 KOSPI 종가의 200일선 대비 위치(%)와 ADX(14)
    - 조정 비중: 전략마다 지금 쓰는 값, 오늘 계산한 값, 그 차이(%p)
-5. 위 네 가지를 'docs/daily_journal_YYYYMMDD.md'(YYYYMMDD는 오늘 날짜)로 저장하고, 대화창에는 [오늘 체결 요약 / 다음 거래일 주문 건수와 승인 대기 건수 / 기준에 가장 가까운 신호] 세 줄을 출력해줘.
+6. 위 네 가지를 'docs/daily_journal_YYYYMMDD.md'(YYYYMMDD는 오늘 날짜)로 저장하고, 대화창에는 [오늘 체결 요약 / 다음 거래일 주문 건수와 승인 대기 건수 / 기준에 가장 가까운 신호] 세 줄을 출력해줘.
 
 [하지 말 것]
 - 읽고 기록만 해. 주문을 내거나 승인 상태, 신호 파일을 바꾸지 마.
-- 전략 규칙이나 지표 계산을 새로 만들지 마. generate_signals.py에 있는 것을 불러와서 써.
+- 전략 규칙이나 기준값을 새로 정하지 마. generate_signals.py와 signals.json에 있는 것만 써. generate_signals.py는 수정하지 마.
 - 체결이나 잔고 조회에 실패하면 값을 추정해서 채우지 마. '조회 실패'로 표시해.
 - 손익이 왜 그렇게 나왔는지 원인을 분석하지 마. 이 일지는 확인과 미리 보기까지만 해.
 - 요청한 일지 파일과 스크립트 외에 다른 파일을 만들지 마.
