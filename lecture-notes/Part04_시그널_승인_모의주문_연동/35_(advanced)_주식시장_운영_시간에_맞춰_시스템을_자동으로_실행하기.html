@@ -2020,8 +2020,8 @@ window.MathJax = {
 <h3 id="1-하루-시간표">1. 하루 시간표</h3>
 <pre><code class="language-text">[08:50] ① 개장 전 점검
           • 접근 토큰 갱신, orders.json이 가장 최근 종가로 만든 것인지 확인
-          • 자동 방식이면 매수 주문을 승인 처리 (approve_orders.py --auto)
-          • 승인 방식이면 아무것도 하지 않음. 승인은 사람이 전날 저녁~개장 전에 해 둠
+          • 승인 방식이면 사람이 전날 저녁에 고쳐 둔 승인 상태를 검사 (approve_orders.py)
+          • 자동 방식이면 매수 주문을 모두 승인 처리 (approve_orders.py --auto)
 
 [09:00] ② 개장 주문 (execute_orders.py)
           • 매도와 승인된 매수를 보냄. 주문 목록이 비어 있으면 건너뜀
@@ -2085,7 +2085,7 @@ window.MathJax = {
 
 [만들 것] 다음 조건에 맞춰 스크립트와 가이드를 작성하고 실행해줘:
 1. 파이썬 스크립트 'orchestrator.py'를 작성해줘. 맨 위에 실행 방식('승인' 또는 '자동', 기본값 '승인')을 두고, 아래 시간표대로 실행해:
-   - 08:50 개장 전 점검: 접근 토큰 갱신, orders.json이 있는지 확인. 실행 방식이 '자동'일 때만 approve_orders.py를 '--auto'로 실행
+   - 08:50 개장 전 점검: 접근 토큰 갱신, orders.json이 있는지 확인. 실행 방식이 '승인'이면 approve_orders.py를 옵션 없이 실행해 검사만 하고, '자동'이면 '--auto'로 실행
    - 09:00 개장 주문: execute_orders.py를 옵션 없이 실행한 것과 같게 매도와 승인된 매수를 보냄. 보낼 주문이 없으면 건너뜀
    - 09:00 ~ 15:30 장중 상주 루프: risk_guard.py의 점검 함수를 '--live'로 실행한 것과 같게 되풀이 호출. 모의투자 서버는 계좌당 초당 1회만 요청을 받으니 루프는 하나만 두고 요청 사이에 최소 1초를 둬
    - 15:40 장 마감 후: generate_signals.py ➔ prepare_orders.py ➔ daily_journal.py 순서로 실행하고, 다음 거래일 주문이 있으면 notifier.py로 '주문 예정' 알림을 보냄

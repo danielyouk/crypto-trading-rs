@@ -2023,7 +2023,7 @@ window.MathJax = {
 <h2 id="이론-핵심-1인-퀀트의-라이프사이클">이론 핵심: 1인 퀀트의 라이프사이클</h2>
 <h3 id="1-일간-루틴-10분-저녁에-한-번">1. [일간 루틴: 10분] 저녁에 한 번</h3>
 <pre><code class="language-text">[장 마감 후 편한 시간] (10분)
-1. '주문 예정' 알림이 왔는지 확인. 왔으면 주문 목록을 보고 매수를 승인하거나 거절
+1. '주문 예정' 알림이 왔는지 확인. 왔으면 orders.json을 열어 값을 확인하고 매수의 승인 상태를 승인 또는 거절로 고침
 2. 오늘 자 일지(docs/daily_journal_YYYYMMDD.md)에서 체결 결과와 신호가 바뀌는 조건을 훑어봄
 3. 알림도 없고 일지에 이상도 없으면 그대로 마무리 (장중에는 HTS/MTS를 쳐다보지 않음)
 </code></pre>
@@ -2062,7 +2062,7 @@ window.MathJax = {
 ├── kis_auth.py                # 증권사 접근 토큰(출입증) 발급 및 잔고 조회
 ├── market_data.py             # 현재가 조회
 ├── prepare_orders.py          # 신호를 계좌와 비교해 주문 목록 만들기
-├── approve_orders.py          # 매수 주문 승인·거절 기록
+├── approve_orders.py          # 고친 승인 상태 검사와 기록
 ├── notifier.py                # 이메일 알림
 ├── execute_orders.py          # 매도와 승인된 매수를 증권사로 보내기
 ├── risk_guard.py              # 장중 개별 종목 -3% 손절 및 계좌 -2% 하루 손실 한도
