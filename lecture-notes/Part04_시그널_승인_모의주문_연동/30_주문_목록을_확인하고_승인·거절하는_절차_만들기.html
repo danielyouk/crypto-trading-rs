@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>매매 알림과 승인·거절 절차 만들기 — DATATRAIN AI 트레이딩</title>
+<title>주문 목록을 확인하고 승인·거절하는 절차 만들기 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../_core/assets/style.css">
 <style>
 /* ==========================================================================
@@ -1794,9 +1794,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/30_매매_알림과_승인·거절_절차_만들기.html">
+          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/30_주문_목록을_확인하고_승인·거절하는_절차_만들기.html">
             <span class="nav-num">30</span>
-            <span class="nav-label">매매 알림과 승인·거절 절차 만들기</span>
+            <span class="nav-label">주문 목록을 확인하고 승인·거절하는 절차 만들기</span>
           </a>
           
           <div class="nav-page-toc">
@@ -1982,7 +1982,7 @@ window.MathJax = {
     <div class="docs-content">
       <div class="note-header">
         <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-        <h1>매매 알림과 승인·거절 절차 만들기</h1>
+        <h1>주문 목록을 확인하고 승인·거절하는 절차 만들기</h1>
 
         <div class="metadata-bar">
           <div class="metadata-item">
@@ -2009,7 +2009,7 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>주문 목록에 매수 주문이 생긴 날, <strong>주문 목록 파일을 직접 열어 값을 확인하고 승인 상태를 고쳐 두는 절차</strong>를 만듭니다. 전날 저녁에 승인해 두면 다음 날 개장 때 주문이 자동으로 나갑니다.</p>
+<p>장 마감 뒤 만들어진 <strong>주문 목록 파일을 직접 열어 값을 확인하고, 매수 주문의 승인 상태를 고쳐 두는 절차</strong>를 만듭니다. 승인해 두면 다음 날 개장 때 주문이 자동으로 나갑니다. 주문 목록이 비어 있는 날은 확인만 하고 끝납니다.</p>
 <blockquote>
 <p>💡 고치지 않으면 매수는 나가지 않습니다. 거래하지 않는 것이 기본값이라, 확인을 놓쳐도 위험이 늘지 않습니다.</p>
 </blockquote>
@@ -2056,7 +2056,7 @@ window.MathJax = {
   &quot;신호 기준일&quot;: &quot;2026-10-05&quot;,
   &quot;주문&quot;: [
     { &quot;매수/매도&quot;: &quot;매도&quot;, &quot;종목명&quot;: &quot;하나금융지주&quot;, &quot;수량&quot;: 5, &quot;예상 금액&quot;: 450000,
-      &quot;이유&quot;: &quot;페어 스위칭이 KB금융으로 교체&quot;, &quot;승인 상태&quot;: &quot;자동&quot; },
+      &quot;이유&quot;: &quot;페어 스위칭이 KB금융으로 교체&quot;, &quot;승인 상태&quot;: &quot;자동&quot;, &quot;메모&quot;: &quot;&quot; },
     { &quot;매수/매도&quot;: &quot;매수&quot;, &quot;종목명&quot;: &quot;KB금융&quot;, &quot;수량&quot;: 3, &quot;예상 금액&quot;: 520000,
       &quot;이유&quot;: &quot;페어 스위칭이 KB금융으로 교체&quot;, &quot;승인 상태&quot;: &quot;승인 대기&quot;, &quot;메모&quot;: &quot;&quot; }
   ]
@@ -2086,7 +2086,7 @@ window.MathJax = {
 <td>어디가 잘못됐는지 알려 주고, 매수는 나가지 않음</td>
 </tr>
 <tr>
-<td>승인 상태 값이 자동·승인 대기·승인·거절 중 하나인가</td>
+<td>매도는 '자동' 그대로이고, 매수는 승인 대기·승인·거절 중 하나인가</td>
 <td>위와 같음</td>
 </tr>
 <tr>
@@ -2114,7 +2114,7 @@ window.MathJax = {
 </tr>
 <tr>
 <td><strong>자동 방식</strong></td>
-<td>묻지 않고 나감</td>
+<td>승인하지 않아도 나감</td>
 <td>시스템에 익숙해진 뒤</td>
 </tr>
 </tbody>
@@ -2132,11 +2132,11 @@ window.MathJax = {
 1. 먼저 작업 폴더의 'prepare_orders.py'와 'orders.json', 'logs/orders_original.json'을 읽어 항목 이름과 구조를 확인해줘.
 2. 옵션 없이 실행하면 'orders.json'을 검사해줘. 아래 가운데 하나라도 걸리면 무엇이 잘못됐는지 알려 주고, 모든 매수를 '나가지 않을 주문'으로 처리해:
    - 파일이 JSON 형식에 맞지 않음 (몇 번째 줄인지 알려줘)
-   - 승인 상태가 '자동', '승인 대기', '승인', '거절' 말고 다른 값임
+   - 매도의 승인 상태가 '자동'이 아니거나, 매수의 승인 상태가 '승인 대기', '승인', '거절' 말고 다른 값임
    - 승인 상태와 메모 말고 다른 값(종목, 수량, 금액 등)이 'logs/orders_original.json'과 다름
 3. 검사를 통과하면 [다음 개장 때 나갈 주문: 매도(자동)와 승인된 매수]와 [나가지 않을 주문: 승인 대기·거절인 매수]를 나눠 표로 보여 주고, 'approvals_log.json'에 [검사 시각, 신호 기준일, 종목, 매수/매도, 수량, 승인 상태, 메모]를 덧붙여줘.
-4. '--auto'를 붙여 실행하면 묻지 않고 모든 매수의 승인 상태를 '승인'으로 바꿔 저장하고, 메모에 '자동 방식'이라고 적어줘.
-5. 검사 결과(통과 여부와 나갈 주문 목록)를 다른 스크립트가 불러와 쓸 수 있게 함수로 만들어줘.
+4. '--auto'를 붙여 실행하면 모든 매수의 승인 상태를 '승인'으로 바꾸고 메모에 '자동 방식'이라고 적어 저장한 뒤, 2~3번과 똑같이 검사하고 'approvals_log.json'에 기록해줘.
+5. 검사 결과(통과 여부와 나갈 주문 목록)를 다른 스크립트가 불러와 쓸 수 있게 함수로 만들어줘. 다른 스크립트가 이 함수로 검사할 때도 3번처럼 'approvals_log.json'에 기록이 남게 해줘.
 6. 이 실습에서는 실제 'orders.json'을 건드리지 말고, 같은 구조의 시험용 파일 'orders_test.json'과 'logs/orders_test_original.json'(KB금융 3주 매수 1건, 하나금융지주 5주 매도 1건)을 만들어 세 가지를 시험해줘. 파일 이름은 '--file orders_test.json'처럼 넘길 수 있게 해줘.
    - 매수의 승인 상태를 '승인'으로 고친 경우
    - 아무것도 고치지 않은 경우
@@ -2160,8 +2160,8 @@ window.MathJax = {
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
 <p>주문 목록을 확인하고 승인해 두는 절차를 만들었습니다.<br />
-하지만 주문이 생긴 날을 알려면 매일 컴퓨터를 열어 봐야 합니다.<br />
-다음 클립에서는 <strong>주문이 생기거나 안전장치가 움직였을 때 이메일로 알림을 받도록</strong> 만들어 보겠습니다.</p>
+승인해 둔 주문은 다음 날 내가 보지 않는 사이에 나가고, 장중 안전장치도 혼자 움직입니다.<br />
+다음 클립에서는 <strong>프로그램이 나 없이 한 일(체결 결과, 손절 실행, 오류)을 이메일로 보고받도록</strong> 만들어 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">

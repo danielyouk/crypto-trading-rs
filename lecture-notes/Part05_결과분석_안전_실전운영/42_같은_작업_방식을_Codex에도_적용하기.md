@@ -70,15 +70,18 @@
 
 Claude Code 대화창에 아래 프롬프트를 입력하여, 우리 시스템이 특정 AI 도구 없이도 파이썬과 JSON 파일만으로 돌아가는지 최종 확인해 보세요.
 
+> 📁 **공유 파일**: 이 프롬프트는 `signals.json`과 `orders.json`을 읽기만 하고 고치거나 새로 만들지 않습니다. 승인 상태를 고쳐 둔 `orders.json`도 그대로 남습니다.
+
 ```prompt
-[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, execute_orders, risk_guard)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
+[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, notifier, execute_orders, risk_guard, order_validator, kill_switch, daily_journal, 그리고 만들었다면 orchestrator)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
 
 [만들 것] 다음 작업을 수행해줘:
 1. 이 시스템이 따로 설치해서 쓰는 라이브러리 목록을 정리해줘. 목록 파일(requirements.txt)이 있으면 그것을 보고, 없으면 없다고 보고한 뒤 코드에서 실제로 불러 쓰는 라이브러리를 찾아 정리해. 그리고 전부 누구나 무료로 설치할 수 있는 공개 라이브러리인지, 특정 AI 도구에서만 쓸 수 있는 것은 없는지 점검해줘.
-2. signals.json과 orders.json 두 파일에, 그 파일을 읽는 코드가 필요로 하는 항목이 빠짐없이 있고 값 형식(날짜·숫자·비중 합계)이 맞는지 검사해줘.
-3. 다른 AI 도구(Codex 등)를 처음 사용하는 사람이 이 프로젝트를 인계받았을 때 1분 만에 실행할 수 있도록 작성된 'docs/universal_tool_guide.md' 매뉴얼을 생성해줘.
+2. signals.json과 orders.json 두 파일에, 그 파일을 읽는 코드가 필요로 하는 항목이 빠짐없이 있고 값 형식(날짜·숫자·비중 합계)이 맞는지 검사해줘. 파일이 없으면 새로 만들지 말고 '파일 없음'으로 적어.
+3. 다른 AI 도구(Codex 등)를 처음 사용하는 사람이 이 프로젝트를 인계받았을 때 1분 만에 실행할 수 있도록 작성된 'docs/universal_tool_guide.md' 매뉴얼을 생성해줘. 명령마다 주문이 나가는지 표시하고, 처음 확인할 때 쓸 주문 없는 실행('--dry-run' 등)도 함께 적어줘.
 
 [하지 말 것]
+- 점검한다고 우리 프로그램 파일(.py)을 실행하지 마. 주문이 나가거나, 내가 승인 상태를 고쳐 둔 orders.json이 새로 덮어써질 수 있어. 라이브러리와 JSON 파일은 읽어서 점검해.
 - 점검 중 발견한 문제를 소스 코드나 JSON 파일을 고쳐서 해결하지 마. 발견 사항만 기록해.
 - 특정 AI 도구 전용 설정 파일이나 플러그인을 새로 만들지 마. 가이드는 파이썬과 터미널 명령만으로 써.
 - 검증 결과를 '통과'로 뭉뚱그리지 말고, 항목별로 통과/미통과와 근거를 적어.
@@ -91,7 +94,7 @@ Claude Code 대화창에 아래 프롬프트를 입력하여, 우리 시스템�
 ### 내 눈으로 확인할 체크리스트
 
 - [ ] 시스템이 쓰는 라이브러리 목록과 두 JSON 파일(`signals.json`, `orders.json`)의 점검 결과가 항목별 통과/미통과로 나왔다.
-- [ ] `docs/universal_tool_guide.md`만 보고 다른 도구나 터미널에서 실행할 수 있는지 확인했다.
+- [ ] `docs/universal_tool_guide.md`만 보고 다른 도구나 터미널에서 주문 없이(`--dry-run`) 실행해 볼 수 있는지 확인했다.
 
 ---
 
