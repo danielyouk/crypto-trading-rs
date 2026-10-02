@@ -25,3 +25,6 @@ docs/*-result.json
 docs/*-run.log
 docs/*-stdout.log
 reference/python_pairstrading/docs/
+
+# Contributor material with unmasked screenshots (account number, ID). Never commit.
+/한국투자증권_apikey_발급.zip
