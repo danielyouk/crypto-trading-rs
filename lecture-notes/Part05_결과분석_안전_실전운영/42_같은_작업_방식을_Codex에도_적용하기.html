@@ -1841,9 +1841,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/35_(advanced)_주식시장_운영_시간에_맞춰_시스템을_자동으로_실행하기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/35_(advanced)_매일_정해진_시간에_시스템을_자동_실행하고_결과를_이메일로_받기.html">
             <span class="nav-num">35</span>
-            <span class="nav-label">(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기</span>
+            <span class="nav-label">(advanced) 매일 정해진 시간에 시스템을 자동 실행하고 결과를 이메일로 받기</span>
           </a>
           
         </div>
@@ -2069,7 +2069,7 @@ window.MathJax = {
 <blockquote>
 <p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>signals.json</code>과 <code>orders.json</code>을 읽기만 하고 고치거나 새로 만들지 않습니다. 승인 상태를 고쳐 둔 <code>orders.json</code>도 그대로 남습니다.</p>
 </blockquote>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, notifier, execute_orders, risk_guard, order_validator, kill_switch, daily_journal, 그리고 만들었다면 orchestrator)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, notifier, execute_orders, risk_guard, order_validator, kill_switch, daily_journal, 그리고 만들었다면 run_after_close, run_market_open)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
 
 [만들 것] 다음 작업을 수행해줘:
 1. 이 시스템이 따로 설치해서 쓰는 라이브러리 목록을 정리해줘. 목록 파일(requirements.txt)이 있으면 그것을 보고, 없으면 없다고 보고한 뒤 코드에서 실제로 불러 쓰는 라이브러리를 찾아 정리해. 그리고 전부 누구나 무료로 설치할 수 있는 공개 라이브러리인지, 특정 AI 도구에서만 쓸 수 있는 것은 없는지 점검해줘.

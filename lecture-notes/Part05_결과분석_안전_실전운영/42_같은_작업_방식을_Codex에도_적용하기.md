@@ -73,7 +73,7 @@ Claude Code 대화창에 아래 프롬프트를 입력하여, 우리 시스템�
 > 📁 **공유 파일**: 이 프롬프트는 `signals.json`과 `orders.json`을 읽기만 하고 고치거나 새로 만들지 않습니다. 승인 상태를 고쳐 둔 `orders.json`도 그대로 남습니다.
 
 ```prompt
-[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, notifier, execute_orders, risk_guard, order_validator, kill_switch, daily_journal, 그리고 만들었다면 orchestrator)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
+[맥락] 우리가 만든 AI 트레이딩 시스템의 프로그램 파일들(kis_auth, market_data, generate_signals, prepare_orders, approve_orders, notifier, execute_orders, risk_guard, order_validator, kill_switch, daily_journal, 그리고 만들었다면 run_after_close, run_market_open)이 Claude Code 없이도, 다른 AI 코딩 도구(Codex, Cursor 등)나 일반 터미널에서 그대로 돌아가는지 점검하고 싶어.
 
 [만들 것] 다음 작업을 수행해줘:
 1. 이 시스템이 따로 설치해서 쓰는 라이브러리 목록을 정리해줘. 목록 파일(requirements.txt)이 있으면 그것을 보고, 없으면 없다고 보고한 뒤 코드에서 실제로 불러 쓰는 라이브러리를 찾아 정리해. 그리고 전부 누구나 무료로 설치할 수 있는 공개 라이브러리인지, 특정 AI 도구에서만 쓸 수 있는 것은 없는지 점검해줘.
