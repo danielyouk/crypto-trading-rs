@@ -12,7 +12,7 @@
     H1  HTML 재빌드 누락        .md의 프롬프트 첫 줄이 같은 이름의 .html에 없으면 빌드를 빠뜨린 것
     S1  대본↔교재 파일명 불일치  instructor-scripts가 언급한 차트 파일(.html/.png)이 교재 어디에도 없는가
     F1  종목 유니버스 이탈      Part 3~5에 4대 전략 유니버스 밖의 종목코드가 등장하는가
-    F2  고정 위험값 변조        2층 하드 가드레일 값(-0.03 / -0.02)이 다른 값으로 적혀 있는가
+    F2  고정 위험값 변조        장중 하루 손실 한도(-0.03)가 다른 값으로 적혀 있는가
     F3  금지 표현              폐기된 수치·용어가 남아 있는가 (아래 BANNED_PHRASES)
     N1  실습 번호 불일치        교재 본문의 '실습 NN'과 curriculum.json의 practice 값이 다른가, 번호가 끊기거나 겹치는가
 
@@ -80,12 +80,11 @@ UNIVERSE_FROM_CLIP = 16  # Part 3 시작. 그 이전(Part 1~2)은 예시 종목�
 # 교재가 종목코드를 적는 두 가지 형태만 인식한다 (일반 6자리 숫자 오탐 방지).
 TICKER_RE = re.compile(r"종목코드[:：]?\s*'?(\d{6})|\((\d{6})\)")
 
-# 2층 하드 가드레일. 클립 01에서 선언했고 어떤 클립에서도 바뀌지 않는다.
+# 장중 하루 손실 한도(총 투자금 대비). 클립 01의 종목 -3% / 계좌 -2%를 2026-10에 이 값 하나로 바꿨다 (Clip 01 정정 참고).
 FIXED_RISK_VALUES = {
-    "hard_stop_loss_pct": "-0.03",
-    "daily_portfolio_circuit_breaker_pct": "-0.02",
+    "daily_loss_limit_pct": "-0.03",
 }
-RISK_VALUE_RE = re.compile(r'"(hard_stop_loss_pct|daily_portfolio_circuit_breaker_pct)"\s*:\s*(-?[\d.]+)')
+RISK_VALUE_RE = re.compile(r'"(daily_loss_limit_pct)"\s*:\s*(-?[\d.]+)')
 
 # 폐기된 수치·용어. (표현, 왜 안 되는가)
 BANNED_PHRASES = [

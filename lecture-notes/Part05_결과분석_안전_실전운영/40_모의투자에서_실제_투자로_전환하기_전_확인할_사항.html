@@ -2030,7 +2030,7 @@ window.MathJax = {
   <div class="compare-card bad">
     <div class="tag">실전 투자 환경</div>
     <div class="steps">
-      • -3% 손절 시 실제 내 피 같은 돈이 차감되어 <strong>심리적 공포 발생</strong>.<br>
+      • 손절할 때 실제 내 돈이 줄어들어 <strong>심리적 공포 발생</strong>.<br>
       • 대형 주문 시 실제 호가창을 갉아먹으며 <strong>슬리피지 확대</strong>.<br>
       • API 에러나 전원 차단 시 즉각적인 손실 위험 노출.
     </div>
@@ -2042,8 +2042,8 @@ window.MathJax = {
 <ol>
 <li><strong>[모의투자 검증]</strong> 최소 2주 이상 모의투자에서 에러 없는 무인 주문/체결 이력을 기록했는가?</li>
 <li><strong>[보안 격리]</strong> <code>.env</code> 파일에 실전 <code>APP_KEY</code>가 안전하게 보관되어 있고 <code>.gitignore</code>가 적용되었는가?</li>
-<li><strong>[하드 손절 가동]</strong> 개별 종목 -3% 도달 시 사람 승인 없이 즉시 시장가 청산되는가?</li>
-<li><strong>[서킷브레이커]</strong> 일일 계좌 -2% 도달 시 전 종목 비상 청산 및 매수 잠금(lock.flag)이 테스트되었는가?</li>
+<li><strong>[하루 손실 한도]</strong> 하루 손실이 총 투자금의 3%에 닿으면 사람 승인 없이 전 종목이 시장가로 청산되는가?</li>
+<li><strong>[매수 잠금]</strong> 청산 뒤 <code>lock.flag</code>를 지우기 전까지 매수가 나가지 않는 것이 테스트되었는가?</li>
 <li><strong>[1회 주문 상한]</strong> 1회 매수 주문 금액이 총 투자금의 60%를 넘으면 거부하는 검사가 <code>order_validator.py</code>에 걸려 있는가?</li>
 <li><strong>[슬리피지 마진]</strong> 왕복 0.3% 이상의 거래비용 스트레스 테스트에서도 수익성이 유지되는가?</li>
 <li><strong>[킬 스위치]</strong> <code>kill_switch.flag</code> 생성 시 즉시 모든 발주가 중단되는 비상 탈출구가 있는가?</li>
@@ -2062,7 +2062,7 @@ window.MathJax = {
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'system_audit.py'를 작성하고 실행해줘:
 1. .env 파일이 있는지, 그리고 Git을 쓴다면 .env가 코드와 함께 인터넷에 올라가지 않게 제외(.gitignore)돼 있는지 검사
 2. 매수 주문이 승인 없이 나간 적이 없는지 검사 ('orders_history.json'의 매수 주문마다 'approvals_log.json'에 승인 기록이 있는지 대조. 시험 주문은 제외). 'approvals_log.json'이 없으면 모든 매수를 '승인 기록 없음'으로 봐. 'orders_history.json'이 없거나 시험 주문을 빼고 남는 매수가 없으면 통과로 적지 말고 '확인할 매수 없음'으로 적어.
-3. risk_guard.py에 개별 종목 -3%면 즉시 청산(하드 손절), 계좌 전체 -2%면 전 종목 청산 후 매수 중단(lock.flag)하는 코드가 있는지 검사
+3. risk_guard.py에 하루 손실이 총 투자금의 3%에 닿으면 전 종목을 팔고 매수를 멈추는(lock.flag) 코드가 있는지 검사
 4. order_validator.py가 금액이 총 투자금의 60%를 넘는 매수 주문, 하루 15회를 넘는 주문, 현재가와 3% 이상 차이 나는 가격의 매수 주문을 거부하는지 검사
 5. 위 1~4번 검사 결과를 종합하여 실전 시작 가능(GO) / 아직 불가(NO-GO) 판정과 권장 시작 자금 가이드(총 투자 가능 금액의 10% 이하, 100~300만 원에서 시작)를 'docs/live_trading_readiness_audit.md' 파일로 저장해줘.
 
