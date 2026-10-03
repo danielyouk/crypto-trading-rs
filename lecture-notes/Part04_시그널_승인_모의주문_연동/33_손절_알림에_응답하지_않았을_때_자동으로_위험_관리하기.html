@@ -2069,10 +2069,10 @@ window.MathJax = {
 <blockquote>
 <p>📁 <strong>공유 파일</strong>: 이 프롬프트는 손절한 종목을 <code>stopped_positions.json</code>에, 매수 중단 표시를 <code>lock.flag</code>에 남깁니다. 그리고 앞에서 만든 <code>prepare_orders.py</code>와 <code>execute_orders.py</code>에 이 두 파일을 확인하는 부분을 덧붙입니다.</p>
 </blockquote>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 사람의 응답을 기다리지 않고 실행되는 장중 손절과 하루 손실 한도 장치를 만들고 싶어. 작업 폴더의 kis_auth.py(잔고 조회), execute_orders.py(주문 함수), notifier.py(이메일 알림)를 불러와서(import) 쓴다.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 사람의 응답을 기다리지 않고 실행되는 장중 손절과 하루 손실 한도 장치를 만들고 싶어. 작업 폴더의 kis_auth.py(잔고 조회), execute_orders.py(주문 함수), notifier.py(이메일 알림)에 만들어 둔 기능을 그대로 가져다 쓴다.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'risk_guard.py'를 작성하고 실행해줘:
-1. 먼저 작업 폴더의 'kis_auth.py', 'execute_orders.py', 'notifier.py', 'prepare_orders.py'를 읽어 쓸 수 있는 함수를 확인해줘. 그리고 kis_auth.py로 지금 보유 중인 종목과 종목별 평균 매수가(여러 번 나눠 샀을 때 1주당 평균으로 치른 값), 평가손익률(%, 지금 가격에 판다고 쳤을 때의 손익률), 계좌 총자산을 조회하는 함수를 만들어줘. 모의투자 서버는 계좌당 초당 1회만 요청을 받으니 점검 사이에 최소 1초를 둬.
+1. 먼저 작업 폴더의 'kis_auth.py', 'execute_orders.py', 'notifier.py', 'prepare_orders.py'를 읽어 쓸 수 있는 함수를 확인해줘. 그리고 kis_auth.py로 지금 보유 중인 종목과 종목별 평균 매수가(여러 번 나눠 샀을 때 1주당 평균으로 치른 값), 평가손익률(%, 지금 가격에 판다고 쳤을 때의 손익률), 계좌 총자산을 조회하는 함수를 만들어줘. 요청은 kis_auth.py의 공용 요청 함수로만 보내 증권사의 요청 한도를 넘지 않게 해.
 2. 1차 안전장치: 평가손익률이 -3.0% 이하인 종목이 있으면 확인 없이 그 종목을 전량 시장가 매도해줘. 주문은 execute_orders.py의 주문 함수로 보내.
 3. 2차 안전장치: 오늘 시작 자산 대비 계좌 총자산이 -2.0% 이하로 내려가면 모든 보유 종목을 시장가 매도하고, 빈 파일 'lock.flag'를 만들어줘. 이 파일은 있기만 하면 매수 주문을 내지 않는다는 표시야. '오늘 시작 자산'은 그날 처음 점검할 때의 계좌 총자산이고, 'logs/day_start_asset.json'에 [날짜, 총자산]으로 저장해 두고 같은 날에는 그 값을 계속 써. '계좌 총자산'은 주식을 사거나 팔기만 해서는 달라지지 않는 값으로 구해. 판 대금이 아직 예수금(아직 주식을 사지 않은 현금)에 잡히지 않았다고 매도 직후가 손실로 보이면 안 돼.
 4. 안전장치가 판 종목은 'stopped_positions.json'에 [종목코드, 종목명, 판 날짜, 사유(개별 종목 손절 / 하루 손실 한도)]를 기록하고, 매도한 뒤에 notifier.py로 '안전장치' 알림을 보내줘. 점검은 1~2초마다 되풀이되니, 같은 종목에 낸 안전장치 매도가 체결되거나 실패로 끝나기 전에는 그 종목에 매도를 다시 내지 마. '안전장치' 알림은 새로 매도를 낸 때만 보내. 하루 손실 한도로 'lock.flag'를 만들었으면 알림 본문에 '이 파일을 지울 때까지 매수가 나가지 않음'을 함께 적어줘.
