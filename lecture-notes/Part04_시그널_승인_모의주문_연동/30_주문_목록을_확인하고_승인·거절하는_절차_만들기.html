@@ -1824,17 +1824,17 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/31_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
             <span class="nav-num">31</span>
-            <span class="nav-label">이메일로 매매 알림 받아보기</span>
+            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
           </a>
           
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
+          <a class="nav-clip" href="../Part04_시그널_승인_모의주문_연동/32_이메일로_매매_알림_받아보기.html">
             <span class="nav-num">32</span>
-            <span class="nav-label">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
+            <span class="nav-label">이메일로 매매 알림 받아보기</span>
           </a>
           
         </div>
@@ -2129,8 +2129,8 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 다음 개장 때 낼 주문 목록('orders_기준일.json', 예: orders_2026-10-05.json. 날짜는 신호를 계산한 장 마감일)을 내가 직접 열어 매수 주문의 승인 상태를 고쳐 둘 거야. 그 파일이 올바르게 고쳐졌는지 검사하고, 다음 개장 때 나갈 주문을 정리해 주는 프로그램을 만들고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'approve_orders.py'를 작성하고 실행해줘:
-1. 먼저 작업 폴더의 'prepare_orders.py'와 가장 최근 날짜의 'orders_날짜.json', 'logs/orders_날짜_original.json'을 읽어 항목 이름과 구조를 확인해줘.
-2. 옵션 없이 실행하면 가장 최근 날짜의 주문 목록 파일을 검사해줘. 원본은 'logs/(주문 목록 파일 이름)_original.json'이야. 아래 가운데 하나라도 걸리면 무엇이 잘못됐는지 알려 주고, 모든 매수를 '나가지 않을 주문'으로 처리해:
+1. 먼저 작업 폴더의 'prepare_orders.py'와 'generate_signals.py'를 읽어줘. 그리고 가장 최근 확정 종가일(generate_signals.py가 날짜 없이 실행될 때 기준일을 정하는 것과 같은 방식)이 이름에 들어간 'orders_날짜.json'과 'logs/orders_날짜_original.json'을 읽어 항목 이름과 구조를 확인해줘.
+2. 옵션 없이 실행하면 1번의 주문 목록 파일을 검사해줘. 그 날짜의 파일이 없으면 더 이전 날짜의 파일을 검사하지 말고 '그날 장 마감 후 주문 목록이 만들어지지 않았음'이라고 알려줘. 원본은 'logs/(주문 목록 파일 이름)_original.json'이야. 아래 가운데 하나라도 걸리면 무엇이 잘못됐는지 알려 주고, 모든 매수를 '나가지 않을 주문'으로 처리해:
    - 파일이 JSON 형식에 맞지 않음 (몇 번째 줄인지 알려줘)
    - 매도의 승인 상태가 '자동'이 아니거나, 매수의 승인 상태가 '승인 대기', '승인', '거절' 말고 다른 값임
    - 승인 상태와 메모 말고 다른 값(종목, 수량, 금액 등)이 원본 파일과 다름
@@ -2160,8 +2160,7 @@ window.MathJax = {
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
 <p>주문 목록을 확인하고 승인해 두는 절차를 만들었습니다.<br />
-승인해 둔 주문은 다음 날 내가 보지 않는 사이에 나가고, 장중 안전장치도 혼자 움직입니다.<br />
-다음 클립에서는 <strong>프로그램이 나 없이 한 일(체결 결과, 손절 실행, 오류)을 이메일로 보고받도록</strong> 만들어 보겠습니다.</p>
+다음 클립에서는 <strong>승인된 주문을 한국투자증권 모의투자 계좌로 실제로 보내고, 체결 결과를 확인</strong>해 보겠습니다.</p>
       </main>
 
       <nav class="pager-nav">
@@ -2172,9 +2171,9 @@ window.MathJax = {
         </a>
         
         
-        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/31_이메일로_매매_알림_받아보기.html">
+        <a class="pager-btn next" href="../Part04_시그널_승인_모의주문_연동/31_매수_신호를_확인한_뒤_승인하여_모의주문_실행하기.html">
           <span class="direction">다음 클립 →</span>
-          <span class="title">이메일로 매매 알림 받아보기</span>
+          <span class="title">매수 신호를 확인한 뒤 승인하여 모의주문 실행하기</span>
         </a>
         
       </nav>
