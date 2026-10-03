@@ -1766,7 +1766,7 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-part-4-한눈에-보기">1. Part 4 한눈에 보기</a>
+            <a class="nav-heading level-3" href="#1-하루의-흐름">1. 하루의 흐름</a>
             
             <a class="nav-heading level-3" href="#2-사람이-하는-일과-프로그램이-하는-일">2. 사람이 하는 일과 프로그램이 하는 일</a>
             
@@ -2003,67 +2003,51 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>이번 클립에서는 새 프로그램을 만들지 않습니다. 앞에서 뽑은 매매 신호가 실제 주문이 되기까지, Part 4에서 만들 시스템이 <strong>장 마감 후 신호 계산과 승인 → 다음 날 개장 주문 → 장중 안전장치</strong> 순서로 어떻게 이어지는지 지도를 봅니다.</p>
+<p>새 프로그램은 만들지 않습니다. 앞에서 뽑은 매매 신호가 실제 주문이 되기까지, Part 4에서 만들 시스템을 한 장의 지도로 봅니다.</p>
 <blockquote>
 <p>💡 지금 증권사 계좌를 켤 필요는 없습니다. 증권사 연결은 다음 클립에서 합니다.</p>
 </blockquote>
 <ul>
-<li>하루가 어떤 순서로 돌아가는가</li>
-<li>사람이 하는 일과 프로그램이 하는 일의 구분</li>
-<li>신호 파일과 실제 주문 사이에 비어 있는 것</li>
+<li>하루가 돌아가는 순서</li>
+<li>사람이 하는 일과 프로그램이 하는 일</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-part-4-한눈에-보기">1. Part 4 한눈에 보기</h3>
-<p>앞에서 만든 신호 파일(<code>signals.json</code>)은 무엇을 몇 주 들고 있어야 하는지, 즉 <strong>목표</strong>만 정합니다. 종목별 순주문도 직전 신호 파일과 비교한 값이라, 계좌에 실제로 몇 주가 있는지는 모릅니다. 이 신호를 실제 주문으로 옮기려면 몇 가지가 더 필요하고, Part 4가 그것을 만듭니다.</p>
-<p>세 전략(추세추종, 듀얼 모멘텀, 페어 스위칭)은 모두 <strong>장 마감 뒤 그날 종가로 판정이 끝납니다.</strong> 그래서 하루는 아래 순서로 돌아갑니다. <strong>굵게 쓴 아홉 가지</strong>가 Part 4에서 하나씩 만들 것이고, 파란 칸이 사람이 하는 일입니다. 시각은 한 가지 예입니다.</p>
+<h3 id="1-하루의-흐름">1. 하루의 흐름</h3>
+<p>신호 파일(<code>signals.json</code>)은 무엇을 몇 주 들고 있어야 하는지, 즉 <strong>목표</strong>만 정합니다. 계좌에 실제로 몇 주가 있는지는 모릅니다. Part 4는 이 목표를 실제 주문으로 옮기는 장치를 만듭니다. 세 전략은 모두 장 마감 뒤 종가로 판정하므로 하루는 이렇게 돌아갑니다.</p>
 <div class="step-flow">
-  <div class="step-card">
-    <span class="step-num">바탕</span>
-    <div class="step-body">
-      <div class="step-title">증권사 연결 · 시세 받기</div>
-      <div class="step-desc">모의투자 계좌의 잔고, 지금 가격, 신호에 쓰는 날짜별 가격을 증권사에서 받습니다. 아래 모든 단계가 이 위에서 돌아갑니다.</div>
-    </div>
-  </div>
   <div class="step-card">
     <span class="step-num">17:00</span>
     <div class="step-body">
-      <div class="step-title">장 마감 후: 신호 → 주문 목록 → 일지</div>
-      <div class="step-desc">오늘 종가로 세 전략의 신호와 목표 수량을 계산합니다. <strong>주문 목록</strong>: 목표를 계좌의 실제 보유와 비교해 내일 낼 주문을 정합니다. <strong>장 마감 후 확인</strong>: 오늘 체결과 보유가 계획대로였는지, 신호가 바뀌려면 얼마나 남았는지 일지에 적습니다. <strong>알림</strong>: 그 일지를 메일로 보냅니다.</div>
+      <div class="step-title">장 마감 후: 신호 → 주문 목록</div>
+      <div class="step-desc">오늘 종가로 신호를 계산하고, 계좌의 실제 보유와 비교해 다음 날 사고팔 수량을 정합니다.</div>
     </div>
   </div>
   <div class="step-card verify">
     <span class="step-num">개장 전</span>
     <div class="step-body">
       <div class="step-title">사람: 승인</div>
-      <div class="step-desc"><strong>승인</strong>: 주문 목록 파일을 열어 매수를 승인하거나 거절합니다. 다음 날 개장 전까지 아무 때나 하면 되고, 승인하지 않은 매수는 나가지 않습니다.</div>
+      <div class="step-desc">주문 목록 파일에서 매수를 승인하거나 거절합니다. 승인하지 않은 매수는 나가지 않습니다.</div>
     </div>
   </div>
   <div class="step-card">
     <span class="step-num">09:00</span>
     <div class="step-body">
       <div class="step-title">개장: 주문</div>
-      <div class="step-desc"><strong>주문 실행</strong>: 매도와 승인된 매수를 증권사로 보내고 체결을 확인합니다. 체결 결과는 메일로 옵니다.</div>
+      <div class="step-desc">매도와 승인된 매수를 증권사로 보냅니다.</div>
     </div>
   </div>
   <div class="step-card">
-    <span class="step-num">~15:30</span>
+    <span class="step-num">장중</span>
     <div class="step-body">
-      <div class="step-title">장중: 안전장치</div>
-      <div class="step-desc"><strong>안전장치</strong>: 손실이 기준에 닿으면 묻지 않고 팔고, 하루 한도에 닿으면 매수를 멈춥니다. 판 내용은 메일로 옵니다.</div>
-    </div>
-  </div>
-  <div class="step-card">
-    <span class="step-num">매일</span>
-    <div class="step-body">
-      <div class="step-title">자동 실행</div>
-      <div class="step-desc">17:00 작업과 09:00 작업을 내가 켜지 않아도 매일 정해진 시각에 저절로 돌립니다.</div>
+      <div class="step-title">안전장치</div>
+      <div class="step-desc">손실이 기준에 닿으면 묻지 않고 팝니다.</div>
     </div>
   </div>
 </div>
 
-<p>사람이 하는 일은 <strong>승인 한 가지</strong>입니다. 주문 목록이 비어 있는 날은 확인만 하고 끝나고, 대부분의 날이 그렇습니다. 일지와 메일은 승인의 단계가 아니라, 이미 일어난 일을 알려 주는 보고입니다.</p>
-<p>단계마다 프로그램을 하나씩 따로 만들고 따로 확인합니다. 프로그램 이름과 세부 내용은 만들어 가면서 정합니다.</p>
+<p>사람이 하는 일은 <strong>승인 한 가지</strong>입니다. 대부분의 날은 주문 목록이 비어 있어 할 일이 없습니다.</p>
+<p>이 흐름을 받치는 것이 세 가지 더 있습니다. 증권사에서 잔고와 가격을 받는 <strong>연결</strong>, 일어난 일(체결 결과, 손절, 오류, 장 마감 후 일지)을 메일로 알려 주는 <strong>알림</strong>, 위 순서를 매일 정해진 시각에 돌리는 <strong>자동 실행</strong>입니다. 알림은 이미 일어난 일을 알려 줄 뿐, 거래 단계가 아닙니다.</p>
 <hr />
 <h3 id="2-사람이-하는-일과-프로그램이-하는-일">2. 사람이 하는 일과 프로그램이 하는 일</h3>
 <div class="table-wrapper"><table>
@@ -2076,35 +2060,23 @@ window.MathJax = {
 </thead>
 <tbody>
 <tr>
-<td>신호 계산, 주문 목록 만들기</td>
-<td>프로그램</td>
-<td>규칙대로 계산하면 되는 일</td>
+<td>매수</td>
+<td><strong>사람이 승인한 뒤</strong> 프로그램</td>
+<td>위험을 늘리는 주문</td>
 </tr>
 <tr>
-<td><strong>매수 주문</strong></td>
-<td><strong>사람이 승인한 뒤</strong> 프로그램이 주문</td>
-<td>위험을 늘리는 주문. 승인이 없으면 그날은 사지 않음</td>
-</tr>
-<tr>
-<td>매도 주문</td>
+<td>매도, 손절</td>
 <td>프로그램 (승인 없이)</td>
-<td>위험을 줄이는 주문</td>
-</tr>
-<tr>
-<td>손절, 하루 손실 한도</td>
-<td>프로그램 (승인 없이)</td>
-<td>급락 때 사람의 답을 기다리면 늦음</td>
+<td>위험을 줄이는 주문. 기다리면 늦음</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>위험을 늘리는 일은 사람이 확인하고, 위험을 줄이는 일은 기계가 바로 합니다.</strong> 매수는 사람이 승인하지 않으면 나가지 않으므로, 아무것도 하지 않는 쪽이 늘 안전한 쪽입니다.</p>
-<p>매수 주문은 장 마감 뒤에 정해지고, 사람은 그 주문 목록 파일을 열어 값을 확인한 뒤 승인 상태를 고쳐 둡니다. 다음 날 개장 전까지만 하면 되고, 개장 때 주문이 자동으로 나갑니다. 시스템에 익숙해진 뒤에는 승인 상태를 고치지 않아도 프로그램이 매수를 모두 승인해 내보내는 <strong>자동 방식</strong>으로 바꿀 수 있습니다.</p>
+<p><strong>위험을 늘리는 일은 사람이 확인하고, 위험을 줄이는 일은 프로그램이 바로 합니다.</strong> 그래서 아무것도 하지 않는 쪽이 늘 안전한 쪽입니다.</p>
 <hr />
 <h2 id="관전-포인트-및-체크리스트">관전 포인트 및 체크리스트</h2>
 <ul>
-<li class="check-item"><input type="checkbox"> 하루 흐름에서 Part 4의 아홉 가지가 각각 언제, 무슨 일을 하는지 짚을 수 있다.</li>
-<li class="check-item"><input type="checkbox"> 매수는 승인이 필요하고 매도와 손절은 자동인 이유를 설명할 수 있다.</li>
-<li class="check-item"><input type="checkbox"> 신호 파일만으로는 주문을 낼 수 없는 이유를 설명할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 장 마감 후, 개장 전, 개장, 장중에 각각 무슨 일이 일어나는지 설명할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 매수만 승인을 받는 이유를 설명할 수 있다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
