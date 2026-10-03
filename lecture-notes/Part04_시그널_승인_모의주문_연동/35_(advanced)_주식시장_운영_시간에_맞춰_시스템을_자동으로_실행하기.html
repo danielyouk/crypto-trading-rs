@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>(advanced) 매일 정해진 시간에 시스템을 자동 실행하고 결과를 이메일로 받기 — DATATRAIN AI 트레이딩</title>
+<title>(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기 — DATATRAIN AI 트레이딩</title>
 <link rel="stylesheet" href="../_core/assets/style.css">
 <style>
 /* ==========================================================================
@@ -1841,9 +1841,9 @@ window.MathJax = {
         </div>
         
         <div class="nav-clip-group">
-          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/35_(advanced)_매일_정해진_시간에_시스템을_자동_실행하고_결과를_이메일로_받기.html">
+          <a class="nav-clip is-active" href="../Part04_시그널_승인_모의주문_연동/35_(advanced)_주식시장_운영_시간에_맞춰_시스템을_자동으로_실행하기.html">
             <span class="nav-num">35</span>
-            <span class="nav-label">(advanced) 매일 정해진 시간에 시스템을 자동 실행하고 결과를 이메일로 받기</span>
+            <span class="nav-label">(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기</span>
           </a>
           
           <div class="nav-page-toc">
@@ -1856,7 +1856,7 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#2-윈도우와-mac에서-예약-실행하기">2. 윈도우와 Mac에서 예약 실행하기</a>
             
-            <a class="nav-heading level-2" href="#실습-실습-23-정해진-시각에-실행되는-작업-만들기">실습 — 실습 23: 정해진 시각에 실행되는 작업 만들기</a>
+            <a class="nav-heading level-2" href="#실습-실습-23-장-운영-시간에-맞춰-실행되는-작업-만들기">실습 — 실습 23: 장 운영 시간에 맞춰 실행되는 작업 만들기</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -1978,7 +1978,7 @@ window.MathJax = {
     <div class="docs-content">
       <div class="note-header">
         <div class="kicker">Part 04. 매매 신호부터 승인과 모의주문까지 연결하기</div>
-        <h1>(advanced) 매일 정해진 시간에 시스템을 자동 실행하고 결과를 이메일로 받기</h1>
+        <h1>(advanced) 주식시장 운영 시간에 맞춰 시스템을 자동으로 실행하기</h1>
 
         <div class="metadata-bar">
           <div class="metadata-item">
@@ -2005,7 +2005,7 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>지금까지 만든 프로그램을 내가 켜지 않아도 <strong>매일 정해진 시각에 저절로 돌게</strong> 합니다. 장 마감 후 작업과 개장 작업을 실행 파일로 만들어 컴퓨터의 예약 실행 기능(윈도우 <strong>작업 스케줄러</strong>, Mac <strong>launchd</strong>)에 등록하고, 그날 일지는 메일로 받습니다.</p>
+<p>지금까지 만든 프로그램을 내가 켜지 않아도 <strong>장 운영 시간에 맞춰 저절로 돌게</strong> 합니다. 장 마감 후 작업과 개장 작업을 실행 파일로 만들어, 컴퓨터의 예약 실행 기능(윈도우 <strong>작업 스케줄러</strong>, Mac <strong>launchd</strong>)에 등록합니다.</p>
 <ul>
 <li>하루에 두 번 실행하는 이유</li>
 <li>윈도우와 Mac에서 예약 실행 등록하기</li>
@@ -2014,20 +2014,20 @@ window.MathJax = {
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-하루에-두-번-실행합니다">1. 하루에 두 번 실행합니다</h3>
-<pre><code class="language-text">[평일 17:00] 장 마감 후 작업: 신호 → 주문 목록 → 일지 → 일일 보고 메일
+<pre><code class="language-text">[평일 17:00] 장 마감 후 작업: 신호 → 주문 목록 → 일지
         ↓
 [사람]       다음 날 개장 전까지 주문 목록에서 매수를 승인하거나 거절
         ↓
-[평일 08:50] 개장 작업: 시작 총자산 기록 → 09:00 매도와 승인된 매수를 보냄 → 15:30까지 장중 안전장치
+[평일 08:50] 개장 작업: 시작 총자산 기록 → 09:00 매도와 승인된 매수 → 15:30까지 장중 안전장치
 </code></pre>
 <ul>
 <li><strong>17:00</strong>: 장은 15:30에 끝나지만 종가가 데이터에 반영되기까지 시간이 걸려 여유를 둡니다.</li>
-<li><strong>08:50</strong>: 장이 열리기 전에 계좌 총자산을 재 두어야, 그날 손실을 그 값과 비교할 수 있습니다. 주문은 09:00에 보냅니다. 모의투자에는 저녁에 주문을 맡겨 두는 <strong>예약주문</strong>이 없어서, 장이 열릴 때 프로그램이 직접 보냅니다.</li>
-<li>전날 주문 목록이 없으면(전날 작업이 돌지 않았으면) 개장 작업은 그 자리에서 전날 종가로 목록을 만들어 <strong>매도만</strong> 보내고 오류 메일을 보냅니다. 빠진 매수는 그날 저녁 목록에 다시 올라옵니다.</li>
+<li><strong>08:50</strong>: 장이 열리기 전에 계좌 총자산을 찍어 두어야 그날 손실을 잴 수 있습니다. 주문은 09:00에 보냅니다. 모의투자에는 저녁에 주문을 맡겨 두는 <strong>예약주문</strong>이 없어서, 장이 열릴 때 프로그램이 직접 보냅니다.</li>
+<li>전날 주문 목록이 없으면(전날 작업이 돌지 않았으면) 개장 작업은 그 자리에서 전날 종가로 목록을 만들어 <strong>매도만</strong> 보내고, 그 사실을 실행 기록에 남깁니다. 빠진 매수는 그날 저녁 목록에 다시 올라옵니다.</li>
 </ul>
 <hr />
 <h3 id="2-윈도우와-mac에서-예약-실행하기">2. 윈도우와 Mac에서 예약 실행하기</h3>
-<p>예약 실행에는 <strong>실행 파일</strong>을 등록합니다. 작업 폴더로 옮겨 간 뒤 그 폴더 가상환경의 파이썬으로 프로그램을 돌리는 몇 줄짜리 파일입니다.</p>
+<p>예약 실행에는 <strong>실행 파일</strong>을 등록합니다. 작업 폴더로 옮겨 간 뒤 그 폴더 가상환경의 파이썬으로 프로그램을 돌리는 몇 줄짜리 파일입니다. 예약 실행은 터미널과 달리 작업 폴더와 가상환경을 잡아 주지 않아서 이렇게 적어 둡니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -2054,27 +2054,27 @@ window.MathJax = {
 </tr>
 </tbody>
 </table></div>
-<p>윈도우에서 평일 17:00에 실행 파일을 돌리는 등록 명령은 이런 모양입니다.</p>
+<p>윈도우에서 평일 17:00에 실행 파일을 돌리는 등록 명령은 이런 모양입니다. Mac은 같은 내용을 <code>.plist</code> 파일에 적어 등록합니다.</p>
 <pre><code class="language-bat">schtasks /create /tn &quot;AI트레이딩 장 마감 후&quot; /tr &quot;C:\ai-trading\run_after_close.bat&quot; /sc weekly /d MON,TUE,WED,THU,FRI /st 17:00
 </code></pre>
 <blockquote>
-<p>⚠️ 예약 시각에 컴퓨터가 <strong>꺼져 있으면 그날은 실행되지 않습니다.</strong> 일일 보고 메일이 오지 않은 날은 실행 기록(<code>logs/run_YYYYMMDD.log</code>)을 확인하세요.</p>
+<p>⚠️ 예약 시각에 컴퓨터가 <strong>꺼져 있으면 그날은 실행되지 않습니다.</strong> 오늘 자 일지가 만들어지지 않았다면 실행 기록(<code>logs/run_YYYYMMDD.log</code>)을 확인하세요. Mac은 작업 폴더가 '문서'나 '데스크탑' 안에 있으면 권한 문제로 예약 실행이 막힐 수 있습니다.</p>
 </blockquote>
 <p><strong>실행 방식</strong>은 처음에는 '승인'으로 둡니다. 몇 주 동안 주문 목록이 규칙대로 만들어지는 것을 확인했다면 '자동'으로 바꿔도 됩니다. 자동 방식에서도 내가 '거절'로 고친 매수는 나가지 않습니다.</p>
 <hr />
-<h2 id="실습-실습-23-정해진-시각에-실행되는-작업-만들기">실습 — 실습 23: 정해진 시각에 실행되는 작업 만들기</h2>
+<h2 id="실습-실습-23-장-운영-시간에-맞춰-실행되는-작업-만들기">실습 — 실습 23: 장 운영 시간에 맞춰 실행되는 작업 만들기</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <blockquote>
 <p>📁 <strong>공유 파일</strong>: 이 프롬프트는 앞에서 만든 프로그램들을 불러 쓰고, 실행 기록을 <code>logs/run_YYYYMMDD.log</code>에, 등록 안내를 <code>docs/scheduler_setup.md</code>에 저장합니다. 같은 날짜의 주문 목록이 이미 있으면 덮어쓰지 않으므로, 고쳐 둔 승인 상태는 그대로 남습니다.</p>
 </blockquote>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 작업 폴더의 프로그램들(generate_signals, prepare_orders, daily_journal, approve_orders, execute_orders, risk_guard, notifier)을 평일 정해진 시각에 저절로 돌게 하고 싶어. 먼저 파일들의 함수와 실행 옵션, 그리고 내 컴퓨터 종류(윈도우, Mac)를 확인해줘.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 작업 폴더의 프로그램들(generate_signals, prepare_orders, daily_journal, approve_orders, execute_orders, risk_guard)을 평일 장 운영 시간에 맞춰 저절로 돌게 하고 싶어. 먼저 파일들의 함수와 실행 옵션, 그리고 내 컴퓨터 종류(윈도우, Mac)를 확인해줘.
 
 [만들 것]
-1. 'run_after_close.py'(평일 17:00): 휴장일이면 끝내. generate_signals.py → prepare_orders.py → daily_journal.py를 실행하고, 일지를 '일일 보고' 메일로 보내. 가격이 오늘 종가까지 오지 않았으면 주문 목록을 만들지 말고 '오류' 메일을 보내. 같은 날짜 주문 목록이 이미 있으면 그대로 둬.
-2. 'run_market_open.py'(평일 08:50): 장이 열리기 전에 risk_guard.py로 시작 총자산을 기록하고 09:00까지 기다려. 그다음 실행 방식('승인' 기본, '자동')에 따라 approve_orders.py를 그대로 또는 '--auto'로 돌린 뒤 execute_orders.py로 주문을 보내고, 15:30까지 risk_guard.py 점검을 되풀이해. 전날 주문 목록이 없으면 그 자리에서 전날 종가로 만들어 매도만 보내고(이 목록의 매수는 승인하지 마) '오류' 메일을 보내.
-3. 두 스크립트는 어느 폴더에서 실행해도 작업 폴더의 파일을 쓰고, 출력과 에러를 'logs/run_YYYYMMDD.log'에 남겨. 한 단계가 실패하면 '오류' 메일을 보내고 그 결과가 필요한 뒤 단계만 건너뛰어(안전장치는 늘 돌려).
+1. 'run_after_close.py'(평일 17:00): 휴장일이면 끝내. generate_signals.py → prepare_orders.py → daily_journal.py를 실행해. 가격이 오늘 종가까지 오지 않았으면 주문 목록을 만들지 말고 기록에 남겨. 같은 날짜 주문 목록이 이미 있으면 그대로 둬.
+2. 'run_market_open.py'(평일 08:50): 장이 열리기 전에 risk_guard.py로 시작 총자산을 기록하고 09:00까지 기다려. 그다음 실행 방식('승인' 기본, '자동')에 따라 approve_orders.py를 그대로 또는 '--auto'로 돌린 뒤 execute_orders.py로 주문을 보내고, 15:30까지 risk_guard.py 점검을 되풀이해. 전날 주문 목록이 없으면 그 자리에서 전날 종가로 만들어 매도만 보내(이 목록의 매수는 승인하지 마).
+3. 두 스크립트는 어느 폴더에서 실행해도 작업 폴더의 파일을 쓰고, 출력과 에러를 'logs/run_YYYYMMDD.log'에 남겨. 한 단계가 실패하면 기록하고, 그 결과가 필요한 뒤 단계만 건너뛰어(안전장치는 늘 돌려).
 4. 내 컴퓨터에 맞는 실행 파일 두 개(윈도우 '.bat', Mac '.sh')와, 평일 17:00·08:50 예약을 등록·확인·삭제하는 방법을 담은 'docs/scheduler_setup.md'를 만들어줘.
-5. '--dry-run'이면 시각을 기다리지 않고 바로 끝까지 돌되, 주문과 메일은 보내지 않고 기록만 남겨. 이번에는 두 스크립트를 '--dry-run'으로만 실행해줘.
+5. '--dry-run'이면 시각을 기다리지 않고 바로 끝까지 돌되, 주문은 보내지 않고 기록만 남겨. 이번에는 두 스크립트를 '--dry-run'으로만 실행해줘.
 
 [하지 말 것]
 - 예약 실행에 직접 등록하지 마. 등록은 내가 안내 문서를 보고 한다.
@@ -2086,7 +2086,7 @@ window.MathJax = {
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
-<li class="check-item"><input type="checkbox"> 드라이런에서 두 작업이 순서대로 돌았고, 실제 주문과 메일은 나가지 않았다.</li>
+<li class="check-item"><input type="checkbox"> 드라이런에서 두 작업이 순서대로 돌았고, 실제 주문은 나가지 않았다.</li>
 <li class="check-item"><input type="checkbox"> <code>docs/scheduler_setup.md</code>를 보고 평일 17:00과 08:50 예약을 등록한 뒤, 등록 목록에서 두 개를 확인했다.</li>
 </ul>
 <hr />
