@@ -1768,7 +1768,11 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#1-하루의-흐름">1. 하루의 흐름</a>
             
-            <a class="nav-heading level-3" href="#2-사람이-하는-일과-프로그램이-하는-일">2. 사람이 하는 일과 프로그램이 하는 일</a>
+            <a class="nav-heading level-3" href="#2-프로그램은-파일로-이어집니다">2. 프로그램은 파일로 이어집니다</a>
+            
+            <a class="nav-heading level-3" href="#3-하루를-따라가-보기">3. 하루를 따라가 보기</a>
+            
+            <a class="nav-heading level-3" href="#4-사람이-하는-일과-프로그램이-하는-일">4. 사람이 하는 일과 프로그램이 하는 일</a>
             
             <a class="nav-heading level-2" href="#관전-포인트-및-체크리스트">관전 포인트 및 체크리스트</a>
             
@@ -2003,53 +2007,79 @@ window.MathJax = {
 
       <main>
         <h2 id="이번-클립에서-만들-것">이번 클립에서 만들 것</h2>
-<p>새 프로그램은 만들지 않습니다. 앞에서 뽑은 매매 신호가 실제 주문이 되기까지, Part 4에서 만들 시스템을 한 장의 지도로 봅니다.</p>
+<p>새 프로그램은 만들지 않습니다. 앞에서 뽑은 매매 신호가 실제 주문이 되기까지, Part 4에서 만들 시스템을 지도와 하루 예시로 미리 봅니다.</p>
 <blockquote>
 <p>💡 지금 증권사 계좌를 켤 필요는 없습니다. 증권사 연결은 다음 클립에서 합니다.</p>
 </blockquote>
 <ul>
-<li>하루가 돌아가는 순서</li>
-<li>사람이 하는 일과 프로그램이 하는 일</li>
+<li>하루가 돌아가는 순서와 그때 일하는 프로그램</li>
+<li>프로그램끼리 파일로 이어지는 방식</li>
+<li>하루를 따라가 보기</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
 <h3 id="1-하루의-흐름">1. 하루의 흐름</h3>
-<p>신호 파일(<code>signals.json</code>)은 무엇을 몇 주 들고 있어야 하는지, 즉 <strong>목표</strong>만 정합니다. 계좌에 실제로 몇 주가 있는지는 모릅니다. Part 4는 이 목표를 실제 주문으로 옮기는 장치를 만듭니다. 세 전략은 모두 장 마감 뒤 종가로 판정하므로 하루는 이렇게 돌아갑니다.</p>
+<p>신호 파일(<code>signals.json</code>)은 무엇을 몇 주 들고 있어야 하는지, 즉 <strong>목표</strong>만 정합니다. 계좌에 실제로 몇 주가 있는지는 모릅니다. Part 4는 이 목표를 실제 주문으로 옮기는 프로그램들을 만듭니다. 세 전략은 모두 장 마감 뒤 종가로 판정하므로 하루는 이렇게 돌아갑니다.</p>
 <div class="step-flow">
   <div class="step-card">
     <span class="step-num">17:00</span>
     <div class="step-body">
       <div class="step-title">장 마감 후: 신호 → 주문 목록</div>
-      <div class="step-desc">오늘 종가로 신호를 계산하고, 계좌의 실제 보유와 비교해 다음 날 사고팔 수량을 정합니다.</div>
+      <div class="step-desc">오늘 종가로 신호를 계산하고(<code>generate_signals.py</code>), 계좌의 실제 보유와 비교해 다음 날 사고팔 수량을 정합니다(<code>prepare_orders.py</code>).</div>
     </div>
   </div>
   <div class="step-card verify">
     <span class="step-num">개장 전</span>
     <div class="step-body">
       <div class="step-title">사람: 승인</div>
-      <div class="step-desc">주문 목록 파일에서 매수를 승인하거나 거절합니다. 승인하지 않은 매수는 나가지 않습니다.</div>
+      <div class="step-desc">주문 목록 파일을 열어 매수를 승인하거나 거절합니다. 승인하지 않은 매수는 나가지 않습니다. 고친 파일이 올바른지는 <code>approve_orders.py</code>가 검사합니다.</div>
     </div>
   </div>
   <div class="step-card">
     <span class="step-num">09:00</span>
     <div class="step-body">
       <div class="step-title">개장: 주문</div>
-      <div class="step-desc">매도와 승인된 매수를 증권사로 보냅니다.</div>
+      <div class="step-desc">매도와 승인된 매수를 증권사로 보냅니다(<code>execute_orders.py</code>). 모의투자에는 저녁에 주문을 맡겨 두는 예약주문이 없어서, 장이 열릴 때 프로그램이 보냅니다.</div>
     </div>
   </div>
   <div class="step-card">
     <span class="step-num">장중</span>
     <div class="step-body">
       <div class="step-title">안전장치</div>
-      <div class="step-desc">손실이 기준에 닿으면 묻지 않고 팝니다.</div>
+      <div class="step-desc">종목이 평균 매수가보다 -3%, 계좌가 그날 시작보다 -2% 내려가면 묻지 않고 팝니다(<code>risk_guard.py</code>).</div>
     </div>
   </div>
 </div>
 
-<p>사람이 하는 일은 <strong>승인 한 가지</strong>입니다. 대부분의 날은 주문 목록이 비어 있어 할 일이 없습니다.</p>
-<p>이 흐름을 받치는 것이 세 가지 더 있습니다. 증권사에서 잔고와 가격을 받는 <strong>연결</strong>, 일어난 일(체결 결과, 손절, 오류, 장 마감 후 일지)을 메일로 알려 주는 <strong>알림</strong>, 위 순서를 매일 정해진 시각에 돌리는 <strong>자동 실행</strong>입니다. 알림은 이미 일어난 일을 알려 줄 뿐, 거래 단계가 아닙니다.</p>
+<p>이 흐름을 받치는 것이 세 가지 더 있습니다.</p>
+<ul>
+<li><strong>연결</strong>: 증권사에서 잔고와 가격을 받습니다(<code>kis_auth.py</code>, <code>market_data.py</code>).</li>
+<li><strong>알림과 일지</strong>: 장 마감 후 일지(<code>daily_journal.py</code>)와 체결 결과, 손절, 오류를 메일로 받습니다(<code>notifier.py</code>). 이미 일어난 일을 알려 줄 뿐, 거래 단계는 아닙니다.</li>
+<li><strong>자동 실행</strong>: 위 순서를 매일 정해진 시각에 저절로 돌립니다.</li>
+</ul>
 <hr />
-<h3 id="2-사람이-하는-일과-프로그램이-하는-일">2. 사람이 하는 일과 프로그램이 하는 일</h3>
+<h3 id="2-프로그램은-파일로-이어집니다">2. 프로그램은 파일로 이어집니다</h3>
+<p>각 프로그램은 앞 프로그램이 남긴 파일을 읽고, 자기 결과를 파일로 남깁니다. 그래서 단계마다 따로 만들고 따로 확인할 수 있고, 무슨 일이 있었는지 파일을 열어 보면 알 수 있습니다.</p>
+<pre><code class="language-text">signals_날짜.json     오늘의 목표 (무엇을 몇 주)
+      ↓ 계좌의 실제 보유와 비교
+orders_날짜.json      다음 날 낼 주문 목록  ← 사람이 매수의 승인 상태를 고침
+      ↓ 개장 때 증권사로 전송
+orders_history.json   실제로 보낸 주문과 체결 기록
+</code></pre>
+<p>파일 이름의 날짜는 신호를 계산한 장 마감일입니다. 날마다 새 파일이 생겨 지난 목표와 주문 목록이 그대로 남습니다.</p>
+<hr />
+<h3 id="3-하루를-따라가-보기">3. 하루를 따라가 보기</h3>
+<p>아래는 흐름을 보여 주기 위한 예시입니다.</p>
+<pre><code class="language-text">월 17:00  페어 스위칭 신호가 하나금융지주에서 KB금융으로 바뀜
+          주문 목록: 하나금융지주 5주 매도(자동), KB금융 3주 매수(승인 대기)
+월 저녁   일일 보고 메일을 보고, 주문 목록 파일에서 KB금융 매수를 '승인'으로 고침
+화 09:00  하나금융지주 매도, KB금융 매수 → 체결 결과 메일
+화 11:20  KB금융이 평균 매수가보다 -3% → 묻지 않고 매도 → 안전장치 메일
+화 17:00  KB금융은 그 달 동안 다시 사지 않으므로 주문 목록에 오르지 않음
+</code></pre>
+<p>월요일 저녁에 승인하지 않았다면, 화요일에는 하나금융지주 매도만 나가고 KB금융 매수는 나가지 않습니다. 대부분의 날은 이런 일 없이 주문 목록이 비어 있습니다.</p>
+<hr />
+<h3 id="4-사람이-하는-일과-프로그램이-하는-일">4. 사람이 하는 일과 프로그램이 하는 일</h3>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -2071,11 +2101,12 @@ window.MathJax = {
 </tr>
 </tbody>
 </table></div>
-<p><strong>위험을 늘리는 일은 사람이 확인하고, 위험을 줄이는 일은 프로그램이 바로 합니다.</strong> 그래서 아무것도 하지 않는 쪽이 늘 안전한 쪽입니다.</p>
+<p><strong>위험을 늘리는 일은 사람이 확인하고, 위험을 줄이는 일은 프로그램이 바로 합니다.</strong> 그래서 아무것도 하지 않는 쪽이 늘 안전한 쪽입니다. 사람이 하는 일은 장 마감 후부터 다음 개장 전 사이의 승인 한 가지입니다.</p>
 <hr />
 <h2 id="관전-포인트-및-체크리스트">관전 포인트 및 체크리스트</h2>
 <ul>
-<li class="check-item"><input type="checkbox"> 장 마감 후, 개장 전, 개장, 장중에 각각 무슨 일이 일어나는지 설명할 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 하루 흐름에서 각 프로그램이 언제 일하는지 짚을 수 있다.</li>
+<li class="check-item"><input type="checkbox"> 주문 목록 파일이 언제 만들어지고, 사람이 그 안의 어디를 고치는지 설명할 수 있다.</li>
 <li class="check-item"><input type="checkbox"> 매수만 승인을 받는 이유를 설명할 수 있다.</li>
 </ul>
 <hr />
