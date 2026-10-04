@@ -2048,7 +2048,7 @@ KB금융        14주    11주      +3   (3주 매수)
 <blockquote>
 <p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>market_data.py</code>의 시세 표에 장 운영 여부를 덧붙이고, <code>generate_signals.py</code>가 총 투자금을 계좌에서 조회하게 바꾼 뒤, 오늘 기준 <code>signals_날짜.json</code>과 <code>signals.json</code>을 다시 만듭니다.</p>
 </blockquote>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 작업 폴더의 market_data.py는 장이 닫혀 있을 때 마지막 거래일의 시세를 보여 주는데, 표에는 그 점이 드러나지 않아. 그리고 generate_signals.py는 총 투자금을 내가 적어 둔 숫자로 계산해. 이제 계좌가 연결됐으니, 신호를 내 모의투자 계좌의 실제 금액에 맞춰 만들고 싶어. 작업 폴더의 kis_auth.py(잔고 조회), market_data.py, generate_signals.py를 쓴다.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 작업 폴더의 market_data.py는 장이 닫혀 있을 때 마지막 거래일의 시세를 보여 주는데, 표에는 그 점이 드러나지 않아. 그리고 계좌가 연결됐으니, 신호를 내 모의투자 계좌의 실제 금액으로 계산하고 싶어. 작업 폴더의 kis_auth.py(잔고 조회), market_data.py, generate_signals.py를 쓴다.
 
 [만들 것]
 1. market_data.py의 시세 표에 지금 장이 열려 있는지(평일 09:00~15:30, 휴장일 제외) 표시하고, 닫혀 있으면 표 위에 '장이 열려 있지 않아 마지막 거래일의 값'과 그 거래일 날짜를 적게 고쳐줘. 시세를 받는 방식은 바꾸지 마.
