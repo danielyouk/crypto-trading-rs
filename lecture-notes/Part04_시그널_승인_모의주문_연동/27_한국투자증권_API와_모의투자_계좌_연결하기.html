@@ -1792,8 +1792,6 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
-            <a class="nav-heading level-2" href="#자주-발생하는-문제">자주 발생하는 문제</a>
-            
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
             
           </div>
@@ -2253,40 +2251,6 @@ KIS_IS_PAPER=True
 <li class="check-item"><input type="checkbox"> 내 모의투자 계좌의 현금과 주식 현황이 나왔고, <code>KIS_IS_PAPER</code>가 <code>True</code>가 아닐 때는 아무것도 보내지 않았다.</li>
 <li class="check-item"><input type="checkbox"> AI가 쓴 서버 주소와 거래 코드의 출처가 KIS Developers 문서나 공식 GitHub 예제였다.</li>
 </ul>
-<hr />
-<h2 id="자주-발생하는-문제">자주 발생하는 문제</h2>
-<ul>
-<li><strong>"유효하지 않은 AppKey입니다"(EGW00103) / "유효하지 않은 AppSecret입니다"(EGW00105) 에러</strong>: 실전용 키와 모의투자용 키는 서로 다릅니다. KIS Developers 신청현황 표에서 <strong>구분이 '모의투자계좌'인 줄</strong>의 [복사] 버튼으로 가져온 키인지 확인하세요.</li>
-<li><strong>API 신청 때 "이미 등록된 계좌번호입니다."가 뜨는데 신청현황에는 없을 때</strong>: KIS Developers 서비스 신청의 1단계 휴대폰 인증 화면에서 'ID변경 전 신청정보 삭제'를 한 뒤 다시 신청합니다. 신청정보 화면 아래 유의사항에 적힌 방법입니다.</li>
-<li><strong>접속 주소·포트 오류</strong>: 모의투자는 <code>https://openapivts.koreainvestment.com:29443</code> (포트 29443)을 사용해야 합니다.</li>
-<li><strong>키가 갑자기 안 먹을 때 (기간 제한)</strong>:</li>
-</ul>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>무엇</th>
-<th>조건</th>
-<th>그때 할 일</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>모의투자 참가기간</td>
-<td>1-2에서 고른 기간(최대 3개월)이 끝남</td>
-<td>[신청/재도전] 탭에서 다시 신청합니다. 계좌번호가 바뀌었다면 신청/조회 화면의 [추가신청하기]로 새 번호를 등록하고 <code>.env</code>의 <code>KIS_CANO</code>를 고칩니다</td>
-</tr>
-<tr>
-<td>모의투자 미접속</td>
-<td>3개월간 모의투자 프로그램 접속 없음</td>
-<td>참가 신청이 취소됩니다. 다시 신청합니다</td>
-</tr>
-<tr>
-<td>API 미사용</td>
-<td>3개월간 거래내역 없음</td>
-<td>접속이 차단될 수 있습니다. 다시 신청하면 쓸 수 있습니다</td>
-</tr>
-</tbody>
-</table></div>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
 <p>증권사 계좌와 연결되었습니다.<br />
