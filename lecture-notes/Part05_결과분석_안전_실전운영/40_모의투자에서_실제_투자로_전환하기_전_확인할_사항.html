@@ -1918,7 +1918,11 @@ window.MathJax = {
             
             <a class="nav-heading level-3" href="#2-실전-전환-10대-최종-체크리스트">2. 실전 전환 10대 최종 체크리스트</a>
             
+            <a class="nav-heading level-3" href="#3-실전-계좌로-바꾸는-방법">3. 실전 계좌로 바꾸는 방법</a>
+            
             <a class="nav-heading level-2" href="#실습-실습-28-실전-시작-가능-여부go-no-go-점검">실습 — 실습 28: 실전 시작 가능 여부(GO / NO-GO) 점검</a>
+            
+            <a class="nav-heading level-3" href="#이어서-go-판정을-받은-뒤-실전-모드-추가하기">이어서: GO 판정을 받은 뒤 실전 모드 추가하기</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -2013,7 +2017,8 @@ window.MathJax = {
 <li>모의투자와 실전 투자의 <strong>결정적 3가지 현실 차이 (심리적 압박, 실제 호가 체결 슬리피지, 세금/출금 이슈)</strong></li>
 <li><strong>실전 전환 10대 체크리스트 (인증, 보안, 자산관리, 하드가드레일, 비상 대응)</strong></li>
 <li>단계별 자금 스케일업 로드맵 (Stage 1: 100만 원 ➔ Stage 2: 1,000만 원 ➔ Stage 3: 목표 운용 자산)</li>
-<li><strong>실습 28</strong>: Claude Code와 함께 내 시스템으로 실전을 시작해도 되는지(GO), 아직 안 되는지(NO-GO) 점검</li>
+<li>실전 계좌로 바꾸는 방법: 한 줄 바꾸기가 아니라 따로 하는 한 단계</li>
+<li><strong>실습 28</strong>: 실전을 시작해도 되는지(GO/NO-GO) 점검하고, GO 뒤에 실전 모드 추가하기</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
@@ -2041,7 +2046,7 @@ window.MathJax = {
 <h3 id="2-실전-전환-10대-최종-체크리스트">2. 실전 전환 10대 최종 체크리스트</h3>
 <ol>
 <li><strong>[모의투자 검증]</strong> 최소 2주 이상 모의투자에서 에러 없는 무인 주문/체결 이력을 기록했는가?</li>
-<li><strong>[보안 격리]</strong> <code>.env</code> 파일에 실전 <code>APP_KEY</code>가 안전하게 보관되어 있고 <code>.gitignore</code>가 적용되었는가?</li>
+<li><strong>[보안 격리]</strong> 실전 키가 모의용 <code>.env</code>와 따로 <code>.env.live</code>에 보관되어 있고, 두 파일 모두 <code>.gitignore</code>에 들어 있는가?</li>
 <li><strong>[하루 손실 한도]</strong> 하루 손실이 총 투자금의 3%에 닿으면 사람 승인 없이 전 종목이 시장가로 청산되는가?</li>
 <li><strong>[매수 잠금]</strong> 청산 뒤 <code>lock.flag</code>를 지우기 전까지 매수가 나가지 않는 것이 테스트되었는가?</li>
 <li><strong>[1회 주문 상한]</strong> 1회 매수 주문 금액이 총 투자금의 60%를 넘으면 거부하는 검사가 <code>order_validator.py</code>에 걸려 있는가?</li>
@@ -2052,6 +2057,40 @@ window.MathJax = {
 <li><strong>[심리적 각오]</strong> 백테스트에서 확인한 내 전략의 최대 손실(MDD)을 실제 돈으로 겪어도 감내할 마음의 준비가 되었는가?</li>
 </ol>
 <hr />
+<h3 id="3-실전-계좌로-바꾸는-방법">3. 실전 계좌로 바꾸는 방법</h3>
+<p>지금까지 만든 시스템은 모의투자 서버로만 요청을 보내고, 실전 계좌로 넘어가는 길이 없습니다. 모의투자로 연습하는 동안 실수로 진짜 돈이 나가지 않게 일부러 그렇게 만들었습니다. 실전 전환은 점검에서 GO를 받은 뒤 <strong>따로 하는 한 단계</strong>로 합니다.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>순서</th>
+<th>하는 일</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>KIS Developers에서 <strong>실전투자계좌로 API를 따로 신청</strong>해 실전 키를 받음</td>
+<td>모의와 실전은 키부터 다름</td>
+</tr>
+<tr>
+<td>2</td>
+<td>실전 키는 <strong>별도 파일 <code>.env.live</code></strong>에 직접 넣음. 모의용 <code>.env</code>는 그대로 둠</td>
+<td>파일 한 줄로 실전이 되지 않게</td>
+</tr>
+<tr>
+<td>3</td>
+<td>프롬프트로 실전 모드를 추가함. 실전 모드는 <strong>실행할 때 직접 고른 경우에만</strong> 켜짐</td>
+<td>실수로 켜지지 않게</td>
+</tr>
+<tr>
+<td>4</td>
+<td>실전 모드에서는 <strong>소액 상한</strong>을 두고, 승인 방식과 기존 안전장치를 그대로 씀</td>
+<td>소액 시작 원칙</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
 <h2 id="실습-실습-28-실전-시작-가능-여부go-no-go-점검">실습 — 실습 28: 실전 시작 가능 여부(GO / NO-GO) 점검</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <blockquote>
@@ -2060,7 +2099,7 @@ window.MathJax = {
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 모의투자에서 실전 투자로 전환하기 전에, 시스템이 빠짐없이 제대로 준비됐는지 점검하고 점검 보고서를 만들고 싶어.
 
 [만들 것] 다음 조건에 맞춰 파이썬 스크립트 'system_audit.py'를 작성하고 실행해줘:
-1. .env 파일이 있는지, 그리고 Git을 쓴다면 .env가 코드와 함께 인터넷에 올라가지 않게 제외(.gitignore)돼 있는지 검사
+1. .env 파일(실전 키를 넣었다면 .env.live도)이 있는지, 그리고 Git을 쓴다면 이 파일들이 코드와 함께 인터넷에 올라가지 않게 제외(.gitignore)돼 있는지 검사
 2. 매수 주문이 승인 없이 나간 적이 없는지 검사 ('orders_history.json'의 매수 주문마다 'approvals_log.json'에 승인 기록이 있는지 대조. 시험 주문은 제외). 'approvals_log.json'이 없으면 모든 매수를 '승인 기록 없음'으로 봐. 'orders_history.json'이 없거나 시험 주문을 빼고 남는 매수가 없으면 통과로 적지 말고 '확인할 매수 없음'으로 적어.
 3. risk_guard.py에 하루 손실이 총 투자금의 3%에 닿으면 전 종목을 팔고 매수를 멈추는(lock.flag) 코드가 있는지 검사
 4. order_validator.py가 금액이 총 투자금의 60%를 넘는 매수 주문, 하루 15회를 넘는 주문, 현재가와 3% 이상 차이 나는 가격의 매수 주문을 거부하는지 검사
@@ -2073,12 +2112,34 @@ window.MathJax = {
 
 [확인] 대화창에 항목별 검사 결과와 최종 GO/NO-GO 판정표가 출력되었는지, 그리고 'docs/live_trading_readiness_audit.md' 파일이 저장되었는지 확인해줘.
 </code></pre></div>
+<h3 id="이어서-go-판정을-받은-뒤-실전-모드-추가하기">이어서: GO 판정을 받은 뒤 실전 모드 추가하기</h3>
+<p>GO 판정을 받고 실전 키를 <code>.env.live</code>에 넣었다면 아래 프롬프트를 입력하세요. NO-GO라면 이 단계는 건너뜁니다.</p>
+<blockquote>
+<p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>.env.live</code>(실전 키, 내가 직접 만듦)를 읽고, <code>kis_auth.py</code>에 실전 모드를 덧붙입니다. 실제 주문은 보내지 않고 실전 계좌 잔고만 조회해 연결을 확인합니다.</p>
+</blockquote>
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 모의투자로 점검을 마치고 GO 판정을 받았어. 이제 소액으로 실제 계좌에서 운용하고 싶어. 지금 kis_auth.py는 모의투자 서버로만 보내게 되어 있어. 실전 키는 KIS Developers에서 실전투자계좌로 따로 신청해, 작업 폴더의 .env.live에 내가 직접 넣어 두었어(항목 이름은 .env와 같아).
+
+[만들 것]
+1. kis_auth.py에 실전 모드를 추가해줘. 실전 모드는 내가 실행할 때 직접 고른 경우(예: '--live-account' 옵션)에만 켜지고, 그때만 .env.live의 키와 실전 서버를 써. 고르지 않으면 지금처럼 모의투자로만 동작해.
+2. 실전 모드에서는 화면과 기록 맨 앞에 '실전 계좌'라고 눈에 띄게 표시하고, 신호 스크립트의 총 투자금이 내가 정한 상한(예: 300만 원)을 넘으면 아무 주문도 보내지 말고 멈춰. 승인 방식은 '자동'으로 바꿀 수 없게 해.
+3. 실전 모드로 주문을 보내는 프로그램(주문 실행, 장중 안전장치, 자동 실행을 만들었다면 그것까지)이 같은 옵션을 받아 넘기게 하고, 하루 손실 한도·주문 전 검사·긴급 정지가 실전 모드에서도 똑같이 작동하는지 확인해줘.
+4. 실전 계좌로 실제 주문은 보내지 말고, 잔고 조회만 한 번 해서 연결을 확인해줘.
+
+[하지 말 것]
+- 실전 서버 주소와 거래 코드를 기억으로 채우지 마. KIS Developers 문서나 한국투자증권 공식 GitHub 예제에서 확인해. 모의투자와 주소, 코드가 달라.
+- .env.live를 만들거나 고치거나 내용을 화면에 보여주지 마.
+- 실전 모드가 옵션 없이 켜지는 길(설정 파일 한 줄, 기본값 등)을 만들지 마.
+- 전략 규칙과 입력값은 모의투자에서 검증한 그대로 둬.
+
+[확인] 옵션 없이 실행하면 모의투자 잔고가, '--live-account'로 실행하면 실전 계좌 잔고가 나오는지 보여주고, .gitignore에 .env.live가 들어 있는지 확인해 없으면 넣어줘.
+</code></pre></div>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 점검 스크립트가 보안 설정과 안전장치 파일(<code>risk_guard.py</code>, <code>order_validator.py</code>)을 모두 검사했다.</li>
 <li class="check-item"><input type="checkbox"> <code>docs/live_trading_readiness_audit.md</code>에 GO/NO-GO 판정과 근거가 저장되었다.</li>
 <li class="check-item"><input type="checkbox"> NO-GO 항목이 있다면 무엇을 고쳐야 하는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> (GO 뒤) 옵션 없이 실행하면 모의투자로만 동작하고, 실전 모드는 직접 고를 때만 켜지는 것을 확인했다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
