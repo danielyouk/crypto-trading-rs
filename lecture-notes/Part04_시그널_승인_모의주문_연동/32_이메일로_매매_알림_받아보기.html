@@ -2079,25 +2079,25 @@ KB금융        3주 매수
 <p>이 프로그램들은 뒤에서 장 운영 시간에 맞춰 자동으로 돌아가게 만듭니다. 그러면 나는 메일을 받기만 합니다. 이번 클립에서는 알림 모듈을 만들고 주문 프로그램에 붙이는 것까지 하고, 메일이 실제로 어떻게 오는지는 과거의 하루를 가상으로 돌려 확인합니다. 가상 실행은 증권사에 연결하지 않고 가격 파일만 쓰며, 결과는 <code>logs/replay</code> 폴더에만 남습니다.</p>
 <hr />
 <h3 id="3-메일-설정">3. 메일 설정</h3>
-<p>프로그램은 <strong>SMTP</strong>(메일을 보낼 때 쓰는 표준 규칙)로 메일을 보냅니다. 아래 다섯 값을 <code>.env</code>에 적습니다.</p>
+<p>프로그램은 <strong>SMTP</strong>(메일을 보낼 때 쓰는 표준 규칙)로 메일을 보냅니다. 필요한 값은 다섯 개이고, 증권사 연결 때 만든 <code>.env</code> 파일 맨 아래에 이어서 적습니다.</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
 <th>값</th>
 <th>뜻</th>
-<th>예 (Gmail)</th>
+<th>Gmail이면</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>SMTP_HOST</code></td>
 <td>메일을 보내 주는 서버 주소</td>
-<td><code>smtp.gmail.com</code></td>
+<td><code>smtp.gmail.com</code> (정해진 값)</td>
 </tr>
 <tr>
 <td><code>SMTP_PORT</code></td>
 <td>접속 번호</td>
-<td><code>587</code></td>
+<td><code>587</code> (정해진 값)</td>
 </tr>
 <tr>
 <td><code>SMTP_USER</code></td>
@@ -2107,18 +2107,45 @@ KB금융        3주 매수
 <tr>
 <td><code>SMTP_PASSWORD</code></td>
 <td><strong>앱 비밀번호</strong></td>
-<td>16자리</td>
+<td>아래 순서로 발급받은 16자리</td>
 </tr>
 <tr>
 <td><code>ALERT_TO</code></td>
 <td>알림을 받을 주소</td>
-<td>내가 자주 보는 메일 주소</td>
+<td>내가 자주 보는 메일 주소. 보내는 주소와 같아도 됨</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>앱 비밀번호</strong>는 메일 서비스가 프로그램용으로 따로 내주는 비밀번호입니다. Gmail은 2단계 인증을 켠 뒤 Google 계정 보안 설정에서 발급합니다. 메뉴 위치는 바뀔 수 있으니, 찾기 어려우면 Claude Code에게 "Gmail 앱 비밀번호 발급 방법을 알려줘"라고 물어보세요.</p>
+<p><strong>앱 비밀번호 발급 (Gmail)</strong> — 평소 로그인 비밀번호가 아니라, 메일 서비스가 프로그램용으로 따로 내주는 비밀번호입니다.</p>
+<ol>
+<li>브라우저에서 <a href="https://myaccount.google.com">Google 계정</a>에 로그인하고 왼쪽 메뉴 <strong>보안(Security &amp; sign-in)</strong>으로 갑니다.</li>
+<li><strong>2단계 인증(2-Step Verification)</strong>이 켜져 있는지 확인합니다. 꺼져 있으면 먼저 켭니다. 앱 비밀번호는 2단계 인증이 켜진 계정에서만 만들 수 있습니다.</li>
+</ol>
+<figure class="visual-figure">
+<p><img alt="Google 계정 보안 화면의 2단계 인증 상태" src="../_core/assets/gmail_01_security_2step_on.png" /></p>
+<figcaption><strong>[캡처 1]</strong> 보안 화면. 2-Step Verification이 켜져 있으면(On) 다음으로 갑니다.</figcaption>
+</figure>
+<ol start="3">
+<li><a href="https://myaccount.google.com/apppasswords">앱 비밀번호 페이지</a>로 갑니다. 안 열리면 계정 페이지 맨 위 검색창에 "앱 비밀번호"를 쳐서 찾습니다.</li>
+<li>앱 이름 칸에 <code>ai-trading</code>처럼 알아볼 이름을 적고 <strong>만들기(Create)</strong>를 누릅니다.</li>
+</ol>
+<figure class="visual-figure">
+<p><img alt="앱 비밀번호 페이지에서 앱 이름을 적는 화면" src="../_core/assets/gmail_02_apppasswords_name.png" /></p>
+<figcaption><strong>[캡처 2]</strong> 앱 비밀번호 페이지. 이름을 적고 Create를 누르면 16자리 비밀번호가 한 번만 표시됩니다.</figcaption>
+</figure>
+<ol start="5">
+<li>16자리 비밀번호가 <strong>한 번만</strong> 표시됩니다. 네 글자씩 띄어 보이지만 띄어쓰기는 보기 편하라고 넣은 것이니, <code>.env</code>에는 <strong>띄어쓰기 없이</strong> 붙여 적습니다. 창을 닫으면 다시 볼 수 없으니 바로 복사합니다. 잃어버리면 지우고 새로 만들면 됩니다.</li>
+</ol>
+<p>회사나 학교 Google 계정은 관리자가 앱 비밀번호를 막아 둔 경우가 있습니다. 그때는 개인 Gmail을 쓰세요. 네이버 메일이면 <code>smtp.naver.com</code>, <code>587</code>을 쓰고, 메일 <strong>환경설정 → POP3/IMAP 설정</strong>에서 SMTP 사용을 켭니다.</p>
+<p><strong><code>.env</code>에 붙여 넣기</strong> — 아래를 그대로 복사해 <code>.env</code> 맨 아래에 붙여 넣고, 세 값(<code>SMTP_USER</code>, <code>SMTP_PASSWORD</code>, <code>ALERT_TO</code>)만 내 것으로 바꿉니다. <code>=</code> 양옆에 띄어쓰기를 두지 않고 따옴표도 쓰지 않습니다.</p>
+<pre><code class="language-env">SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=내주소@gmail.com
+SMTP_PASSWORD=앱비밀번호16자리를띄어쓰기없이
+ALERT_TO=알림받을주소@gmail.com
+</code></pre>
 <blockquote>
-<p>⚠️ 평소 로그인 비밀번호를 <code>.env</code>에 적지 마세요. 반드시 앱 비밀번호를 씁니다.</p>
+<p>⚠️ 평소 로그인 비밀번호를 <code>.env</code>에 적지 마세요. 앱 비밀번호는 채팅창이나 화면 공유에 노출됐다면 Google 계정에서 지우고 새로 만듭니다.</p>
 </blockquote>
 <hr />
 <h2 id="실습-실습-20-이메일-알림-모듈-만들기">실습 — 실습 20: 이메일 알림 모듈 만들기</h2>
