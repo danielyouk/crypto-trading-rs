@@ -1860,6 +1860,10 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#실습-실습-23-장-운영-시간에-맞춰-실행되는-작업-만들기">실습 — 실습 23: 장 운영 시간에 맞춰 실행되는 작업 만들기</a>
             
+            <a class="nav-heading level-3" href="#먼저-두-작업과-실행-파일-만들기">먼저: 두 작업과 실행 파일 만들기</a>
+            
+            <a class="nav-heading level-3" href="#이어서-안내-문서대로-예약-등록하기">이어서: 안내 문서대로 예약 등록하기</a>
+            
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
             <a class="nav-heading level-2" href="#다음-클립-예고">다음 클립 예고</a>
@@ -2012,7 +2016,7 @@ window.MathJax = {
 <li>하루에 두 번 실행하는 이유</li>
 <li>윈도우와 Mac에서 예약 실행 등록하기 (예약 없이 직접 실행해도 됨)</li>
 <li>나중에 전략을 바꾸고 싶을 때</li>
-<li><strong>실습 23</strong>: 장 마감 후 작업과 개장 작업 만들기 및 한 번 실행해 보기</li>
+<li><strong>실습 23</strong>: 장 마감 후 작업과 개장 작업 만들기, 안내 문서대로 예약 등록하기</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
@@ -2043,7 +2047,11 @@ window.MathJax = {
 <p><strong>예약은 선택입니다.</strong> 등록하지 않았다면 장 마감 후에 장 마감 후 작업을, 장이 열리기 전에 개장 작업을 직접 실행합니다. 하는 일은 같고, 컴퓨터가 대신 켜 주느냐 내가 켜느냐만 다릅니다. 개장 작업은 15:30까지 켜 둔 채 두어야 장중 안전장치가 돕니다.</p>
 <hr />
 <h3 id="2-윈도우와-mac에서-예약-실행하기">2. 윈도우와 Mac에서 예약 실행하기</h3>
-<p>예약 실행에는 <strong>실행 파일</strong>을 등록합니다. 작업 폴더로 옮겨 간 뒤 그 폴더 가상환경의 파이썬으로 프로그램을 돌리는 몇 줄짜리 파일입니다. 예약 실행은 터미널과 달리 작업 폴더와 가상환경을 잡아 주지 않아서 이렇게 적어 둡니다.</p>
+<p>예약 실행에는 <strong>실행 파일</strong>을 등록합니다. 작업 폴더로 옮겨 간 뒤 그 폴더 가상환경의 파이썬으로 프로그램을 돌리는 몇 줄짜리 파일입니다. 예약 실행은 터미널과 달리 작업 폴더와 가상환경을 잡아 주지 않아서 이렇게 적어 둡니다. 윈도우용은 대략 이런 모양이고, AI가 내 작업 폴더 경로를 넣어 만들어 줍니다.</p>
+<pre><code class="language-bat">@echo off
+cd /d C:\ai-trading
+.venv\Scripts\python.exe run_after_close.py
+</code></pre>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -2070,9 +2078,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table></div>
-<p>윈도우에서 평일 17:00에 실행 파일을 돌리는 등록 명령은 이런 모양입니다. Mac은 같은 내용을 <code>.plist</code> 파일에 적어 등록합니다.</p>
-<pre><code class="language-bat">schtasks /create /tn &quot;AI트레이딩 장 마감 후&quot; /tr &quot;C:\ai-trading\run_after_close.bat&quot; /sc weekly /d MON,TUE,WED,THU,FRI /st 17:00
-</code></pre>
+<p>등록 절차는 AI가 <strong>내 컴퓨터에 맞춰 쓴 <code>docs/scheduler_setup.md</code></strong>를 따릅니다(실습에서 만듭니다). 영상은 윈도우로 보여 주지만, 문서가 내 컴퓨터용으로 만들어지므로 Mac도 같은 순서입니다. 등록한 뒤에는 작업을 바로 한 번 실행해 <code>logs/run_날짜.log</code>에 기록이 남는지 봅니다. 그 시각에 할 일이 없으면 "휴장일" 또는 "장 시간 아님"에서 멈추는데, 그것으로 예약이 실행 파일까지 제대로 이어진 것은 확인된 셈입니다.</p>
 <blockquote>
 <p>⚠️ 예약 시각에 컴퓨터가 <strong>꺼져 있으면 그날은 실행되지 않습니다.</strong> 오늘 자 일지가 만들어지지 않았다면 실행 기록(<code>logs/run_YYYYMMDD.log</code>)을 확인하고, 그날은 두 작업을 직접 실행하면 됩니다. Mac은 작업 폴더가 '문서'나 '데스크탑' 안에 있으면 권한 문제로 예약 실행이 막힐 수 있습니다.</p>
 </blockquote>
@@ -2131,6 +2137,7 @@ window.MathJax = {
 </code></pre></div>
 <hr />
 <h2 id="실습-실습-23-장-운영-시간에-맞춰-실행되는-작업-만들기">실습 — 실습 23: 장 운영 시간에 맞춰 실행되는 작업 만들기</h2>
+<h3 id="먼저-두-작업과-실행-파일-만들기">먼저: 두 작업과 실행 파일 만들기</h3>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <blockquote>
 <p>📁 <strong>공유 파일</strong>: 이 프롬프트는 앞에서 만든 프로그램들을 불러 쓰고, 실행 기록을 <code>logs/run_YYYYMMDD.log</code>에, 등록 안내를 <code>docs/scheduler_setup.md</code>에 저장합니다. 같은 날짜의 주문 목록이 이미 있으면 덮어쓰지 않으므로, 고쳐 둔 승인 상태는 그대로 남습니다.</p>
@@ -2141,7 +2148,7 @@ window.MathJax = {
 1. 'run_after_close.py'(장 마감 후 작업): 오늘이 휴장일이면 아무것도 하지 않고 끝내. 아니면 generate_signals.py → prepare_orders.py → daily_journal.py를 차례로 실행해. 가격이 오늘 종가까지 오지 않았으면 주문 목록을 만들지 말고 기록에 남겨. 같은 날짜 주문 목록이 이미 있으면 그대로 둬.
 2. 'run_market_open.py'(개장 작업): 오늘이 휴장일이거나 15:30이 지났으면 아무것도 하지 않고 끝내. 아니면 장이 열리기 전에 risk_guard.py로 그날 아침의 계좌 총자산을 기록하고 09:00까지 기다려. 그다음 execute_orders.py로 주문을 보내고(이 프로그램이 approve_orders.py의 검사를 거쳐 매도와 승인된 매수만 고른다), 15:30까지 risk_guard.py의 실제 감시를 돌려(1분마다 기록하고 한도를 넘으면 모두 팖). 전날 주문 목록이 없으면 그 자리에서 전날 종가로 만들어 매도만 보내(이 목록의 매수는 승인하지 마).
 3. 두 스크립트는 어느 폴더에서 실행해도 작업 폴더의 파일을 쓰고, 출력과 에러를 'logs/run_YYYYMMDD.log'에 남겨. 한 단계가 실패하면 기록하고, 그 결과가 필요한 뒤 단계만 건너뛰어(안전장치는 늘 돌려).
-4. 내 컴퓨터에 맞는 실행 파일 두 개(윈도우 '.bat', Mac '.sh')와, 평일 17:00·08:50 예약을 등록·확인·삭제하는 방법을 담은 'docs/scheduler_setup.md'를 만들어줘.
+4. 내 컴퓨터에 맞는 실행 파일 두 개(윈도우 '.bat', Mac '.sh')와 'docs/scheduler_setup.md'를 만들어줘. 문서에는 평일 17:00·08:50 예약을 등록 → 등록됐는지 확인 → 지금 바로 한 번 실행해 보기 → 삭제하는 방법을 순서대로 적고, 노트북이 배터리로 돌 때·예약 시각을 놓쳤을 때·잠자기 상태일 때도 작업이 돌게 하는 설정과, 작업 폴더 위치 때문에 실행이 막히는 경우를 피하는 방법을 포함해.
 5. 만든 뒤 지금 바로 두 스크립트를 한 번씩 실행하고, 무슨 일이 있었는지(어디서 멈췄는지, 또는 어떤 단계가 돌았는지) 그대로 보여줘.
 
 [하지 말 것]
@@ -2151,11 +2158,18 @@ window.MathJax = {
 
 [확인] 두 작업의 실행 결과와 'logs/run_YYYYMMDD.log', 실행 파일 두 개와 'docs/scheduler_setup.md'가 생겼는지, 예약 없이 직접 실행하는 명령을 보여줘.
 </code></pre></div>
+<h3 id="이어서-안내-문서대로-예약-등록하기">이어서: 안내 문서대로 예약 등록하기</h3>
+<ol>
+<li><code>docs/scheduler_setup.md</code>를 열어 내 컴퓨터(윈도우 또는 Mac) 부분을 그대로 따라 두 작업을 등록합니다.</li>
+<li>문서의 "지금 바로 한 번 실행해 보기"대로 등록한 작업을 실행합니다. 지금 시각에 따라 "휴장일" 또는 "장 시간 아님"에서 멈추는 것이 정상입니다.</li>
+<li><code>logs/run_날짜.log</code>에 그 실행 기록이 남았는지 봅니다.</li>
+</ol>
+<p>예약을 걸지 않을 거라면 이 단계는 건너뛰고, 문서에서 두 작업을 직접 실행하는 명령만 확인해 둡니다.</p>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 두 작업을 한 번씩 실행해 각각 어디까지 돌았는지(또는 왜 멈췄는지) 실행 기록에서 확인했다.</li>
-<li class="check-item"><input type="checkbox"> <code>docs/scheduler_setup.md</code>를 보고 평일 17:00과 08:50 예약을 등록했거나, 예약 없이 두 작업을 직접 실행하는 명령을 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <code>docs/scheduler_setup.md</code>대로 두 작업을 등록하고 바로 한 번 실행해 <code>logs/run_날짜.log</code>에 기록이 남았다. (예약을 걸지 않는다면 직접 실행하는 명령을 확인했다.)</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
