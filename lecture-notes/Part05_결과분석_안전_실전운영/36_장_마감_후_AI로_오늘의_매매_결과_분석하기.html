@@ -2046,12 +2046,12 @@ window.MathJax = {
 <h2 id="실습-실습-24-ai-일일-매매-심층-분석-실행">실습 — 실습 24: AI 일일 매매 심층 분석 실행</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <blockquote>
-<p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>orders_history.json</code>(주문과 체결 기록), 오늘과 바로 전 거래일의 잔고 기록(<code>logs/holdings_YYYYMMDD.json</code>, 장 마감 후 일지를 쓸 때 함께 저장됨), 오늘 보유의 근거가 된 날짜별 신호 파일(<code>signals_날짜.json</code>)을 읽고, 분석을 <code>docs/daily_performance_review.md</code>로 저장합니다. 장 마감 뒤 <code>generate_signals.py</code> → <code>prepare_orders.py</code> → <code>daily_journal.py</code>가 끝나 오늘 자 잔고 기록이 있어야 합니다. 기록이 없으면 AI가 분석하지 않고 멈추도록 해 두었습니다.</p>
+<p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>orders_history.json</code>(주문과 체결 기록), 오늘과 그 전 가장 최근의 잔고 기록(<code>logs/holdings_YYYYMMDD.json</code>, 장 마감 후 일지를 쓸 때 함께 저장됨), 오늘 보유의 근거가 된 날짜별 신호 파일(<code>signals_날짜.json</code>)을 읽고, 분석을 <code>docs/daily_performance_review.md</code>로 저장합니다. 장 마감 뒤 <code>generate_signals.py</code> → <code>prepare_orders.py</code> → <code>daily_journal.py</code>가 끝나 오늘 자 잔고 기록이 있어야 합니다. 기록이 없으면 AI가 분석하지 않고 멈추도록 해 두었습니다.</p>
 </blockquote>
 <div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 오늘의 매매 체결 내역과 계좌 잔고 데이터를 바탕으로 AI 심층 성과 분석 리포트를 작성하고 싶어.
 
 [만들 것] 다음 분석을 수행해줘:
-1. 'orders_history.json', 오늘과 바로 전 거래일의 잔고 기록('logs/holdings_YYYYMMDD.json' 가운데 오늘 것과 그보다 앞선 가장 늦은 것), 오늘 보유의 근거가 된 신호 파일('signals_날짜.json' 가운데 기준일이 오늘보다 앞선 가장 늦은 것)을 읽어줘. 오늘 자 잔고 기록이 없으면 멈춰서 &quot;daily_journal.py를 먼저 실행하라&quot;고 알려줘. 평가손익 변화는 두 잔고 기록의 종목별 평가손익 차이로, 체결로 확정된 손익은 'orders_history.json'의 오늘 매도 체결 가격과 바로 전 잔고 기록의 평균 매수가 차이에 체결 수량을 곱해 구해. 바로 전 잔고 기록이 없으면 그 칸은 '어제 기록 없음'으로 표시해.
+1. 'orders_history.json', 오늘과 그 전 가장 최근의 잔고 기록('logs/holdings_YYYYMMDD.json' 가운데 오늘 것과 그보다 앞선 가장 늦은 것), 오늘 보유의 근거가 된 신호 파일('signals_날짜.json' 가운데 기준일이 오늘보다 앞선 가장 늦은 것)을 읽어줘. 오늘 자 잔고 기록이 없으면 멈춰서 &quot;daily_journal.py를 먼저 실행하라&quot;고 알려줘. 평가손익 변화는 두 잔고 기록의 종목별 평가손익 차이로, 체결로 확정된 손익은 'orders_history.json'의 오늘 매도 체결 가격과 바로 전 잔고 기록의 평균 매수가 차이에 체결 수량을 곱해 구해. 바로 전 잔고 기록이 없으면 그 칸은 '어제 기록 없음'으로 표시해.
 2. 체결 건마다 [예상 가격 vs 체결 가격]을 대조해 슬리피지(%)를 정리해줘. 오늘 체결이 한 건도 없으면 &quot;오늘 체결 없음&quot;이라고 적고 3번으로 넘어가.
 3. 오늘 총손익(체결로 확정된 손익 + 들고 있는 종목의 평가손익 변화)이 세 전략(추세추종, 듀얼 모멘텀, 페어 스위칭)에서 각각 얼마씩 나왔는지 나눈 표를 대화창에 출력해줘. 같은 종목을 두 전략이 들고 있으면 1번에서 읽은 신호 파일의 전략별 목표 수량 비율로 나눠.
 4. 오늘 손실이 난 종목마다, 시장 전체가 빠져서 생긴 손실인지(FinanceDataReader로 받은 그날 KOSPI 지수(^KS11) 등락과 비교) 우리 규칙 때문에 생긴 손실인지 나눠 본 'AI 원인 분석 의견서'를 작성하고 'docs/daily_performance_review.md'로 저장해줘.
