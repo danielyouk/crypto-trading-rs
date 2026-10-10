@@ -2028,7 +2028,8 @@ window.MathJax = {
   일지를 읽고 orders_날짜.json에서 매수의 '승인 대기'를 '승인' 또는 '거절'로 고쳐 저장
         ↓
 [08:50 개장 작업] run_market_open.py
-  ⓪ 08:50  신호 → 주문 목록     어젯밤 작업이 돌았으면 이미 있는 목록 그대로. 안 돌았으면 지금 만듦(매수는 승인 대기)
+  ⓪ 08:50  generate_signals.py → prepare_orders.py
+                              어젯밤 작업이 돌았으면 이미 있는 목록 그대로. 안 돌았으면 지금 만듦(매수는 승인 대기)
   ① 08:50  risk_guard.py      아침 계좌 총자산 기록                                    → logs/day_start_asset.json
   ② 09:00  execute_orders.py  approve_orders.py의 검사로 고친 목록을 원본과 대조
                               통과 → 매도, 체결 뒤 승인된 매수                            → orders_history.json, approvals_log.json
