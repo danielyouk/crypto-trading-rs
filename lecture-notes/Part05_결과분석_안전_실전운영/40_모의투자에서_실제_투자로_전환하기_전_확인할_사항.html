@@ -1922,7 +1922,7 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#실습-실습-28-실전-시작-가능-여부go-no-go-점검">실습 — 실습 28: 실전 시작 가능 여부(GO / NO-GO) 점검</a>
             
-            <a class="nav-heading level-3" href="#이어서-go-판정을-받은-뒤-실전-모드는-그때-요청합니다">이어서: GO 판정을 받은 뒤 — 실전 모드는 그때 요청합니다</a>
+            <a class="nav-heading level-3" href="#이어서-go-판정을-받은-뒤-실전-전환은-그때-이-순서로-요청합니다">이어서: GO 판정을 받은 뒤 — 실전 전환은 그때 이 순서로 요청합니다</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -2113,45 +2113,47 @@ window.MathJax = {
 
 [확인] 대화창에 항목별 검사 결과, [시스템 준비]·[운용 기간] 두 줄과 종합 판정, 실전 시작 가능일이 출력되었는지, 그리고 'docs/live_trading_readiness_audit.md' 파일이 저장되었는지 확인해줘.
 </code></pre></div>
-<h3 id="이어서-go-판정을-받은-뒤-실전-모드는-그때-요청합니다">이어서: GO 판정을 받은 뒤 — 실전 모드는 그때 요청합니다</h3>
-<p>이 단계는 몇 달 뒤의 일이고, 그때 여러분의 폴더는 지금과 조금 다를 것입니다. 그래서 여기서는 완성된 프롬프트 대신 <strong>지켜야 할 원칙</strong>만 둡니다. 그때 가서 이 원칙을 [맥락]·[만들 것]·[하지 말 것]·[확인]에 담아 AI에게 요청하면 됩니다. NO-GO인 동안에는 실전 키를 만들지도 않습니다.</p>
-<div class="table-wrapper"><table>
-<thead>
-<tr>
-<th>원칙</th>
-<th>뜻</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>실전은 <strong>내가 직접 고를 때만</strong> 켜진다</td>
-<td>실행할 때 '실전 계좌'를 뜻하는 옵션을 붙인 경우에만. 설정 파일 한 줄이나 기본값으로 켜지는 길은 없어야 한다</td>
-</tr>
-<tr>
-<td>실전 키는 <strong>따로</strong> 둔다</td>
-<td><code>.env.live</code>에 내가 직접 넣고, 모의용 <code>.env</code>는 그대로. AI가 그 파일을 만들거나 고치거나 화면에 보여 주지 않게 한다. <code>.gitignore</code>에도 넣는다</td>
-</tr>
-<tr>
-<td>실전에서도 <strong>같은 안전장치</strong></td>
-<td>하루 손실 한도, 주문 전 검사, 긴급 정지, 매수 승인이 모의투자와 똑같이 작동해야 한다. 화면과 기록 맨 앞에 '실전 계좌'를 눈에 띄게 표시</td>
-</tr>
-<tr>
-<td>첫 실행은 <strong>잔고 조회만</strong></td>
-<td>실제 주문은 보내지 않고 연결만 확인. 주문은 소액을 넣은 뒤 여느 날처럼 승인 절차로</td>
-</tr>
-<tr>
-<td>실전 주소와 거래 코드는 <strong>공식 자료에서</strong></td>
-<td>모의투자와 다르다. KIS Developers 문서나 한국투자증권 공식 GitHub 예제에서 확인하게 한다</td>
-</tr>
-</tbody>
-</table></div>
+<h3 id="이어서-go-판정을-받은-뒤-실전-전환은-그때-이-순서로-요청합니다">이어서: GO 판정을 받은 뒤 — 실전 전환은 그때 이 순서로 요청합니다</h3>
+<p>이 단계는 몇 달 뒤의 일이고, 그때 여러분의 폴더는 지금과 조금 다를 것입니다. 그래서 완성된 프롬프트 대신 <strong>요청할 순서와 지킬 것</strong>만 둡니다. 그때 가서 아래 내용을 [맥락]·[만들 것]·[하지 말 것]·[확인]에 담아 AI에게 요청하면 됩니다. NO-GO인 동안에는 실전 키를 만들지도 않습니다.</p>
+<div class="step-flow">
+  <div class="step-card verify">
+    <span class="step-num">1</span>
+    <div class="step-body">
+      <div class="step-title">실전 키 파일 <code>.env.live</code>는 내가 직접 만든다</div>
+      <div class="step-desc">KIS Developers에서 실전투자계좌로 API를 따로 신청해 받은 키를 넣습니다. 항목 이름은 <code>.env</code>와 같게. AI가 이 파일을 만들거나 고치거나 화면에 보여 주지 않게 하고, <code>.gitignore</code>에 넣습니다.</div>
+    </div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">2</span>
+    <div class="step-body">
+      <div class="step-title">지금 코드를 실전 모드로도 실행할 수 있게 바꿔 달라고 한다</div>
+      <div class="step-desc">실행할 때 '실전 계좌'를 뜻하는 옵션을 붙인 경우에만 켜지고, 그때만 <code>.env.live</code>의 키와 실전 서버를 씁니다. 옵션이 없으면 지금처럼 모의투자. 설정 파일 한 줄이나 기본값으로 켜지는 길은 만들지 않게 합니다.</div>
+    </div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">3</span>
+    <div class="step-body">
+      <div class="step-title">자동 거래 전체를 실전에서도 돌게 옮겨 달라고 한다</div>
+      <div class="step-desc">신호 → 주문 목록 → 승인 → 개장 주문 → 장중 안전장치 → 예약 작업까지, 같은 옵션을 받아 넘기게. 하루 손실 한도·주문 전 검사·긴급 정지·매수 승인은 모의투자와 똑같이 작동하고, 화면과 기록 맨 앞에 '실전 계좌'가 눈에 띄게 표시되게 합니다. 전략 규칙과 입력값은 검증한 그대로.</div>
+    </div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">4</span>
+    <div class="step-body">
+      <div class="step-title">첫 실행은 잔고 조회만, 첫 주문은 소액으로 여느 날처럼</div>
+      <div class="step-desc">실제 주문 없이 실전 계좌 잔고를 한 번 조회해 연결만 확인합니다. 그다음 소액(총 투자 가능 금액의 10% 이하, 100~300만 원)을 넣고, 승인 절차 그대로 첫 주문을 냅니다. 6개월 이상 그 금액으로 운용한 뒤에 늘립니다.</div>
+    </div>
+  </div>
+</div>
+
+<p>지킬 것 하나 더: 실전 서버 주소와 거래 코드는 모의투자와 다릅니다. 기억으로 채우지 말고 KIS Developers 문서나 한국투자증권 공식 GitHub 예제에서 확인하게 합니다.</p>
 <hr />
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> 점검 스크립트가 보안 설정과 안전장치 파일(<code>risk_guard.py</code>, <code>order_validator.py</code>)을 모두 검사했다.</li>
 <li class="check-item"><input type="checkbox"> <code>docs/live_trading_readiness_audit.md</code>에 GO/NO-GO 판정과 근거가 저장되었다.</li>
 <li class="check-item"><input type="checkbox"> NO-GO 항목이 있다면 무엇을 고쳐야 하는지 확인했다.</li>
-<li class="check-item"><input type="checkbox"> 실전 모드를 요청할 때 지킬 원칙 다섯 가지를 읽었고, GO 전에는 실전 키(<code>.env.live</code>)를 만들지 않는다.</li>
+<li class="check-item"><input type="checkbox"> 실전 전환을 요청할 순서 네 단계를 읽었고, GO 전에는 실전 키(<code>.env.live</code>)를 만들지 않는다.</li>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
