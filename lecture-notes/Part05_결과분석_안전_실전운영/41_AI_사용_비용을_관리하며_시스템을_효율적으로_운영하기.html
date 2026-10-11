@@ -1929,9 +1929,9 @@ window.MathJax = {
             
             <a class="nav-heading level-2" href="#이론-핵심">이론 핵심</a>
             
-            <a class="nav-heading level-3" href="#1-토큰-비용-체계와-프롬프트-캐싱의-마법">1. 토큰 비용 체계와 프롬프트 캐싱의 마법</a>
+            <a class="nav-heading level-3" href="#1-프롬프트-캐싱-똑같은-앞부분은-싸게">1. 프롬프트 캐싱: 똑같은 앞부분은 싸게</a>
             
-            <a class="nav-heading level-3" href="#2-토큰-다이어트-3대-황금률">2. 토큰 다이어트 3대 황금률</a>
+            <a class="nav-heading level-3" href="#2-ai가-읽는-양을-줄이는-세-가지-요령">2. AI가 읽는 양을 줄이는 세 가지 요령</a>
             
             <a class="nav-heading level-3" href="#내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</a>
             
@@ -2040,35 +2040,17 @@ window.MathJax = {
 </tbody>
 </table></div>
 <ul>
-<li>AI 요금이 매겨지는 방식과 <strong>프롬프트 캐싱</strong> (매번 똑같이 보내는 앞부분은 최대 90% 할인)</li>
+<li><strong>프롬프트 캐싱</strong>: 매번 똑같이 보내는 앞부분은 싸게 처리됨</li>
 <li>AI가 읽는 양을 줄이는 <strong>세 가지 요령</strong></li>
 <li>이 클립은 실습 없이 설명으로 지나갑니다. 다음 분석부터 요령 세 가지를 그대로 쓰면 됩니다.</li>
 </ul>
 <hr />
 <h2 id="이론-핵심">이론 핵심</h2>
-<h3 id="1-토큰-비용-체계와-프롬프트-캐싱의-마법">1. 토큰 비용 체계와 프롬프트 캐싱의 마법</h3>
-<p>Claude 모델은 대화의 앞부분(시스템 프롬프트, 매번 함께 읽히는 기본 코드 설명 등)이 이전과 똑같으면 그 부분을 잠시 기억해 두었다가 다시 씁니다(<strong>프롬프트 캐싱</strong>). 기억에서 다시 읽은 몫(캐시 히트)은 비용이 1/10 수준으로 줄어듭니다.</p>
-<div class="compare-box">
-  <div class="compare-card bad">
-    <div class="tag">매번 전체를 보내는 호출</div>
-    <div class="steps">
-      • 매번 20,000 토큰 전송<br>
-      • 1회당 0.06달러<br>
-      • 매일 10회 호출 시 <strong>월 18달러</strong> (약 25,000원)
-    </div>
-  </div>
-  <div class="compare-card good">
-    <div class="tag">프롬프트 캐싱 + 대화 정리 적용</div>
-    <div class="steps">
-      • 캐시 히트 시 90% 할인<br>
-      • 1회당 0.006달러<br>
-      • 매일 10회 호출 시 <strong>월 1.8달러</strong> (약 2,500원)
-    </div>
-  </div>
-</div>
-
+<h3 id="1-프롬프트-캐싱-똑같은-앞부분은-싸게">1. 프롬프트 캐싱: 똑같은 앞부분은 싸게</h3>
+<p>Claude는 대화의 앞부분(시스템 프롬프트, 매번 함께 읽히는 프로젝트 설명 등)이 이전과 똑같으면 그 부분을 잠시 기억해 두었다가 다시 씁니다(<strong>프롬프트 캐싱</strong>). Claude Code는 이것을 알아서 씁니다. 기억에서 다시 읽은 몫(캐시 히트)은 처음 읽을 때보다 훨씬 적게 셉니다. 쓴 만큼 내는 방식의 요금으로는 약 1/10입니다.</p>
+<p>다만 대화가 길어지면 매번 다시 읽는 양 자체가 늘어납니다. 캐싱이 덜어 주지 못하는 그 부분을 줄이는 것이 다음 세 가지 요령입니다.</p>
 <hr />
-<h3 id="2-토큰-다이어트-3대-황금률">2. 토큰 다이어트 3대 황금률</h3>
+<h3 id="2-ai가-읽는-양을-줄이는-세-가지-요령">2. AI가 읽는 양을 줄이는 세 가지 요령</h3>
 <div class="arch-grid">
   <div class="arch-card">
     <div class="card-title">① "읽어" 대신 "분석해"라고 하기</div>
