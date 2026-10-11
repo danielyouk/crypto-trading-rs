@@ -26,10 +26,36 @@
 
 **Cursor**는 AI 기능이 들어간 코드 편집기입니다. 새 폴더를 만들지 않고 **지금 쓰던 작업 폴더를 그대로** 엽니다. `.env`, 프로그램, 가상환경(`.venv`)이 모두 그 안에 있기 때문입니다.
 
-1. [cursor.com](https://cursor.com)에서 Cursor를 설치하고 실행합니다.
-2. **File → Open Folder**로 작업 폴더를 엽니다. 처음 열면 "이 폴더를 신뢰하느냐"고 묻는데, 내 폴더이니 신뢰를 선택합니다.
-3. 오른쪽 AI 대화창을 엽니다(단축키 `Ctrl+L`, Mac은 `Cmd+L`). 대화창 아래에서 **Agent** 모드를 고르면 파일을 고치고 명령도 실행할 수 있습니다.
-4. 명령을 실행하기 전에 허락을 물으면 내용을 보고 허락합니다. 프로그램은 작업 폴더의 `.venv` 파이썬으로 실행해야 합니다.
+<div class="step-flow">
+  <div class="step-card">
+    <span class="step-num">1</span>
+    <div class="step-body">
+      <div class="step-title">설치</div>
+      <div class="step-desc"><a href="https://cursor.com">cursor.com</a>에서 Cursor를 설치하고 실행합니다.</div>
+    </div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">2</span>
+    <div class="step-body">
+      <div class="step-title">같은 폴더 열기 — File → Open Folder</div>
+      <div class="step-desc">작업 폴더를 엽니다. 처음 열면 "이 폴더를 신뢰하느냐"고 묻는데, 내 폴더이니 신뢰를 선택합니다.</div>
+    </div>
+  </div>
+  <div class="step-card">
+    <span class="step-num">3</span>
+    <div class="step-body">
+      <div class="step-title">AI 대화창 열기 — Ctrl+L (Mac은 Cmd+L)</div>
+      <div class="step-desc">대화창 아래에서 <strong>Agent</strong> 모드를 고르면 파일을 고치고 명령도 실행할 수 있습니다.</div>
+    </div>
+  </div>
+  <div class="step-card verify">
+    <span class="step-num">4</span>
+    <div class="step-body">
+      <div class="step-title">명령 실행은 허락을 보고</div>
+      <div class="step-desc">실행 전에 허락을 물으면 내용을 보고 허락합니다. 프로그램은 작업 폴더의 <code>.venv</code> 파이썬으로 실행해야 합니다.</div>
+    </div>
+  </div>
+</div>
 
 Claude Code와 다른 점은 화면뿐입니다. 요청하는 방식은 같습니다.
 
