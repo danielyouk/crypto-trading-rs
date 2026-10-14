@@ -2046,9 +2046,10 @@ window.MathJax = {
 <h2 id="실습-실습-24-ai-일일-매매-심층-분석-실행">실습 — 실습 24: AI 일일 매매 심층 분석 실행</h2>
 <p>Claude Code 대화창에 아래 프롬프트를 입력하세요.</p>
 <blockquote>
+<p>📌 <strong>강의와 운용의 차이</strong>: 촬영 때는 한국 장이 아직 끝나지 않아 그날 기록이 없었기 때문에, [맥락]의 마지막 문장에 지난 거래일(2026-10-13)을 적었습니다. 여러분은 그 날짜를 <strong>분석하고 싶은 날</strong>로 바꾸거나, 그 문장을 지우고 장 마감 뒤에 돌리면 오늘이 분석됩니다.</p>
 <p>📁 <strong>공유 파일</strong>: 이 프롬프트는 <code>orders_history.json</code>(주문과 체결 기록), 분석하는 날과 그 전 가장 최근의 잔고 기록(<code>logs/holdings_YYYYMMDD.json</code>, 장 마감 후 일지를 쓸 때 함께 저장됨), 그날 보유의 근거가 된 날짜별 신호 파일(<code>signals_날짜.json</code>)을 읽고, 분석을 <code>docs/daily_performance_review_YYYYMMDD.md</code>로 저장합니다. 분석하는 날의 잔고 기록이 있어야 하므로, 오늘을 분석하려면 장 마감 뒤 일지까지 끝난 다음에, 지난 날을 분석하려면 그날 일지가 있으면 바로 됩니다. 기록이 없으면 AI가 분석하지 않고 멈추도록 해 두었습니다.</p>
 </blockquote>
-<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 하루의 매매 체결 내역과 계좌 잔고 기록을 바탕으로 그날의 성과 분석 보고서를 만들고 싶어. 분석할 날짜는 내가 정해 줄 수 있게 하고, 정하지 않으면 오늘로 해.
+<div class="prompt-card">  <div class="prompt-card-header">    <span class="prompt-badge">AI 프롬프트 템플릿 (목표 중심)</span>    <button class="copy-btn">프롬프트 복사</button>  </div>  <pre><code>[맥락] 하루의 매매 체결 내역과 계좌 잔고 기록을 바탕으로 그날의 성과 분석 보고서를 만들고 싶어. 분석할 날짜는 내가 정해 줄 수 있게 하고, 정하지 않으면 오늘로 해. 이번에는 2026-10-13을 분석해.
 
 [만들 것] 다음 분석을 수행해줘:
 1. 'orders_history.json', 그날과 그 전 가장 최근의 잔고 기록('logs/holdings_YYYYMMDD.json' 가운데 그날 것과 그보다 앞선 가장 늦은 것), 그날 보유의 근거가 된 신호 파일('signals_날짜.json' 가운데 기준일이 그날보다 앞선 가장 늦은 것)을 읽어줘. 그날 잔고 기록이 없으면 멈춰서 &quot;daily_journal.py를 먼저 실행하라&quot;고 알려줘. 평가손익 변화는 두 잔고 기록의 종목별 평가손익 차이로, 체결로 확정된 손익은 'orders_history.json'의 그날 매도 체결 가격과 바로 전 잔고 기록의 평균 매수가 차이에 체결 수량을 곱해 구해. 바로 전 잔고 기록이 없으면 그 칸은 '그 전 기록 없음'으로 표시해.
