@@ -4,6 +4,8 @@
     AI트레이딩_실습_프롬프트_모음.md   복사용
     AI트레이딩_실습_프롬프트_모음.pdf  열람용 (Windows Chrome 헤드리스로 변환, 없으면 LibreOffice)
     script_clip_map.json              프롬프트에 등장하는 스크립트 이름 → 클립 번호 (package_reference_code.py 가 씀)
+    클립별_txt/ClipNN_제목.txt          클립 하나에 프롬프트만 담은 복붙용 텍스트
+    AI트레이딩_부록_실습_프롬프트_모음.zip  위 PDF·md·클립별 txt·README 를 묶은 전달용 ZIP
 
 실행:
     .venv/bin/python runners/build_prompt_collection.py [--out-dir artifacts/benefits] [--keep-html]
@@ -17,6 +19,7 @@ import json
 import re
 import shutil
 import subprocess
+import zipfile
 from datetime import date
 from pathlib import Path
 from urllib.parse import quote
@@ -147,7 +150,8 @@ HOWTO_MD = '''## 읽는 법
 2. 프롬프트 속 **날짜·종목·숫자는 본인 화면에 맞게** 바꾸세요. 특히 `"""` 사이에는 본인 화면의 표나 오류 로그를 그대로 붙여 넣습니다.
 3. 결과가 다르거나 오류가 나면 새 프롬프트를 처음부터 쓰지 말고, Clip 05에서 배운 **후속 수정 네 칸**으로 고칩니다.
 4. 영상과 교재가 다르면 **교재(핸드북)가 최신**입니다. 이 모음집은 교재에서 뽑았습니다.
-5. 증권사에 실제로 주문을 보내는 프롬프트(Part 4·5)는 **모의투자 계좌**를 전제로 합니다.
+5. 같은 프롬프트를 보내도 **AI가 쓰는 코드는 사람마다, 날마다 다를 수 있습니다.** 강사 화면과 코드가 같은지가 아니라, 화면에 나온 결과(차트·표·알림·동작)가 [확인] 칸대로 맞는지로 판단하세요.
+6. 증권사에 실제로 주문을 보내는 프롬프트(Part 4·5)는 **모의투자 계좌**를 전제로 합니다.
 '''
 
 
@@ -241,7 +245,53 @@ def build(out_dir: Path, keep_html: bool) -> None:
     to_pdf(html_path, pdf_path)
     if not keep_html:
         html_path.unlink(missing_ok=True)
-    print(f"클립 {clip_count}개, 프롬프트 {total}개 → {md_path.name}, {pdf_path.name} ({pdf_path.stat().st_size // 1024} KB), script_clip_map.json({len(script_map)}개 이름)")
+
+    # ---------- 클립별 txt + README + ZIP ----------
+    txt_dir = out_dir / "클립별_txt"
+    if txt_dir.exists():
+        shutil.rmtree(txt_dir)
+    txt_dir.mkdir()
+    for pn, part in parts.items():
+        for c in part["clips"]:
+            lines = [f"Clip {c['clip_num']:02d}. {c['title']}", f"Part {pn}. {part['title']}", f"핸드북: {c['href_text']}", "", "=" * 60, ""]
+            for i, p in enumerate(c["prompts"], 1):
+                label = re.sub(r"^실습\s*[—-]\s*", "", p["heading"]) if p["heading"] else f"프롬프트 {i}"
+                lines.append(f"[{i}/{len(c['prompts'])}] {label}")
+                for note in p["notes"]:
+                    lines.append(re.sub(r"\*\*|`", "", note))
+                if p["skip"]:
+                    lines.append(f"({p['skip']})")
+                lines += ["", "-" * 60, p["body"], "-" * 60, ""]
+            safe = re.sub(r"[\\/:*?\"<>|]", "_", c["title"]).replace(" ", "_")
+            (txt_dir / f"Clip{c['clip_num']:02d}_{safe}.txt").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
+
+    readme = f"""AI 트레이딩 시스템 만들기: 실습 프롬프트 모음 (만든 날 {today})
+
+들어 있는 것
+  AI트레이딩_실습_프롬프트_모음.pdf  열람용. 읽는 법(네 칸 골격), 차례, Part·클립 순서의 프롬프트 전문
+  AI트레이딩_실습_프롬프트_모음.md   같은 내용의 복사용(마크다운)
+  클립별_txt/                        클립 하나에 그 클립의 프롬프트만 담은 텍스트 {clip_count}개. 강의 클립마다 붙이기 좋습니다
+
+쓰는 법
+  1. 핸드북({SITE})의 각 클립 페이지 '실습' 절에도 같은 프롬프트가 '프롬프트 복사' 버튼과 함께 있습니다.
+  2. 프롬프트는 클립 순서대로 쓰세요. 뒤 클립은 앞 클립에서 만든 파일이 있다고 전제합니다.
+  3. 날짜·종목·숫자는 본인 화면에 맞게 바꾸고, \"\"\" 사이에는 본인 화면의 표나 오류 로그를 붙여 넣습니다.
+  4. 영상과 다르면 교재(핸드북)가 최신입니다. 이 모음집은 교재에서 뽑았습니다.
+  5. 같은 프롬프트를 보내도 AI가 쓰는 코드는 사람마다, 날마다 다를 수 있습니다. 코드가 강사와 같은지가 아니라 화면 결과(차트·표·알림·동작)가 맞는지로 판단하세요.
+  6. 증권사에 주문을 보내는 프롬프트(Part 4·5)는 모의투자 계좌를 전제로 합니다.
+"""
+    (out_dir / "README.txt").write_text(readme, encoding="utf-8-sig")
+
+    zip_path = out_dir / "AI트레이딩_부록_실습_프롬프트_모음.zip"
+    inner = "AI트레이딩_실습_프롬프트_모음"
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for f in (out_dir / "README.txt", pdf_path, md_path):
+            zf.write(f, f"{inner}/{f.name}")
+        for f in sorted(txt_dir.iterdir()):
+            zf.write(f, f"{inner}/클립별_txt/{f.name}")
+    print(f"클립 {clip_count}개, 프롬프트 {total}개 → {md_path.name}, {pdf_path.name} ({pdf_path.stat().st_size // 1024} KB), "
+          f"클립별 txt {clip_count}개, script_clip_map.json({len(script_map)}개 이름)")
+    print(f"전달용 ZIP: {zip_path} ({zip_path.stat().st_size // 1024} KB)")
 
 
 def to_win(p: Path) -> str:
