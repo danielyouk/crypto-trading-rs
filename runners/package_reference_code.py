@@ -35,6 +35,13 @@ EXCLUDE_FILES = [
 ]
 KEEP_EVEN_IF_MATCH = {".env.example"}
 
+# 프롬프트가 파일 이름을 못 박지 않아 script_clip_map.json 에 없지만, 그 클립에서 만들어지는 파일
+EXTRA_CLIP_MAP = {
+    "run_trading.bat": [35], "run_trading.sh": [35],      # Clip 35: 내 컴퓨터에 맞는 실행 파일 두 개
+    "daily_performance_review.py": [36],                   # Clip 36: 장 마감 후 매매 결과 분석
+    "kis_auth_safety_check.py": [27],                      # Clip 27: 모의투자 전용 안전장치 확인
+}
+
 # 남은 텍스트 파일에서 비밀처럼 보이는 것
 SECRET_PATTERNS = [
     (re.compile(r"(?i)(app\s*key|appkey|app\s*secret|appsecret|secret|token|password|passwd|pw)\s*[=:]\s*['\"]?[A-Za-z0-9+/=_-]{12,}"), "키·비밀번호 값으로 보임"),
@@ -92,7 +99,7 @@ def build_readme(files: list[Path], clip_map: dict[str, list[int]], today: str) 
     for f in sorted(files, key=lambda x: (x.suffix != ".py", str(x))):
         if f.suffix not in {".py", ".bat", ".sh", ".md"} or f.name.startswith("README"):
             continue
-        clips = clip_map.get(f.name) or clip_map.get(str(f).replace("\\", "/"))
+        clips = clip_map.get(f.name) or clip_map.get(str(f).replace("\\", "/")) or EXTRA_CLIP_MAP.get(f.name)
         if clips:
             made = f"Clip {clips[0]:02d}"
             used = ", ".join(f"{c:02d}" for c in clips[1:])
@@ -128,6 +135,8 @@ def build_readme(files: list[Path], clip_map: dict[str, list[int]], today: str) 
 - `.env`, `.kis_token.json` 같은 비밀값과 토큰
 - `logs/`, `price_cache/`, 주문 목록·승인 기록·체결 이력·일지 등 강사 계좌의 기록
 - 그래서 처음 실행하면 "이전 신호 파일이 없음" 같은 안내가 나오는 것이 정상입니다. Clip 29부터 순서대로 만들면 채워집니다.
+- `docs/` 안의 일지·보고서·안내 문서는 프로그램이 실행될 때 만들어지는 결과물이라 넣지 않았습니다.
+- Part 1~3(Clip 2~19)의 백테스트 스크립트는 이 묶음에 없습니다. 그 클립들은 프롬프트 한 번으로 완성되는 독립 스크립트라 본인이 만든 것을 쓰면 됩니다.
 
 ## 파일과 클립 대응
 
@@ -141,6 +150,7 @@ def main() -> int:
     ap.add_argument("--out", required=True, help="만들 ZIP 경로")
     ap.add_argument("--map", help="script_clip_map.json (build_prompt_collection.py 가 만듦)")
     ap.add_argument("--inner-name", default="ai-trading", help="ZIP 안 최상위 폴더 이름")
+    ap.add_argument("--notes", help="README 끝에 그대로 붙일 마크다운 파일(예: 교재와 다른 점)")
     args = ap.parse_args()
 
     src = Path(args.source).expanduser().resolve()
@@ -165,8 +175,12 @@ def main() -> int:
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(p, dest)
             kept.append(rel)
-        (stage / ".env.example").write_text(make_env_example(src / ".env"), encoding="utf-8")
-        (stage / "README_시작하기.md").write_text(build_readme(kept, clip_map, today), encoding="utf-8")
+        if not (stage / ".env.example").exists():
+            (stage / ".env.example").write_text(make_env_example(src / ".env"), encoding="utf-8")
+        readme = build_readme(kept, clip_map, today)
+        if args.notes:
+            readme += "\n" + Path(args.notes).read_text(encoding="utf-8").rstrip() + "\n"
+        (stage / "README_시작하기.md").write_text(readme, encoding="utf-8")
         hits = scan_secrets(stage)
 
         out = Path(args.out).expanduser().resolve()
