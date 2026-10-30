@@ -15,6 +15,8 @@
     F2  고정 위험값 변조        장중 하루 손실 한도(-0.03)가 다른 값으로 적혀 있는가
     F3  금지 표현              폐기된 수치·용어가 남아 있는가 (아래 BANNED_PHRASES)
     N1  실습 번호 불일치        교재 본문의 '실습 NN'과 curriculum.json의 practice 값이 다른가, 번호가 끊기거나 겹치는가
+    W1  상대 WFE 최소 우위      상대 WFE를 계산시키는 프롬프트에 '훈련 우위 1%p 이상' 규칙이 빠졌는가
+                              (분모인 훈련 우위가 0에 가까우면 비율이 수천 %로 튀어 아무 후보나 통과한다. 2026-10 정정)
 
 F1~F3은 "앞에서 A라고 했는데 뒤에서 B라고 하는" 종류의 어긋남을 잡기 위한 **사실 목록**입니다.
 새 사실이 확정되면 아래 상수(STRATEGY_UNIVERSE / FIXED_RISK_VALUES / BANNED_PHRASES)에 한 줄 추가하세요.
@@ -230,6 +232,30 @@ def check_facts(md: Path, text: str, findings: list[Finding]) -> None:
             findings.append(Finding("F3 금지 표현", "FAIL", md, line_of(text, idx), f"'{phrase}' — {why}"))
 
 
+WFE_MIN_EDGE = "1%p 이상"
+
+
+def check_relative_wfe(md: Path, text: str, findings: list[Finding]) -> None:
+    """W1 — 상대 WFE를 계산시키는 프롬프트는 분모(훈련 우위)의 최소값을 함께 적어야 한다.
+
+    상대 WFE = 검증 우위 ÷ 훈련 우위. 훈련 우위가 0이면 계산이 안 되고, 0에 가까우면 수천 %로 튀어
+    '검증에서 조금이라도 앞서면 통과'가 된다. 그래서 훈련 우위가 1%p 이상인 후보만 계산한다(클립 18·19·37).
+    """
+    for start_line, body, skipped in iter_prompt_blocks(text):
+        if skipped or "상대 WFE" not in body:
+            continue
+        if WFE_MIN_EDGE not in body:
+            findings.append(
+                Finding(
+                    "W1 상대 WFE 최소 우위",
+                    "FAIL",
+                    md,
+                    start_line,
+                    f"상대 WFE를 계산시키는데 '훈련 우위 {WFE_MIN_EDGE}' 규칙이 프롬프트에 없음 (분모가 0 근처면 비율이 폭발)",
+                )
+            )
+
+
 def check_practice_numbers(notes: list[Path], note_texts: dict[Path, str], findings: list[Finding]) -> None:
     """N1 — 본문 실습 번호와 목차(curriculum.json)가 같은가, 번호가 끊기거나 겹치지 않는가."""
     if not CURRICULUM_PATH.exists():
@@ -300,6 +326,7 @@ def main() -> int:
         check_prompts(md, text, findings)
         check_html_sync(md, text, findings)
         check_facts(md, text, findings)
+        check_relative_wfe(md, text, findings)
 
     check_practice_numbers(notes, note_texts, findings)
     check_script_refs("\n".join(note_texts.values()), findings)

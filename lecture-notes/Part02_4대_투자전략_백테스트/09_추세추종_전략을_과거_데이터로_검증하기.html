@@ -2039,7 +2039,7 @@ window.MathJax = {
 </tr>
 <tr>
 <td><strong>결과 해석 훈련</strong></td>
-<td>"MDD는 줄었나 / 비용 후에도 남나 / 어디서 약했나" 세 질문으로 성적표 읽기</td>
+<td>"MDD는 언제, 왜 났나 / 비용 후에도 남나 / 어디서 약했나" 세 질문으로 성적표 읽기</td>
 </tr>
 </tbody>
 </table></div>
@@ -2070,9 +2070,9 @@ $$</div>
 <tbody>
 <tr>
 <td><strong>①</strong></td>
-<td><strong>MDD가 줄었나?</strong></td>
-<td>단순 보유 MDD vs 전략 MDD</td>
-<td>대세 하락장에서 현금 피신으로 낙폭을 확실히 방어했는가</td>
+<td><strong>MDD는 언제, 왜 났나?</strong></td>
+<td>단순 보유 MDD vs 전략 MDD + 언더워터 플롯</td>
+<td>가장 깊은 낙폭 때 전략은 현금이었나, 보유 중이었나</td>
 </tr>
 <tr>
 <td><strong>②</strong></td>
@@ -2088,6 +2088,9 @@ $$</div>
 </tr>
 </tbody>
 </table></div>
+<blockquote>
+<p>⚠️ <strong>정정</strong>: 영상에서는 ①이 "MDD가 줄었나? 낙폭을 확실히 방어했는가"였지만, "가장 깊은 낙폭 때 전략이 현금이었나, 보유 중이었나"로 바꿨습니다. 200일선은 종가가 선 아래로 내려온 다음 날에야 팔기 때문에, 선보다 한참 위에서 시작한 급락은 단순 보유와 똑같이 맞습니다. 그래서 기간에 따라 두 MDD가 같게 나올 수 있습니다. (위 '추가 요소' 표와 아래 체크리스트도 같습니다)</p>
+</blockquote>
 <hr />
 <h2 id="실습-실습-04-kodex-200-추세추종-10년-백테스트">실습 — 실습 04: KODEX 200 추세추종 10년 백테스트</h2>
 <p>Claude Code 대화창에 아래의 표준 퀀트 백테스트 프롬프트를 입력하세요.</p>
@@ -2124,7 +2127,7 @@ $$</div>
 <h3 id="내-눈으로-확인할-체크리스트">내 눈으로 확인할 체크리스트</h3>
 <ul>
 <li class="check-item"><input type="checkbox"> <strong>데이터 시작 확인</strong>: KODEX 200 데이터가 10년 전부터 정상 로드되었는지 확인했다.</li>
-<li class="check-item"><input type="checkbox"> <strong>① MDD 방어 확인</strong>: 성과표에서 단순 보유 MDD 대비 전략 MDD가 의미 있게 줄어들었는지 확인했다.</li>
+<li class="check-item"><input type="checkbox"> <strong>① MDD 비교</strong>: 단순 보유와 전략의 MDD를 비교하고, 언더워터 플롯에서 각자의 가장 깊은 낙폭이 언제였는지, 그때 전략이 현금이었는지 보유 중이었는지를 확인했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>② 비용 후 생존 확인</strong>: Gross CAGR과 Net CAGR의 차이를 확인하고, 거래비용(왕복 0.25%)이 잦은 매매와 결합할 때 미치는 영향을 파악했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>③ 대화형 차트 확인</strong>: 생성된 <code>trend_following_backtest_result.html</code> 파일을 브라우저로 열어, 마우스 호버 툴팁과 하단 언더워터 플롯에서 대세 하락장 현금 피신 구간을 확인했다.</li>
 <li class="check-item"><input type="checkbox"> <strong>④ 휩소를 눈으로 확인</strong>: 위 패널에서 가격이 200일선을 짧게 오르내린 구간(예: 2018~2019년)을 찾아, 그 자리의 현금 음영이 잘게 쪼개져 있고 아래 언더워터 플롯의 전략 낙폭이 계단처럼 깊어지는지 대조했다.</li>
@@ -2138,9 +2141,12 @@ $$</div>
 </ul>
 <hr />
 <h2 id="다음-클립-예고">다음 클립 예고</h2>
-<p>첫 성과표를 손에 넣었습니다. 200일선 추세추종은 <strong>대세 하락장에서의 자산 방어에는 강력하지만, 박스권 횡보장 휩소와 거래비용으로 인해 단독 운영에는 한계가 있음</strong>을 데이터로 확인했습니다.<br />
+<p>첫 성과표를 손에 넣었습니다. 200일선 추세추종이 <strong>어떤 하락은 피하고 어떤 하락은 피하지 못했는지, 휩소와 거래비용이 얼마나 깎아 먹었는지</strong>를 데이터로 확인했습니다.<br />
 그렇다면 느린 이동평균선이 놓치는 <strong>"하루 안에 폭발하는 수급 모멘텀"</strong>을 포착하는 방법은 없을까요?<br />
 다음 클립에서는 단기 트레이딩의 대표 전략인 <strong>'래리 윌리엄스의 변동성 돌파(Volatility Breakout) 전략'</strong>의 원리를 파헤쳐 보겠습니다.</p>
+<blockquote>
+<p>⚠️ <strong>정정</strong>: 영상에서는 "대세 하락장에서의 자산 방어에는 강력하다"고 정리했지만, "어떤 하락은 피하고 어떤 하락은 피하지 못했는지 확인했다"로 바꿨습니다. 결과를 미리 정해 두면 화면의 성과표와 어긋날 수 있기 때문입니다.</p>
+</blockquote>
       </main>
 
       <nav class="pager-nav">
